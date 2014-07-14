@@ -264,7 +264,7 @@
                     </div>
                     <div class="grid-content">
                         <div id="audiograma_placeholder" ></div>
-                                           </div>
+                    </div>
                 </div>
             </div> 
             <div class="grid" id="exam_outcome_div" style="display:none">
@@ -284,20 +284,25 @@
                         </div>
                     </div>
                     <div id="no_venda_div" style="display:none">
-                        <div class='formRow'>
-                            <label>Razão</label>
-                            <div class='formRight'>
-                                <select id='no_venda_select'>
-                                    <option value="PVP">Preço</option>
-                                    <option value="FAM">Familiar</option>
-                                    <option value="PAGU">Sem aproveitamento</option>
-                                    <option value="CONC">Concorrência</option>
-                                    <option value="PENS">Pensador</option>
-                                    <option value="EST">Estética/Conforto</option>
-                                    <option value="SPERD">Sem Perda</option>
-                                </select>
-                            </div>  
-                        </div>
+                        <form id="no_venda_form">
+
+
+                            <div class='formRow'>
+                                <label>Razão</label>
+                                <div class='formRight'>
+                                    <select id='no_venda_select' class="validate[required]">
+                                        <option selected value="">Escolha uma razao</option>
+                                        <option value="PVP">Preço</option>
+                                        <option value="FAM">Familiar</option>
+                                        <option value="PAGU">Sem aproveitamento</option>
+                                        <option value="CONC">Concorrência</option>
+                                        <option value="PENS">Pensador</option>
+                                        <option value="EST">Estética/Conforto</option>
+                                        <option value="SPERD">Sem Perda</option>
+                                    </select>
+                                </div>  
+                            </div>
+                        </form>
                     </div>
                     <div id="yes_venda_div" style="display:none">
                         <div class='formRow'>

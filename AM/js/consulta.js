@@ -68,7 +68,7 @@ $(function()
                     .end()
                     .find("select")
                     .prop("disabled", data.closed);
-            
+
             if (data.produtos) {
                 $("#main_consulta_div")
                         .find("#dGama")
@@ -270,6 +270,7 @@ $(function()
                                 consult_audiogra.save(lead_id, reserva_id, false);
 
                                 if (ha_perda) {// HA PERDA 
+
                                     if (!$("[name=vp_a]:checked").length) {
                                         $.jGrowl('Indique se há venda.', {life: 3000});
                                         return false;
@@ -286,16 +287,20 @@ $(function()
                                         });
                                     }
                                     else {//NÂO HA VENDA
-                                        $.msg();
-                                        $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
-                                            $.jGrowl('Consulta gravada sem venda', {life: 3000});
-                                            $.msg('unblock');
-                                            $("#marcacao_modal").modal("show");
-                                        }, "json").fail(function(data) {
-                                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                                            $.msg('unblock', 5000);
-                                        });
+                                        if ($("#no_venda_form").validationEngine("validate"))
+                                        {
+                                            $.msg();
+                                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
+                                                $.jGrowl('Consulta gravada sem venda', {life: 3000});
+                                                $.msg('unblock');
+                                                $("#marcacao_modal").modal("show");
+                                            }, "json").fail(function(data) {
+                                                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                                                $.msg('unblock', 5000);
+                                            });
+                                        }
                                     }
+
                                 }
                                 else {//NAO HA PERDA
                                     $.msg();

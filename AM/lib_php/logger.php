@@ -45,19 +45,34 @@ class Logger {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function get_all_logs() {
-       
-        $query = "SELECT `id`, `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log";
-        $stmt = $this->_db->prepare($query);
-        $stmt->execute();
-         return  $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
+    public function get_all_filtered($section, $date_start,$date_end) {
 
-    public function getAll($section) {
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` WHERE section=:section limit 20000;";
+        $parameters = array();
+        $where = "";
+
+        if ($section !== "all") {
+            $where = "where section=?";
+            $parameters[] = $section;
+        }
+
+        if ($date !== "all") {
+            $where = "where event_date between ";
+            $parameters[] = $section;
+        }
+
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log`";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":section" => $section));
+        $stmt->execute($parameters);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function getAll() {
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log`   limit 20000;";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    
 
 }
