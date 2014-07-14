@@ -374,6 +374,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         lead_id: me.client.id,
                         client_name: me.client.name,
                         codCamp: me.client.codCamp,
+                        type_text: $.trim($(this).text()),
                         //changed: 0,
                         closed: false
                     }, $(this).data().eventobject);
@@ -635,7 +636,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             }, function() {
                 me.modals.acf.find("#obs_acf").val("");
                 me.modals.acf.modal("hide");
-                that.data("reservation_data").closed = 1;
+                me.modals.acf.data().calEvent.closed = 1;
                 me.calendar.fullCalendar('updateEvent', this);
                 $.msg('unblock');
             }, 'json').fail(function(data) {
@@ -643,7 +644,28 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 $.msg('unblock', 5000);
             });
         })
-                .end();
+                .end()
+                .find(".btn_trash")
+                .click(function() {
+                    $.msg();
+                    me.modals.acf.modal("hide");
+                    var id = me.modals.acf.data().calEvent.id;
+                    $.post("/AM/ajax/calendar.php", {
+                        id: id,
+                        action: "remove"
+                    },
+                    function(ok) {
+                        if (ok) {
+                            me.calendar.fullCalendar('removeEvents', id);
+                        }
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                    ;
+                });
+        ;
 
     };
     this.openClient = function(calEvent) {
@@ -664,6 +686,13 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         .end()
                         .find("#btn_view_consult")
                         .show();
+            } else if (me.user.user_level === 1) {
+                me.modal_ext
+                        .find(".modal-footer span.left, .modal-footer span.right")
+                        .hide()
+                        .end()
+                        .find("#btn_view_consult")
+                        .hide();
             } else if (calEvent.user !== me.user.username && me.user.user_level < 5) {
                 me.modal_ext
                         .find(".modal-footer span.left")
@@ -763,8 +792,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
     };
     this.openACF = function(calEvent) {
         me.modals.acf
-                .find("#save_acf")
-                .data("reservation_data", calEvent)
+                .data("calEvent", calEvent)
                 .end()
                 .find("h3")
                 .text(calEvent.type_text + ' ' + calEvent.client_name)

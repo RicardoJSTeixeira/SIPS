@@ -24,7 +24,7 @@ switch ($action) {
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, d.feedback, d.consulta_razao, d.venda_razao, d.user
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', IFNULL(b.address2,'')), postal_code, b.city, b.phone_number, b.alt_phone, IF(d.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, d.feedback, d.consulta_razao, d.venda_razao, d.user
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
@@ -37,7 +37,7 @@ switch ($action) {
             $refs = array_map(function($a) {
                 return $a->id;
             }, $refs);
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', b.address2), postal_code, b.city, b.phone_number, b.alt_phone, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, c.feedback, c.consulta_razao, c.venda_razao, c.user
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(b.address1, ' ', IFNULL(b.address2,'')), postal_code, b.city, b.phone_number, b.alt_phone, IF(c.closed=1,'Fechada',IF(a.start_date>NOW(),'Marcada','Aberta')) estado, a.start_date, c.feedback, c.consulta_razao, c.venda_razao, c.user
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
@@ -62,13 +62,13 @@ switch ($action) {
         $u = $user->getUser();
         $variables[":list"] = $u->list_id;
         if ($u->user_level > 6) {
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', address2), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', IFNULL(address2,'')), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
     inner join vicidial_users b on a.user=b.user
     left join sips_sd_reservations c on a.lead_id=c.lead_id
     where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
-            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', address2), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
+            $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', IFNULL(address2,'')), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
     left join sips_sd_reservations b on a.lead_id=b.lead_id
     where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
         }

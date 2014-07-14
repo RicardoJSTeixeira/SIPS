@@ -51,7 +51,7 @@ function checkReserva($beg, $end, $rbeg, $rend) {
     $result2 = (strtotime($beg) <= strtotime($rend));
     $result5 = (strtotime($end) >= strtotime($rbeg));
     $result6 = (strtotime($end) <= strtotime($rend));
-    return ($result1 && $result2) OR ($result1 && $result6) OR ($result2 && $result5) OR ($result5 && $result6);
+    return ($result1 && $result2) OR ( $result1 && $result6) OR ( $result2 && $result5) OR ( $result5 && $result6);
 }
 
 //design
@@ -66,21 +66,21 @@ function m2h($min, $full = false) {
 
 //end design
 //nav
-function last_week($date,$users) {
-    if($users->user_level>5){
+function last_week($date, $users) {
+    if ($users->user_level > 5) {
         return (date('D') == 'Mon') ? date("Y-m-d", strtotime($date . " 2 mondays ago")) : date("Y-m-d", strtotime($date . " last monday"));
-    }else{
-    return date("Y-m-d", strtotime($_GET["dt"] . ' last '.date('l',strtotime('next weekday'))));
+    } else {
+        return date("Y-m-d", strtotime($_GET["dt"] . ' last ' . date('l', strtotime('next weekday'))));
     }
 }
 
 function next_week($date) {
-   return (date('D') == 'Mon') ? date("Y-m-d", strtotime($date . " this monday")) : date("Y-m-d", strtotime($date . " next monday"));
+    return (date('D') == 'Mon') ? date("Y-m-d", strtotime($date . " this monday")) : date("Y-m-d", strtotime($date . " next monday"));
 }
 
 //end nav
 //is reserva
-function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, $date, $min, $slot2change, $i_reservas,$users) {
+function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, $date, $min, $slot2change, $i_reservas, $users) {
 
     $estado = "";
 
@@ -99,38 +99,39 @@ function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, 
     }
     for ($i = 0; $i < count($reservas); $i++) {
         //if (check2DateTimeEqual($beg, $reservas[$i][start_date]) && check2DateTimeEqual($end, $reservas[$i][end_date]) && ($rsc == $reservas[$i][id_resource])) {
-        if (checkReserva($beg, $end, $reservas[$i]["start_date"], $reservas[$i]["end_date"]) && ($rsc == $reservas[$i]["id_resource"])) {
-            if ($reservas[$i]["id_user"] != $users->id AND $users->user_level<5) {
-                $estado.=" deles";
-            }
-            $lead_id = $reservas[$i]["lead_id"];
-            $postal = $reservas[$i]["postal_code"];
-            $type = $reservas[$i]["display_text"];
-            $id_type = "t" . $reservas[$i]["id_reservation_type"];
-            $result = ($slot2change == $reservas[$i]["id_reservation"]) ? ' muda' : ' reservado';
-            //BEGIN elimina a reserva do array
-            unset($reservas[$i]);
-            $reservas = array_values($reservas);
-            //END elimina a reserva do array
-
-            return array("id" => $lead_id, "type" => $type, "stat" => "$estado $result $id_type","postal"=>$postal);
+        if (!(checkReserva($beg, $end, $reservas[$i]["start_date"], $reservas[$i]["end_date"]) && ($rsc == $reservas[$i]["id_resource"]))) {
+            continue;
         }
+        if ($reservas[$i]["id_user"] != $users->id AND $users->user_level < 5) {
+            $estado.=" deles";
+        }
+        $lead_id = $reservas[$i]["lead_id"];
+        $postal = $reservas[$i]["postal_code"];
+        $type = $reservas[$i]["display_text"];
+        $id_type = "t" . $reservas[$i]["id_reservation_type"];
+        $result = ($slot2change == $reservas[$i]["id_reservation"]) ? ' muda' : ' reservado';
+        //BEGIN elimina a reserva do array
+        /* unset($reservas[$i]);
+          $reservas = array_values($reservas); */
+        //END elimina a reserva do array
+
+        return array("id" => $lead_id, "type" => $type, "stat" => "$estado $result $id_type", "postal" => $postal);
     }
 
 
     if (strlen($estado) > 0) {
-        return array("id" => 0, "type" => 0, "stat" => "$estado","postal"=>null);
+        return array("id" => 0, "type" => 0, "stat" => "$estado", "postal" => null);
     }
 
     for ($k = 0; $k < count($execoes); $k++) {
         if ($execoes[$k]["id_resource"] == $rsc) {
             if (($inverted == 1)) {
                 if (checkExecoesDate($beg, $execoes[$k]["start_date"], $execoes[$k]["end_date"])) {
-                    return array("id" => 0, "type" => "", "stat" => ($slot2change == 0) ? ' reservavel' : ' disponivel',"postal"=>null);
+                    return array("id" => 0, "type" => "", "stat" => ($slot2change == 0) ? ' reservavel' : ' disponivel', "postal" => null);
                 }
             } else {
                 if (checkExecoesDate($beg, $execoes[$k]["start_date"], $execoes[$k]["end_date"])) {
-                    return array("id" => 0, "type" => "", "stat" => ' bloqueado',"postal"=>null);
+                    return array("id" => 0, "type" => "", "stat" => ' bloqueado', "postal" => null);
                 }
             }
         }
@@ -140,11 +141,11 @@ function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, 
         if ($series[$j]["id_resource"] == $rsc) {
             if (($inverted == 1)) {
                 if (checkSeriesDate($beg, $series[$j]["start_time"], $series[$j]["day_of_week_start"], $series[$j]["end_time"], $series[$j]["day_of_week_end"])) {
-                    return array("id" => 0, "type" => "", "stat" => ($slot2change == 0) ? ' reservavel' : ' disponivel',"postal"=>null);
+                    return array("id" => 0, "type" => "", "stat" => ($slot2change == 0) ? ' reservavel' : ' disponivel', "postal" => null);
                 }
             } else {
                 if (checkSeriesDate($beg, $series[$j]["start_time"], $series[$j]["day_of_week_start"], $series[$j]["end_time"], $series[$j]["day_of_week_end"])) {
-                    return array("id" => 0, "type" => "", "stat" => ' bloqueado',"postal"=>null);
+                    return array("id" => 0, "type" => "", "stat" => ' bloqueado', "postal" => null);
                 }
             }
         }
@@ -152,12 +153,12 @@ function set_estado($beg, $end, $rsc, &$reservas, $series, $inverted, $execoes, 
 
 
     if (is_past($date, $min)) {
-        return array("id" => 0, "type" => "", "stat" => " past","postal"=>null);
+        return array("id" => 0, "type" => "", "stat" => " past", "postal" => null);
     }
     if (($inverted == 1)) {
-        return array("id" => 0, "type" => "", "stat" => " bloqueado","postal"=>null);
+        return array("id" => 0, "type" => "", "stat" => " bloqueado", "postal" => null);
     } else {
-        return array("id" => 0, "type" => "", "stat" => ($slot2change == 0) ? " reservavel" : " disponivel","postal"=>null);
+        return array("id" => 0, "type" => "", "stat" => ($slot2change == 0) ? " reservavel" : " disponivel", "postal" => null);
     }
 }
 
