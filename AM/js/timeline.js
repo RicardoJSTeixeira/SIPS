@@ -16,13 +16,13 @@ $(function() {
 
 //fazer limite de tempo e sections
 //admin abo, que so ve produtos e stuff minor
-
+//partir texto, ha merdas q n têm espaços e saiem da pagina, ver 94. conada tua mae
 
 
 
                 class_badge = "timeline-badge";
                 class_badge_icon = "icon-asterisk";
-            
+
 
                 switch (this.type)
                 {
@@ -67,10 +67,13 @@ $(function() {
                 function createList(arr) {
                     info.push('<ul>');
                     $.each(arr, function(i, val) {
-                        if (i !== "pass")
-                        {
-                            info.push('<li>' + i.toString().toUpperCase() + " &#x27a1; " + val);
+                        if (i !== "pass") {
+                            if (typeof val === "object")
+                                info.push('<li>' + i.toString().toUpperCase() + " &#x27a1; " + val.join(" ,"));
+                            else
+  info.push('<li>' + i.toString().toUpperCase() + " &#x27a1; " + val);
                         }
+
                         if (typeof val === 'object') {
                             createList(val);
                         }
