@@ -46,7 +46,7 @@ class apoio_marketing extends requests_class {
 
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level < 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : '';
+        $filter = ($this->user_level == 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : (($this->user_level < 5 )?' where user like "' . $this->user_id . '" ':'');
         $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, 'local_publicididade', cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -183,7 +183,7 @@ class correio extends requests_class {
 //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level < 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : '';
+        $filter = ($this->user_level == 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : (($this->user_level < 5 )?' where user like "' . $this->user_id . '" ':'');
         $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -283,7 +283,7 @@ class frota extends requests_class {
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level < 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : '';
+        $filter = ($this->user_level == 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : (($this->user_level < 5 )?' where user like "' . $this->user_id . '" ':'');
         $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -376,7 +376,7 @@ class mensal_stock extends requests_class {
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level < 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : '';
+        $filter = ($this->user_level == 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : (($this->user_level < 5 )?' where user like "' . $this->user_id . '" ':'');
         $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -476,7 +476,7 @@ class movimentacao_stock extends requests_class {
     //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level < 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : '';
+        $filter = ($this->user_level == 5 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : (($this->user_level < 5 )?' where user like "' . $this->user_id . '" ':'');
         $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
