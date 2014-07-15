@@ -200,8 +200,6 @@ function init() {
     $.msg('overwriteGlobal', 'clickUnblock', false);
     $.msg('overwriteGlobal', 'autoUnblock', false);
     $.msg('overwriteGlobal', 'content', 'Por favor aguarde...');
-    
-    $.fn.popover.defaults.container = 'body';
 }
 function get_messages() {
     //GET NEW MESSAGES
