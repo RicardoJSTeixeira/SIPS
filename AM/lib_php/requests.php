@@ -477,7 +477,7 @@ class movimentacao_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode("','", $this->user->siblings) . '") ' : (($this->user_level < 6 )?' where user like "' . $this->user_id . '" ':'');
-        $query = "SELECT id, user, data, produtos, status from spice_report_movimentacao $filter ";
+        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 

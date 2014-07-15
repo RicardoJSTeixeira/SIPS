@@ -66,6 +66,13 @@ switch ($action) {
         $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)));
         break;
 
+    case "save_proposta":
+        echo json_encode($users->save_proposta($lead_id, $reserva_id, $proposta));
+        break;
+
+    case "get_propostas":
+        echo json_encode($users->get_propostas($lead_id));
+        break;
     default:
         break;
 }
