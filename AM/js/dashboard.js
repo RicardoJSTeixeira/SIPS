@@ -93,7 +93,7 @@ $(function() {
                         <td>" + this.first_name + "</td>\n\
                         <td>" + moment().from(this.start_date, true) + " <div class='view-button'>\n\
                             <button class='btn btn-mini icon-alone initC "+(SpiceU.user_level===1?'hide':'')+"' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Iniciar Consulta'><i class='icon-share-alt'></i></button>\n\
-                            <button class='btn btn-mini icon-alone initSC "+(SpiceU.user_level===1?'hide':'')+"' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Sem Consulta'><i class='icon-minus-sign'></i></button></div>\n\
+                            <button class='btn btn-mini icon-alone initSC' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Sem Consulta'><i class='icon-minus-sign'></i></button></div>\n\
                         </td>\n\
                     </tr>";
         });
