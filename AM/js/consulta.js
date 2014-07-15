@@ -35,6 +35,12 @@ $(function()
                 $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop(":checked", true);
                 $("#3_pessoa_input").val(data.terceira_pessoa.nome);
             }
+            if (data.proposta_comercial) {
+                $("#button_create_proposta_comercial").hide();
+            }
+            else {
+                $("#button_create_proposta_comercial").show();
+            }
 
             $("#main_consulta_div")
                     .find("#options_div")
@@ -468,6 +474,7 @@ $(function()
 
                 modal.modal("hide");
                 $.msg('replace', 'Proposta gravada com sucesso!');
+                $("#button_create_proposta_comercial").hide();
                 $.msg('unblock', 2000);
             }, "json").fail(function(data) {
                 $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');

@@ -84,25 +84,20 @@ var clientBox = function(configs) {
             $("#button_proposta_comercial").click(function() {
                 $.msg();
                 var propostas = "";
+                var final = "<h5>Data de criação da proposta comercial</h5>";
                 $.post('/AM/ajax/users.php', {action: "get_propostas", lead_id: me.client_info.id},
                 function(data) {
 
                     if (data.length) {
                         var menu = "";
                         $.each(data, function() {
-
-
-                            menu = "<div></div>"
-
-
-
-
                             $.each(this.proposta, function() {
-
                                 propostas += " <tr><td>" + this.modelo + "</td><td>" + this.valor + "</td><td>" + this.quantidade + "</td><td>" + this.entrada + "</td><td>" + this.meses + "</td></tr>"
                             });
-                        })
-                        var table = "<table class='table table-striped table-mod table-bordered'>\n\
+                            menu = "<div>\n\
+                            <div class='formRow'>\n\
+                            <label>" + this.data + "</label><button class='btn right' onclick='  $(this).next(\".formRight\").toggle(); '><i class='icon-eye-open icon-alone'></i></button>\n\
+                            <div class='formRight' style='display:none'><table class='table table-striped table-mod table-bordered'>\n\
                             <thead>\n\
                             <tr>\n\
                             <th>Modelo</th>\n\
@@ -113,11 +108,16 @@ var clientBox = function(configs) {
                             </tr>\n\
                             </thead>\n\
                             <tbody id='tbody_proposta_comercial'>" + propostas + "</tbody>\n\
-                            </table>";
-                        
-                        
-                        
-                        bootbox.alert(table, function() {
+                            </table> </div>\n\
+                            </div>\n\
+                            </div><div class='clear'></div>";
+                            final += menu;
+                        });
+
+
+
+
+                        bootbox.alert(final, function() {
                         });
                     }
                     else
