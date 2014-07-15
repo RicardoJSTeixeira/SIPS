@@ -41,6 +41,7 @@
     <div id="proposta_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
         <div class="modal-header">
             <h3>Proposta Comercial</h3>
+
         </div>
         <form id="proposta_form">
             <table class="table table-mod">
@@ -58,11 +59,11 @@
                     <tr>
                         <th>1ª</th>
                         <td>
-                            <select id='p1modelo' class="span validate[required]">
+                            <select id='p1modelo' class="span select_modelo_proposta validate[required]" data-placeholder="Escolha um modelo" >
                             </select>
                         </td>
                         <td>
-                            <input type="text" id='p1valor' class="span text-right onlynumber validate[required]" value="" maxlength="5"/>
+                            <input type="text" id='p1valor' class="span text-right onlynumber validate[required]" name='valor1' value="" maxlength="5"/>
                         </td>
                         <td>
                             <input type="text" id='p1qt' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
@@ -77,55 +78,57 @@
                             <input type="text" id='p1meses' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="2_proposta" style="display:none">
                         <th>2ª</th>
                         <td>
-                            <select id='p2modelo' class="span">
+                            <select id='p2modelo' class="span select_modelo_proposta"  data-placeholder="Escolha um modelo">
                             </select>
                         </td>
                         <td>
-                            <input type="text" id='p2valor' class="span text-right onlynumber" value="" maxlength="5"/>
+                            <input type="text" id='p2valor' class="span text-right onlynumber validate[required]" value="" maxlength="5"/>
                         </td>
                         <td>
-                            <input type="text" id='p2qt' class="span text-right onlynumber" value="" maxlength="2"/>
+                            <input type="text" id='p2qt' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
                         <td>
                             <div class="input-append" >
-                                <input type="text" id='p2entrada' class="text-right onlynumber" style="width:16px" maxlength="2" value=""/>
+                                <input type="text" id='p2entrada' class="text-right onlynumber validate[required]" style="width:16px" maxlength="2" value=""/>
                                 <span class="add-on">%</span>
                             </div>
                         </td>
                         <td>
-                            <input type="text" id='p2meses' class="span text-right onlynumber" value="" maxlength="2"/>
+                            <input type="text" id='p2meses' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="3_proposta" style="display:none">
                         <th>3ª</th>
                         <td>
-                            <select id='p3modelo' class="span">
+                            <select id='p3modelo' class="span select_modelo_proposta"   data-placeholder="Escolha um modelo">
                             </select>
                         </td>
                         <td>
-                            <input type="text" id='p3valor' class="span text-right onlynumber" value="" maxlength="5"/>
+                            <input type="text" id='p3valor' class="span text-right onlynumber validate[required]" value="" maxlength="5"/>
                         </td>
                         <td>
-                            <input type="text" id='p3qt' class="span text-right onlynumber" value="" maxlength="2"/>
+                            <input type="text" id='p3qt' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
                         <td>
                             <div class="input-append">
-                                <input type="text" id='p3entrada' class="text-right onlynumber" style="width:16px" maxlength="2" value=""/>
+                                <input type="text" id='p3entrada' class="text-right onlynumber validate[required]" style="width:16px" maxlength="2" value=""/>
                                 <span class="add-on">%</span>
                             </div>
                         </td>
                         <td>
-                            <input type="text" id='p3meses' class="span text-right onlynumber" value="" maxlength="2"/>
+                            <input type="text" id='p3meses' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
                     </tr>
                 </tbody>
             </table>
-        </form>         
+        </form>          
         <div class="modal-footer">
-            <button class="btn btn-success" id="print_proposta"><i class="icon-print"></i>Imprimir</button>
+            <button class="btn left" id="add_proposta_linha"><i class="icon-plus"></i>Adicionar Linha</button>
+            <!--<button class="btn btn-success" id="print_proposta"><i class="icon-print"></i>Imprimir</button>-->
+            <button class="btn btn-success" id="save_proposta"><i class="icon-save"></i>Gravar</button>
             <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Sair</button>
         </div>
     </div>
@@ -138,7 +141,10 @@
                     <div class="grid-title">
                         <div class="pull-left"><i class="icon-cogs"></i> Opções</div>
                         <div class="pull-right" id="actions_exame">
-                            <button type="button" class="btn icon-alone" data-toggle="modal tooltip" data-target="#proposta_modal" title="Proposta comercial"><i class="icon-gift"></i></button>
+                            <button type="button" class="btn icon-alone" onclick='$("#2_proposta").hide();
+                                    $("#3_proposta").hide();
+                                    $("#add_proposta_linha").show();
+                                    document.getElementById("proposta_form").reset();' data-toggle="modal tooltip" data-target="#proposta_modal" title="Proposta comercial"><i class="icon-gift"></i></button>
                             <button class='btn btn-danger icon-alone' data-toggle="tooltip" title="Terminar Consulta sem Exame" id='terminar_consulta_no_exame' ><i class="icon-user-md"></i></button>
                         </div>
                     </div>

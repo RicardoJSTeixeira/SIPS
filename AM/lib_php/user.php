@@ -47,8 +47,8 @@ class UserLogin {
         $stmt->execute(array(":id" => $camp));
         $lists = $stmt->fetchAll(PDO::FETCH_OBJ);
         $list = $lists[0]->list_id;
-        $siblings=json_decode($this->_user->closer_campaigns);
-        $siblings[]=$this->_user->user;
+        $siblings = json_decode($this->_user->closer_campaigns);
+        $siblings[] = $this->_user->user;
         return (object) array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign" => $camp, "list_id" => $list, "user_level" => $this->_user->user_level, "user_group" => $this->_user->user_group, "siblings" => $siblings);
     }
 
@@ -165,6 +165,25 @@ class UserControler {
         $query = "UPDATE `vicidial_users` SET `active`=:active WHERE `user`=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":active" => $active));
+    }
+
+    public function save_proposta($lead_id, $reserva_id, $proposta) {
+        $query = "INSERT INTO `spice_proposta` (`lead_id`, `reserva_id`, `data`, `proposta`) VALUES (:lead_id, :reserva_id, :data, :proposta);";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":lead_id" => $lead_id, ":reserva_id" => $reserva_id, ":data" => date('Y-m-d H:i:s'), ":proposta" => json_encode($proposta)));
+    }
+
+    public function get_propostas($lead_id) {
+        $query = "SELECT reserva_id,data,proposta FROM `spice_proposta` WHERE lead_id=:lead_id;";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":lead_id" => $lead_id));
+        $js = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $row["proposta"] = json_decode($row["proposta"]);
+            $js[] = $row;
+        }
+
+        return $js;
     }
 
 }

@@ -1,11 +1,9 @@
-var cliente_info = function(lead_id, options_ext)
-{
+var cliente_info = function(lead_id, options_ext) {
     var me = this;
 
     this.config = {};
     $.extend(true, this.config, options_ext);
-    this.init = function(callback)
-    {
+    this.init = function(callback) {
 
 
 
@@ -15,19 +13,15 @@ var cliente_info = function(lead_id, options_ext)
         $.msg();
         $.post("/AM/ajax/client.php", {action: "byLeadToInfo",
             id: lead_id},
-        function(data1)
-        {
+        function(data1) {
 
-            $.each(data1, function()
-            {
-                if (this.value)
-                {
+            $.each(data1, function() {
+                if (this.value) {
                     temp = ($("<div>", {class: "formRow"})
                             .append($("<span>").text(this.display_name + ":"))
                             .append($("<div>", {class: "right"})
                                     .append($("<span>").text(this.value))));
-                    switch (this.name.toLowerCase())
-                    {
+                    switch (this.name.toLowerCase()) {
                         case "first_name":
                         case "middle_initial":
                         case "last_name":
@@ -59,7 +53,6 @@ var cliente_info = function(lead_id, options_ext)
                     .append($("<div>", {class: "row-fluid"}).append($("<div>", {class: "span7 ", id: "extra_info_div"}).append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)));
             if (!client_extra_count)
                 final.find("#extra_info_div").parent().remove();
-
             bootbox.dialog(final,
                     [{"label": "Nova Marcação",
                             "icon": "icon-calendar",
