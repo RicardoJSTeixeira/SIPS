@@ -109,12 +109,12 @@ switch ($action) {
                 a.user from vicidial_list a
     inner join vicidial_users b on a.user=b.user
     left join sips_sd_reservations c on a.lead_id=c.lead_id
-    where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='NO' limit 20000";
+    where b.user_group=:user_group and list_id=:list and (c.lead_id is null or c.gone=0) and extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', IFNULL(address2,'')), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
     left join sips_sd_reservations b on a.lead_id=b.lead_id
-    where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
+    where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and (b.lead_id is null or b.gone=0) and extra6='NO' limit 20000";
         }
 
         $stmt = $db->prepare($query);
