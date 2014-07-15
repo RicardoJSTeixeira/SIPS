@@ -196,7 +196,8 @@ var calendar = function(selector, data, modals, ext, client, user) {
                             return event.obs;
                         }
                     })(),
-                    trigger: 'hover'
+                    trigger: 'hover',
+                    container: 'body'
                 });
             }
             element

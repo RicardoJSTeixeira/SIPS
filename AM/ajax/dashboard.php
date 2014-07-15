@@ -45,7 +45,7 @@ switch ($action) {
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
    left join spice_consulta d on d.reserva_id=a.id_reservation
-   where c.user_group=:user_group and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
+   where c.user_group=:user_group and DATE(a.start_date)>'2014-06-29' and a.gone=0  group by a.lead_id limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $calendar = new Calendars($db);
@@ -73,14 +73,14 @@ switch ($action) {
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
-   where a.id_resource in ('" . implode("','", $refs) . "') and DATE(a.start_date)>'2014-06-29' group by a.lead_id limit 20000";
+   where a.id_resource in ('" . implode("','", $refs) . "') and DATE(a.start_date)>'2014-06-29' and a.gone=0 group by a.lead_id limit 20000";
         }
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $row[16] = $row[16] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
-                    . "<button class='btn btn-mini icon-alone criar_encomenda" . (($row[10] !== 'Fechada') ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
+                    . "<button class='btn btn-mini icon-alone criar_encomenda" . (($u->user_level === 1) ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
                     //. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";
@@ -109,12 +109,12 @@ switch ($action) {
                 a.user from vicidial_list a
     inner join vicidial_users b on a.user=b.user
     left join sips_sd_reservations c on a.lead_id=c.lead_id
-    where b.user_group=:user_group and list_id=:list and c.lead_id is null and extra6='NO' limit 20000";
+    where b.user_group=:user_group and list_id=:list and (c.lead_id is null or c.gone=0) and extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $query = "SELECT a.lead_id, extra1, extra2, extra8 'nif', CONCAT(first_name, ' ', middle_initial, ' ', last_name), CONCAT(address1, ' ', IFNULL(address2,'')), postal_code, city, phone_number, alt_phone, a.entry_date, a.user from vicidial_list a
     left join sips_sd_reservations b on a.lead_id=b.lead_id
-    where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and b.lead_id is null and extra6='NO' limit 20000";
+    where a.user in ('" . implode("','", $u->siblings) . "') and list_id=:list and (b.lead_id is null or b.gone=0) and extra6='NO' limit 20000";
         }
 
         $stmt = $db->prepare($query);
@@ -153,7 +153,7 @@ switch ($action) {
     inner join `vicidial_list` b on a.extra7=b.lead_id 
     inner join vicidial_users c on a.user=c.user
     left join sips_sd_reservations d on a.lead_id=d.lead_id
-    where c.user_group=:user_group and a.list_id=:list and d.lead_id is null and a.extra6='NO' and DATE(d.start_date)>'2014-06-29' limit 20000";
+    where c.user_group=:user_group and a.list_id=:list and (d.lead_id is null or d.gone=0) and a.extra6='NO' and DATE(d.start_date)>'2014-06-29' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $query = "SELECT
@@ -173,7 +173,7 @@ switch ($action) {
     FROM `vicidial_list` a 
     inner join `vicidial_list` b on a.extra7=b.lead_id 
     left join sips_sd_reservations c on a.lead_id=c.lead_id
-    where c.id_user in ('" . implode("','", $u->siblings) . "') and a.list_id=:list and c.lead_id is null and a.extra6='NO' and DATE(c.start_date)>'2014-06-29' limit 20000";
+    where c.id_user in ('" . implode("','", $u->siblings) . "') and a.list_id=:list and (c.lead_id is null or c.gone=0) and a.extra6='NO' and DATE(c.start_date)>'2014-06-29' limit 20000";
         }
 
         $stmt = $db->prepare($query);
@@ -200,12 +200,12 @@ switch ($action) {
         $query = "SELECT * FROM (SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'' closed from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
-   where a.id_resource in ($refs) and a.end_date<:date and c.id is NULL and DATE(a.start_date)>'2014-06-29'
+   where a.id_resource in ($refs) and a.end_date<:date and c.id is NULL and DATE(a.start_date)>'2014-06-29' and a.gone=0 
    UNION ALL
    SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'...por fechar' closed from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
-   where a.id_resource in ($refs) and a.end_date<:date1 and c.closed=0 and DATE(a.start_date)>'2014-06-29') a order by a.end_date asc";
+   where a.id_resource in ($refs) and a.end_date<:date1 and c.closed=0 and DATE(a.start_date)>'2014-06-29' and a.gone=0 ) a order by a.end_date asc";
         $variables[":date"] = date("Y-m-d");
         $variables[":date1"] = date("Y-m-d");
         $stmt = $db->prepare($query);

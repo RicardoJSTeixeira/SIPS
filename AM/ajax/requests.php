@@ -25,11 +25,11 @@ $user = new UserLogin($db);
 $user->confirm_login();
 
 $userID = $user->getUser();
-$apoio_marketing = new apoio_marketing($db, $userID->user_level, $userID->username);
-$relatorio_correio = new correio($db, $userID->user_level, $userID->username);
-$relatorio_frota = new frota($db, $userID->user_level, $userID->username);
-$relatorio_mensal_stock = new mensal_stock($db, $userID->user_level, $userID->username);
-$relatorio_movimentacao_stock = new movimentacao_stock($db, $userID->user_level, $userID->username);
+$apoio_marketing = new apoio_marketing($db, $userID->user_level, $userID->username,$userID);
+$relatorio_correio = new correio($db, $userID->user_level, $userID->username,$userID);
+$relatorio_frota = new frota($db, $userID->user_level, $userID->username,$userID);
+$relatorio_mensal_stock = new mensal_stock($db, $userID->user_level, $userID->username,$userID);
+$relatorio_movimentacao_stock = new movimentacao_stock($db, $userID->user_level, $userID->username,$userID);
 $alert = new alerts($db, $userID->username);
 $log = new Logger($db, $user->getUser());
 switch ($action) {
