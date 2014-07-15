@@ -20,7 +20,11 @@ $log = new Logger($db, $user->getUser());
 
 switch ($action) {
 
-    case "get":
-        echo json_encode($log->get_all_logs());
+    case "get_filtered":
+        echo json_encode($log->get_all_filtered($section, $date_start, $date_end));
+        break;
+
+    case "get_all":
+        echo json_encode($log->getAll());
         break;
 }
