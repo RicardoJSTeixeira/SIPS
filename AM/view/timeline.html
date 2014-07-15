@@ -47,7 +47,7 @@
         float: left;
         border: 1px solid #d4d4d4;
         border-radius: 2px;
-        padding: 20px;
+        padding: 15px;
 
         position: relative;
         -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
@@ -186,13 +186,59 @@
     }
 </style>
 
-    <div class="page-header">
-        <h1 id="timeline">Log/Histório</h1>
-
+<div class="span3 grid" style="position:fixed">  
+    <div class="grid-title">
+        <div class="pull-left">Log/Histório</div>
     </div>
+    <div class="grid-content">
+        <form id="filter_form">
+            <div class="formRow">
+                <h5>Categorias</h5>
+
+                <select id="select_section" multiple class="filter chosen-select">
+                    <option value="Apoio Mkt" >Apoio Mkt</option>
+                    <option value="Calendário" >Calendário</option>
+                    <option value="Encomenda" >Encomenda</option>
+                    <option value="Frota" >Frota</option>
+                    <option value="Correio" >Correio</option>
+                    <option value="Mov. Stock" >Mov. Stock</option>
+                    <option value="Produto" >Produto</option>
+                    <option value="Promoção" >Promoção</option>
+                    <option value="Stock" >Stock</option>
+                    <option value="User" >User</option>
+                </select>
+
+            </div>
+
+
+
+            <div class="formRow">
+                <h5>Datas Limite</h5>
+
+                <input placeholder="Data de inicio" type="text" id="date_start" >
+
+                <input  placeholder="Data de Fim" type="text" id="date_end"  >  
+
+            </div>
+        </form>
+        <div class="formRow">
+            <button class="btn" id="button_apply_filters">Filtrar</button>
+        </div> 
+    </div>
+
+
+</div>
+
+
+
+
+
+<div class="span9 offset3 grid-transparent">
     <ul class="timeline" id="timeline_main">
 
-    </ul>
+    </ul> 
+</div>
+
 
 
 <script type="text/javascript" src="js/timeline.js"></script>

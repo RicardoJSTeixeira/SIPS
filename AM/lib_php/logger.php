@@ -45,22 +45,30 @@ class Logger {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function get_all_filtered($section, $date_start,$date_end) {
+    public function get_all_filtered($section, $date_start, $date_end) {
 
         $parameters = array();
         $where = "";
 
-        if ($section !== "all") {
-            $where = "where section=?";
-            $parameters[] = $section;
+        if ($section) {
+            $where = "where section in ('" . implode("','", $section) . "')";
+
+            if ($date_start) {
+                $where = $where . " and event_date>?";
+                $parameters[] = $date_start;
+            }
+            if ($date_end) {
+                $where = $where . " and event_date<?";
+                $parameters[] = $date_end;
+            }
+        } else {
+            return [];
         }
 
-        if ($date !== "all") {
-            $where = "where event_date between ";
-            $parameters[] = $section;
-        }
 
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log`";
+
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` $where";
+        
         $stmt = $this->_db->prepare($query);
         $stmt->execute($parameters);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -72,7 +80,5 @@ class Logger {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
-
-    
 
 }
