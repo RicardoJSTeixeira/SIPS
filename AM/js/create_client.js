@@ -84,7 +84,7 @@ $(function() {
                                         <td>" + this.date_of_birth + "\n\
                                             <div class='view-button'>\n\
                                                 <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
-                                                <button class = 'btn btn-mini icon-alone criar_encomenda hide' data-lead_id ='" + this.id + "' title='Nova Encomenda'> <i class='icon-shopping-cart'></i></button>\n\
+                                                <button class = 'btn btn-mini icon-alone criar_encomenda' data-lead_id ='" + this.id + "' title='Nova Encomenda'> <i class='icon-shopping-cart'></i></button>\n\
                                                 <button class = 'btn btn-mini icon-alone criar_marcacao' data-lead_id ='" + this.id + "' title='Marcar Consulta'> <i class='icon-calendar'></i></button>\n\
                                             </div>\n\
                                         </td>\n\
