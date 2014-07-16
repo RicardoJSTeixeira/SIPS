@@ -32,72 +32,38 @@ $(function()
             if (data.terceira_pessoa.tipo) {
                 $("#ca_s").prop("checked", true);
                 $("#3_pessoa_div").show();
-                $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop(":checked", true);
+                $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop("checked", true);
                 $("#3_pessoa_input").val(data.terceira_pessoa.nome);
             }
             else
-                   $("#ca_s").prop("checked", true);
-               
+                $("#ca_n").prop("checked", true);
+
             if (data.proposta_comercial) {
                 $("#button_create_proposta_comercial").hide();
             }
 
 
             $("#main_consulta_div")
-                    .find("#options_div")
-                    .show()
-                    .end()
-                    .find("#exit_save")
-                    .show()
-                    .end()
-                    .find("#terminar_consulta_div")
-                    .toggle(!data.closed)
-                    .end()
-                    .find("#validate_audio_script_save_div")
-                    .toggle(!data.closed)
-                    .end()
-                    .find("#audiograma_main_div")
-                    .show()
-                    .end()
-                    .find("#script_main_div")
-                    .show()
-                    .end()
-                    .find("#first_info_div")
-                    .hide()
-                    .end()
-                    .find("#exam_outcome_div")
-                    .end()
-                    .find("[name=ne]")
-                    .val([data.exame_razao])
-                    .end()
-                    .find("input")
-                    .prop("disabled", data.closed)
-                    .end()
-                    .find("select")
-                    .prop("disabled", data.closed);
+                    .find("#options_div").show().end()
+                    .find("#exit_save").show().end()
+                    .find("#terminar_consulta_div").toggle(!data.closed).end()
+                    .find("#validate_audio_script_save_div").toggle(!data.closed).end()
+                    .find("#audiograma_main_div").show().end()
+                    .find("#script_main_div").show().end()
+                    .find("#first_info_div").hide().end()
+                    .find("#exam_outcome_div").end().find("[name=ne]").val([data.exame_razao]).end()
+                    .find("input").prop("disabled", data.closed).end()
+                    .find("select").prop("disabled", data.closed);
 
             if (data.produtos) {
                 $("#main_consulta_div")
-                        .find("#dGama")
-                        .val(data.produtos.direito.gama)
-                        .end()
-                        .find("#eGama")
-                        .val(data.produtos.esquerdo.gama)
-                        .end()
-                        .find("#dMarca")
-                        .val(data.produtos.direito.marca)
-                        .end()
-                        .find("#eMarca")
-                        .val(data.produtos.esquerdo.marca)
-                        .end()
-                        .find("#dModelo")
-                        .val(data.produtos.direito.modelo)
-                        .end()
-                        .find("#eModelo")
-                        .val(data.produtos.esquerdo.modelo)
-                        .end()
-                        .find("[name=tp_vd]")
-                        .val([data.produtos.tipo]);
+                        .find("#dGama").val(data.produtos.direito.gama).end()
+                        .find("#eGama").val(data.produtos.esquerdo.gama).end()
+                        .find("#dMarca").val(data.produtos.direito.marca).end()
+                        .find("#eMarca").val(data.produtos.esquerdo.marca).end()
+                        .find("#dModelo").val(data.produtos.direito.modelo).end()
+                        .find("#eModelo").val(data.produtos.esquerdo.modelo).end()
+                        .find("[name=tp_vd]").val([data.produtos.tipo]);
             }
 
             $("#main_consulta_div #exam_outcome_div").show();
@@ -123,7 +89,7 @@ $(function()
                 consult_closed = true;
             }
         }
-     
+
 
 
         script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", undefined, lead_id, reserva_id, SpiceU.username, SpiceU.camp, 0, 0);
@@ -230,8 +196,6 @@ $(function()
 
 //OPTIONS DIV--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     $("#main_consulta_div #terminar_consulta").on("click", function() {
-
-
         if (consult_closed) {
             $.history.push('view/dashboard.html');
         }
@@ -284,7 +248,7 @@ $(function()
                                         }
                                         if ($("#main_consulta_div #venda_yes").is(":checked")) {//HA VENDA
                                             $.msg();
-                                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
+                                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 1, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']:checked").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                                 $.jGrowl('Consulta gravada com venda', {life: 3000});
                                                 $.msg('unblock');
                                                 $("#encomenda_modal").modal("show");
@@ -296,7 +260,7 @@ $(function()
                                         else {//NÂO HA VENDA
 
                                             $.msg();
-                                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
+                                            $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']:checked").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                                 $.jGrowl('Consulta gravada sem venda', {life: 3000});
                                                 $.msg('unblock');
                                                 $("#marcacao_modal").modal("show");
@@ -310,7 +274,7 @@ $(function()
                                     }
                                     else {//NAO HA PERDA
                                         $.msg();
-                                        $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "SPERD", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
+                                        $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: "", left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "SPERD", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']:checked").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                             $.jGrowl('Consulta gravada sem perda', {life: 3000});
                                             $.msg('unblock');
                                             $("#marcacao_modal").modal("show");
