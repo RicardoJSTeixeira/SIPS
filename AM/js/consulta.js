@@ -35,6 +35,9 @@ $(function()
                 $("[name='tp'][value='" + data.terceira_pessoa.tipo + "']").prop(":checked", true);
                 $("#3_pessoa_input").val(data.terceira_pessoa.nome);
             }
+            else
+                   $("#ca_s").prop("checked", true);
+               
             if (data.proposta_comercial) {
                 $("#button_create_proposta_comercial").hide();
             }
