@@ -18,9 +18,9 @@ Class requisitions {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            
-            
-                        //sorting de colunas
+
+
+            //sorting de colunas
             if ($this->_user_level > 5) {
                 //Admin
                 $row[11] = ($row[9] == 0 ? 0 : ($row[9] == 1 ? 2 : 1));
@@ -28,9 +28,9 @@ Class requisitions {
                 //User
                 $row[11] = ($row[9] == 0 ? 1 : ($row[9] == 1 ? 2 : 0));
             }
-            
-            
-            
+
+
+
             $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
@@ -90,19 +90,20 @@ Class requisitions {
     }
 
     public function get_products_by_requisiton($id) {
-        $query = "SELECT products from spice_requisition where id=:id";
+        $query = "SELECT products,comments from spice_requisition where id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array("id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $productalia = array();
         foreach (json_decode($row["products"]) as $value) {
-            $productalia[$value->id] = array("quantity" => $value->quantity, "color" => $value->color, "color_name" => $value->color_name, "size" => $value->size);
+            $productalia["product"][$value->id] = array("quantity" => $value->quantity, "color" => $value->color, "color_name" => $value->color_name, "size" => $value->size);
         }
-        $query = "SELECT id,name,category from spice_product where id in ('" . join("','", array_keys($productalia)) . "') order by category asc";
+        $productalia["comments"] = $row["comments"];
+        $query = "SELECT id,name,category from spice_product where id in ('" . join("','", array_keys($productalia["product"])) . "') order by category asc";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row1 = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $productalia[$row1["id"]] = array("name" => $row1["name"], "quantity" => $productalia[$row1["id"]]["quantity"], "color" => $productalia[$row1["id"]]["color"], "color_name" => $productalia[$row1["id"]]["color_name"], "category" => $row1["category"], "size" => $productalia[$row1["id"]]["size"]);
+            $productalia["product"][$row1["id"]] = array("name" => $row1["name"], "quantity" => $productalia["product"][$row1["id"]]["quantity"], "color" => $productalia["product"][$row1["id"]]["color"], "color_name" => $productalia["product"][$row1["id"]]["color_name"], "category" => $row1["category"], "size" => $productalia["product"][$row1["id"]]["size"]);
         }
         return $productalia;
     }
