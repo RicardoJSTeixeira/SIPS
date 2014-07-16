@@ -38,9 +38,7 @@ $(function()
             if (data.proposta_comercial) {
                 $("#button_create_proposta_comercial").hide();
             }
-            else {
-                $("#button_create_proposta_comercial").show();
-            }
+
 
             $("#main_consulta_div")
                     .find("#options_div")
@@ -118,17 +116,18 @@ $(function()
                             .find("[name=ne]").prop("disabled", true);
                 }
             }
-
             if (data.closed) {
                 consult_closed = true;
             }
         }
+        else {
+            $("#button_create_proposta_comercial").hide();
+        }
+
 
         script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", undefined, lead_id, reserva_id, SpiceU.username, SpiceU.camp, 0, 0);
-
         var config = {save_overwrite: true, input_disabled: consult_closed};
         script.init(config);
-
         $('#main_consulta_div #audiograma_placeholder').load("view/audiograma.html", function() {
             consult_audiogra = new audiograma(lead_id);
             if (consult_closed) {

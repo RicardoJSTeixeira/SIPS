@@ -59,7 +59,6 @@ switch ($action) {
     case "get_consulta":
         $stmt = $db->prepare("SELECT id,data,reserva_id,lead_id,campanha,consulta,consulta_razao,exame,exame_razao,venda,venda_razao,left_ear,right_ear,produtos,feedback,terceira_pessoa,closed from spice_consulta where reserva_id=:reserva_id");
         $stmt->execute(array(":reserva_id" => $reserva_id));
-
         if ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
             $result->consulta = (int) $result->consulta;
             $result->exame = (int) $result->exame;
@@ -67,14 +66,12 @@ switch ($action) {
             $result->closed = (int) $result->closed;
             $result->produtos = json_decode($result->produtos);
             $result->terceira_pessoa = json_decode($result->terceira_pessoa);
+
+            $stmt = $db->prepare("SELECT reserva_id from spice_proposta where reserva_id=:reserva_id");
+            $stmt->execute(array(":reserva_id" => $reserva_id));
+            $temp = $stmt->fetch(PDO::FETCH_OBJ);
+            $result->proposta_comercial = $temp->reserva_id ? 1 : 0;
         }
-
-        $stmt = $db->prepare("SELECT reserva_id from spice_proposta where reserva_id=:reserva_id");
-        $stmt->execute(array(":reserva_id" => $reserva_id));
-        $temp = $stmt->fetch(PDO::FETCH_OBJ);
-    
-        $result->proposta_comercial = $temp->reserva_id ? 1 : 0;
-
         echo json_encode($result);
         break;
 }
