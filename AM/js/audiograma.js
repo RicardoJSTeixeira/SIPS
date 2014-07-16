@@ -34,8 +34,8 @@ var audiograma = function(lead_id) {
 
 
         var
-                ar500 =  me.adg.find("#AR500").val().replace(contas_regex, ""),
-                al500 =  me.adg.find("#AL500").val().replace(contas_regex, ""),
+                ar500 = me.adg.find("#AR500").val().replace(contas_regex, ""),
+                al500 = me.adg.find("#AL500").val().replace(contas_regex, ""),
                 ar1000 = me.adg.find("#AR1000").val().replace(contas_regex, ""),
                 al1000 = me.adg.find("#AL1000").val().replace(contas_regex, ""),
                 ar2000 = me.adg.find("#AR2000").val().replace(contas_regex, ""),
@@ -111,7 +111,7 @@ var audiograma = function(lead_id) {
             if (!$(this).val())
                 bcl = 1;
         });
- 
+
         if ((bcr && bcl) && tooltip_to_validate) {
             bcstatus = false;
             $('#bc_tooltip').tooltip('show');
@@ -136,7 +136,7 @@ var audiograma = function(lead_id) {
     me.adg.find(".perda_input").on("change", function() {
         var ready = 1;
         $.each(me.adg.find(".perda_input"), function() {
-            if (!$(this).val().length){
+            if (!$(this).val().length) {
                 ready = 0;
                 return false;
             }
@@ -151,29 +151,26 @@ var audiograma = function(lead_id) {
                 element = $(this),
                 min = ~~element.data("min"),
                 max = ~~element.data("max"),
-                val = element.val();
-
+                val = element.val(),
+                final = "";
         if (val === "")
             return true;
 
         val = val.replace(values_regex, "");
-        val = Math.round(val / 5) * 5;
-        element.val(val);
+        final = val;
 
         if (+val > max) {
-            element.val("+" + max);
-            return true;
-        }
-
-        if (+val < min) {
+            final = "+" + Math.round(max / 5) * 5;
+        } else if (+val < min) {
             if (min <= 0) {
-                element.val(min);
-                return true;
+                final = Math.round(min / 5) * 5;
             } else {
-                element.val("-" + min);
-                return true;
+                final = "-" + Math.round(min / 5) * 5;
             }
         }
+
+        element.val(final);
+
     }
     );
     $.msg();
