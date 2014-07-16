@@ -40,6 +40,16 @@
                 }
             ]
         },
+                {
+            "nome": "Finesource",
+            "servico": "",
+            "interlocutores": [
+                {
+                    "nome": "Andre teixeira",
+                    "email": "andreduarte92@hotmail.com"
+                }
+            ]
+        },
         {
             "nome": "Gavis",
             "servico": "",

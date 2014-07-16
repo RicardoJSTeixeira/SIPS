@@ -54,7 +54,7 @@ switch ($action) {
 
     case "get_script_fields":
         $ja = array();
-        $query = "SELECT a.id,a.tag,a.type,c.valor from script_dinamico a inner join script_assoc b on a.id_script=b.id_script inner join script_result c on a.tag=c.tag_elemento and lead_id='$lead_id'  where b.id_camp_linha='$campaign_id' and a.type in ('textarea','texto')";
+        $query = "SELECT a.id,a.tag,a.type,c.valor,a.texto from script_dinamico a inner join script_assoc b on a.id_script=b.id_script inner join script_result c on a.tag=c.tag_elemento and lead_id='$lead_id'  where b.id_camp_linha='$campaign_id' and a.type in ('textarea','texto')";
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
             switch ($row["type"]) {
@@ -64,7 +64,7 @@ switch ($action) {
                 case "texto";
                     $row["type"] = "Caixa de Texto";
             }
-            $ja[] = array("id" => $row["id"], "tag" => $row["tag"], "type" => $row["type"], "valor" => $row["valor"]);
+            $ja[] = array("id" => $row["id"], "tag" => $row["tag"], "type" => $row["type"], "valor" => $row["valor"], "texto" => $row["texto"]);
         }
         echo json_encode($ja);
         break;
