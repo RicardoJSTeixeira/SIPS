@@ -121,7 +121,6 @@ $(function()
         $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
         $.msg('unblock', 5000);
     });
-
     $("#main_consulta_div [name='ca']").change(function() {
         $("#3_pessoa_div").toggle(Boolean(~~$(this).val()));
     });
@@ -239,9 +238,7 @@ $(function()
                                 consult_audiogra.validate(function() {
                                     script.submit_manual();
                                     consult_audiogra.save(lead_id, reserva_id, false);
-
                                     if (ha_perda) {// HA PERDA 
-
                                         if (!$("[name=vp_a]:checked").length) {
                                             $.jGrowl('Indique se há venda.', {life: 3000});
                                             return false;
@@ -258,7 +255,6 @@ $(function()
                                             });
                                         }
                                         else {//NÂO HA VENDA
-
                                             $.msg();
                                             $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "1", exame_razao: "", venda: 0, venda_razao: $("#main_consulta_div #no_venda_select option:selected").val(), left_ear: $("#main_consulta_div #left_ear_value").val(), right_ear: $("#main_consulta_div #right_ear_value").val(), produtos: produtos, feedback: "TNV", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']:checked").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                                                 $.jGrowl('Consulta gravada sem venda', {life: 3000});
@@ -268,9 +264,7 @@ $(function()
                                                 $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                                                 $.msg('unblock', 5000);
                                             });
-
                                         }
-
                                     }
                                     else {//NAO HA PERDA
                                         $.msg();
@@ -296,7 +290,6 @@ $(function()
     });
 
     $("#main_consulta_div #exit_save").click(function() {
-
         $.msg();
         var produtos = {
             direito: {marca: $("#main_consulta_div #dMarca").val(), gama: $("#main_consulta_div #dGama").val(), modelo: $("#main_consulta_div #dModelo").val()},
@@ -313,7 +306,7 @@ $(function()
             $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
             $.msg('unblock', 5000);
         });
-        ;
+
 
     });
 
@@ -329,11 +322,7 @@ $(function()
                 .find("#first_info_div").show().end()
                 .find("#inicial_option_div").hide().end()
                 .find("#no_exam_div").show().end()
-                .find("#exam_outcome_div").hide().end();
-    });
-
-
-
+                .find("#exam_outcome_div").hide().end();    });
     $(".onlynumber").autotab("numeric");
 
     /*   $("#print_proposta").click(function() {
@@ -421,9 +410,7 @@ $(function()
      });*/
 
     $("#save_proposta").click(function() {
-
-        if ($("#proposta_form").validationEngine("validate"))
-        {
+        if ($("#proposta_form").validationEngine("validate")) {
             $.msg();
             var modal = $("#proposta_modal");
             var proposta = [];
@@ -433,13 +420,12 @@ $(function()
             if ($("#3_proposta").is(":visible"))
                 proposta.push({modelo: modal.find("#p3modelo").val(), valor: modal.find("#p3valor").val(), quantidade: modal.find("#p3qt").val(), entrada: modal.find("#p3entrada").val(), meses: modal.find("#p3meses").val()});
 
-
             $.post("ajax/users.php", {action: "save_proposta", reserva_id: reserva_id, lead_id: lead_id, proposta: proposta}, function() {
 
                 modal.modal("hide");
                 $.msg('replace', 'Proposta gravada com sucesso!');
                 $("#button_create_proposta_comercial").hide();
-                $.msg('unblock', 2000);
+                $.msg('unblock', 1500);
             }, "json").fail(function(data) {
                 $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                 $.msg('unblock', 5000);
@@ -447,15 +433,14 @@ $(function()
         }
     });
 
-
-    $("#add_proposta_linha").click(function()
-    {
+    $("#add_proposta_linha").click(function() {
         if (!$("#2_proposta").is(":visible"))
             $("#2_proposta").show();
         else {
             $("#3_proposta").show();
             $("#add_proposta_linha").hide();
         }
-    })
+    });
+   
 
 });
