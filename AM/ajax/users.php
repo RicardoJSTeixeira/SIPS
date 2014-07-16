@@ -45,8 +45,7 @@ switch ($action) {
 
     case "create":
         try {
-            $users->set($username, $pass, $desc, $ulevel);
-            echo json_encode($id);
+            echo json_encode($users->set($username, $pass, $desc, $ulevel));
         } catch (PDOException $exc) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             if ($exc->getCode() == 23000) {
