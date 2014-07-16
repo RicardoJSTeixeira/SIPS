@@ -1,5 +1,4 @@
 var clientBox = function(configs) {
-
     var
             me = this,
             defaults = {
@@ -112,6 +111,7 @@ var clientBox = function(configs) {
                             </div>\n\
                             </div><div class='clear'></div>";
                             final += menu;
+                            propostas="";
                         });
 
 
