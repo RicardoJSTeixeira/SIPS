@@ -120,9 +120,7 @@ $(function()
                 consult_closed = true;
             }
         }
-        else {
-            $("#button_create_proposta_comercial").hide();
-        }
+     
 
 
         script = new render($("#main_consulta_div #script_placeholder"), "/sips-admin/script_dinamico/", undefined, lead_id, reserva_id, SpiceU.username, SpiceU.camp, 0, 0);
