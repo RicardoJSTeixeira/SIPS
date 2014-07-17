@@ -26,13 +26,6 @@ var audiograma = function(lead_id) {
             "text": "Ambos os ouvidos: Sem Perda"
         };
 
-        //APRESENTA SO VALORES CALCULADOS DE CADA OUVIDO
-
-
-//FALTA TIRAR O TOOLTIP DO CO DIREITO E CO ESQUERDA
-
-
-
         var
                 ar500 = me.adg.find("#AR500").val().replace(contas_regex, ""),
                 al500 = me.adg.find("#AL500").val().replace(contas_regex, ""),
@@ -51,9 +44,13 @@ var audiograma = function(lead_id) {
             all_ear.value = 0;
             me.adg.find(".non_required_fields").removeClass("validate[required]");
             tooltip_to_validate = 0;
+            me.adg.find("#audiograma_form").validationEngine('hideAll');
         } else {
-            if (!me.adg.find(".non_required_fields").hasClass("validate[required]"))
-                me.adg.find(".non_required_fields").addClass("validate[required]");
+            $.each(me.adg.find(".non_required_fields"), function()
+            {
+                if (!$(this).hasClass("validate[required]"))
+                    $(this).addClass("validate[required]");
+            });
             all_ear.text = "Resultado: Perda";
             all_ear.value = 1;
             if (right_ear.value >= 35 && right_ear.value < 65) {
@@ -130,12 +127,10 @@ var audiograma = function(lead_id) {
         }
         return false;
     };
-
-
-
     me.adg.find(".perda_input").on("change", function() {
         var ready = 1;
         $.each(me.adg.find(".perda_input"), function() {
+
             if (!$(this).val().length) {
                 ready = 0;
                 return false;
