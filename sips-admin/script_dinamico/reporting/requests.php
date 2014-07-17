@@ -530,12 +530,9 @@ switch ($action) {
                     $stmt = $db->prepare($query);
                     $stmt->execute(array($campaign_id, $data_inicio, $data_fim));
 
-
-
                     $query = "create table $logs_estado_bd ENGINE = MYISAM select  a.*,b.call_date,b.length_in_sec from $scriptoffset a  inner join vicidial_log b on a.unique_id=b.uniqueid ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
-
 
                     $query = "create table $logsscriptgrouplead ENGINE = MYISAM select * from (select * from $logs_estado_bd  order by call_date desc) a group by script_lead;";
                     $stmt = $db->prepare($query);
@@ -607,7 +604,6 @@ switch ($action) {
                     $query = "create table $logs_estado_bd ENGINE = MYISAM select  a.*,b.call_date,b.length_in_sec from $scriptoffset a  inner join vicidial_log b on a.unique_id=b.uniqueid ";
                     $stmt = $db->prepare($query);
                     $stmt->execute();
-
 
 
                     $query = "create table $logsscriptgrouplead ENGINE = MYISAM select * from (select * from $logs_estado_bd  order by call_date desc) a group by script_lead;";
