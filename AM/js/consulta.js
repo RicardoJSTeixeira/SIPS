@@ -221,7 +221,7 @@ $(function()
                 if ($("#main_consulta_div #no_exam_div input[name='ne']:checked").length)
                 {
                     $.msg();
-                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "STEST", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
+                    $.post("ajax/consulta.php", {action: "insert_consulta", reserva_id: reserva_id, lead_id: lead_id, consulta: 1, consulta_razao: "", exame: "0", exame_razao: $("#main_consulta_div #no_exam_div input[name='ne']:checked").val(), venda: 0, venda_razao: "", left_ear: 0, right_ear: 0, tipo_aparelho: "", descricao_aparelho: "", produtos: produtos, feedback: "STEST", terceira_pessoa: $("#ca_s").is(":checked") ? {tipo: $("[name='tp']:checked").val(), nome: $("#3_pessoa_input").val()} : [], closed: 1}, function() {
                         $.jGrowl('Consulta gravada sem exame', {life: 3000});
                         $.msg('unblock');
                         $("#marcacao_modal").modal("show");

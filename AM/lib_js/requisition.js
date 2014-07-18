@@ -218,7 +218,7 @@ var requisition = function(geral_path, options_ext) {
             $.each(produtos_single, function() {
                 produtos_in_text.append($("<tr>", {class: "product_line"})
                         .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
-                        .append($("<td>", {class: "td_category"}).text(this.category.capitalize()))
+                        .append($("<td>", {class: "td_category"}).text(this.category))
                         .append($("<td>", {class: "td_quantity"}).text(this.quantity))
                         .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
                         .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
@@ -368,24 +368,32 @@ var requisition = function(geral_path, options_ext) {
                     "sTitle": "Id"
                 }, {
                     "sTitle": "User",
-                    "bVisible": SpiceU.user_level > 5
+                    "bVisible": SpiceU.user_level > 5,
+                     "sWidth": "75px"
                 }, {
-                    "sTitle": "Tipo"
+                    "sTitle": "Tipo",
+                     "sWidth": "60px"
                 }, {
                     "sTitle": "ClientID",
-                    "sType": 'numeric'
+                    "sType": 'numeric',
+                                         "sWidth": "90px"
+
                 }, {
-                    "sTitle": "Data"
+                    "sTitle": "Data",
+                    "sWidth": "125px"
                 }, {
                     "sTitle": "Nº de contrato"
                 }, {
                     "sTitle": "Ref. Cliente"
                 }, {
-                    "sTitle": "Anexo"
+                    "sTitle": "Anexo",
+                    "sWidth": "80px"
                 }, {
-                    "sTitle": "Produtos"
+                    "sTitle": "Produtos",
+                    "sWidth": "50px"
                 }, {
-                    "sTitle": "Estado"
+                    "sTitle": "Estado",
+                    "sWidth": "95px"
                 }, {
                     "sTitle": "Opções",
                     "sWidth": "60px",
@@ -470,20 +478,27 @@ var requisition = function(geral_path, options_ext) {
                     'Estado': EInfotmp[6] + ""
                 };
                 EData.bInfo.push(EInfo);
-                $.each(data, function() {
-
+                $.each(data.product, function() {
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                     EData.products.push({
                         Name: this.name,
-                        Category: this.category.capitalize(),
+                        Category: this.category,
                         Colour: this.color_name,
                         Qt: this.quantity,
                         Size: this.size
                     });
                     if (this.category !== "Acessório")
                         this.size = "";
-                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category.capitalize() + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
+                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
                 });
+
+
+                if (data.comments.length)
+                    modal_tbody.append("<tr ><td colspan='5'>" + data.comments + "</td> </tr>");
+                else
+                    modal_tbody.append("<tr ><td colspan='5'>Sem comentários</td> </tr>");
+
+
                 modal.modal("show");
                 $.msg('unblock');
             }, "json").fail(function(data) {
