@@ -4419,6 +4419,7 @@ function  DispoSelect_submit_allowed()
                                     client: clientName,
                                     length_in_sec: AgainCalLSecondS
                                 }, function(data) {
+                                    unique_id_hack="";
                                     console.log(data);
                                 });
                                 DispoSubmitFinalStep();
@@ -4440,6 +4441,7 @@ function  DispoSelect_submit_allowed()
                                     client: clientName,
                                     length_in_sec: AgainCalLSecondS
                                 }, function(data) {
+                                    unique_id_hack="";
                                     console.log(data);
                                 });
                     DispoSubmitFinalStep();
@@ -4502,6 +4504,7 @@ function  DispoSelect_submit_allowed()
                     client: clientName,
                     length_in_sec: AgainCalLSecondS
                 }, function(data) {
+                    unique_id_hack="";
                     console.log(data);
                 });
             }
