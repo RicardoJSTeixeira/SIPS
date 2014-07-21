@@ -625,7 +625,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
 
 
         me.modals.acf.find("#save_acf").click(function() {
-            var that = $(this);
             if (me.modals.acf.find("#obs_acf").validationEngine('validate'))
                 return false;
 
@@ -633,7 +632,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             $.post("ajax/calendar.php", {
                 action: 'set_reservation_obs',
                 obs: me.modals.acf.find("#obs_acf").val(),
-                id_reservation: ~~that.data("reservation_data").id
+                id_reservation: ~~me.modals.acf.data("calEvent").id
             }, function() {
                 me.modals.acf.find("#obs_acf").val("");
                 me.modals.acf.modal("hide");
