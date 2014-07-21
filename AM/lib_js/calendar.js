@@ -689,7 +689,13 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         .show();
             } else if (me.user.user_level === 1) {
                 me.modal_ext
-                        .find(".modal-footer span.left, .modal-footer span.right")
+                        .find(".modal-footer span.left")
+                        .hide()
+                        .end()
+                        .find(".modal-footer span.right")
+                        .show()
+                        .end()
+                        .find(".modal-footer span.right #btn_init_consult")
                         .hide()
                         .end()
                         .find("#btn_view_consult")
@@ -703,7 +709,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         .hide();
             } else {
                 me.modal_ext
-                        .find(".modal-footer span")
+                        .find(".modal-footer span, .modal-footer span .btn")
                         .show()
                         .end()
                         .find("#btn_view_consult")
