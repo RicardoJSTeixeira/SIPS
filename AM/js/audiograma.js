@@ -101,11 +101,11 @@ var audiograma = function(lead_id) {
         var bcl = 0;
         var bcstatus = true;
         $.each($("#bcr_tr input"), function() {
-            if (!$(this).val())
+            if (!$(this).val() && $(this).attr("name") !== "BCR1500" )
                 bcr = 1;
         });
         $.each($("#bcl_tr input"), function() {
-            if (!$(this).val())
+            if (!$(this).val() && $(this).attr("name") !== "BCL1500")
                 bcl = 1;
         });
 
