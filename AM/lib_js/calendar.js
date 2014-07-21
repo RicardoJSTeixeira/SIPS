@@ -98,7 +98,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 $.msg('unblock');
                 return false;
             }
-            if (date < new Date().getTime()) {
+            if (date < (moment().subtract('h','10').format('X')*1000)) {
                 $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
                 $.msg('unblock', 3000);
                 return false;
@@ -229,7 +229,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
 
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
-            if (event.start < new Date().getTime()) {
+            if (event.start < (moment().subtract('h','10').format('X')*1000)) {
                 revertFunc();
                 return false;
             }
@@ -283,7 +283,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 }
             }
 
-            if (event.start < new Date().getTime()) {
+            if (event.start < (moment().subtract('h','10').format('X')*1000)) {
                 $.jGrowl("Não é permitido alterar o passado.", {
                     sticky: 4000
                 });
