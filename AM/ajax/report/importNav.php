@@ -34,10 +34,11 @@ $headers = explode("\t", trim(fgets($file, 4096)));
 function getResTypeRaw($db) {
     $stmt = $db->prepare("SELECT id_reservations_types, display_text, min_time, max_time FROM `sips_sd_reservations_types` where display_text like '%Exame%'");
     $stmt->execute();
-    $row = $stmt->fetchAll(PDO::FETCH_OBJ);
-    return array_reduce($row, function($a, $v) {
-        return $a[$v->display_text] = (object) array("id" => $v->id_reservations_types, "min" => $v->min_time, "max" => $v->max_time);
-    });
+    $rs = array();
+    while ($v = $stmt->fetch(PDO::FETCH_OBJ)) {
+        $rs[$v->display_text] = (object) array("id" => $v->id_reservations_types, "min" => $v->min_time, "max" => $v->max_time);
+    }
+    return $rs;
 }
 
 function getResType($slc, $types) {
@@ -50,7 +51,6 @@ function getResType($slc, $types) {
 }
 
 $tRes = getResTypeRaw($db);
-
 $stmtUpdate = $db->prepare("UPDATE sips_sd_reservations SET extra_id=:navid WHERE id_reservation=:id");
 $stmtGetRsc = $db->prepare("SELECT id_resource id FROM `sips_sd_resources` WHERE `alias_code` LIKE :ref");
 $stmtSetRes = $db->prepare("INSERT INTO `sips_sd_reservations` (`start_date`, `end_date`,`id_reservation_type`, `id_resource`, `id_user`, `lead_id`, `extra_id`) VALUES (:start, :end, :res_type, :id_rsc, :user, :lead_id, :nav_id)");
@@ -80,11 +80,12 @@ while (!feof($file)) {
         $LineCount++;
         $buffer[$index];
         $total++;
-        if ((int) $buffer[39] !== 0) {
+        if (((int) $buffer[39]) !== 0) {
             $stmtUpdate->execute(array(":navid" => $buffer[40], ":id" => $buffer[39]));
             if ($stmtUpdate->rowCount()) {
                 $ok++;
             } else {
+                $notok++;
                 $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Update: Reserva não actualizada :"' . $buffer[39] . '"');
             }
             continue;
@@ -131,7 +132,7 @@ while (!feof($file)) {
             $resType = getResType($buffer[23], $tRes);
             $stmtSetRes->execute(array(
                 ":start" => date('Y-m-d H:i:s', $start),
-                ":end" => date('Y-m-d H:i:s', strtotime($start, "+" . $resType->max . " minutes")),
+                ":end" => date('Y-m-d H:i:s', strtotime("+" . $resType->max . " minutes", $start)),
                 ":res_type" => $resType->id,
                 ":id_rsc" => $rsc->id,
                 ":user" => $u->username,
@@ -139,6 +140,7 @@ while (!feof($file)) {
                 ":nav_id" => $buffer[40]
             ));
         } else {
+            $notok++;
             $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Import: Client não importado.');
         }
     }
