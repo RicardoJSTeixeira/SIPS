@@ -374,7 +374,6 @@ class Calendar extends Calendars {
                 } elseif ((strtotime($nbl['start']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
                     unset($nbl);
                 } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
-                    $nbl['end'] = $bl['start'];
                     $block[] = array(
                         'start' => $bl['end'],
                         'end' => $nbl['end'],
@@ -382,6 +381,7 @@ class Calendar extends Calendars {
                         'className' => "bloqueado",
                         'bloqueio' => true
                     );
+                    $nbl['end'] = $bl['start'];
                 }
             }
         }
