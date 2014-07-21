@@ -89,9 +89,10 @@ function init_plupload() {
                                         <td>" + this.line + "</td>\n\
                                         <td>" + this.navid + "</td>\n\
                                         <td>" + this.id + "</td>\n\
+                                        <td>" + this.error + "</td>\n\
                                       </tr>";
                             });
-                            bootbox.alert("<div class='alert alert-info'>Total:" + data.total + " Sucessos:" + data.ok + " Não Sucessos:" + data.notok + "</div>\n\
+                            bootbox.dialog("<div class='alert alert-info'>Total:" + data.total + " Sucessos:" + data.ok + " Não Sucessos:" + data.notok + "</div>\n\
                             <div class='alert alert-warning'>Os insucessos podem ser consultas importadas anteriormente</div>\n\
                                         <table class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
@@ -99,13 +100,14 @@ function init_plupload() {
                                                     <td>Linha</td>\n\
                                                     <td>Navid</td>\n\
                                                     <td>Id</td>\n\
-                                                    </tr>\n\
+                                                    <td>Msg.</td>\n\
+                                                </tr>\n\
                                             </thead>\n\
                                             <tbody>\n\
                                             " + trs + "\n\
                                             </tbody>\n\
                                         </table>\n\
-                                ");
+                                ", [{'OK': true, "label": "OK"}], {customClass: 'container'});
                             $.msg('unblock');
                         }
                         else {
