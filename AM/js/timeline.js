@@ -9,7 +9,7 @@ $(function() {
         no_results_text: "Sem resultados"
     });
     $("#select_section option").prop('selected', true).trigger('chosen:updated');
-    if (SpiceU.user_level == 7)
+    if (SpiceU.user_level === 7)
     {
     }
 
@@ -21,13 +21,13 @@ $(function() {
         $("#date_start").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
     });
     search();
-})
+});
 
 
 
 $("#button_apply_filters").click(function() {
     search();
-})
+});
 
 
 function search()
@@ -118,13 +118,13 @@ function create_timeline(data)
                 .append($("<div>", {class: "timeline-panel"})
                         .append($("<div>", {class: "timeline-heading"})
                                 .append($("<h4>", {class: "timeline-title"}).text(this.type + " - " + this.section + " - " + this.record_id))
-                                .append($("<h7>").text(" " + moment(this.event_date, "YYYY-MM-DD HH:mm:ss").fromNow() + " - " + this.event_date).prepend($("<i>", {class: "icon-time"})))
+                                .append($("<h7>").text(" " + moment(this.event_date, "YYYY-MM-DD HH:mm:ss").fromNow() + " - " + this.event_date + " - " + this.username).prepend($("<i>", {class: "icon-time"})))
                                 )
                         .append($("<div>", {class: "timeline-body"})
                                 .append($("<p>").html(info)
                                         )
                                 ))
                 );
-        $("#timeline_main").append(log);
-    })
+        $("#timeline_main").prepend(log);
+    });
 }
