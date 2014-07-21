@@ -52,7 +52,6 @@ function getResType($slc, $types) {
 
 $tRes = getResTypeRaw($db);
 $stmtUpdate = $db->prepare("UPDATE sips_sd_reservations SET extra_id=:navid WHERE id_reservation=:id");
-$stmtGetRsc = $db->prepare("SELECT id_resource id FROM `sips_sd_resources` WHERE `alias_code` LIKE :ref");
 $stmtSetRes = $db->prepare("INSERT INTO `sips_sd_reservations` (`start_date`, `end_date`,`id_reservation_type`, `id_resource`, `id_user`, `lead_id`, `extra_id`) VALUES (:start, :end, :res_type, :id_rsc, :user, :lead_id, :nav_id)");
 $stmtSetClient = $db->prepare("INSERT INTO vicidial_list 
     (entry_date, status, user, list_id, 
@@ -91,13 +90,15 @@ while (!feof($file)) {
             continue;
         }
 
+        $stmtGetRsc = $db->prepare("SELECT id_resource id FROM `sips_sd_resources` WHERE `alias_code` LIKE :ref limit 1");
         $stmtGetRsc->execute(array(":ref" => $buffer[23]));
         if (!($rsc = $stmtGetRsc->fetch(PDO::FETCH_OBJ))) {
             $notok++;
             $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Import: Calendário não encontrado :"' . $buffer[23] . '".');
             continue;
         }
-
+        $stmtGetRsc->closeCursor();
+        
         $nc = array(
             ":user" => $u->username,
             ":list_id" => $u->list_id,
@@ -126,6 +127,9 @@ while (!feof($file)) {
             ":comments" => $buffer[32],
             ":to_issue" => "YES"
         );
+        $nc = array_map(function($a) {
+            return utf8_encode($a);
+        }, $nc);
         if ($stmtSetClient->execute($nc)) {
 
             $start = strtotime($buffer[29] . " " . $buffer[28]);
