@@ -93,7 +93,7 @@ while (!feof($file)) {
         $stmtGetRsc->execute(array(":ref" => $buffer[23]));
         if (!($rsc = $stmtGetRsc->fetch(PDO::FETCH_OBJ))) {
             $notok++;
-            $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Import: Calendário não importado :"' . $buffer[23] . '".');
+            $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Import: Calendário não encontrado :"' . $buffer[23] . '".');
             continue;
         }
 
