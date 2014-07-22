@@ -81,8 +81,6 @@ var clientBox = function(configs) {
 
 
 
-
-
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_pdfs",
                 navid: me.client_info.navId || "",
