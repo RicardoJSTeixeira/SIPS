@@ -42,7 +42,7 @@ switch ($action) {
             "codCamp" => (String) $row->codmkt);
         break;
     case 'byReserv':
-        $query = "SELECT a.lead_id, first_name, middle_initial, last_name, phone_number, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', extra5 'compart', comments, start_date, display_text  "
+        $query = "SELECT a.lead_id, first_name, middle_initial, last_name, phone_number, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', extra5 'compart', comments, start_date, display_text, b.extra_id  "
                 . "FROM vicidial_list a "
                 . "INNER JOIN sips_sd_reservations b ON a.lead_id=b.lead_id "
                 . "INNER JOIN sips_sd_resources c ON b.id_resource=c.id_resource "
@@ -63,6 +63,7 @@ switch ($action) {
             "compart" => (String) $row->compart,
             "date" => (String) $row->start_date,
             "rscName" => (String) $row->display_text,
+            "navId" => (String) $row->extra_id,
             "comments" => (String) $row->comments);
         break;
     case 'byLeadToInfo':
@@ -80,7 +81,7 @@ switch ($action) {
         foreach ($js as $key => $value) {
             $js[$key]["value"] = $row[$key];
         }
-        $js=  array_values($js);
+        $js = array_values($js);
         break;
     case 'byWhat':
         $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list where $what=:value";
