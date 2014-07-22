@@ -23,6 +23,8 @@ function confirmacao($lead_id, $dispoAtt, $link) {
     function removeConfirm($lead_id, $link) {
         $qdelete = "update crm_confirm_feedback_last set sale = '1' where lead_id='" . mysql_real_escape_string($lead_id) . "';";
         mysql_query($qdelete, $link) or die(mysql_error());
+        $qdelete = "Update vicidial_list set validation = NULL where lead_id = '" . mysql_real_escape_string($lead_id) . "';";
+        mysql_query($qdelete, $link) or die(mysql_error());
     }
     if ($dispoAtt["completed"] == 'true') {
         removeConfirm($lead_id, $link);
