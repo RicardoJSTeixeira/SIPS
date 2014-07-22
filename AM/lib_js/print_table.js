@@ -17,15 +17,15 @@ function table2csv(oTable, exportmode, tableElm) {
     // get table data
     if (exportmode === "full") { // total data
         var total = oTable.fnSettings().fnRecordsTotal();
-        for (i = 0; i < total; i++) { 
+        for (i = 0; i < total; i++) {
             var row = oTable.fnGetData(i);
-            row = strip_tags(row).replace(/,/g,'\t');
+            row = strip_tags(row).replace(/,/g, '\t');
             rows.push(row);
         }
     } else { // visible rows only
         $(tableElm + ' tbody tr:visible').each(function(index) {
             var row = oTable.fnGetData(this);
-            row = strip_tags(row).replace(/,/g,'\t');
+            row = strip_tags(row).replace(/,/g, '\t');
             rows.push(row);
         });
     }
@@ -35,13 +35,16 @@ function table2csv(oTable, exportmode, tableElm) {
     if ($('.csv-data').length)
         $('.csv-data').remove();
     // open a div with a download link 
-     window.location.href = 'data:application/vnd.ms-excel;charset=UTF-8,'
-                            + encodeURIComponent(csv);
+    window.location.href = 'data:application/vnd.ms-excel;charset=UTF-8,'
+            + encodeURIComponent(csv);
 }
 
 function strip_tags(html) {
     var tmp = document.createElement("div");
-    tmp.innerHTML = html;
+    var array = $.map(html, function(value, index) {
+        return [value];
+    });
+    tmp.innerHTML = array;
     return tmp.textContent || tmp.innerText;
 }
 
