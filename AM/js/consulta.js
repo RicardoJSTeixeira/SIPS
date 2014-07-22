@@ -57,12 +57,12 @@ $(function()
 
             if (data.produtos) {
                 $("#main_consulta_div")
-                        .find("#dGama").val(data.produtos.direito.gama).end()
-                        .find("#eGama").val(data.produtos.esquerdo.gama).end()
+                        .find("#dGama").val(data.produtos.direito.gama).trigger("chosen:updated").end()
+                        .find("#eGama").val(data.produtos.esquerdo.gama).trigger("chosen:updated").end()
                         .find("#dMarca").val(data.produtos.direito.marca).end()
                         .find("#eMarca").val(data.produtos.esquerdo.marca).end()
-                        .find("#dModelo").val(data.produtos.direito.modelo).end()
-                        .find("#eModelo").val(data.produtos.esquerdo.modelo).end()
+                        .find("#dModelo").val(data.produtos.direito.modelo).trigger("chosen:updated").end()
+                        .find("#eModelo").val(data.produtos.esquerdo.modelo).trigger("chosen:updated").end()
                         .find("[name=tp_vd]").val([data.produtos.tipo]);
             }
 
