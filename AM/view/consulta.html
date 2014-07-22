@@ -141,11 +141,7 @@
                     <div class="grid-title">
                         <div class="pull-left"><i class="icon-cogs"></i> Opções</div>
                         <div class="pull-right" id="actions_exame">
-                            <button type="button" class="btn icon-alone" id='button_create_proposta_comercial' onclick='$("#2_proposta").hide();
-                                    $("#3_proposta").hide();
-                                    $("#add_proposta_linha").show();
-                                    $(".select_modelo_proposta").val("").trigger("chosen:updated");
-                                    document.getElementById("proposta_form").reset();' data-toggle="modal tooltip" data-target="#proposta_modal" title="Proposta comercial"><i class="icon-gift"></i></button>
+                            <button type="button" class="btn icon-alone" id='button_create_proposta_comercial' data-toggle="modal tooltip" data-target="#proposta_modal" title="Proposta comercial"><i class="icon-gift"></i></button>
                             <button class='btn btn-danger icon-alone' data-toggle="tooltip" title="Terminar Consulta sem Exame" id='terminar_consulta_no_exame' ><i class="icon-user-md"></i></button>
                         </div>
                     </div>
@@ -159,7 +155,10 @@
                         <div class="formRow" id="validate_audio_script_save_div" style="display:none">
                             <button class="btn btn-primary btn-block" id="exit_save" ><i class="icon-save"></i>Gravar sem Concluir</button>
                         </div>
-                        <div class="alert alert-info" id="wconsulta-fechada" style="display:none"><i class="icon icon-warning-sign"></i><br/>Consulta Fechada</div>
+                        <div id="wconsulta-fechada" style="display:none">
+                            <div class="alert alert-info"><i class="icon icon-warning-sign"></i> Consulta Fechada</div>
+                            <button class="btn btn-success btn-block" id="bnova_enc" style="display:none"><i class="icon icon-shopping-cart"></i> Encomenda</button>
+                        </div>
                     </div>
                     <div class="clear"></div>
                 </div>

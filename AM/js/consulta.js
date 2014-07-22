@@ -68,8 +68,10 @@ $(function()
 
             $("#main_consulta_div #exam_outcome_div").show();
             if (data.exame) {
-                if (data.venda)
+                if (data.venda) {
                     $("#main_consulta_div #venda_yes").prop("checked", true).change();
+                    $("#bnova_enc").show();
+                }
                 else {
                     $("#main_consulta_div")
                             .find("#venda_no").prop("checked", true).change().end()
@@ -183,7 +185,7 @@ $(function()
         }, false);
     });
 
-    $("#new_request_button").click(function() {
+    $("#new_request_button, #bnova_enc").click(function() {
         var en = btoa(lead_id);
         $.history.push("view/new_requisition.html?id=" + en);
     });
@@ -322,7 +324,8 @@ $(function()
                 .find("#first_info_div").show().end()
                 .find("#inicial_option_div").hide().end()
                 .find("#no_exam_div").show().end()
-                .find("#exam_outcome_div").hide().end();    });
+                .find("#exam_outcome_div").hide().end();
+    });
     $(".onlynumber").autotab("numeric");
 
     /*   $("#print_proposta").click(function() {
@@ -409,6 +412,15 @@ $(function()
      }
      });*/
 
+    $("#button_create_proposta_comercial").click(function(e) {
+        e.preventDefault();
+        $("#2_proposta").hide();
+        $("#3_proposta").hide();
+        $("#add_proposta_linha").show();
+        $(".select_modelo_proposta").val("").trigger("chosen:updated");
+        $("#proposta_form").get(0).reset();
+    });
+
     $("#save_proposta").click(function() {
         if ($("#proposta_form").validationEngine("validate")) {
             $.msg();
@@ -441,6 +453,6 @@ $(function()
             $("#add_proposta_linha").hide();
         }
     });
-   
+
 
 });
