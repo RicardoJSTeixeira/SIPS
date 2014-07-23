@@ -54,11 +54,15 @@ class alerts {
         return $stmt->execute(array(":user" => $this->username));
     }
 
-    function make($is_for, $alert, $section, $record_id, $cancel, $status) {
-        $stmt = $this->_db->prepare("delete from spice_alerts where record_id=:record_id and section=:section");
-        $stmt->execute(array(":record_id" => $record_id, ":section" => $section));
-        $stmt = $this->_db->prepare("INSERT INTO spice_alerts (`is_from`, `is_for`, `entry_date`, `status`, `alert`,`section`,`record_id`,`cancel`) VALUES (:user, :is_for, NOW(), :status, :alert, :section, :record_id, :cancel)");
-        return $stmt->execute(array(":user" => $this->username, ":is_for" => $is_for, ":status" => $status, ":alert" => $alert, ":section" => $section, ":record_id" => $record_id, ":cancel" => $cancel));
+    function make($is_for, $alert, $section, $record_id, $cancel) {
+        $this->update($section, $record_id);
+        $stmt = $this->_db->prepare("INSERT INTO spice_alerts (`is_from`, `is_for`, `entry_date`, `status`, `alert`,`section`,`record_id`,`cancel`) VALUES (:user, :is_for, NOW(), '0', :alert, :section, :record_id, :cancel)");
+        return $stmt->execute(array(":user" => $this->username, ":is_for" => $is_for, ":alert" => $alert, ":section" => $section, ":record_id" => $record_id, ":cancel" => $cancel));
+    }
+
+    function update($section, $record_id) {
+        $stmt = $this->_db->prepare("update spice_alerts set status=1 where record_id=:record_id and section=:section");
+        return $stmt->execute(array(":record_id" => $record_id, ":section" => $section));
     }
 
 }
