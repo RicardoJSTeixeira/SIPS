@@ -113,6 +113,39 @@ function init() {
         });
     });
     $(".ichat").on("click", ".ok_alert", function() {
+        /*
+         const S_ENC = "Encomenda";
+         const S_APMKT = "Apoio Mkt";
+         const S_FROTA = "Frota";
+         const S_MAIL = "Correio";
+         const S_MOVSTOCK = "Mov. Stock";
+         const S_STOCK = "Stock";*/
+
+        var table = $(this).data().record_section == "S_ENC" ? "ajax/requisition.php" : "ajax/requests.php";
+        $.msg();
+        $.post(table, {
+            action: "set_readed",
+            id_msg: $(this).data().id
+        }, function() {
+            get_alerts();
+            $.msg('unblock');
+        }, "json").fail(function(data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "set_readed",
@@ -235,6 +268,7 @@ function get_alerts(callback) {
         $("#alerts-content").empty();
         $("#alert_time").data("update", moment());
         var msg = "";
+        var dismiss_icon = "";
         $.each(data, function() {
             if (SpiceU.user_level < 5) {
                 if (this.alert.search(/Apoio Mkt./i) !== -1) {
@@ -244,8 +278,14 @@ function get_alerts(callback) {
                     return true;
                 }
             }
+
+            if (!~~this.cancel)
+                dismiss_icon = "<a  class='' data-id='" + this.id + "' ><i class=' icon-remove'></i></a>";
+            else
+                dismiss_icon = "<a href='javascript:void(0)' class='ok_alert' data-id='" + this.id + "' ><i class='icon-ok'></i></a>";
+
             msg = "<div class='imessage'>\n\
-                        <div class='r_icon'><a href='javascript:void(0)' class='ok_alert' data-id='" + this.id + "'><i class='icon-comment'></i></a></div>\n\
+                        <div class='r_icon'>" + dismiss_icon + "</div>\n\
                         <div class='r_info'>\n\
                             <div class='r_text'>" + this.alert + "</div>\n\
                             <div class='r_text'><i class='icon-time'></i>" + moment(this.entry_date).fromNow() + "</div>\n\
@@ -253,6 +293,7 @@ function get_alerts(callback) {
                         <div class='clear'></div>\n\
                     </div>" + msg;
         });
+
         $("#alerts-count").text(data.length);
         $("#alerts-content").append(msg);
         if (typeof callback === "function") {

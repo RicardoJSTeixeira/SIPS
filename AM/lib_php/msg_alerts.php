@@ -1,6 +1,5 @@
 <?php
 
-
 class messages {
 
     private $_db;
@@ -40,7 +39,7 @@ class alerts {
     }
 
     function getAll() {
-        $stmt = $this->_db->prepare("SELECT `id`,`is_from`,`alert`,`entry_date` from spice_alerts where `is_for`=:user and status=0");
+        $stmt = $this->_db->prepare("SELECT `id`,`is_from`,`alert`,`entry_date`,`section`,`record_id`,`cancel` from spice_alerts where `is_for`=:user and status=0");
         $stmt->execute(array(":user" => $this->username));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -51,14 +50,15 @@ class alerts {
     }
 
     function setAllReaded() {
-        $stmt = $this->_db->prepare("UPDATE spice_alerts set status=1, read_date=NOW() where `is_for`=:user");
+        $stmt = $this->_db->prepare("UPDATE spice_alerts set status=1, read_date=NOW() where `is_for`=:user and cancel=1");
         return $stmt->execute(array(":user" => $this->username));
     }
 
-    function make($is_for, $alert) {
-        $stmt = $this->_db->prepare("INSERT INTO spice_alerts (`is_from`, `is_for`, `entry_date`, `status`, `alert`) VALUES (:user, :is_for, NOW(), '0', :alert)");
-        return $stmt->execute(array(":user" => $this->username, ":is_for" => $is_for, ":alert" => $alert));
+    function make($is_for, $alert, $section, $record_id, $cancel, $status) {
+        $stmt = $this->_db->prepare("delete from spice_alerts where record_id=:record_id and section=:section");
+        $stmt->execute(array(":record_id" => $record_id, ":section" => $section));
+        $stmt = $this->_db->prepare("INSERT INTO spice_alerts (`is_from`, `is_for`, `entry_date`, `status`, `alert`,`section`,`record_id`,`cancel`) VALUES (:user, :is_for, NOW(), :status, :alert, :section, :record_id, :cancel)");
+        return $stmt->execute(array(":user" => $this->username, ":is_for" => $is_for, ":status" => $status, ":alert" => $alert, ":section" => $section, ":record_id" => $record_id, ":cancel" => $cancel));
     }
 
 }
-
