@@ -229,26 +229,22 @@ $(function() {
                 tables.por_abrir.fnClearTable();
                 $.each(data.por_abrir, function() {
                     tables.por_abrir.dataTable().fnAddData(
-                            [this.nome, this.campanha, this.data + "<div class='view-button'><button id='" + this.lead_id + "L' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
-                    $("#" + this.lead_id + "L").data("info", this);
+                            [this.nome, this.campanha, this.data + "<div class='view-button'><button id='" + this.lead_id + "L' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" + JSON.stringify(this) + "'> Ver </button></div"]);
                 });
                 tables.abertos.fnClearTable();
                 $.each(data.abertos, function() {
                     tables.abertos.dataTable().fnAddData(
-                            [this.id, this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
-                    $("#" + this.id + "I").data("info", this);
+                            [this.id, this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" + JSON.stringify(this) + "'> Ver </button></div"]);
                 });
                 tables.fechados.fnClearTable();
                 $.each(data.fechados, function() {
                     tables.fechados.dataTable().fnAddData(
-                            [this.id, this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
-                    $("#" + this.id + "I").data("info", this);
+                            [this.id, this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" + JSON.stringify(this) + "'> Ver </button></div"]);
                 });
                 tables.expirados.fnClearTable();
                 $.each(data.expirados, function() {
                     tables.expirados.dataTable().fnAddData(
-                            [this.id, this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data, this.tipo + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao'> Ver </button></div"]);
-                    $("#" + this.id + "I").data("info", this);
+                            [this.id, this.nome, this.campanha, this.tipo_reclamacao, this.tipificacao_reclamacao, this.data, this.tipo + "<div class='view-button'><button id='" + this.id + "I' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" + JSON.stringify(this) + "'> Ver </button></div"]);
                 });
             }, "json")
                     .fail(function() {
