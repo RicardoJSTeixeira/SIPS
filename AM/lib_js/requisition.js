@@ -532,13 +532,13 @@ var requisition = function(geral_path, options_ext) {
                 action: "listar_comments_por_encomenda",
                 id: EData.id_req
             }, function(data) {
-                var doc = new jsPDF('p', 'pt', 'a4', true);
+                var doc = new jsPDF('l', 'pt', 'a4', true);
                 doc.table(20, 20, EData.bInfo, ['User', 'Tipo', 'Id Client', 'Date', 'Order Number', 'Client Ref.', 'Estado'], {
                     autoSize: true,
-                    printHeaders: true,
-                    fontSize: 10
+                    printHeaders: true
+                    
                 });
-                doc.table(20, 80, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
+                doc.table(20, 100, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
                     autoSize: true,
                     printHeaders: true
                 });
@@ -548,7 +548,7 @@ var requisition = function(geral_path, options_ext) {
                         , text = data;
                 lines = doc.setFont('Times', 'Roman')
                         .setFontSize(size)
-                        .splitTextToSize(text, 850);
+                        .splitTextToSize(text,650);
 
 
                 $.post('ajax/audiograma.php', {
