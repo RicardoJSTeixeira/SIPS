@@ -117,6 +117,8 @@ var requests = function(basic_path, options_ext) {
                             $.jGrowl("Selecione pelo menos uma Freguesia/Código de Postal", {life: 4000});
                     }
                 });
+
+
             });
         },
         get_to_datatable: function(am_zone) {
@@ -612,6 +614,8 @@ var requests = function(basic_path, options_ext) {
             $.get("/AM/view/requests/relatorio_mensal_stock.html", function(data) {
                 rms_zone.append(data);
                 rms_zone.find(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).val(moment().format('YYYY-MM-DD'));
+                rms_zone.find("#product_template").chosen({no_results_text: "Sem resultados"});
+
                 //SUBMIT
                 rms_zone.find("#relatorio_mensal_stock_form").submit(function(e) {
                     e.preventDefault();
@@ -642,6 +646,26 @@ var requests = function(basic_path, options_ext) {
                             $.jGrowl("Preencha pelo menos uma linha.");
                     }
                 });
+                rms_zone.find("#button_rfms_template_product").click(function(e) {
+                    e.preventDefault();
+                    $.msg();
+                    $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: 225}, function(data) {
+                        rms_zone.find("#table_tbody_rfms").empty();
+                        rms_zone.find("#button_rfms_table_add_line").click();
+                        rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(data.name);
+                        if (data.children) {
+                            $.each(data.children, function() {
+                                rms_zone.find("#button_rfms_table_add_line").click();
+                                rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(this.name);
+                            })
+                        }
+                        $.msg('unblock');
+                    }, "json").fail(function(data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
+                })
+
                 rms_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
                     rms_zone
@@ -655,6 +679,12 @@ var requests = function(basic_path, options_ext) {
                     e.preventDefault();
                     $(this).parent().parent().remove();
                 });
+
+                rms_zone.on("change", ".product_template", function(e) {
+
+
+                });
+
             });
         },
         get_to_datatable: function(rms_zone) {
@@ -886,7 +916,7 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
                     );
                 },
-                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, 
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
                     {"sTitle": "User", "sWidth": "80px", "bVisible": (SpiceU.user_level > 5)},
                     {"sTitle": "Data", "sWidth": "125px"},
                     {"sTitle": "Produtos", "sWidth": "75px"},
@@ -1035,3 +1065,5 @@ var requests = function(basic_path, options_ext) {
         }
     };
 };
+
+ 
