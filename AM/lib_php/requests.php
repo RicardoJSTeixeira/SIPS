@@ -1,7 +1,6 @@
 <?php
 
 abstract class requests_class {
-
     protected $_db;
     public $user_level = 0;
     public $user_id = "no_user";
@@ -15,13 +14,10 @@ abstract class requests_class {
     }
 
 }
-
 class apoio_marketing extends requests_class {
-
     public function __construct($db, $user_level, $user_id, $user) {
         parent::__construct($db, $user_level, $user_id, $user);
     }
-
     public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
         $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) "
                 . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status)";
@@ -41,16 +37,12 @@ class apoio_marketing extends requests_class {
             ":status" => 1));
         return $this->_db->lastInsertId();
     }
-
-//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
-
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 )?' where user like "' . $this->user_id . '" ':'');
+        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, 'local_publicididade', cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
-
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             //sorting de colunas
             if ($this->user_level > 5) {
@@ -60,7 +52,6 @@ class apoio_marketing extends requests_class {
                 //User
                 $row[18] = ($row[16] == 0 ? 1 : ($row[16] == 1 ? 2 : 0));
             }
-
             $row[5] = "<div> <button class='btn icon-alone ver_horario' data-apoio_marketing_id='$row[0]'><i class='icon-time'></i></button></div>";
             $row[10] = "<div> <button class='btn icon-alone ver_local_publicidade' data-apoio_marketing_id='$row[0]' ><i class='icon-home'></i></button></div>";
             if ($row[17] == '1') {
@@ -154,7 +145,6 @@ class apoio_marketing extends requests_class {
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $ap = $stmt->fetch(PDO::FETCH_OBJ);
-
         $ap->horario = json_decode($ap->horario);
         $ap->local_publicidade = json_decode($ap->local_publicidade);
         return $ap;
@@ -169,7 +159,6 @@ class apoio_marketing extends requests_class {
 }
 
 class correio extends requests_class {
-
     public function __construct($db, $user_level, $user_id, $user) {
         parent::__construct($db, $user_level, $user_id, $user);
     }
@@ -180,16 +169,13 @@ class correio extends requests_class {
         return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
-//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 )?' where user like "' . $this->user_id . '" ':'');
+        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
-
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
             //sorting de colunas
             if ($this->user_level > 5) {
                 //Admin
@@ -198,7 +184,6 @@ class correio extends requests_class {
                 //User
                 $row[8] = ($row[6] == 0 ? 1 : ($row[6] == 1 ? 2 : 0));
             }
-
             $approved = $row[6] == 1 ? 1 : 0;
             if ($row[4]) {
                 $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-folder-close'></i></button>";
@@ -266,10 +251,17 @@ class correio extends requests_class {
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    public function get_one($id) {
+        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio WHERE id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $ap = $stmt->fetch(PDO::FETCH_OBJ);
+        return $ap;
+    }
+
 }
 
 class frota extends requests_class {
-
     public function __construct($db, $user_level, $user_id, $user) {
         parent::__construct($db, $user_level, $user_id, $user);
     }
@@ -280,16 +272,13 @@ class frota extends requests_class {
         return $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
     }
 
-    //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 )?' where user like "' . $this->user_id . '" ':'');
+        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
-
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
             if ($this->user_level > 5) {
                 //Admin
                 $row[10] = ($row[8] == 0 ? 0 : ($row[8] == 1 ? 2 : 1));
@@ -311,17 +300,13 @@ class frota extends requests_class {
                     $row[8] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-
             $row[7] = "<div> <button class = 'btn ver_ocorrencias icon-alone' data-relatorio_frota_id = '$row[0]'><i class = 'icon-list'></i></button></div>";
-
-
             $result['aaData'][] = $row;
         }
         return $result;
     }
 
     public function accept($id) {
-
         $query = "Update spice_report_frota set status = 1 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
@@ -340,14 +325,12 @@ class frota extends requests_class {
         $query = "SELECT ocorrencia from spice_report_frota where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
-
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $ocorrencias = json_decode($row["ocorrencia"]);
             foreach ($ocorrencias as $value) {
                 $ocorrencia[] = array("data" => $row[3] = $value->data, "ocorrencia" => $value->ocorrencia, "km" => $value->km);
             }
         }
-
         return $ocorrencia;
     }
 
@@ -358,11 +341,18 @@ class frota extends requests_class {
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+    public function get_one($id) {
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota WHERE id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $ap = $stmt->fetch(PDO::FETCH_OBJ);
+        return $ap;
+    }
+
+                
 }
 
 class mensal_stock extends requests_class {
-
     public function __construct($db, $user_level, $user_id, $user) {
         parent::__construct($db, $user_level, $user_id, $user);
     }
@@ -373,14 +363,12 @@ class mensal_stock extends requests_class {
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
 
-    //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 )?' where user like "' . $this->user_id . '" ':'');
+        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
-
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             //sorting de colunas
             if ($this->user_level > 5) {
@@ -390,7 +378,6 @@ class mensal_stock extends requests_class {
                 //User
                 $row[6] = ($row[4] == 0 ? 1 : ($row[4] == 1 ? 2 : 0));
             }
-
             $approved = $row[4] == "1" ? 1 : 0;
             switch ($row[4]) {
                 case "0":
@@ -406,10 +393,7 @@ class mensal_stock extends requests_class {
                     $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-
             $row[3] = "<div> <button class = 'btn  ver_produto_stock icon-alone' data-approved = '$approved' data-stock_id = '$row[0]'><i class = 'icon-eye-open'></i></button></div>";
-
-
             $result['aaData'][] = $row;
         }
         return $result;
@@ -434,7 +418,6 @@ class mensal_stock extends requests_class {
         $query = "SELECT produtos from spice_report_stock where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
-
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
@@ -458,11 +441,16 @@ class mensal_stock extends requests_class {
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+    public function get_one($id) {
+        $query = "SELECT id, user, data, produtos, status from spice_report_stock WHERE id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $ap = $stmt->fetch(PDO::FETCH_OBJ);
+        return $ap;
+    }
 }
 
 class movimentacao_stock extends requests_class {
-
     public function __construct($db, $user_level, $user_id, $user) {
         parent::__construct($db, $user_level, $user_id, $user);
     }
@@ -473,14 +461,13 @@ class movimentacao_stock extends requests_class {
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
 
-    //EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+                
     public function get_to_datatable() {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 )?' where user like "' . $this->user_id . '" ':'');
+        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
-
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             //sorting de colunas
             if ($this->user_level > 5) {
@@ -505,16 +492,13 @@ class movimentacao_stock extends requests_class {
                     $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-
             $row[3] = "<div> <button class = 'btn  ver_produto_mov_stock icon-alone' data-approved = '$approved' data-movimentacao_id = '$row[0]'><i class = 'icon-eye-open'></i></button></div>";
-
             $result['aaData'][] = $row;
         }
         return $result;
     }
 
     public function accept($id) {
-
         $query = "Update spice_report_movimentacao set status = 1 where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
@@ -533,7 +517,6 @@ class movimentacao_stock extends requests_class {
         $query = "SELECT produtos from spice_report_movimentacao where id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
-
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
@@ -557,5 +540,13 @@ class movimentacao_stock extends requests_class {
         return $stmt->execute(array(":id" => $id, ":produtos" => json_encode($produtos)));
     }
 
-//EXTRA FUNCTIONS______________________________________________________________________________________________________________________________________________
+    public function get_one($id) {
+        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao WHERE id=:id";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id" => $id));
+        $ap = $stmt->fetch(PDO::FETCH_OBJ);
+        return $ap;
+                
+    }
+
 }
