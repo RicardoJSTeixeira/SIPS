@@ -12,7 +12,7 @@ var clientBox = function(configs) {
                                 <div class='pull-left'>Cliente</div>\n\
                                 <div class='pull-right'>\n\
                                   <button id='button_proposta_comercial' title='Propostas comerciais' class='btn icon-alone'><i class='icon-money'></i></button>\n\
-                                    <button title='Abrir Pdf' class='btn icon-alone'><i class='icon-user'></i></button>\n\
+                                    <button id='open_pdf' class='btn  icon-alone'><i class='icon-user'></i> </button>\n\
                                     <button onclick='history.back();' title='Voltar' class='btn icon-alone'><i class='icon-circle-arrow-left'></i></button>\n\
                                 </div>\n\
                             </div>\n\
@@ -35,6 +35,7 @@ var clientBox = function(configs) {
     this.client_info = [];
     this.init = function(callback) {
         var action = (config.byReserv) ? 'byReserv' : 'default';
+        $.msg();
         $.post("/AM/ajax/client.php", {action: action, id: config.id}, function(clientI) {
             me.client_info = clientI;
             $(config.target)
@@ -80,6 +81,30 @@ var clientBox = function(configs) {
 
 
 
+            $.post('/AM/ajax/upload_file.php', {
+                action: "get_pdfs",
+                navid: me.client_info.navId || "",
+                ref_cliente: me.client_info.refClient
+            }, function(data) {
+
+                if (data) {
+                    $("#open_pdf").click(function() {
+                        var c = encodeURIComponent(data);
+                        document.location = '/AM/ajax/downloader.php?file=' + c;
+                    });
+                }
+                else {
+                    $("#open_pdf").click(function() {
+                        $.jGrowl("Cliente sem ficheiro associado", 3000);
+                    });
+                }
+                $.msg('unblock');
+            }, "json").fail(function(data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+
+
             $("#button_proposta_comercial").click(function() {
                 $.msg();
                 var propostas = "";
@@ -111,12 +136,8 @@ var clientBox = function(configs) {
                             </div>\n\
                             </div><div class='clear'></div>";
                             final += menu;
-                            propostas="";
+                            propostas = "";
                         });
-
-
-
-
                         bootbox.alert(final, function() {
                         });
                     }
@@ -132,6 +153,16 @@ var clientBox = function(configs) {
                     $.msg('unblock', 5000);
                 });
             });
+
+
+
+
+
+
+
+
+
+
             if (typeof callback === 'function') {
                 callback(clientI);
             }

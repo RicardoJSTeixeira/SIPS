@@ -95,6 +95,42 @@ switch ($action) {
         echo json_encode($js);
         break;
 
+    case "get_pdfs":
+
+        $files = array();
+        $dh = @opendir($_SERVER['DOCUMENT_ROOT'] . "/AM/CPDF");
+
+        $ref_cliente = preg_replace("/[^0-9]/", "", $ref_cliente);
+
+        while (false !== ( $file = readdir($dh) )) {
+            if ($file == ".." && $file == ".")
+                continue;
+            $split = explode("_", $file);
+            $file_navid = $split[0];
+            $split = explode(".", $split[1]);
+            $file_ref = $split[0];
+            if ($ref_cliente == $file_ref) {
+                $files[$file_navid] = $_SERVER['DOCUMENT_ROOT'] . "/AM/CPDF/" . $file;
+            }
+        }
+        closedir($dh);
+        ksort($files);
+
+        if (!count($files)) {
+            echo json_encode(false);
+            break;
+        }
+
+        if (is_numeric($navid) && $files[$navid]) {
+            echo json_encode(base64_encode(($files[$navid])));
+            break;
+        } else
+            echo json_encode(base64_encode(array_pop($files)));
+
+
+
+        break;
+
 
     case "upload_report":
         $fileName = $_FILES["file"]["name"];
