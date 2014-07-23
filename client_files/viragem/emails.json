@@ -37,10 +37,18 @@
                 {
                     "nome": "Pedro Tavares",
                     "email": "pedro.tavares@cibercar.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
-                {
+        {
             "nome": "Finesource",
             "servico": "",
             "interlocutores": [
@@ -57,6 +65,14 @@
                 {
                     "nome": "Nuno Botelho",
                     "email": "nuno.botelho@gavis.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -67,6 +83,14 @@
                 {
                     "nome": "Meira Afonso",
                     "email": "meira.afonso@hydraplan.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -85,6 +109,14 @@
                 {
                     "nome": "Maria Fátima Pais",
                     "email": "mfpais@santogal.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -107,6 +139,14 @@
                 {
                     "nome": "Ana Costa",
                     "email": "afcosta@santogal.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -129,6 +169,14 @@
                 {
                     "nome": "Ana Costa",
                     "email": "afcosta@santogal.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -151,6 +199,14 @@
                 {
                     "nome": "Ana Costa",
                     "email": "afcosta@santogal.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -165,6 +221,14 @@
                 {
                     "nome": "joao.l.lopes",
                     "email": "joao.l.lopes@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -179,6 +243,14 @@
                 {
                     "nome": "paulo.tarouca",
                     "email": "paulo.tarouca@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -193,6 +265,14 @@
                 {
                     "nome": "joao.bonito",
                     "email": "joao.bonito@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -207,6 +287,14 @@
                 {
                     "nome": "paulo.tarouca",
                     "email": "paulo.tarouca@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -221,6 +309,14 @@
                 {
                     "nome": "joao.bonito",
                     "email": "joao.bonito@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -235,6 +331,14 @@
                 {
                     "nome": "paulo.tarouca",
                     "email": "paulo.tarouca@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -253,6 +357,14 @@
                 {
                     "nome": "antonio.m.martins",
                     "email": "antonio.m.martins@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -267,6 +379,14 @@
                 {
                     "nome": "carlos.calado",
                     "email": "carlos.calado@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -281,6 +401,14 @@
                 {
                     "nome": "joaquim.cardoso",
                     "email": "joaquim.cardoso@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -295,6 +423,14 @@
                 {
                     "nome": "carlos.calado",
                     "email": "carlos.calado@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -313,6 +449,14 @@
                 {
                     "nome": "joaquim.cardoso",
                     "email": "joaquim.cardoso@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -327,6 +471,14 @@
                 {
                     "nome": "carlos.calado",
                     "email": "carlos.calado@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -341,6 +493,14 @@
                 {
                     "nome": "joaquim.cardoso",
                     "email": "joaquim.cardoso@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         },
@@ -355,6 +515,14 @@
                 {
                     "nome": "carlos.calado",
                     "email": "carlos.calado@multiauto-galilei.pt"
+                },
+                {
+                    "nome": "Catarina Livramento",
+                    "email": "catarinalivramento@viragem.com"
+                },
+                {
+                    "nome": "Mario Garcez",
+                    "email": "mariogarcez@viragem.com"
                 }
             ]
         }
