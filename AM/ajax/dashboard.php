@@ -197,15 +197,18 @@ switch ($action) {
             return $a->id;
         }, $refs);
         $refs = implode(",", $refs);
+        
+        $rs=getResTypeRaw($db);
+        $rs=  implode(",", $rs);
         $query = "SELECT * FROM (SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'' closed from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
-   where a.id_resource in ($refs) and a.end_date<:date and c.id is NULL and DATE(a.start_date)>'2014-07-20' and a.gone=0 
+   where a.id_resource in ($refs) and a.id_reservation_type in ($rs) and a.end_date<:date and c.id is NULL and DATE(a.start_date)>'2014-07-20' and a.gone=0 
    UNION ALL
    SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'...por fechar' closed from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
-   where a.id_resource in ($refs) and a.end_date<:date1 and c.closed=0 and DATE(a.start_date)>'2014-07-20' and a.gone=0 ) a order by a.end_date asc";
+   where a.id_resource in ($refs) and a.id_reservation_type in ($rs) and a.end_date<:date1 and c.closed=0 and DATE(a.start_date)>'2014-07-20' and a.gone=0 ) a order by a.end_date asc";
         $variables[":date"] = date("Y-m-d");
         $variables[":date1"] = date("Y-m-d");
         $stmt = $db->prepare($query);
@@ -216,4 +219,15 @@ switch ($action) {
         }
         echo json_encode($data);
         break;
+}
+
+
+function getResTypeRaw($db) {
+    $stmt = $db->prepare("SELECT id_reservations_types FROM `sips_sd_reservations_types` where display_text like '%Exame%'");
+    $stmt->execute();
+    $rs = array();
+    while ($v = $stmt->fetch(PDO::FETCH_OBJ)) {
+        $rs[] = $v->id_reservations_types;
+    }
+    return $rs;
 }

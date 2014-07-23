@@ -365,23 +365,25 @@ class Calendar extends Calendars {
 
         while ($bl = array_pop($events)) {
             foreach ($block as &$nbl) {
-                //var_dump($bl); //desbloqueio programado
-                //var_dump($nbl); 
-                if ((strtotime($nbl['start']) < strtotime($bl['end'])) && (strtotime($nbl['start']) >= strtotime($bl['start']))) {
-                    $nbl['start'] = $bl['end'];
-                } elseif ((strtotime($nbl['end']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) < strtotime($bl['end']))) {
-                    $nbl['end'] = $bl['start'];
-                } elseif ((strtotime($nbl['start']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
-                    unset($nbl);
-                } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
-                    $block[] = array(
-                        'start' => $bl['end'],
-                        'end' => $nbl['end'],
-                        'editable' => false,
-                        'className' => "bloqueado",
-                        'bloqueio' => true
-                    );
-                    $nbl['end'] = $bl['start'];
+                foreach ($block as $key => &$nbl) {
+                    //var_dump($bl); //desbloqueio programado
+                    //var_dump($nbl); 
+                    if ((strtotime($nbl['start']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
+                        unset($block[$key]);
+                    } elseif ((strtotime($nbl['start']) < strtotime($bl['end'])) && (strtotime($nbl['start']) >= strtotime($bl['start']))) {
+                        $nbl['start'] = $bl['end'];
+                    } elseif ((strtotime($nbl['end']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) < strtotime($bl['end']))) {
+                        $nbl['end'] = $bl['start'];
+                    } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
+                        $block[] = array(
+                            'start' => $bl['end'],
+                            'end' => $nbl['end'],
+                            'editable' => false,
+                            'className' => "bloqueado",
+                            'bloqueio' => true
+                        );
+                        $nbl['end'] = $bl['start'];
+                    }
                 }
             }
         }
@@ -392,7 +394,7 @@ class Calendar extends Calendars {
         $aux = $start;
         $blocks = array();
         for ($index = 0; $index < 7; $index++) {
-            $blocks = array_merge($blocks, $this->_inverteBloqueio(strtotime("+ ".($shour*60)." minutes", $aux), strtotime("+ ".($ehour*60)." minutes", $aux), $events));
+            $blocks = array_merge($blocks, $this->_inverteBloqueio(strtotime("+ " . ($shour * 60) . " minutes", $aux), strtotime("+ " . ($ehour * 60) . " minutes", $aux), $events));
             $aux = strtotime("+1 day", $aux);
         }
         return $blocks;
