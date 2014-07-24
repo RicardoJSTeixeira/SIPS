@@ -369,14 +369,14 @@ var requisition = function(geral_path, options_ext) {
                 }, {
                     "sTitle": "User",
                     "bVisible": SpiceU.user_level > 5,
-                     "sWidth": "75px"
+                    "sWidth": "75px"
                 }, {
                     "sTitle": "Tipo",
-                     "sWidth": "60px"
+                    "sWidth": "60px"
                 }, {
                     "sTitle": "ClientID",
                     "sType": 'numeric',
-                                         "sWidth": "90px"
+                    "sWidth": "90px"
 
                 }, {
                     "sTitle": "Data",
@@ -536,21 +536,21 @@ var requisition = function(geral_path, options_ext) {
                 doc.table(20, 20, EData.bInfo, ['User', 'Tipo', 'Id Client', 'Date', 'Order Number', 'Client Ref.', 'Estado'], {
                     autoSize: true,
                     printHeaders: true
-                    
                 });
-                doc.table(20, 100, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
-                    autoSize: true,
-                    printHeaders: true
-                });
+
                 var fonts = [['Times', 'Roman']]
                         , size = 16, lines
                         , verticalOffset = 0.5 // inches on a 8.5 x 11 inch sheet.
                         , text = data;
                 lines = doc.setFont('Times', 'Roman')
                         .setFontSize(size)
-                        .splitTextToSize(text,650);
+                        .splitTextToSize(text, 350);
+                if (data.length) {
+                    doc.text(388, doc.lastCellPos.y + 62, "Observações");
+                    doc.text(405, doc.lastCellPos.y + 85, lines);
+                }
 
-
+               
                 $.post('ajax/audiograma.php', {
                     action: "populate",
                     lead_id: ~~EData.bInfo[0]['Id Client']
@@ -567,8 +567,8 @@ var requisition = function(geral_path, options_ext) {
                             });
                             values.push(temp_values);
 
-                            doc.text(18, doc.lastCellPos.y + 52, that.name);
-                            doc.table(20, doc.lastCellPos.y + 60, values, titles, {
+                            doc.text(18, doc.lastCellPos.y + 42, that.name);
+                            doc.table(20, doc.lastCellPos.y + 50, values, titles, {
                                 autoSize: true,
                                 printHeaders: true,
                                 fontSize: 10
@@ -578,15 +578,19 @@ var requisition = function(geral_path, options_ext) {
                             temp_values = {};
                         });
                     }
-                    if (data.length) {
-                        doc.text(18, doc.lastCellPos.y + 42, "Observações");
-                        doc.text(25, doc.lastCellPos.y + 65, lines);
-                    }
+                    doc.addPage();
+                    doc.table(20, 20, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
+                        autoSize: true,
+                        printHeaders: true
+                    });
+
                     doc.save(moment().format());
                 }, "json").fail(function(data1) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                     $.msg('unblock', 5000);
                 });
+
+
                 $.msg('unblock');
             }, "json").fail(function(data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));

@@ -649,7 +649,7 @@ var requests = function(basic_path, options_ext) {
                 rms_zone.find("#button_rfms_template_product").click(function(e) {
                     e.preventDefault();
                     $.msg();
-                    $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: 225}, function(data) {
+                    $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: 525}, function(data) {
                         rms_zone.find("#table_tbody_rfms").empty();
                         rms_zone.find("#button_rfms_table_add_line").click();
                         rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(data.name);

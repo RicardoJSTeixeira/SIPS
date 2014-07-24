@@ -49,7 +49,7 @@ switch ($action) {
 
     case "populate":
         $result = array();
-        $query = "SELECT name,value FROM spice_audiograma where lead_id=? order by id asc";
+        $query = "SELECT name,value FROM spice_audiograma where lead_id=? order by date desc ,name asc limit 6 ";
         $variables[] = $lead_id;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
