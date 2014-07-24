@@ -468,6 +468,7 @@ var requisition = function(geral_path, options_ext) {
                 $(that).parents("tr").find('td:not(:eq(0)):not(:eq(6)):not(:eq(6)):not(:eq(7))').each(function(i) {
                     EInfotmp.push(this.innerText);
                 });
+
                 EInfo = {
                     'User': EInfotmp[0] + "",
                     'Tipo': EInfotmp[1] + "",
@@ -477,7 +478,9 @@ var requisition = function(geral_path, options_ext) {
                     'Client Ref.': EInfotmp[5] + "",
                     'Estado': EInfotmp[6] + ""
                 };
+
                 EData.bInfo.push(EInfo);
+
                 $.each(data.product, function() {
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                     EData.products.push({
@@ -527,6 +530,7 @@ var requisition = function(geral_path, options_ext) {
         });
         modal.on("click", "#print_requisition", function() {
             $.msg();
+            var lead_id = ~~EData.bInfo[0]['Id Client'];
             //Ir buscar os comentarios
             $.post('ajax/requisition.php', {
                 action: "listar_comments_por_encomenda",
@@ -545,17 +549,21 @@ var requisition = function(geral_path, options_ext) {
                 lines = doc.setFont('Times', 'Roman')
                         .setFontSize(size)
                         .splitTextToSize(text, 350);
-                if (data.length) {
-                    doc.text(388, doc.lastCellPos.y + 62, "Observações");
-                    doc.text(405, doc.lastCellPos.y + 85, lines);
-                }
 
-               
+
+
                 $.post('ajax/audiograma.php', {
                     action: "populate",
-                    lead_id: ~~EData.bInfo[0]['Id Client']
+                    lead_id: lead_id
                 }, function(data1) {
-                    if (data1) {
+                    if (data1.length) {
+                        if (data.length) {
+                            lines = doc.setFont('Times', 'Roman')
+                                    .setFontSize(size)
+                                    .splitTextToSize(text, 350);
+                            doc.text(388, doc.lastCellPos.y + 62, "Observações");
+                            doc.text(405, doc.lastCellPos.y + 85, lines);
+                        }
                         var that = "";
                         var titles = [], values = [];
                         var temp_values = {};
@@ -577,12 +585,27 @@ var requisition = function(geral_path, options_ext) {
                             values = [];
                             temp_values = {};
                         });
+                        doc.addPage();
+                        doc.table(20, 20, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
+                            autoSize: true,
+                            printHeaders: true
+                        });
                     }
-                    doc.addPage();
-                    doc.table(20, 20, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
-                        autoSize: true,
-                        printHeaders: true
-                    });
+                    else
+                    {
+                        doc.table(20, doc.lastCellPos.y + 60, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
+                            autoSize: true,
+                            printHeaders: true
+                        });
+                        if (data.length) {
+                            lines = doc.setFont('Times', 'Roman')
+                                    .setFontSize(size)
+                                    .splitTextToSize(text, 750);
+                            doc.text(20, doc.lastCellPos.y + 52, "Observações");
+                            doc.text(45, doc.lastCellPos.y + 75, lines);
+                        }
+                    }
+
 
                     doc.save(moment().format());
                 }, "json").fail(function(data1) {
