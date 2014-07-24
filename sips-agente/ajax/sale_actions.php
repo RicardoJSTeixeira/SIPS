@@ -9,7 +9,10 @@ if (isset($_GET['dispoAtt']))  { $dispoAtt = $_GET['dispoAtt']; } else { $dispoA
 switch ($client) { 
     case 'connecta' : {
             switch ($campaign_id) {
-                case 'W00003' : connectaPostCalendar(); break;
+                case 'W00003' :
+                case 'W00015' :
+                case 'W00016' :
+                case 'W00017' : connectaPostCalendar(); break;
                 case 'W00004' : connectaMensageiros(); break;
                 case 'W00009' : connectaMensageiros(); break;
             }
