@@ -3,8 +3,8 @@ var audiograma = function(lead_id) {
             values_regex = /[^0-9\-\+\<\>]+|[\-\+\<\>] *$/g,
             contas_regex = /[^0-9\-]+/g,
             lead_id = lead_id,
-            me = this;
-    var tooltip_to_validate = 1;
+            me = this,
+            tooltip_to_validate = 1;
     this.adg = $("#main_audiograma_div");
     me.adg.find("#right_ear").text("Sem dados");
     me.adg.find("#left_ear").text("Sem dados");
@@ -39,7 +39,7 @@ var audiograma = function(lead_id) {
         right_ear.value = ((ar500 * 4) + (ar1000 * 3) + (ar2000 * 2) + (ar4000 * 1)) / 10;
         left_ear.value = ((al500 * 4) + (al1000 * 3) + (al2000 * 2) + (al4000 * 1)) / 10;
 
-        if (right_ear.value < 35 && left_ear.value < 35) {
+        if (right_ear.value < 25 && left_ear.value < 25) {
             all_ear.text = "Resultado: Sem perda";
             all_ear.value = 0;
             me.adg.find(".non_required_fields").removeClass("validate[required]");
@@ -53,12 +53,12 @@ var audiograma = function(lead_id) {
             });
             all_ear.text = "Resultado: Perda";
             all_ear.value = 1;
-            if (right_ear.value >= 35 && right_ear.value < 65) {
+            if (right_ear.value >= 25 && right_ear.value < 65) {
                 right_ear.text = "Perda";
             } else if (right_ear.value >= 65) {
                 right_ear.text = "Perda Power";
             }
-            if (left_ear.value >= 35 && left_ear.value < 65) {
+            if (left_ear.value >= 25 && left_ear.value < 65) {
                 left_ear.text = "Perda";
             } else if (left_ear.value >= 65) {
                 left_ear.text = "Perda Power";
@@ -101,7 +101,7 @@ var audiograma = function(lead_id) {
         var bcl = 0;
         var bcstatus = true;
         $.each($("#bcr_tr input"), function() {
-            if (!$(this).val() && $(this).attr("name") !== "BCR1500" )
+            if (!$(this).val() && $(this).attr("name") !== "BCR1500")
                 bcr = 1;
         });
         $.each($("#bcl_tr input"), function() {
@@ -112,6 +112,9 @@ var audiograma = function(lead_id) {
         if ((bcr && bcl) && tooltip_to_validate) {
             bcstatus = false;
             $('#bc_tooltip').tooltip('show');
+            setTimeout(function() {
+                $('#bc_tooltip').tooltip('hide');
+            }, 3000);
         } else
             $('#bc_tooltip').tooltip('hide');
 
@@ -121,6 +124,9 @@ var audiograma = function(lead_id) {
                 validado();
             }
         } else {
+            setTimeout(function() {
+                me.adg.find("#audiograma_form").validationEngine('hideAll');
+            }, 3000);
             if (typeof nao_validado === "function") {
                 nao_validado();
             }

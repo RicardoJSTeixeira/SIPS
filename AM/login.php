@@ -11,7 +11,7 @@ if (!empty($_POST) && isset($_POST["username"]) && isset($_POST["password"])) {
     if ($username == $user->login($username, $password)) {
         header('Location: index.php');
     } else {
-        echo file_get_contents("view/login.html");
+        header('Location: login.php?fail=1');
     }
 } else {
     echo file_get_contents("view/login.html");

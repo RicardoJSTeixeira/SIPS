@@ -113,39 +113,6 @@ function init() {
         });
     });
     $(".ichat").on("click", ".ok_alert", function() {
-        /*
-         const S_ENC = "Encomenda";
-         const S_APMKT = "Apoio Mkt";
-         const S_FROTA = "Frota";
-         const S_MAIL = "Correio";
-         const S_MOVSTOCK = "Mov. Stock";
-         const S_STOCK = "Stock";*/
-
-        var table = $(this).data().record_section == "S_ENC" ? "ajax/requisition.php" : "ajax/requests.php";
-        $.msg();
-        $.post(table, {
-            action: "set_readed",
-            id_msg: $(this).data().id
-        }, function() {
-            get_alerts();
-            $.msg('unblock');
-        }, "json").fail(function(data) {
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "set_readed",

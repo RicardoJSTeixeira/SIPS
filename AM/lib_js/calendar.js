@@ -98,29 +98,15 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 $.msg('unblock');
                 return false;
             }
-            if (date < (moment().subtract('h','10').format('X')*1000)) {
+            if (date < (moment().subtract('h', '10').format('X') * 1000)) {
                 $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
                 $.msg('unblock', 3000);
                 return false;
             }
-            var exist = false;
-            $.each(me.calendar.fullCalendar('clientEvents'),
-                    function() {
-                        if (this.del)
-                            return true;
 
-                        if (
-                                ((moment(this.start).unix() < cEO.end) && (moment(this.start).unix() > cEO.start)) ||
-                                ((moment(this.end).unix() > cEO.start) && (moment(this.end).unix() < cEO.end)) ||
-                                ((moment(this.start).unix() <= cEO.start) && (moment(this.end).unix() >= cEO.end))
-                                ) {
-                            exist = true;
-                            $.msg('replace', 'Não é permitido marcações concorrentes.');
-                            $.msg('unblock', 3000);
-                            return false;
-                        }
-                    });
-            if (exist) {
+            if (me.concorrency(cEO)) {
+                $.msg('replace', 'Não é permitido marcações concorrentes.');
+                $.msg('unblock', 3000);
                 return false;
             }
 
@@ -229,93 +215,56 @@ var calendar = function(selector, data, modals, ext, client, user) {
 
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
-            if (event.start < (moment().subtract('h','10').format('X')*1000)) {
-                revertFunc();
-                return false;
-            }
-            var exist = false;
-            $.each(me.calendar.fullCalendar('clientEvents'),
-                    function() {
-                        if (this.id === event.id) {
-                            return true;
-                        }
-
-                        if (this.del)
-                            return true;
-
-                        if (
-                                ((moment(this.start).unix() < moment(event.end).unix()) && (moment(this.start).unix() > moment(event.start).unix())) ||
-                                ((moment(this.end).unix() > moment(event.start).unix()) && (moment(this.end).unix() < moment(event.end).unix())) ||
-                                ((moment(this.start).unix() <= moment(event.start).unix()) && (moment(this.end).unix() >= moment(event.end).unix()))
-                                ) {
-                            exist = true;
-                            $.jGrowl("Não é permitido marcações concorrentes.", {
-                                sticky: 4000
-                            });
-                            return false;
-                        }
-                    });
-            if (exist) {
+            $.msg();
+            if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
+                $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
+                $.msg('unblock', 3000);
                 revertFunc();
                 return false;
             }
 
+            if (me.concorrency(event)) {
+                $.msg('replace', 'Não é permitido marcações concorrentes.');
+                $.msg('unblock', 3000);
+                revertFunc();
+                return false;
+            }
+
+            $.msg('unblock');
             me.change(event, dayDelta, minuteDelta, revertFunc);
         },
         eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
-
+            $.msg();
             if (event.max) {
                 if (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max) {
-                    $.jGrowl("A duração maxima deste tipo de maracação é: " + event.max + "m.", {
-                        sticky: 4000
-                    });
+                    $.msg("replace', 'A duração maxima deste tipo de maracação é: " + event.max + "m.");
+                    $.msg('unblock', 3000);
                     revertFunc();
                     return false;
                 }
             }
             if (event.min) {
-                if (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < event.min) {
-                    $.jGrowl("A duração minima deste tipo de maracação é: " + event.min + "m.", {
-                        sticky: 4000
-                    });
+                if (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes) {
+                    $.msg('replace', "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m.");
+                    $.msg('unblock', 3000);
                     revertFunc();
                     return false;
                 }
             }
-
-            if (event.start < (moment().subtract('h','10').format('X')*1000)) {
-                $.jGrowl("Não é permitido alterar o passado.", {
-                    sticky: 4000
-                });
+            if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
+                $.msg('replace', "Não é permitido alterar o passado.");
+                $.msg('unblock', 3000);
                 revertFunc();
                 return false;
             }
-            var exist = false;
-            $.each(me.calendar.fullCalendar('clientEvents'),
-                    function() {
-                        if (this.id === event.id) {
-                            return true;
-                        }
 
-                        if (this.del)
-                            return true;
-
-                        if (
-                                ((moment(this.start).unix() < moment(event.end).unix()) && (moment(this.start).unix() > moment(event.start).unix())) ||
-                                ((moment(this.end).unix() > moment(event.start).unix()) && (moment(this.end).unix() < moment(event.end).unix())) ||
-                                ((moment(this.start).unix() <= moment(event.start).unix()) && (moment(this.end).unix() >= moment(event.end).unix()))
-                                ) {
-                            exist = true;
-                            $.jGrowl("Não é permitido marcações concorrentes.", {
-                                sticky: 4000
-                            });
-                            return false;
-                        }
-                    });
-            if (exist) {
+            if (me.concorrency(event)) {
+                $.msg('replace', "Não é permitido marcações concorrentes.");
+                $.msg('unblock', 3000);
                 revertFunc();
                 return false;
             }
+            $.msg('unblock');
             me.change(event, dayDelta, minuteDelta, revertFunc);
         }
     };
@@ -828,6 +777,28 @@ var calendar = function(selector, data, modals, ext, client, user) {
 
         me.modals.acf.modal("show");
     };
+    this.concorrency = function(event) {
+        if (moment().diff(event.start, 'days')) {
+            var exist = false;
+            $.each(me.calendar.fullCalendar('clientEvents'),
+                    function() {
+                        if (this.del)
+                            return true;
+
+                        if (
+                                ((moment(this.start).unix() < moment(event.end).unix()) && (moment(this.start).unix() > moment(event.start).unix())) ||
+                                ((moment(this.end).unix() > moment(event.start).unix()) && (moment(this.end).unix() < moment(event.end).unix())) ||
+                                ((moment(this.start).unix() <= moment(event.start).unix()) && (moment(this.end).unix() >= moment(event.end).unix()))
+                                ) {
+                            exist = true;
+                            return false;
+                        }
+                    });
+            return exist;
+        } else {
+            return false;
+        }
+    };
     this.destroy = function() {
         this.calendar.fullCalendar('destroy');
         $("#external-events .grid-content > div").empty();
@@ -836,6 +807,19 @@ var calendar = function(selector, data, modals, ext, client, user) {
     this.resource = (typeof data.config !== "undefined" && typeof data.config.events !== "undefined") ? data.config.events.data.resource : "all";
     var config = $.extend(true, this.config, data.config);
     this.calendar = selector.fullCalendar(config);
+
+    $("body").off().keydown(function(e) {
+        var actions = {
+            37: function() {
+                $("#calendar").fullCalendar('prev');
+            },
+            39: function() {
+                $("#calendar").fullCalendar('next');
+            }
+        };
+        if (typeof actions[e.keyCode] === "function")
+            actions[e.keyCode]();
+    });
 
     if (me.user.user_level > 4) {
         me.modal_ext.find("#btn_change").removeClass("hide");

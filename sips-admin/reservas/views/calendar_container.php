@@ -306,7 +306,7 @@
                             $tab[$iii + 1] .= ($i == $resources[0]["begin_time"]) ? "\t<tr class='slots'>\n\t\t<td class='nome'><span>" . $resources[$iii]["display_text"] . "</span></td>\n" : "";
                             //title first column 
                             $beg = date("Y-m-d H:i:s", strtotime($date . "+$i minutes"));
-                            $end = date("Y-m-d H:i:s", strtotime($date . "+" . ($i + $resources[0]["blocks"] - 1) . " minutes"));
+                            $end = date("Y-m-d H:i:s", strtotime($date . "+" . ($i + $resources[0]["blocks"]) . " minutes"));
                             $dados = set_estado($beg, $end, $resources[$iii]["id_resource"], $reservas, $series, $resources[$iii]["restrict_days"], $execoes, $date, $i, $slot2change, $i_reservas, $users);
                             $title = (($dados["type"] != "") ? " title='$dados[type]'" : "");
                             $tab[$iii + 1] .= "\t\t<td class='slot" . $dados["stat"] . "'$title >" . (!is_null($dados["postal"]) ? "<span class='postal'>$dados[postal]</span>" : "") . "

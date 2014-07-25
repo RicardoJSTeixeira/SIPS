@@ -372,9 +372,9 @@ class Calendar extends Calendars {
                         unset($block[$key]);
                     } elseif ((strtotime($nbl['start']) < strtotime($bl['end'])) && (strtotime($nbl['start']) >= strtotime($bl['start']))) {
                         $nbl['start'] = $bl['end'];
-                    } elseif ((strtotime($nbl['end']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) < strtotime($bl['end']))) {
+                    } elseif ((strtotime($nbl['end']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
                         $nbl['end'] = $bl['start'];
-                    } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) >= strtotime($bl['end']))) {
+                    } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
                         $block[] = array(
                             'start' => $bl['end'], 
                            'end' => $nbl['end'],
