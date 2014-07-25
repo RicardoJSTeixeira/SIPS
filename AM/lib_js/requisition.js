@@ -529,7 +529,7 @@ var requisition = function(geral_path, options_ext) {
                 id: EData.id_req
             }, function(data) {
                 var doc = new jsPDF('l', 'pt', 'a4', true);
-                doc.table(30, 30, EData.bInfo, [{name: 'User', width: 75}, {name: 'Tipo', width: 50}, {name: 'Id Client', width: 65}, {name: 'Date', width: 125}, {name: 'Order Number', width: 85}, {name: 'Client Ref.', width: 75}, {name: 'Status', width: 120}], {
+                doc.table(30, 30, EData.bInfo, [{name: 'User', width: 75}, {name: 'Tipo', width: 50}, {name: 'Id Client', width: 65}, {name: 'Date', width: 125}, {name: 'Order Number', width: 95}, {name: 'Client Ref.', width: 75}, {name: 'Status', width: 120}], {
                     autoSize: false,
                     printHeaders: true
                 });

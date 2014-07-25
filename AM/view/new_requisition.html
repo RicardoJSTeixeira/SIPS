@@ -253,10 +253,15 @@
             url: '/AM/ajax/upload_file.php?action=upload&id=' + unique_number,
             filters: {
                 mime_types: [
-                    {title: "Image files", extensions: "jpg,gif,png"},
-                    {title: "Zip files", extensions: "zip"},
-                    {title: "Text Files", extensions: "txt,doc,docx"},
-                    {title: "PDF Files", extensions: "pdf"}
+                    {title: "Ficheiros Imagem", extensions: "jpg,gif,png,bm"},
+                    {title: "Ficheiros Zip", extensions: "zip,rar,tar,7z,zipx"},
+                    {title: "Ficheiros Texto ", extensions: "txt,doc,docx,log,msg,odt,rtf"},
+                    {title: "Ficheiros PDF", extensions: "pdf"},
+                    {title: "Power Point", extensions: "ppt,pps,pptx"},
+                    {title: "E-mail", extensions: "eml"},
+                    {title: "Ficheiros Spreadsheet", extensions: "xlr,xls,xlsx"},
+                    {title: "Outros", extensions: "csv,xml,sdf"}
+                    Microsoft Excel
                 ],
                 max_file_size: "20mb",
                 prevent_duplicates: true
