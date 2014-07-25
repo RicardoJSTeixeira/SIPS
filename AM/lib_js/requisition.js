@@ -464,11 +464,9 @@ var requisition = function(geral_path, options_ext) {
                     id_req: 0
                 };
                 EData.id_req = ~~$(that).parents("tr").find("td").first().text();
-
                 $(that).parents("tr").find('td:not(:eq(0)):not(:eq(6)):not(:eq(6)):not(:eq(7))').each(function(i) {
                     EInfotmp.push(this.innerText);
                 });
-
                 EInfo = {
                     'User': EInfotmp[0] + "",
                     'Tipo': EInfotmp[1] + "",
@@ -478,9 +476,7 @@ var requisition = function(geral_path, options_ext) {
                     'Client Ref.': EInfotmp[5] + "",
                     'Status': EInfotmp[6] + ""
                 };
-
                 EData.bInfo.push(EInfo);
-
                 $.each(data.product, function() {
                     this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                     EData.products.push({
@@ -494,14 +490,10 @@ var requisition = function(geral_path, options_ext) {
                         this.size = "";
                     modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
                 });
-
-
                 if (data.comments.length)
                     modal_tbody.append("<tr ><td colspan='5'>" + data.comments + "</td> </tr>");
                 else
                     modal_tbody.append("<tr ><td colspan='5'>Sem comentários</td> </tr>");
-
-
                 modal.modal("show");
                 $.msg('unblock');
             }, "json").fail(function(data) {
