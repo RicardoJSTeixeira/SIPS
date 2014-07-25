@@ -134,20 +134,20 @@ var requests = function(basic_path, options_ext) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
-                    {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, 
+                    {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)},
                     {"sTitle": "Data pedido"},
-                    {"sTitle": "Data inicial/Data final", "sWidth": "65px"}, 
+                    {"sTitle": "Data inicial/Data final", "sWidth": "65px"},
                     {"sTitle": "Data final", "sWidth": "65px"},
                     {"sTitle": "Horario", "sWidth": "46px"},
-                    {"sTitle": "Localidade"}, 
+                    {"sTitle": "Localidade"},
                     {"sTitle": "Local"},
                     {"sTitle": "Morada"},
-                    {"sTitle": "Observações"}, 
+                    {"sTitle": "Observações"},
                     {"sTitle": "Pub.", "sWidth": "1px"},
                     {"sTitle": "Cod."},
                     {"sTitle": "Total", "sWidth": "5px"},
                     {"sTitle": "c/ Perda", "sWidth": "1px"},
-                    {"sTitle": "Vendas", "sWidth": "1px"}, 
+                    {"sTitle": "Vendas", "sWidth": "1px"},
                     {"sTitle": "Valor", "sWidth": "1px"},
                     {"sTitle": "Estado", "sWidth": "60px"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
@@ -666,13 +666,11 @@ var requests = function(basic_path, options_ext) {
                     $.msg();
                     $.post('/AM/ajax/products.php', {action: "get_produto_by_id", id: 525}, function(data) {
                         rms_zone.find("#table_tbody_rfms").empty();
-                        rms_zone.find("#button_rfms_table_add_line").click();
-                        rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(data.name);
+
+
                         if (data.children) {
-                            $.each(data.children, function() {
-                                rms_zone.find("#button_rfms_table_add_line").click();
-                                rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(this.name);
-                            })
+
+                            devolver_childs(data, "");
                         }
                         $.msg('unblock');
                     }, "json").fail(function(data) {
@@ -680,6 +678,25 @@ var requests = function(basic_path, options_ext) {
                         $.msg('unblock', 5000);
                     });
                 })
+
+
+                function devolver_childs(element, name) {
+
+                    if (element.children.length) {
+                        $.each(element.children, function() {
+                            if (name.length)
+                                return devolver_childs(this, name + "/" + element.name);
+                            else
+                                return devolver_childs(this, element.name);
+                        });
+                    }
+                    else {
+                        rms_zone.find("#button_rfms_table_add_line").click();
+                        var trimed_string = name.split("/");
+                        trimed_string.shift();
+                        rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(trimed_string+"/" + element.name);
+                    }
+                }
 
                 rms_zone.find("#button_rfms_table_add_line").click(function(e) {
                     e.preventDefault();
