@@ -63,7 +63,7 @@ switch ($action) {
                 $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id","S_ENC",$id,1);
             }
         }
-        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição aceitada", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição aceite", "msg" => "$message")));
         echo json_encode($result);
         break;
 
