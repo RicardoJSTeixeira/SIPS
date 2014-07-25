@@ -23,6 +23,8 @@ switch ($action) {
 
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
+        $rs=getResTypeRaw($db);
+        $rs=  implode(",", $rs);
         if ($u->user_level > 6) {
             $query = "SELECT a.lead_id,
                 extra1, 
@@ -45,7 +47,7 @@ switch ($action) {
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
    left join spice_consulta d on d.reserva_id=a.id_reservation
-   where c.user_group=:user_group and DATE(a.start_date)>'2014-07-20' and a.gone=0  group by a.lead_id limit 20000";
+   where c.user_group=:user_group and DATE(a.start_date)>'2014-07-20' and a.id_reservation_type in ($rs) and a.gone=0  group by a.lead_id limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $calendar = new Calendars($db);
@@ -73,7 +75,7 @@ switch ($action) {
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
-   where a.id_resource in ('" . implode("','", $refs) . "') and DATE(a.start_date)>'2014-07-20' and a.gone=0 group by a.lead_id limit 20000";
+   where a.id_resource in ('" . implode("','", $refs) . "') and DATE(a.start_date)>'2014-07-20' and a.id_reservation_type in ($rs) and a.gone=0 group by a.lead_id limit 20000";
         }
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
