@@ -39,7 +39,7 @@ var audiograma = function(lead_id) {
         right_ear.value = ((ar500 * 4) + (ar1000 * 3) + (ar2000 * 2) + (ar4000 * 1)) / 10;
         left_ear.value = ((al500 * 4) + (al1000 * 3) + (al2000 * 2) + (al4000 * 1)) / 10;
 
-        if (right_ear.value < 35 && left_ear.value < 35) {
+        if (right_ear.value < 25 && left_ear.value < 25) {
             all_ear.text = "Resultado: Sem perda";
             all_ear.value = 0;
             me.adg.find(".non_required_fields").removeClass("validate[required]");
@@ -53,12 +53,12 @@ var audiograma = function(lead_id) {
             });
             all_ear.text = "Resultado: Perda";
             all_ear.value = 1;
-            if (right_ear.value >= 35 && right_ear.value < 65) {
+            if (right_ear.value >= 25 && right_ear.value < 65) {
                 right_ear.text = "Perda";
             } else if (right_ear.value >= 65) {
                 right_ear.text = "Perda Power";
             }
-            if (left_ear.value >= 35 && left_ear.value < 65) {
+            if (left_ear.value >= 25 && left_ear.value < 65) {
                 left_ear.text = "Perda";
             } else if (left_ear.value >= 65) {
                 left_ear.text = "Perda Power";
