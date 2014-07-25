@@ -133,7 +133,25 @@ var requests = function(basic_path, options_ext) {
                 "fnServerParams": function(aoData) {
                     aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
                 },
-                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"}, {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "Data pedido"}, {"sTitle": "Data inicial", "sWidth": "65px"}, {"sTitle": "Data final", "sWidth": "65px"}, {"sTitle": "Horario", "sWidth": "46px"}, {"sTitle": "Localidade"}, {"sTitle": "Local"}, {"sTitle": "Morada"}, {"sTitle": "Observações"}, {"sTitle": "Pub.", "sWidth": "1px"}, {"sTitle": "Cod."}, {"sTitle": "Total", "sWidth": "31px"}, {"sTitle": "c/ Perda", "sWidth": "36px"}, {"sTitle": "Vendas", "sWidth": "46px"}, {"sTitle": "Valor", "sWidth": "33px"}, {"sTitle": "Estado", "sWidth": "63px"}, {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)}, {"sTitle": "sort", "bVisible": false}],
+                "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
+                    {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)}, 
+                    {"sTitle": "Data pedido"},
+                    {"sTitle": "Data inicial/Data final", "sWidth": "65px"}, 
+                    {"sTitle": "Data final", "sWidth": "65px"},
+                    {"sTitle": "Horario", "sWidth": "46px"},
+                    {"sTitle": "Localidade"}, 
+                    {"sTitle": "Local"},
+                    {"sTitle": "Morada"},
+                    {"sTitle": "Observações"}, 
+                    {"sTitle": "Pub.", "sWidth": "1px"},
+                    {"sTitle": "Cod."},
+                    {"sTitle": "Total", "sWidth": "5px"},
+                    {"sTitle": "c/ Perda", "sWidth": "1px"},
+                    {"sTitle": "Vendas", "sWidth": "1px"}, 
+                    {"sTitle": "Valor", "sWidth": "1px"},
+                    {"sTitle": "Estado", "sWidth": "60px"},
+                    {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
+                    {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
@@ -249,15 +267,12 @@ var requests = function(basic_path, options_ext) {
                     var can_submit = 1;
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate")) {
                         if (rf_zone.find("#table_tbody_rf tr").length) {
-
                             $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
-
                                 if (~~$(this).autoNumeric('get') > ~~rf_zone.find("#input_km").autoNumeric('get')) {
                                     $.jGrowl("O número de Kms numa das ocorrências é superior aos Kms totais no relatório");
                                     can_submit = 0;
                                 }
                             });
-
                             if (can_submit) {
                                 var ocorrencias_array = [];
                                 $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
