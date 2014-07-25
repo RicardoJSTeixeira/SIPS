@@ -3,8 +3,8 @@ var audiograma = function(lead_id) {
             values_regex = /[^0-9\-\+\<\>]+|[\-\+\<\>] *$/g,
             contas_regex = /[^0-9\-]+/g,
             lead_id = lead_id,
-            me = this;
-    var tooltip_to_validate = 1;
+            me = this,
+            tooltip_to_validate = 1;
     this.adg = $("#main_audiograma_div");
     me.adg.find("#right_ear").text("Sem dados");
     me.adg.find("#left_ear").text("Sem dados");
@@ -101,7 +101,7 @@ var audiograma = function(lead_id) {
         var bcl = 0;
         var bcstatus = true;
         $.each($("#bcr_tr input"), function() {
-            if (!$(this).val() && $(this).attr("name") !== "BCR1500" )
+            if (!$(this).val() && $(this).attr("name") !== "BCR1500")
                 bcr = 1;
         });
         $.each($("#bcl_tr input"), function() {
@@ -112,6 +112,9 @@ var audiograma = function(lead_id) {
         if ((bcr && bcl) && tooltip_to_validate) {
             bcstatus = false;
             $('#bc_tooltip').tooltip('show');
+            setTimeout(function() {
+                $('#bc_tooltip').tooltip('hide');
+            }, 3000);
         } else
             $('#bc_tooltip').tooltip('hide');
 
@@ -121,6 +124,9 @@ var audiograma = function(lead_id) {
                 validado();
             }
         } else {
+            setTimeout(function() {
+                me.adg.find("#audiograma_form").validationEngine('hideAll');
+            }, 3000);
             if (typeof nao_validado === "function") {
                 nao_validado();
             }
