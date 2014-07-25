@@ -13,7 +13,7 @@ switch ($client) {
                 case 'W00015' :
                 case 'W00016' :
                 case 'W00017' : connectaPostCalendar(); break;
-                case 'W00004' : connectaMensageiros(); break;
+                case 'W00004' : 
                 case 'W00009' : connectaMensageiros(); break;
             }
             confirmacao($lead_id, $dispoAtt, $link);
@@ -124,7 +124,7 @@ function connectaPostCalendar() {
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_assoc($query);
     $origem = utf8_decode($row['middle_initial']); // middle_initial
-    $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88') and unique_id = '$unique_id' order by tag_elemento ASC";
+    $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88', '115', '116', '117') and unique_id = '$unique_id' order by tag_elemento ASC";
     
     $query = mysql_query($query, $link) or die(mysql_error());
     
@@ -138,7 +138,7 @@ function connectaPostCalendar() {
     $tipo_vencimento = $results[20]; // cp co ->script 20
     $nome_cliente = utf8_decode(str_replace("'", "", $results[73])); // first_name 73
     $idade = $results[74]; // ->script 74
-    $morada = utf8_decode(str_replace("'", "", $results[75])); // script 75
+    $morada = utf8_decode(str_replace("'", "", $results[75]." ".$results[115]." ".$results[116])); // script 75
     $localidade = utf8_decode(str_replace("'", "", $results[76])); // city 76
     $cod_postal = $results[77]; // 1234-567 script 77
     $telefone = $results[78]; // phone_number 78
@@ -148,6 +148,7 @@ function connectaPostCalendar() {
     $num_cartoes = $results[82]; // ->script 82
     $nif = $results[87]; // ->script  87
     $tem_credito = $results[88]; // script 88
+    $supervisor = $results[117]; // script 117
     $query = "SELECT start_date, id_resource FROM sips_sd_reservations where lead_id = '$lead_id' and start_date > DATE(NOW()) LIMIT 1";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_row($query);
@@ -168,7 +169,7 @@ function connectaPostCalendar() {
     $distrito = utf8_decode($row[0]);
     //$query_final = "exec clientes.InserirVisita 'TESTE' , 1, 'TESTE'  , 'TEST'  , '25/01/2014', '10:00', 'TESTE'  , 'TESTE'  , '1234-123'  , 'TESTE'  , 'Lisboa'  , '918099390'  , '918099390'  , 34, 'CO'  , 'Cartão GOLD' , 1, '123456789', 'S' , 'Lisboa', 'teste de marcação por sp'";
     //exec clientes.InserirVisita 'Alcobaça' , 168029, 'barc1'  , 'barc1'  , '11/11/2013', '10:00', 'asdasdas'  , 'asdasdasd'  , '1234-123'  , 'asdasd'  , 'Alcobaça'  , '1231231'  , 'Gold'  , 12, 'CO'  , '229722210' , S, '', '' , 'Leiria', '1'
-     $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$user'  , '$user'  , '$data_visita', '$hora_visita', '$nome_cliente'  , '$morada'  , '$cod_postal'  , '$localidade'  , '$concelho'  , '$telefone'  , '$telefone_alternativo'  , $idade, '$tipo_vencimento'  , '$tipo_cartao' , $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
+     $query_final = "exec clientes.InserirVisita '$origem' , $lead_id, '$supervisor', '$user', '$data_visita', '$hora_visita', '$nome_cliente', '$morada', '$cod_postal', '$localidade', '$concelho', '$telefone', '$telefone_alternativo', $idade, '$tipo_vencimento', '$tipo_cartao', $num_cartoes, '$nif', '$tem_credito' , '$distrito', '$observações'";
      echo $query_final;
      $link = mssql_connect('172.16.5.2', 'gocontact', '') or die(mssql_get_last_message());
      $sql = @mssql_query($query_final, $link) or die(mssql_get_last_message());
