@@ -476,7 +476,7 @@ var requisition = function(geral_path, options_ext) {
                     'Date': EInfotmp[3] + "",
                     'Order Number': EInfotmp[4] + "",
                     'Client Ref.': EInfotmp[5] + "",
-                    'Estado': EInfotmp[6] + ""
+                    'Status': EInfotmp[6] + ""
                 };
 
                 EData.bInfo.push(EInfo);
@@ -486,7 +486,7 @@ var requisition = function(geral_path, options_ext) {
                     EData.products.push({
                         Name: this.name,
                         Category: this.category,
-                        Colour: this.color_name,
+                        Color: this.color_name,
                         Qt: this.quantity,
                         Size: this.size
                     });
@@ -537,19 +537,21 @@ var requisition = function(geral_path, options_ext) {
                 id: EData.id_req
             }, function(data) {
                 var doc = new jsPDF('l', 'pt', 'a4', true);
-                doc.table(20, 20, EData.bInfo, ['User', 'Tipo', 'Id Client', 'Date', 'Order Number', 'Client Ref.', 'Estado'], {
-                    autoSize: true,
+                doc.table(30, 30, EData.bInfo, [{name: 'User', width: 75}, {name: 'Tipo', width: 50}, {name: 'Id Client', width: 65}, {name: 'Date', width: 125}, {name: 'Order Number', width: 85}, {name: 'Client Ref.', width: 75}, {name: 'Status', width: 120}], {
+                    autoSize: false,
                     printHeaders: true
                 });
 
-                var fonts = [['Times', 'Roman']]
-                        , size = 16, lines
-                        , verticalOffset = 0.5 // inches on a 8.5 x 11 inch sheet.
-                        , text = data;
+                var
+                        fonts = [['Times', 'Roman']],
+                        size = 16,
+                        lines,
+                        verticalOffset = 0.5, // inches on a 8.5 x 11 inch sheet.
+                        text = data;
+
                 lines = doc.setFont('Times', 'Roman')
                         .setFontSize(size)
                         .splitTextToSize(text, 350);
-
 
 
                 $.post('ajax/audiograma.php', {
@@ -561,8 +563,8 @@ var requisition = function(geral_path, options_ext) {
                             lines = doc.setFont('Times', 'Roman')
                                     .setFontSize(size)
                                     .splitTextToSize(text, 350);
-                            doc.text(388, doc.lastCellPos.y + 62, "Observações");
-                            doc.text(405, doc.lastCellPos.y + 85, lines);
+                            doc.text(428, doc.lastCellPos.y + 262, "Obs.");
+                            doc.text(445, doc.lastCellPos.y + 285, lines);
                         }
                         var that = "";
                         var titles = [], values = [];
@@ -574,9 +576,9 @@ var requisition = function(geral_path, options_ext) {
                                 temp_values[this.name] = this.value;
                             });
                             values.push(temp_values);
-
-                            doc.text(18, doc.lastCellPos.y + 42, that.name);
-                            doc.table(20, doc.lastCellPos.y + 50, values, titles, {
+                            doc.setFontSize(10);
+                            doc.text(30, doc.lastCellPos.y + 52, that.name);
+                            doc.table(32, doc.lastCellPos.y + 60, values, titles, {
                                 autoSize: true,
                                 printHeaders: true,
                                 fontSize: 10
@@ -586,22 +588,21 @@ var requisition = function(geral_path, options_ext) {
                             temp_values = {};
                         });
                         doc.addPage();
-                        doc.table(20, 20, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
-                            autoSize: true,
+                        doc.table(30, 20, EData.products, [{name: 'Name', width: 200}, {name: 'Category', width: 100}, {name: 'Color', width: 75}, {name: 'Qt', width: 50}, {name: 'Size', width: 50}], {
+                            autoSize: false,
                             printHeaders: true
                         });
                     }
-                    else
-                    {
-                        doc.table(20, doc.lastCellPos.y + 60, EData.products, ['Name', 'Category', 'Colour', 'Qt', 'Size'], {
-                            autoSize: true,
+                    else {
+                        doc.table(30, doc.lastCellPos.y + 60, EData.products, [{name: 'Name', width: 200}, {name: 'Category', width: 100}, {name: 'Color', width: 75}, {name: 'Qt', width: 50}, {name: 'Size', width: 50}], {
+                            autoSize: false,
                             printHeaders: true
                         });
                         if (data.length) {
                             lines = doc.setFont('Times', 'Roman')
                                     .setFontSize(size)
                                     .splitTextToSize(text, 750);
-                            doc.text(20, doc.lastCellPos.y + 52, "Observações");
+                            doc.text(20, doc.lastCellPos.y + 52, "Obs.");
                             doc.text(45, doc.lastCellPos.y + 75, lines);
                         }
                     }

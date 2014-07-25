@@ -57,7 +57,7 @@
         fontSize = this.table_font_size || this.internal.getFontSize();
         fontStyle = this.internal.getFont().fontStyle;
         // 1 pixel = 0.264583 mm and 1 mm = 72/25.4 point
-        var px2pt = 0.264583 * 72 / 25.4,
+        var px2pt = 1,
             dimensions,
             text;
 
@@ -240,7 +240,7 @@
             headerNames = Object.keys(data[0]);
 
         } else if (headers[0] && (typeof headers[0] !== 'string')) {
-            var px2pt = 0.264583 * 72 / 25.4;
+            var px2pt = 1;
 
             // Split header configs into names and prompts
             for (i = 0, ln = headers.length; i < ln; i += 1) {
@@ -285,12 +285,12 @@
         // -- Construct the table
 
         if (printHeaders) {
-            var lineHeight = this.calculateLineHeight(headerNames, columnWidths, headerPrompts.length?headerPrompts:headerNames);
+            var lineHeight = this.calculateLineHeight(headerNames, columnWidths, headerNames);
 
             // Construct the header row
             for (i = 0, ln = headerNames.length; i < ln; i += 1) {
                 header = headerNames[i];
-                tableHeaderConfigs.push([x, y, columnWidths[header], lineHeight, String(headerPrompts.length ? headerPrompts[i] : header)]);
+                tableHeaderConfigs.push([x, y, columnWidths[header], lineHeight,  header]);
             }
 
             // Store the table header config
