@@ -15,21 +15,26 @@ function table2csv(oTable, exportmode, tableElm) {
     csv += headers.join(' \t ') + "\n";
 
     // get table data
+
     if (exportmode === "full") { // total data
         var total = oTable.fnSettings().fnRecordsTotal();
         for (i = 0; i < total; i++) {
             var row = oTable.fnGetData(i);
+            match_headers(row, headers);
             row = strip_tags(row).replace(/,/g, '\t');
             rows.push(row);
         }
     } else { // visible rows only
         $(tableElm + ' tbody tr:visible').each(function(index) {
             var row = oTable.fnGetData(this);
+            match_headers(row, headers);
             row = strip_tags(row).replace(/,/g, '\t');
             rows.push(row);
         });
     }
+
     csv += rows.join("\n");
+
 
     // if a csv div is already open, delete it
     if ($('.csv-data').length)
@@ -48,3 +53,9 @@ function strip_tags(html) {
     return tmp.textContent || tmp.innerText;
 }
 
+
+function match_headers(row, header) {
+    while (row.length > header.length) {
+        row.pop();
+    }
+}

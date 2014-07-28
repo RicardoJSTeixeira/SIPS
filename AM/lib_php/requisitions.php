@@ -12,14 +12,12 @@ Class requisitions {
     public function get_requisitions_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->_user_level == 6 ) ? ' where sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' where sr.user like "' . $this->_user_id . '" ' : '');
-        $query = "SELECT sr.id,sr.user,sr.type,sr.lead_id,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter  ";
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter  ";
 
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
-
             //sorting de colunas
             if ($this->_user_level > 5) {
                 //Admin
@@ -28,9 +26,6 @@ Class requisitions {
                 //User
                 $row[11] = ($row[9] == 0 ? 1 : ($row[9] == 1 ? 2 : 0));
             }
-
-
-
             $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
@@ -48,7 +43,7 @@ Class requisitions {
                         $row[6] = "<i class='icon-ban-circle'></i>";
                 }
             }
-            $row[3] = $row[3] == "0" ? "<i class='icon-ban-circle'></i>" : "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[3]' title='Ver Cliente'><i class='icon-edit'></i></button> $row[3]";
+            $row[3] = $row[13] == "0" ? "<i class='icon-ban-circle'></i>" : "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[13]' title='Ver Cliente'><i class='icon-edit'></i></button> $row[3]";
             switch ($row[9]) {
                 case "0":
                     $row[10] = "<div class='btn-group'> <button class='btn accept_requisition btn-success icon-alone' value='" . $row[0] . "'><i class= 'icon-ok'></i></button><button class='btn decline_requisition btn-warning icon-alone' value='" . $row[0] . "'><i class= 'icon-remove'></i></button> </div>";
@@ -68,8 +63,32 @@ Class requisitions {
             else
                 $row[7] = "Sem Anexo";
             $row[8] = "<div><button class='btn ver_requisition_products icon-alone' value='" . $row[0] . "'><i class='icon-eye-open'></i></button></div>";
+            $row[12] = json_encode($row);
 
             $result['aaData'][] = $row;
+        }
+        return $result;
+    }
+
+    public function get_requisitions_by_id($id_req) {
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,sr.products,sr.status, sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where sr.id=:id_req  ";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":id_req" => $id_req));
+        $result = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                
+            switch ($row["status"]) {
+                case "0":
+                    $row["status"] = "Pedido enviado";
+                    break;
+                case "1":
+                    $row["status"] = " Aprovado ";
+                    break;
+                case "2":
+                    $row["status"] = " Pendente";
+                    break;
+            }
+            $result[] = $row;
         }
         return $result;
     }

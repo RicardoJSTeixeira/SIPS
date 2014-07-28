@@ -180,7 +180,7 @@ class correio extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter";
+        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status,'button','sorting','object' from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -196,11 +196,7 @@ class correio extends requests_class {
             $row[5] = preg_replace('/(\v|\s)+/', ' ', $row[5]);
             $row[5] = str_replace(',', ';', $row[5]);
             $approved = $row[6] == 1 ? 1 : 0;
-            if ($row[4]) {
-                $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-folder-close'></i></button>";
-            } else {
-                $row[4] = "Sem anexo";
-            }
+
             switch ($row[6]) {
                 case "0":
                     $row[7] = "<div class = 'btn-group'><button class = 'btn accept_report_correio btn-success icon-alone' value = '$row[0]'><i class = 'icon-ok'></i></button><button class = 'btn decline_report_correio btn-warning icon-alone' value = '$row[0]'><i class = 'icon-remove'></i></button></div>";
@@ -215,6 +211,13 @@ class correio extends requests_class {
                     $row[6] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
+            $row[9] = json_encode($row);
+            if ($row[4]) {
+                $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-folder-close'></i></button>";
+            } else {
+                $row[4] = "Sem anexo";
+            }
+
             $result['aaData'][] = $row;
         }
 
@@ -287,7 +290,7 @@ class frota extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter ";
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status,'button','sort','object' from spice_report_frota $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -314,6 +317,7 @@ class frota extends requests_class {
                     $row[8] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
+            $row[11] = json_encode($row);
             $row[7] = "<div> <button class = 'btn ver_ocorrencias icon-alone' data-relatorio_frota_id = '$row[0]'><i class = 'icon-list'></i></button></div>";
             $result['aaData'][] = $row;
         }
@@ -380,7 +384,7 @@ class mensal_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter  ";
+        $query = "SELECT id, user, data, produtos, status,'button','sort','object' from spice_report_stock $filter  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -407,6 +411,7 @@ class mensal_stock extends requests_class {
                     $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
+             $row[7] = json_encode($row);
             $row[3] = "<div> <button class = 'btn  ver_produto_stock icon-alone' data-approved = '$approved' data-stock_id = '$row[0]'><i class = 'icon-eye-open'></i></button></div>";
             $result['aaData'][] = $row;
         }
@@ -480,7 +485,7 @@ class movimentacao_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao $filter ";
+        $query = "SELECT id, user, entry_date, produtos, status,'button','sort','object' from spice_report_movimentacao $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -507,6 +512,7 @@ class movimentacao_stock extends requests_class {
                     $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
+             $row[7]=  json_encode($row); 
             $row[3] = "<div> <button class = 'btn  ver_produto_mov_stock icon-alone' data-approved = '$approved' data-movimentacao_id = '$row[0]'><i class = 'icon-eye-open'></i></button></div>";
             $result['aaData'][] = $row;
         }

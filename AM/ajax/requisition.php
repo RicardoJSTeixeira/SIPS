@@ -42,6 +42,11 @@ switch ($action) {
     case "criar_encomenda":
         echo json_encode($requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments));
         break;
+    
+    case "get_encomenda":
+            echo json_encode($requisitions->get_requisitions_by_id($id_req));
+        break;
+
 
     case "editar_encomenda":
         echo json_encode($requisitions->edit_requisition($clientID, $cod_cliente));
@@ -60,7 +65,7 @@ switch ($action) {
         $result = $requisitions->accept_requisition($id);
         if ($result) {
             if ($message) {
-                $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id","S_ENC",$id,1);
+                $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id", "S_ENC", $id, 1);
             }
         }
         $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição aceite", "msg" => "$message")));
@@ -70,7 +75,7 @@ switch ($action) {
     case "decline_requisition":
         $result = $requisitions->decline_requisition($id);
         if ($result) {
-            $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message ID:$id","S_ENC",$id,0);
+            $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message ID:$id", "S_ENC", $id, 0);
         }
         $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição Rejeitada", "msg" => "$message")));
         echo json_encode($result);
