@@ -374,8 +374,7 @@ var requisition = function(geral_path, options_ext) {
                     "sTitle": "Tipo",
                     "sWidth": "60px"
                 }, {
-                    "sTitle": "ClientID",
-                    "sType": 'numeric',
+                    "sTitle": "Nome Cliente",
                     "sWidth": "90px"
 
                 }, {
@@ -400,6 +399,9 @@ var requisition = function(geral_path, options_ext) {
                     "bVisible": SpiceU.user_level > 5
                 }, {
                     "sTitle": "sort",
+                    "bVisible": false
+                }, {
+                    "sTitle": "object",
                     "bVisible": false
                 }],
             "oLanguage": {
@@ -464,38 +466,43 @@ var requisition = function(geral_path, options_ext) {
                     id_req: 0
                 };
                 EData.id_req = ~~$(that).parents("tr").find("td").first().text();
-                $(that).parents("tr").find('td:not(:eq(0)):not(:eq(6)):not(:eq(6)):not(:eq(7))').each(function(i) {
-                    EInfotmp.push(this.innerText);
-                });
-                EInfo = {
-                    'User': EInfotmp[0] + "",
-                    'Tipo': EInfotmp[1] + "",
-                    'Id Client': EInfotmp[2] + "",
-                    'Date': EInfotmp[3] + "",
-                    'Order Number': EInfotmp[4] + "",
-                    'Client Ref.': EInfotmp[5] + "",
-                    'Status': EInfotmp[6] + ""
-                };
-                EData.bInfo.push(EInfo);
-                $.each(data.product, function() {
-                    this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
-                    EData.products.push({
-                        Name: this.name,
-                        Category: this.category,
-                        Color: this.color_name,
-                        Qt: this.quantity,
-                        Size: this.size
+                $.post('ajax/requisition.php', {
+                    action: "get_encomenda",
+                    id_req: EData.id_req
+                }, function(data1) {
+                    if (data1) {
+                        EData.bInfo.push({
+                            'User': data1[0].user + "",
+                            'Tipo': data1[0].type + "",
+                            'Id Client': data1[0].lead_id + "",
+                            'Date': data1[0].date + "",
+                            'Order Number': data1[0].contract_number + "",
+                            'Client Ref.': data1[0].extra2 + "",
+                            'Status': data1[0].status + ""
+                        });
+                    }
+                    else
+                        EData.bInfo.push({});
+                    $.each(data.product, function() {
+                        this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
+                        EData.products.push({
+                            Name: this.name,
+                            Category: this.category,
+                            Color: this.color_name,
+                            Qt: this.quantity,
+                            Size: this.size
+                        });
+                        if (this.category !== "Acessório")
+                            this.size = "";
+                        modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
                     });
-                    if (this.category !== "Acessório")
-                        this.size = "";
-                    modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
-                });
-                if (data.comments.length)
-                    modal_tbody.append("<tr ><td colspan='5'>" + data.comments + "</td> </tr>");
-                else
-                    modal_tbody.append("<tr ><td colspan='5'>Sem comentários</td> </tr>");
-                modal.modal("show");
-                $.msg('unblock');
+                    if (data.comments.length)
+                        modal_tbody.append("<tr ><td colspan='5'>" + data.comments + "</td> </tr>");
+                    else
+                        modal_tbody.append("<tr ><td colspan='5'>Sem comentários</td> </tr>");
+                    modal.modal("show");
+                    $.msg('unblock');
+                }, "json");
             }, "json").fail(function(data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);

@@ -331,7 +331,8 @@ var requests = function(basic_path, options_ext) {
                     {"sTitle": "Ocorrências", "sWidth": "40px"},
                     {"sTitle": "Estado", "sWidth": "80px"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
-                    {"sTitle": "sort", "bVisible": false}],
+                    {"sTitle": "sort", "bVisible": false},
+                    {"sTitle": "object", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_F').click(function(event) {
@@ -477,7 +478,8 @@ var requests = function(basic_path, options_ext) {
                     {"sTitle": "Observações"},
                     {"sTitle": "Estado", "sWidth": "80px"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
-                    {"sTitle": "sort", "bVisible": false}],
+                    {"sTitle": "sort", "bVisible": false},
+                    {"sTitle": "object", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function(event) {
@@ -694,7 +696,7 @@ var requests = function(basic_path, options_ext) {
                         rms_zone.find("#button_rfms_table_add_line").click();
                         var trimed_string = name.split("/");
                         trimed_string.shift();
-                        rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(trimed_string+"/" + element.name);
+                        rms_zone.find("#table_tbody_rfms").find("tr").last().find(".desc").val(trimed_string + "/" + element.name);
                     }
                 }
 
@@ -738,7 +740,8 @@ var requests = function(basic_path, options_ext) {
                     {"sTitle": "Produtos", "sWidth": "75px"},
                     {"sTitle": "Estado"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
-                    {"sTitle": "sort", "bVisible": false}],
+                    {"sTitle": "sort", "bVisible": false},
+                    {"sTitle": "object", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_S').click(function(event) {
@@ -954,7 +957,8 @@ var requests = function(basic_path, options_ext) {
                     {"sTitle": "Produtos", "sWidth": "75px"},
                     {"sTitle": "Estado"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
-                    {"sTitle": "sort", "bVisible": false}],
+                    {"sTitle": "sort", "bVisible": false},
+                    {"sTitle": "object", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_MS').click(function(event) {
