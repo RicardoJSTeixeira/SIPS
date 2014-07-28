@@ -117,8 +117,6 @@ var requests = function(basic_path, options_ext) {
                             $.jGrowl("Selecione pelo menos uma Freguesia/Código de Postal", {life: 4000});
                     }
                 });
-
-
             });
         },
         get_to_datatable: function(am_zone) {
