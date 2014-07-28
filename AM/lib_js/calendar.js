@@ -145,6 +145,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 max: 0,
                 min: 0,
                 obs: "",
+                postal: "",
                 rsc: 0,
                 start: "",
                 system: false,
@@ -324,8 +325,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         lead_id: me.client.id,
                         client_name: me.client.name,
                         codCamp: me.client.codCamp,
+                        postal: me.client.postalCode,
                         type_text: $.trim($(this).text()),
-                        //changed: 0,
+                        user: SpiceU.username,
                         closed: false
                     }, $(this).data().eventobject);
 
@@ -651,6 +653,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
             } else if (calEvent.user !== me.user.username && me.user.user_level < 5) {
                 me.modal_ext
                         .find(".modal-footer span.left")
+                        .show()
+                        .end()
+                        .find(".modal-footer button.btn_trash")
                         .hide()
                         .end()
                         .find("#btn_view_consult")
@@ -781,11 +786,11 @@ var calendar = function(selector, data, modals, ext, client, user) {
         if (moment().diff(event.start, 'days')) {
             var exist = false;
             $.each(me.calendar.fullCalendar('clientEvents'),
-                    function() { 
+                    function() {
                         if (this.del)
                             return true;
-                        
-                        if (this.id === event.id) 
+
+                        if (this.id === event.id)
                             return true;
 
                         if (
@@ -824,7 +829,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             actions[e.keyCode]();
     });
 
-    if (me.user.user_level > 4) {
+    if (me.user.user_level > 4 || 1) {
         me.modal_ext.find("#btn_change").removeClass("hide");
     }
 };
