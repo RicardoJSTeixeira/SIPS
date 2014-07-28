@@ -45,7 +45,7 @@ class apoio_marketing extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, 'local_publicididade', cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter";
+        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed,'sort','object' from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -57,6 +57,7 @@ class apoio_marketing extends requests_class {
                 //User
                 $row[18] = ($row[16] == 0 ? 1 : ($row[16] == 1 ? 2 : 0));
             }
+            $row[19] = implode(",", $row);
             $row[9] = preg_replace('/(\v|\s)+/', ' ', $row[9]);
             $row[9] = str_replace(',', ';', $row[9]);
             $row[5] = "<div> <button class='btn icon-alone ver_horario' data-apoio_marketing_id='$row[0]'><i class='icon-time'></i></button></div>";
@@ -211,7 +212,7 @@ class correio extends requests_class {
                     $row[6] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-            $row[9] = json_encode($row);
+            $row[9] = implode(",", $row);
             if ($row[4]) {
                 $row[4] = "<button data-anexo_id = '$row[0]' data-approved = '$approved' class = 'btn ver_anexo_correio icon-alone'><i class = 'icon-folder-close'></i></button>";
             } else {
@@ -317,7 +318,7 @@ class frota extends requests_class {
                     $row[8] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-            $row[11] = json_encode($row);
+            $row[11] = implode(",", $row);
             $row[7] = "<div> <button class = 'btn ver_ocorrencias icon-alone' data-relatorio_frota_id = '$row[0]'><i class = 'icon-list'></i></button></div>";
             $result['aaData'][] = $row;
         }
@@ -411,7 +412,7 @@ class mensal_stock extends requests_class {
                     $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-             $row[7] = json_encode($row);
+            $row[7] = implode(",", $row);
             $row[3] = "<div> <button class = 'btn  ver_produto_stock icon-alone' data-approved = '$approved' data-stock_id = '$row[0]'><i class = 'icon-eye-open'></i></button></div>";
             $result['aaData'][] = $row;
         }
@@ -512,7 +513,7 @@ class movimentacao_stock extends requests_class {
                     $row[4] = "<span class = 'label label-important'>Pendente</span>";
                     break;
             }
-             $row[7]=  json_encode($row); 
+            $row[7] = implode(",", $row);
             $row[3] = "<div> <button class = 'btn  ver_produto_mov_stock icon-alone' data-approved = '$approved' data-movimentacao_id = '$row[0]'><i class = 'icon-eye-open'></i></button></div>";
             $result['aaData'][] = $row;
         }

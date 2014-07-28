@@ -63,7 +63,7 @@ Class requisitions {
             else
                 $row[7] = "Sem Anexo";
             $row[8] = "<div><button class='btn ver_requisition_products icon-alone' value='" . $row[0] . "'><i class='icon-eye-open'></i></button></div>";
-            $row[12] = json_encode($row);
+            $row[12] =implode(",", $row);
 
             $result['aaData'][] = $row;
         }
