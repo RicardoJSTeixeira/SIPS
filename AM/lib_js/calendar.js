@@ -781,8 +781,11 @@ var calendar = function(selector, data, modals, ext, client, user) {
         if (moment().diff(event.start, 'days')) {
             var exist = false;
             $.each(me.calendar.fullCalendar('clientEvents'),
-                    function() {
+                    function() { 
                         if (this.del)
+                            return true;
+                        
+                        if (this.id === event.id) 
                             return true;
 
                         if (
