@@ -640,6 +640,9 @@ var calendar = function(selector, data, modals, ext, client, user) {
             } else if (me.user.user_level === 1) {
                 me.modal_ext
                         .find(".modal-footer span.left")
+                        .show()
+                        .end()
+                        .find(".modal-footer button.btn_trash")
                         .hide()
                         .end()
                         .find(".modal-footer span.right")
