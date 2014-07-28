@@ -9,7 +9,7 @@ $(function() {
         modals.client = $("#calendar_client_modal");
         modals.special = $("#calendar_special_event");
         modals.mkt = $("#calendar_mkt");
-          modals.acf = $("#calendar_acf");
+        modals.acf = $("#calendar_acf");
 
         function startC(data, client) {
             sch = new calendar($("#calendar"), data, modals, $('#external-events'), client, user);
@@ -60,7 +60,7 @@ $(function() {
                 end = moment($(that).find("#special-event-end").val()).unix(),
                 obs = $(that).find("#special-event-obs").val(),
                 rtype = $(that).find("[name=special-event-type]:checked").val();
-        $.post("/AM/ajax/calendar.php", {action: "special-event", start: start, end: end, rtype: rtype, obs: obs, resource: $("[name=single-refs]:checked").val()}, function(data) {
+        $.post("/AM/ajax/calendar.php", {action: "special-event", start: start, end: end, rtype: rtype, obs: obs, resource: $("[name=single-refs]:checked").val()}, function() {
             $.jGrowl("Criado com sucesso.", {sticky: 4000});
             $("[name=single-refs]:checked").change();
             that.reset();
