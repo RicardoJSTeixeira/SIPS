@@ -47,7 +47,7 @@ var clientBox = function(configs) {
                     .text(clientI.address)
                     .end()
                     .find("#client_postal")
-                    .text(clientI.postal)
+                    .text(clientI.postalCode)
                     .end()
                     .find("#client_local")
                     .text(clientI.local)
@@ -118,22 +118,25 @@ var clientBox = function(configs) {
                                 propostas += " <tr><td>" + this.modelo + "</td><td>" + this.valor + "</td><td>" + this.quantidade + "</td><td>" + this.entrada + "</td><td>" + this.meses + "</td></tr>"
                             });
                             menu = "<div>\n\
-                            <div class='formRow'>\n\
-                            <label>" + this.data + "</label><button class='btn right' onclick='  $(this).next(\".formRight\").toggle(); '><i class='icon-eye-open icon-alone'></i></button>\n\
-                            <div class='formRight' style='display:none'><table class='table table-striped table-mod table-bordered'>\n\
-                            <thead>\n\
-                            <tr>\n\
-                            <th>Modelo</th>\n\
-                            <th>Valor</th>\n\
-                            <th>Quantidade</th>\n\
-                            <th>Entrada</th>\n\
-                            <th>Meses</th>\n\
-                            </tr>\n\
-                            </thead>\n\
-                            <tbody id='tbody_proposta_comercial'>" + propostas + "</tbody>\n\
-                            </table> </div>\n\
-                            </div>\n\
-                            </div><div class='clear'></div>";
+                                        <div class='formRow'>\n\
+                                            <label>" + this.data + "</label><button class='btn right' onclick='$(this).next(\".formRight\").toggle(); '><i class='icon-eye-open icon-alone'></i></button>\n\
+                                            <div class='formRight' style='display:none'>\n\
+                                                <table class='table table-striped table-mod table-bordered'>\n\
+                                                    <thead>\n\
+                                                        <tr>\n\
+                                                            <th>Modelo</th>\n\
+                                                            <th>Valor</th>\n\
+                                                            <th>Quantidade</th>\n\
+                                                            <th>Entrada</th>\n\
+                                                            <th>Meses</th>\n\
+                                                        </tr>\n\
+                                                    </thead>\n\
+                                                    <tbody id='tbody_proposta_comercial'>" + propostas + "</tbody>\n\
+                                                </table>\n\
+                                            </div>\n\
+                                        </div>\n\
+                                    </div>\n\
+                                    <div class='clear'></div>";
                             final += menu;
                             propostas = "";
                         });

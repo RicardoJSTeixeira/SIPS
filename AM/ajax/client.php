@@ -84,7 +84,10 @@ switch ($action) {
         $js = array_values($js);
         break;
     case 'byWhat':
-        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list where $what=:value";
+        if(strlen($value)==0)
+            break;
+        
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list where $what=:value limit 100";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":value" => $value));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {

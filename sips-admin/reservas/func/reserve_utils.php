@@ -48,9 +48,9 @@ function check2DateTimeEqual($data1, $data2) {
 
 function checkReserva($beg, $end, $rbeg, $rend) {
     $result1 = (strtotime($beg) >= strtotime($rbeg));
-    $result2 = (strtotime($beg) <= strtotime($rend));
+    $result2 = (strtotime($beg) <= strtotime($rend." -1 seconds"));
     $result5 = (strtotime($end) >= strtotime($rbeg));
-    $result6 = (strtotime($end) <= strtotime($rend));
+    $result6 = (strtotime($end) <= strtotime($rend." -1 seconds"));
     return ($result1 && $result2) OR ( $result1 && $result6) OR ( $result2 && $result5) OR ( $result5 && $result6);
 }
 
