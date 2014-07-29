@@ -44,12 +44,12 @@ $(function() {
     $("#special-event-beg")
             .datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", startDate: moment().format("YYYY-MM-DD hh:ii"), minuteStep: 15})
             .on('changeDate', function() {
-                $("#special-event-end").datetimepicker('setStartDate', $(this).val());
+                $("#special-event-end").datetimepicker('setStartDate', moment($(this).val(),"YYYY-MM-DD HH:mm").add("minutes",15).format("YYYY-MM-DD HH:mm"));
             });
     $("#special-event-end")
             .datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", startDate: moment().format("YYYY-MM-DD hh:ii"), minuteStep: 15})
             .on('changeDate', function() {
-                $("#datetime_from").datetimepicker('setEndDate', $(this).val());
+                $("#special-event-beg").datetimepicker('setEndDate', moment($(this).val(),"YYYY-MM-DD HH:mm").subtract("minutes",15).format("YYYY-MM-DD HH:mm"));
             });
 
     $("#special-event-form").submit(function(e) {
