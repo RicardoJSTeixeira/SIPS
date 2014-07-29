@@ -72,12 +72,11 @@ $(function() {
                                  <td>" + this.localidade + "</td>\n\
                                  <td>" + this.concelho + "</td>\n\
                                  <td>" + this.distrito + "</td>\n\
-                                 <td>" + this.cod_postal + "</td>\n\
-                                        <td><button class='btn postal_code_populate'>Copiar</button></td>\n\
+                                 <td>" + this.cod_postal + "<div class='view-button'><button class='btn btn-mini postal_code_populate' data-mor='" + JSON.stringify(this) + "'><i class='icon-copy'></i> Copiar</button></div></td>\n\
                                             </tr>";
                             });
                             bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um/varios codigos postais semelhantes.</div>\n\
-                                        <table class='table table-mod table-bordered table-striped table-condensed'>\n\
+                                        <table id='postal_code_table_check' class='table table-mod table-bordered table-striped table-condensed'>\n\
                                             <thead>\n\
                                                 <tr>\n\
                                                     <td>Rua</td>\n\
@@ -86,21 +85,24 @@ $(function() {
                                                    <td>Concelho</td>\n\
                                                     <td>Distrito</td>\n\
                                                     <td>Codigo Postal</td>\n\
-                                                     <td>Formulário</td>\n\
                                                     </tr>\n\
                                             </thead>\n\
                                             <tbody>\n\
                                             " + postal_codes + "\n\
                                             </tbody>\n\
-                                        </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'});
-                            $(".postal_code_populate").click(function() {
-                                $("[name='ADDRESS1']").val($(this).parent().prev().prev().prev().prev().prev().prev().text());
-                                $("[name='POSTAL_CODE']").val($(this).parent().prev().text());
-                                $("[name='CITY']").val($(this).parent().prev().prev().prev().prev().text());
-                                $("[name='PROVINCE']").val($(this).parent().prev().prev().prev().text());
-                                $("[name='STATE']").val($(this).parent().prev().prev().text());
+                                        </table><div class='clear'></div>", [{'OK': true, "label": "OK"}], {customClass: 'container'});
+                            $("#postal_code_table_check").on("click", ".postal_code_populate", function(e) {
+                                e.preventDefault();
+                                var that = $(this).data().mor;
+                                $("[name='ADDRESS1']").val(that.rua);
+                                $("[name='POSTAL_CODE']").val(that.cod_postal);
+                                $("[name='CITY']").val(that.localidade);
+                                $("[name='PROVINCE']").val(that.concelho);
+                                $("[name='STATE']").val(that.distrito);
                                 bootbox.hideAll();
-                            });
+                            })
+
+                            $("#postal_code_table_check").DataTable();
                         }, "json");
                     }
                 });
