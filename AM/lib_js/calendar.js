@@ -443,6 +443,10 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         var
                                 opt = "",
                                 rsc = me.modal_ext.data().calEvent.rsc;
+                        
+                        if (Refs.length<2){
+                            return '<div class="alert">Não tem calendários para alterar a marcação.</div>';
+                        }
                         $.each(Refs, function() {
                             if (~~this.id !== rsc) {
                                 opt += "<option value='" + this.id + "'>" + this.name + "</option>\n";
