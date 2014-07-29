@@ -151,7 +151,24 @@ $(function() {
                                             <tbody>\n\
                                             " + trs + "\n\
                                             </tbody>\n\
-                                        </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'});
+                                   </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'}).on("click", ".criar_marcacao", function()
+                        {
+                            bootbox.hideAll();
+                            var en = btoa($(this).data().lead_id);
+                            $.history.push("view/calendar.html?id=" + en);
+                        }).on("click", ".criar_encomenda", function()
+                        {
+                            bootbox.hideAll();
+                            var
+                                    data = $(this).data(),
+                                    en = btoa(data.lead_id);
+                            $.history.push("view/new_requisition.html?id=" + en);
+                        }).on("click", ".ver_cliente", function()
+                        {
+                            var client = new cliente_info($(this).data().lead_id, null);
+                            client.init(null);
+
+                        });
                     }, "json");
                 });
             }
