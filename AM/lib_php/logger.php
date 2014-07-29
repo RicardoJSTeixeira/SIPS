@@ -75,7 +75,7 @@ class Logger {
     }
 
     public function getAll() {
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log`   limit 20000;";
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` limit 1000;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
