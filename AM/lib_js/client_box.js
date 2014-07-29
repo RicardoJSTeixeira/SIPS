@@ -9,12 +9,10 @@ var clientBox = function(configs) {
     config = $.extend(defaults, configs),
             template = "<div class='grid'>\n\
                             <div class='grid-title'>\n\
-                                <div class='pull-left'>Cliente</div>\n\
-                                <div class='pull-right'>\n\
+                                                              <div class='pull-right'>\n\
                                   <button id='button_proposta_comercial' title='Propostas comerciais' class='btn icon-alone'><i class='icon-money'></i></button>\n\
                                     <button id='open_pdf' class='btn  icon-alone'><i class='icon-user'></i> </button>\n\
-                                    <button onclick='history.back();' title='Voltar' class='btn icon-alone'><i class='icon-circle-arrow-left'></i></button>\n\
-                                </div>\n\
+                                                                   </div>\n\
                             </div>\n\
                             <div class='user c_bg-2'>\n\
                                 <div class='user-name' id='client_cod_camp'></div>\n\
