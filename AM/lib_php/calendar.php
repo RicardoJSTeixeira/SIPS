@@ -304,7 +304,7 @@ class Calendar extends Calendars {
                     #"slotMinutes" => (int) $this->_resources[0]->blocks,
                     "slotMinutes" => 15,
                     "minTime" => $this->_resources[0]->begin_time / 60,
-                    "maxTime" => $this->_resources[0]->end_time / 60,
+                    "maxTime" => ($this->_resources[0]->end_time / 60) + ($this->_resources[0]->blocks / 60),
                     "sch" => $this->_id_scheduler,
                     "lazyFetching" => (bool) !$this->_is_restricted_days,
         );
@@ -376,8 +376,8 @@ class Calendar extends Calendars {
                         $nbl['end'] = $bl['start'];
                     } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
                         $block[] = array(
-                            'start' => $bl['end'], 
-                           'end' => $nbl['end'],
+                            'start' => $bl['end'],
+                            'end' => $nbl['end'],
                             'editable' => false,
                             'className' => "bloqueado",
                             'bloqueio' => true
