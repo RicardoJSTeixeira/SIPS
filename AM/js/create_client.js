@@ -60,16 +60,11 @@ $(function() {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else if (this.name === "SECURITY_PHRASE") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
-            } else if (this.name === "POSTAL_CODE")
-            {
+            } else if (this.name === "POSTAL_CODE") {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name}).focusout(function() {
-                    if ((this.value.length))
-                    {
+                    if ((this.value.length)) {
                         $.post("ajax/client.php", {action: "check_postal_code", postal_code: this.value}, function(data1) {
-
-
                             var postal_codes = "";
-
                             $.each(data1, function() {
                                 postal_codes += "<tr>\n\
                                  <td>" + this.rua + "</td>\n\
@@ -78,7 +73,7 @@ $(function() {
                                  <td>" + this.concelho + "</td>\n\
                                  <td>" + this.distrito + "</td>\n\
                                  <td>" + this.cod_postal + "</td>\n\
-                                        <td><button class='btn postal_code_populate'>Povoar</button></td>\n\
+                                        <td><button class='btn postal_code_populate'>Copiar</button></td>\n\
                                             </tr>";
                             });
                             bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um/varios codigos postais semelhantes.</div>\n\
@@ -91,17 +86,13 @@ $(function() {
                                                    <td>Concelho</td>\n\
                                                     <td>Distrito</td>\n\
                                                     <td>Codigo Postal</td>\n\
-                                                     <td>Povoar</td>\n\
+                                                     <td>Formulário</td>\n\
                                                     </tr>\n\
                                             </thead>\n\
                                             <tbody>\n\
                                             " + postal_codes + "\n\
                                             </tbody>\n\
                                         </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'});
-
-
-
-
                             $(".postal_code_populate").click(function() {
                                 $("[name='ADDRESS1']").val($(this).parent().prev().prev().prev().prev().prev().prev().text());
                                 $("[name='POSTAL_CODE']").val($(this).parent().prev().text());
@@ -110,9 +101,6 @@ $(function() {
                                 $("[name='STATE']").val($(this).parent().prev().prev().text());
                                 bootbox.hideAll();
                             });
-
-
-
                         }, "json");
                     }
                 });
