@@ -60,6 +60,62 @@ $(function() {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
             } else if (this.name === "SECURITY_PHRASE") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
+            } else if (this.name === "POSTAL_CODE")
+            {
+                elmt = $("<input>", {type: "text", id: this.name, name: this.name}).focusout(function() {
+                    if ((this.value.length))
+                    {
+                        $.post("ajax/client.php", {action: "check_postal_code", postal_code: this.value}, function(data1) {
+
+
+                            var postal_codes = "";
+
+                            $.each(data1, function() {
+                                postal_codes += "<tr>\n\
+                                 <td>" + this.rua + "</td>\n\
+                                 <td>" + this.zona + "</td>\n\
+                                 <td>" + this.localidade + "</td>\n\
+                                 <td>" + this.concelho + "</td>\n\
+                                 <td>" + this.distrito + "</td>\n\
+                                 <td>" + this.cod_postal + "</td>\n\
+                                        <td><button class='btn postal_code_populate'>Povoar</button></td>\n\
+                                            </tr>";
+                            });
+                            bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um/varios codigos postais semelhantes.</div>\n\
+                                        <table class='table table-mod table-bordered table-striped table-condensed'>\n\
+                                            <thead>\n\
+                                                <tr>\n\
+                                                    <td>Rua</td>\n\
+                                                    <td>Zona</td>\n\
+                                                    <td>Localidade</td>\n\
+                                                   <td>Concelho</td>\n\
+                                                    <td>Distrito</td>\n\
+                                                    <td>Codigo Postal</td>\n\
+                                                     <td>Povoar</td>\n\
+                                                    </tr>\n\
+                                            </thead>\n\
+                                            <tbody>\n\
+                                            " + postal_codes + "\n\
+                                            </tbody>\n\
+                                        </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'});
+
+
+
+
+                            $(".postal_code_populate").click(function() {
+                                $("[name='ADDRESS1']").val($(this).parent().prev().prev().prev().prev().prev().prev().text());
+                                $("[name='POSTAL_CODE']").val($(this).parent().prev().text());
+                                $("[name='CITY']").val($(this).parent().prev().prev().prev().prev().text());
+                                $("[name='PROVINCE']").val($(this).parent().prev().prev().prev().text());
+                                $("[name='STATE']").val($(this).parent().prev().prev().text());
+                                bootbox.hideAll();
+                            });
+
+
+
+                        }, "json");
+                    }
+                });
             } else {
                 elmt = $("<input>", {type: "text", id: this.name, name: this.name});
             }
@@ -107,24 +163,7 @@ $(function() {
                                             <tbody>\n\
                                             " + trs + "\n\
                                             </tbody>\n\
-                                        </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'}).on("click", ".criar_marcacao", function()
-                        {
-                            bootbox.hideAll();
-                            var en = btoa($(this).data().lead_id);
-                            $.history.push("view/calendar.html?id=" + en);
-                        }).on("click", ".criar_encomenda", function()
-                        {
-                            bootbox.hideAll();
-                            var
-                                    data = $(this).data(),
-                                    en = btoa(data.lead_id);
-                            $.history.push("view/new_requisition.html?id=" + en);
-                        }).on("click", ".ver_cliente", function()
-                        {
-                            var client = new cliente_info($(this).data().lead_id, null);
-                            client.init(null);
-
-                        });
+                                        </table>", [{'OK': true, "label": "OK"}], {customClass: 'container'});
                     }, "json");
                 });
             }
@@ -227,6 +266,10 @@ $("#form_create_client").submit(function(e) {
         });
     }
 });
+
+
+
+
 $("#btn_criar_marcacao").click(function() {
     var en = btoa($("#criar_marcacao").modal("hide").data("client_id"));
     $.history.push("view/calendar.html?id=" + en);

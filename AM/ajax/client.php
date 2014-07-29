@@ -12,6 +12,7 @@ $id = filter_var($_POST['id']);
 $action = filter_var($_POST['action']);
 $what = filter_var($_POST['what']);
 $value = filter_var($_POST['value']);
+$postal_code = filter_var($_POST['postal_code']);
 switch ($action) {
     case 'byName':
         $query = "SELECT  first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id limit 1";
@@ -84,9 +85,9 @@ switch ($action) {
         $js = array_values($js);
         break;
     case 'byWhat':
-        if(strlen($value)==0)
+        if (strlen($value) == 0)
             break;
-        
+
         $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list where $what=:value limit 100";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":value" => $value));
@@ -103,8 +104,25 @@ switch ($action) {
                 "city" => (string) $row->city);
         }
         break;
+
+    case 'check_postal_code':
+        $query = "SELECT  rua,cod_postal,localidade,zona,freguesia,distrito,concelho FROM cp7 where cod_postal like :postal_code  limit 300";
+        $stmt = $db->prepare($query);
+        $stmt->execute(array(":postal_code" => "%" . $postal_code . "%"));
+        while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $js[] = array(
+                "rua" => (string) $row->rua,
+                "cod_postal" => (string) $row->cod_postal,
+                "localidade" => (string) $row->localidade,
+                "zona" => (string) $row->zona,
+                "freguesia" => (string) $row->freguesia,
+                "distrito" => (string) $row->distrito,
+                "concelho" => (string) $row->concelho);
+        }
+        break;
+
     default:
-        echo 'Are you a noob hacker? Or just a noob?';
+        echo 'Are you a noob hacker? Or just a noob?'; 
         break;
 }
 
