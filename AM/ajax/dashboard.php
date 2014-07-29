@@ -23,8 +23,8 @@ switch ($action) {
 
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
-        $rs=getResTypeRaw($db);
-        $rs=  implode(",", $rs);
+        $rs = getResTypeRaw($db);
+        $rs = implode(",", $rs);
         if ($u->user_level > 6) {
             $query = "SELECT a.lead_id,
                 extra1, 
@@ -42,7 +42,8 @@ switch ($action) {
                 d.consulta_razao,
                 d.venda_razao,
                 d.exame_razao, 
-                d.user
+                d.user,
+                d.reserva_id
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    inner join vicidial_users c on b.user=c.user
@@ -71,7 +72,8 @@ switch ($action) {
                 c.consulta_razao,
                 c.venda_razao,
                 c.exame_razao,
-                c.user
+                c.user,
+                  c.reserva_id
         from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
@@ -80,11 +82,18 @@ switch ($action) {
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $row[16] = $row[16] . "<div class='view-button'>"
+
+            if (strlen($row[14]))
+                $row[13] = $row[14];
+            else if (strlen($row[15]))
+                $row[13] = $row[15];
+            
+            $row[14] = $row[16] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_encomenda" . (($u->user_level === 1) ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
                     . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
-                    //. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
+                    . "<button class='btn btn-mini icon-alone ver_consulta' data-lead_id='$row[0]'data-reserva_id='$row[17]' title='Ver Consulta'><i class='icon-user-md'></i></button>"
+//. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";
             $output['aaData'][] = $row;
         }
@@ -199,9 +208,9 @@ switch ($action) {
             return $a->id;
         }, $refs);
         $refs = implode(",", $refs);
-        
-        $rs=getResTypeRaw($db);
-        $rs=  implode(",", $rs);
+
+        $rs = getResTypeRaw($db);
+        $rs = implode(",", $rs);
         $query = "SELECT * FROM (SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'' closed from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
    left join spice_consulta c on c.reserva_id=a.id_reservation
@@ -222,7 +231,6 @@ switch ($action) {
         echo json_encode($data);
         break;
 }
-
 
 function getResTypeRaw($db) {
     $stmt = $db->prepare("SELECT id_reservations_types FROM `sips_sd_reservations_types` where display_text like '%Exame%'");
