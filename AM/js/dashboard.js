@@ -17,7 +17,7 @@ $(function() {
 
         //LISTAR CONSULTAS ABERTAS,FECHADAS
         var
-                columns_allm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Estado", "sWidth": "50px"}, {"sTitle": "Data", "sWidth": "120px"}, {"sTitle": "Resultado Consulta", "sWidth": "65px"}, {"sTitle": "Feedback sem Consulta", "sWidth": "65px"}, {"sTitle": "Feedback sem venda", "sWidth": "65px"}, {"sTitle": "Feedback sem exame", "sWidth": "65px"}, {"sTitle": "User", "sWidth": "150px"}],
+                columns_allm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Estado", "sWidth": "50px"}, {"sTitle": "Data", "sWidth": "120px"}, {"sTitle": "Resultado Consulta", "sWidth": "65px"}, {"sTitle": "Feedback", "sWidth": "65px"}, {"sTitle": "User", "sWidth": "150px"}],
                 columns_ncsm = [{"sTitle": "ID", "sWidth": "50px", bVisible: false}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Ref. Cliente", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Nome"}, {"sTitle": "Morada"}, {"sTitle": "Cod. Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Data", "sWidth": "240px"}, {"sTitle": "User", "sWidth": "70px"}];
         //columns_ncsm_r = [{"sTitle": "Nome Recomendador", "sWidth": "140px", bVisible: false}, {"sTitle": "Cod. Mkt. Rec.", "sWidth": "70px"}, {"sTitle": "ID", "sWidth": "50px"}, {"sTitle": "Nome"}, {"sTitle": "Cod. Mkt.", "sWidth": "70px"}, {"sTitle": "Referência", "sWidth": "70px"}, {"sTitle": "Nif", "sWidth": "63px"}, {"sTitle": "Postal", "sWidth": "55px"}, {"sTitle": "Localidade", "sWidth": "70px"}, {"sTitle": "Telefone 1", "sWidth": "64px"}, {"sTitle": "Telefone 2", "sWidth": "64px"}, {"sTitle": "Morada"}, {"sTitle": "Data", "sWidth": "240px"},{"sTitle": "Dispenser", "sWidth": "70px"}];
 
@@ -92,7 +92,7 @@ $(function() {
             temp += "<tr " + ((isV6) ? "class='error'" : "") + ">\n\
                         <td>" + this.first_name + "</td>\n\
                         <td>" + moment().from(this.start_date, true) + " <div class='view-button'>\n\
-                            <button class='btn btn-mini icon-alone initC "+(SpiceU.user_level===1?'hide':'')+"' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Iniciar Consulta'><i class='icon-share-alt'></i></button>\n\
+                            <button class='btn btn-mini icon-alone initC " + (SpiceU.user_level === 1 ? 'hide' : '') + "' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Iniciar Consulta'><i class='icon-share-alt'></i></button>\n\
                             <button class='btn btn-mini icon-alone initSC' data-cid='" + this.lead_id + "' data-rid='" + this.id_reservation + "' data-toggle='tooltip' title='Sem Consulta'><i class='icon-minus-sign'></i></button></div>\n\
                         </td>\n\
                     </tr>";
@@ -118,8 +118,7 @@ $(function() {
                     trigger: 'click'
                 })
                 .end()
-                .on("submit", "#no_consult_confirm", function(e)
-                {
+                .on("submit", "#no_consult_confirm", function(e) {
                     e.preventDefault();
                     var
                             that = $(this),
@@ -159,26 +158,27 @@ $(function() {
         consultasMais();
     }, "json");
 
-    $("#div_master").on("click", ".criar_marcacao", function()
-    {
+    $("#div_master").on("click", ".criar_marcacao", function() {
         var en = btoa($(this).data().lead_id);
         $.history.push("view/calendar.html?id=" + en);
     });
-    $("#div_master").on("click", ".recomendacoes", function()
-    {
+    $("#div_master").on("click", ".recomendacoes", function() {
         var en = btoa($(this).data().lead_id);
         $.history.push("view/mass_client.html?id=" + en);
     });
-
-    $("#div_master").on("click", ".ver_cliente", function()
-    {
-        var client = new cliente_info($(this).data("lead_id"), null);
-        client.init(null);
-
+    $("#div_master").on("click", ".ver_consulta", function() {
+        var lead_id = btoa($(this).data().lead_id);
+        var reserva_id = btoa($(this).data().reserva_id);
+        $.history.push("view/consulta.html?id=" + encodeURIComponent(lead_id) + "&rs=" + encodeURIComponent(reserva_id));
     });
 
-    $("#div_master").on("click", ".criar_encomenda", function()
-    {
+
+    $("#div_master").on("click", ".ver_cliente", function() {
+        var client = new cliente_info($(this).data("lead_id"), null);
+        client.init(null);
+    });
+
+    $("#div_master").on("click", ".criar_encomenda", function() {
         var
                 data = $(this).data(),
                 en = btoa(data.lead_id);
