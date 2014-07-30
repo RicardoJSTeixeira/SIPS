@@ -62,12 +62,12 @@ class Logger {
                 $parameters[] = $date_end;
             }
         } else {
-            return [];
+            return array();
         }
 
 
 
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` $where";
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` $where  limit 500";
         
         $stmt = $this->_db->prepare($query);
         $stmt->execute($parameters);
