@@ -10,7 +10,7 @@ $Timestamp = date("dmY-His");
 $UploadedFile = $Timestamp."_".preg_replace("/[^-\.\_0-9a-zA-Z]/" , "_" , $_FILES['input-db-wizard-upload']['name']);
 $ConvertedFile = preg_replace("/\.csv$|\.xls$|\.xlsx$|\.ods$|\.sxc$/i", '.txt', $UploadedFile);
 move_uploaded_file($_FILES['input-db-wizard-upload']['tmp_name'], "/tmp/".$UploadedFile);
-$ConvertCommand = "/srv/www/htdocs/sips-admin/campaigns/extras/upload/sheet2tab.pl /tmp/$UploadedFile /tmp/$ConvertedFile";
+$ConvertCommand = $_SERVER["DOCUMENT_ROOT"]."sips-admin/campaigns/extras/upload/sheet2tab.pl /tmp/$UploadedFile /tmp/$ConvertedFile";
 passthru("$ConvertCommand");
 echo $ConvertedFile;
 
