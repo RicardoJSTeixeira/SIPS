@@ -641,29 +641,19 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         .end()
                         .find("#btn_view_consult")
                         .show();
-            } else if (me.user.user_level === 1) {
+            } else if (me.user.user_level < 5) {
                 me.modal_ext
                         .find(".modal-footer span.left")
                         .show()
                         .end()
                         .find(".modal-footer button.btn_trash")
-                        .hide()
+                        .toggle(calEvent.user === me.user.username)
                         .end()
                         .find(".modal-footer span.right")
                         .show()
                         .end()
                         .find(".modal-footer span.right #btn_init_consult")
-                        .hide()
-                        .end()
-                        .find("#btn_view_consult")
-                        .hide();
-            } else if (calEvent.user !== me.user.username && me.user.user_level < 5) {
-                me.modal_ext
-                        .find(".modal-footer span.left")
-                        .show()
-                        .end()
-                        .find(".modal-footer button.btn_trash")
-                        .hide()
+                        .toggle(me.user.user_level !== 1)
                         .end()
                         .find("#btn_view_consult")
                         .hide();
@@ -760,7 +750,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
     this.openACF = function(calEvent) {
         me.modals.acf
                 .data("calEvent", calEvent)
-                .end()
                 .find("h3")
                 .text(calEvent.type_text + ' ' + calEvent.client_name)
                 .end()
