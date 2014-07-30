@@ -191,8 +191,11 @@
         <div class="pull-left">Log/Histório</div>
     </div>
     <div class="grid-content">
+
+
         <form id="filter_form">
             <div class="formRow">
+                <div class="alert alert-info">A pesquisa está limita a 500 registos.</div>
                 <h5>Categorias</h5>
 
                 <select id="select_section" multiple class="filter chosen-select">
@@ -207,26 +210,19 @@
                     <option value="Stock" >Stock</option>
                     <option value="User" >User</option>
                 </select>
-
             </div>
-
-
-
             <div class="formRow">
                 <h5>Datas Limite</h5>
-
-                <input placeholder="Data de inicio" type="text" id="date_start" >
-
-                <input  placeholder="Data de Fim" type="text" id="date_end"  >  
-
+                <input placeholder="Data de inicio" type="text" id="date_start" class="validate[required]" >
+                <input  placeholder="Data de Fim" type="text" id="date_end"  class="validate[required]">  
             </div>
         </form>
+
         <div class="formRow">
+
             <button class="btn" id="button_apply_filters">Filtrar</button>
         </div> 
     </div>
-
-
 </div>
 
 
