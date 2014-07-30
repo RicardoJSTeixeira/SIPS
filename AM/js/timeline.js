@@ -8,10 +8,7 @@ $(function() {
     $("#select_section").chosen({
         no_results_text: "Sem resultados"
     });
-    $("#select_section option").prop('selected', true).trigger('chosen:updated');
-    if (SpiceU.user_level === 7)
-    {
-    }
+
 
 
     $("#date_start").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
@@ -20,13 +17,17 @@ $(function() {
     $("#date_end").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
         $("#date_start").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
     });
-    search();
+
 });
 
 
 
-$("#button_apply_filters").click(function() {
-    search();
+$("#button_apply_filters").click(function(e) {
+    e.preventDefault();
+    if ($("#filter_form").validationEngine("validate")) {
+        search();
+    }
+
 });
 
 
