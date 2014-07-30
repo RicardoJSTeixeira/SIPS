@@ -2,6 +2,8 @@
 
 $curTime = date("Y-m-d_H:i:s");
 $filename = "novas_marc_" . $curTime;
+
+
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
@@ -96,7 +98,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         date("H:i", strtotime($row['start_date'])),
         date("d-m-Y", strtotime($row['start_date'])),
         $row['reservation_text'],
-        "",
+        "Spice",
         $row['comments'],
         "",
         "",

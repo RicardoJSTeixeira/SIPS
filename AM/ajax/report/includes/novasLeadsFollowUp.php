@@ -44,18 +44,14 @@ fputcsv($output, array(
     'Salesperson Team',
     'Tipo Cliente'), ";");
 if ($type == "dispenser") {
-    $dispens_cc = "and c.extra6='NO'";
+    $dispens_cc = "and a.extra6='NO'";
 } else {
-    $dispens_cc = "and c.extra6='YES'";
+    $dispens_cc = "and a.extra6='YES'"; 
 }
-
-$query_log = "SELECT "
-        . "a.*,"
-        . "FROM vicidial_list a ON a.lead_id = c.lead_id "
-        . "INNER JOIN vicidial_user b ON a.user=b.user "
-        . "AND a.call_date BETWEEN :data_inicial AND :data_final AND e.user_group=:user_group $dispens_cc";
+$query_log = "SELECT a.* FROM vicidial_list a INNER JOIN vicidial_users b ON a.user=b.user "
+        . "AND a.entry_date BETWEEN :data_inicial AND :data_final   $dispens_cc";
 $stmt = $db->prepare($query_log);
-$stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":user_group" => $u->user_group));
+$stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     fputcsv($output, array(
@@ -68,7 +64,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $row['address2'],
         $row['address3'],
         $row['state'],
-        $row['postal_code'],
+        $row['postal_code'], 
         $row['extra3'],
         $row['extra10'],
         $row['city'],
