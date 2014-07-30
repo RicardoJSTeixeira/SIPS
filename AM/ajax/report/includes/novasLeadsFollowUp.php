@@ -48,8 +48,29 @@ if ($type == "dispenser") {
 } else {
     $dispens_cc = "and a.extra6='YES'"; 
 }
-$query_log = "SELECT a.* FROM vicidial_list a INNER JOIN vicidial_users b ON a.user=b.user "
+$query_log = "SELECT a.title,"
+        . "a.extra1,"
+        . "a.first_name,"
+        . "a.middle_initial,"
+        . "a.last_name,"
+        . "a.address1,"
+        . "a.address2,"
+        . "a.address3,"
+        . "a.state,"
+        . "a.postal_code,"
+        . "a.extra3,"
+        . "a.extra10,"
+        . "a.city,"
+        . "a.province,"
+        . "a.country_code,"
+        . "a.phone_number,"
+        . "a.alt_phone,"
+        . "a.email,"
+        . "a.date_of_birth,"
+        . "a.extra2,"
+        . "a.comments FROM vicidial_list a INNER JOIN vicidial_users b ON a.user=b.user "
         . "AND a.entry_date BETWEEN :data_inicial AND :data_final   $dispens_cc";
+var_dump($query_log);
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
