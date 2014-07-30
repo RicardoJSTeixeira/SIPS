@@ -763,11 +763,22 @@ var calendar = function(selector, data, modals, ext, client, user) {
         },
         function(data) {
             if (data.obs) {
-                me.modals.acf.find("#obs_acf").prop("disabled", true).end().find("#save_acf").hide();
-                me.modals.acf.find("#obs_acf").val(data.obs);
+                me.modals.acf
+                        .find("#obs_acf")
+                        .prop("disabled", true)
+                        .val(data.obs)
+                        .end()
+                        .find("#save_acf,.btn_trash")
+                        .hide();
             }
             else {
-                me.modals.acf.find("#obs_acf").val("").prop("disabled", false).end().find("#save_acf").show();
+                me.modals.acf
+                        .find("#obs_acf")
+                        .val("")
+                        .prop("disabled", false)
+                        .end()
+                        .find("#save_acf,.btn_trash")
+                        .show();
             }
             $.msg('unblock');
         },
