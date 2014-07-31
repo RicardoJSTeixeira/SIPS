@@ -61,7 +61,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 });
                 return false;
             }
-            if (calEvent.type_text === "Fitting" || calEvent.type_text === "Assistência" || calEvent.type_text === "Consulta Q") {
+            if (calEvent.useful) {
                 me.openACF(calEvent);
                 return true;
             }
@@ -75,8 +75,11 @@ var calendar = function(selector, data, modals, ext, client, user) {
             }
             if (calEvent.system) {
                 me.openSpecialEvent(calEvent);
-            } else {
+                return true;
+            }
+            if (calEvent.sale) {
                 me.openClient(calEvent);
+                return true;
             }
         },
         droppable: {
@@ -444,8 +447,8 @@ var calendar = function(selector, data, modals, ext, client, user) {
                         var
                                 opt = "",
                                 rsc = me.modal_ext.data().calEvent.rsc;
-                        
-                        if (Refs.length<2){
+
+                        if (Refs.length < 2) {
                             return '<div class="alert">Não tem calendários para alterar a marcação.</div>';
                         }
                         $.each(Refs, function() {
