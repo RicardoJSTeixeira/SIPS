@@ -33,9 +33,9 @@ switch ($action) {
             return false;
         } else {
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $id . "_-_" . $fileName))
-                echo "$fileName Guardado";
+                echo "$fileName Guardado&&&$id";
             else
-                echo "$fileName Não Guardado";
+                echo "$fileName Não Guardado&&&$id";
         }
         break;
 
