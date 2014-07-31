@@ -12,7 +12,9 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
-
+header('Content-Encoding: UTF-8');
+header('Content-type: text/csv; charset=UTF-8');
+echo "\xEF\xBB\xBF";
 $user = new UserLogin($db);
 $user->confirm_login();
 
