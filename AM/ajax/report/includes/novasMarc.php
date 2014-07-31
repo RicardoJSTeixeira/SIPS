@@ -6,6 +6,8 @@ $calendar = new Calendars($db);
 $curTime = date("Y-m-d_H:i:s");
 $filename = "novas_marc_" . $curTime;
 
+$rs = $calendar->getResTypeRaw();
+$rs = implode(",", $rs);
 
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
@@ -50,7 +52,6 @@ fputcsv($output, array(
     'To be Issued',
     'ID Consulta SPICE'), ";");
 
-$calendar->
 
 $query_log = "SELECT "
         . "a.start_date, "
@@ -63,7 +64,7 @@ $query_log = "SELECT "
         . "INNER JOIN sips_sd_reservations_types c ON a.id_reservation_type = c.id_reservations_types "
         . "INNER JOIN sips_sd_resources d ON a.id_resource = d.id_resource "
         . "INNER JOIN vicidial_users e ON a.id_user = e.user "
-        . "AND a.entry_date BETWEEN :data_inicial AND :data_final AND e.user_group=:user_group";
+        . "WHERE a.entry_date BETWEEN :data_inicial AND :data_final AND e.user_group=:user_group AND a.id_reservation_type in ($rs)";
 
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":user_group" => $u->user_group));

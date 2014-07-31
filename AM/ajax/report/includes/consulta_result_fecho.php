@@ -1,9 +1,15 @@
 <?php
 
+require "$root/AM/lib_php/calendar.php";
+$calendar = new Calendars($db);
+
 $curTime = date("Y-m-d_H:i:s");
 $filename = "consulta_result_fecho_" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
+
+$rs = $calendar->getResTypeRaw();
+$rs = implode(",", $rs);
 
 fputcsv($output, array(
     'User',
@@ -13,9 +19,14 @@ fputcsv($output, array(
     'Total Abertas',
     '% Abertas',
     'Fechadas',
-    '% Fechadas',), ";");
+    '% Fechadas'), ";");
 
-$query_log = "SELECT a.consulta,a.exame,a.venda,a.closed,a.terceira_pessoa,c.user,c.user_level,c.full_name,a.left_ear,a.right_ear,c.siblings from spice_consulta a  inner join  vicidial_users c on c.user=a.user where c.user_group='SPICE' and a.data between :data_inicial and :data_final ";
+$query_log = "SELECT b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, c.user, c.user_level, c.full_name, b.left_ear, b.right_ear, c.siblings "
+        . "from sips_sd_reservations a "
+        . "inner join spice_consulta b on a.id_reservation=b.reserva_id "
+        . "inner join vicidial_users c on c.user=b.user "
+        . "where c.user_group='SPICE' AND a.id_reservation_type in ($rs) and a.start_date between :data_inicial and :data_final ";
+
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 $info = array();
@@ -61,7 +72,7 @@ foreach ($final as &$value) {
     }
 }
 
- 
+
 foreach ($final as &$value) {
     fputcsv($output, array("ASM"), ";");
     fputcsv($output, array(
@@ -82,7 +93,7 @@ foreach ($final as &$value) {
 
 
     foreach ($value["dispenser"] as $value1) {
-  
+
 
         $total["total_consulta"] += (int) $value1["total_consulta"];
         $total["total_consulta_aberta"] += (int) $value1["total_consulta_aberta"];
