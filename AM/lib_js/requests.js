@@ -249,7 +249,7 @@ var requests = function(basic_path, options_ext) {
                 //Adiciona Linhas
                 rf_zone.find("#button_rf_table_add_line").click(function(e) {
                     e.preventDefault();
-                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime  linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'  data-prompt-position='topRight:120'></td><td><input class='linha_ocorrencia span' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='linha_km text-right ' type='text' value='0' maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
+                    rf_zone.find("#table_tbody_rf").append("<tr><td> <input size='16' type='text' name='rf_data" + rfinput_count + "' class='rf_datetime validate[required]  linha_data span' readonly id='rf_datetime" + rfinput_count + "' placeholder='Data'  data-prompt-position='topRight:120'></td><td><input class='linha_ocorrencia span validate[required]' type='text' name='rf_ocorr" + rfinput_count + "'></td><td><input class='linha_km text-right validate[required]' type='text'  maxlength='6' name='rf_km" + rfinput_count + "' size='16'/></td><td><button class='btn btn-danger button_rf_table_remove_line icon-alone'><i class='icon-minus'></i></button></td></tr>");
                     rf_zone.find("#rf_datetime" + rfinput_count).datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", startView: 2, minView: 2});
                     rf_zone.find("[name='rf_km" + rfinput_count + "']").autoNumeric('init', {mDec: '0'});
                     $("[name='rf_ocorr" + rfinput_count + "']").autocomplete({source: availableTags});
@@ -269,7 +269,7 @@ var requests = function(basic_path, options_ext) {
                             $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
                                 if (~~$(this).autoNumeric('get') > ~~rf_zone.find("#input_km").autoNumeric('get')) {
                                     $.jGrowl("O número de Kms numa das ocorrências é superior aos Kms totais no relatório");
-                                    can_submit = 0;
+                                    can_submit = 0; 
                                 }
                             });
                             if (can_submit) {
