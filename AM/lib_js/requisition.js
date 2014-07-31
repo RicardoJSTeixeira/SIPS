@@ -162,7 +162,6 @@ var requisition = function(geral_path, options_ext) {
                     if ($(this).prop("category_product") === "Molde" || $(this).prop("category_product") === "INTRA")
                         must_have_anexo = true;
                     has_products++;
-
                     if (duplicate_array.indexOf(($(this).prop("id_product"))) === -1) {
                         produtos_single.push({
                             id: $(this).prop("id_product"),
