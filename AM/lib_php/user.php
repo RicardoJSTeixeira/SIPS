@@ -99,6 +99,7 @@ class UserControler {
     //User Levels
     const ASSIST = 1;
     const DISP = 2;
+    const UMRA = 3;
     const ASM = 5;
     const SUPBO = 6;
     const ADMBO = 7;
@@ -108,6 +109,7 @@ class UserControler {
     public $_ULalias = array(
         "1" => "Assistente",
         "2" => "Técnico",
+        "3" => "UMRA",
         "5" => "Supervisores Áreas",
         "6" => "Supervisor Pedidos BackOfice",
         "7" => "Administrador Pedidos do BackOffice",
@@ -141,6 +143,10 @@ class UserControler {
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    
+    public function getTypes(){
+        return $this->_ULalias;
     }
 
     public function set($username, $pass, $desc, $ulevel) {

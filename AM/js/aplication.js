@@ -7,6 +7,7 @@ $(function() {
         types = {
             "1": "branch",
             "2": "dispenser",
+            "3": "umra",
             "5": "asm",
             "6": "sbo",
             "7": "abo",
