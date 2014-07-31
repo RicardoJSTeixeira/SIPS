@@ -1,5 +1,8 @@
 <?php
 
+require "$root/AM/lib_php/calendar.php";
+$calendar = new Calendars($db);
+
 $curTime = date("Y-m-d_H:i:s");
 $filename = "novas_marc_" . $curTime;
 
@@ -46,6 +49,8 @@ fputcsv($output, array(
     'Tipo Cliente',
     'To be Issued',
     'ID Consulta SPICE'), ";");
+
+$calendar->
 
 $query_log = "SELECT "
         . "a.start_date, "

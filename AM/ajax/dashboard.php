@@ -23,7 +23,8 @@ switch ($action) {
 
     case "populate_allm"://ALL MARCAÇOES
         $u = $user->getUser();
-        $rs = getResTypeRaw($db);
+        $calendar = new Calendars($db);
+        $rs = $calendar->getResTypeRaw();
         $rs = implode(",", $rs);
         if ($u->user_level > 6) {
             $query = "SELECT a.lead_id,
@@ -209,7 +210,7 @@ switch ($action) {
         }, $refs);
         $refs = implode(",", $refs);
 
-        $rs = getResTypeRaw($db);
+        $rs = $calendar->getResTypeRaw();
         $rs = implode(",", $rs);
         $query = "SELECT * FROM (SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'' closed from sips_sd_reservations a 
    inner join vicidial_list b on a.lead_id=b.lead_id 
@@ -230,14 +231,4 @@ switch ($action) {
         }
         echo json_encode($data);
         break;
-}
-
-function getResTypeRaw($db) {
-    $stmt = $db->prepare("SELECT id_reservations_types FROM `sips_sd_reservations_types` where display_text like '%Exame%'");
-    $stmt->execute();
-    $rs = array();
-    while ($v = $stmt->fetch(PDO::FETCH_OBJ)) {
-        $rs[] = $v->id_reservations_types;
-    }
-    return $rs;
 }

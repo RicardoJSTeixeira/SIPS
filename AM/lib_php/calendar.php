@@ -10,7 +10,7 @@ Class Calendars {
 
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false, $username = "") {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -18,7 +18,7 @@ Class Calendars {
                     . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
                     . "WHERE b.id_scheduler=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories "
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful "
                     . "FROM sips_sd_reservations a "
                     . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
                     . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
@@ -53,7 +53,9 @@ Class Calendars {
                 'max' => (int) $row->max_time,
                 'min' => (int) $row->min_time,
                 'del' => (bool) $row->del,
-                'obs' => (string) $row->obs
+                'obs' => (string) $row->obs,
+                "sale" => (bool) $row->sale,
+                "useful" => (bool) $row->useful
             );
         }
         return $reservars;
@@ -115,9 +117,9 @@ Class Calendars {
             for ($index = 0; $index < count($user_groups); $index++) {
                 $prepare_hack.="?,";
             }
-            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group FROM sips_sd_reservations_types where user_group in (" . rtrim($prepare_hack, ",") . ");");
+            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group, sale, useful FROM sips_sd_reservations_types where user_group in (" . rtrim($prepare_hack, ",") . ");");
         } else {
-            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group FROM sips_sd_reservations_types");
+            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group, sale, useful FROM sips_sd_reservations_types");
         }
         $stmt->execute($user_groups);
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -129,7 +131,9 @@ Class Calendars {
                         "max" => (int) $row->max_time,
                         "min" => (int) $row->min_time,
                         "active" => (bool) !(!$row->active || ($row->user_group == "SYSTEM")),
-                        "color" => $row->color);
+                        "color" => $row->color,
+                        "sale" => (bool) $row->sale,
+                        "useful" => (bool) $row->useful);
         }
         return $this->_tipo_reservas;
     }
@@ -242,6 +246,16 @@ Class Calendars {
         $result = json_decode($result->obs);
         $obs = array("date" => $result->date, "obs" => $result->obs);
         return $obs;
+    }
+
+    public function getResTypeRaw() {
+        $stmt = $this->_db->prepare("SELECT id_reservations_types FROM `sips_sd_reservations_types` where sale =1");
+        $stmt->execute();
+        $rs = array();
+        while ($v = $stmt->fetch(PDO::FETCH_OBJ)) {
+            $rs[] = $v->id_reservations_types;
+        }
+        return $rs;
     }
 
 }
