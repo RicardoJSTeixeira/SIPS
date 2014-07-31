@@ -45,7 +45,7 @@ class apoio_marketing extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed,'sort','object' from spice_apoio_marketing $filter";
+        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -181,7 +181,7 @@ class correio extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status,'button','sorting','object' from spice_report_correio $filter";
+        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -291,7 +291,7 @@ class frota extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status,'button','sort','object' from spice_report_frota $filter ";
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -385,7 +385,7 @@ class mensal_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data, produtos, status,'button','sort','object' from spice_report_stock $filter  ";
+        $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -486,7 +486,7 @@ class movimentacao_stock extends requests_class {
     public function get_to_datatable() {
         $result['aaData'] = array();
         $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, entry_date, produtos, status,'button','sort','object' from spice_report_movimentacao $filter ";
+        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao $filter ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
