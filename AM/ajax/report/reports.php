@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-ini_set('display_errors', '1');
+#error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+#ini_set('display_errors', '1');
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/AM/lib_php/db.php";
 
