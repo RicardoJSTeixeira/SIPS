@@ -64,6 +64,10 @@ switch ($action) {
         echo json_encode($users->edit($username, $pass, $desc, $ulevel, $active, $siblings));
         $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)));
         break;
+    
+    case "getTypes":
+        echo json_encode($users->getTypes());
+        break;
 
     case "save_proposta":
         echo json_encode($users->save_proposta($lead_id, $reserva_id, $proposta));

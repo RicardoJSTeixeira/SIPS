@@ -32,6 +32,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
             week: "MMMM yyyy",
             day: 'd MMMM yyyy'
         },
+        slotMinutes: 15,
         allDaySlot: false,
         defaultView: "agendaWeek",
         allDayDefault: false,
