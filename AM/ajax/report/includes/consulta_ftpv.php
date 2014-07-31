@@ -17,7 +17,7 @@ fputcsv($output, array(
     'Terceira pessoa',
     '% Terceira pessoa',), ";");
 
-$query_log = "SELECT a.consulta,a.exame,a.venda,a.closed,a.terceira_pessoa,c.user,c.user_level,c.full_name,a.left_ear,a.right_ear,c.closer_campaigns from spice_consulta a  inner join  vicidial_users c on c.user=a.user where c.user_group='SPICE' and a.data between :data_inicial and :data_final ";
+$query_log = "SELECT a.consulta,a.exame,a.venda,a.closed,a.terceira_pessoa,c.user,c.user_level,c.full_name,a.left_ear,a.right_ear,c.siblings from spice_consulta a  inner join  vicidial_users c on c.user=a.user where c.user_group='SPICE' and a.data between :data_inicial and :data_final ";
 
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
@@ -66,15 +66,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $info[$row["user"]]["full_name"] = $row["full_name"];
 
         if ($row["user_level"] == 5) {
-            $info[$row["user"]]["children"] = [];
-            $temp = json_decode($row["siblings"]);
-            if ($temp)
-                $info[$row["user"]]["children"] = $temp;
+            $info[$row["user"]]["children"] = json_decode($row["siblings"]);
         }
         $info[$row["user"]]["terceira_pessoa"] = (count($row["terceira_pessoa"])) ? 1 : 0;
     }
 }
-
 $final = array();
 foreach ($info as &$value) {
     if ($value["user_level"] == 5) {
