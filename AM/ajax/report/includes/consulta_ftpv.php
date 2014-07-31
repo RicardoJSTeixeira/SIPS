@@ -33,10 +33,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $row["terceira_pessoa"] = json_decode($row["terceira_pessoa"]);
 
     if ($info[$row["user"]]) {
-        (int) $row["consulta"] ? $info[$row["user"]]["consulta"] += 1 : $info[$row["user"]]["n_consulta"] += 1;
-        (int) $row["exame"] ? $info[$row["user"]]["exame"] += 1 : $info[$row["user"]]["n_exame"] += 1;
-        (int) $row["venda"] ? $info[$row["user"]]["venda"] += 1 : $info[$row["user"]]["n_venda"] += 1;
-        (int) $row["closed"] ? $info[$row["user"]]["closed"] += 1 : $info[$row["user"]]["n_closed"] += 1;
+        (int) $row["consulta"] ? $info[$row["user"]]["consulta"] ++ : $info[$row["user"]]["n_consulta"] ++;
+        (int) $row["exame"] ? $info[$row["user"]]["exame"] ++ : $info[$row["user"]]["n_exame"] ++;
+        (int) $row["venda"] ? $info[$row["user"]]["venda"] ++ : $info[$row["user"]]["n_venda"] ++;
+        (int) $row["closed"] ? $info[$row["user"]]["closed"] ++ : $info[$row["user"]]["n_closed"] ++;
 
         if ((int) $row["left_ear"] > 35 || (int) $row["right_ear"] > 35)
             $info[$row["user"]]["perda"] += 1;
@@ -59,24 +59,19 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $info[$row["user"]]["n_closed"] = (int) $row["closed"] ? 0 : 1;
 
 
-        if ((int) $row["left_ear"] > 35 || (int) $row["right_ear"] > 35)
-            $info[$row["user"]]["perda"] = 1;
-        else
-            $info[$row["user"]]["perda"] = 0;
+        $info[$row["user"]]["perda"] = ((int) $row["left_ear"] > 25 || (int) $row["right_ear"] > 25) ? 1 : 0;
+
         $info[$row["user"]]["user"] = $row["user"];
         $info[$row["user"]]["user_level"] = $row["user_level"];
         $info[$row["user"]]["full_name"] = $row["full_name"];
 
         if ($row["user_level"] == 5) {
             $info[$row["user"]]["children"] = [];
-            $temp = explode('","', $row["closer_campaigns"]);
+            $temp = json_decode($row["siblings"]);
             if ($temp)
                 $info[$row["user"]]["children"] = $temp;
         }
-        if (count($row["terceira_pessoa"]))
-            $info[$row["user"]]["terceira_pessoa"] = 1;
-        else
-            $info[$row["user"]]["terceira_pessoa"] = 0;
+        $info[$row["user"]]["terceira_pessoa"] = (count($row["terceira_pessoa"])) ? 1 : 0;
     }
 }
 
@@ -113,6 +108,7 @@ foreach ($final as &$value) {
     $total["perda"] +=(int) $info[$value["user"]]["perda"];
     $total["n_venda"] += (int) $value["n_venda"];
     $total["terceira_pessoa"] += (int) $value["terceira_pessoa"];
+    
     fputcsv($output, array(
         $value['user'],
         $cons_fechadas,
@@ -124,6 +120,7 @@ foreach ($final as &$value) {
         round($value['n_venda'] / $cons_fechadas, 2),
         $value['terceira_pessoa'],
         round($value['terceira_pessoa'] / $cons_fechadas, 2)), ";");
+    
     foreach ($value["dispenser"] as $value1) {
         $cons_fechadas = $value1['consulta'] + $value1['perda'] + $value1['n_venda'];
         $total["consulta_fechada"] +=$cons_fechadas;
