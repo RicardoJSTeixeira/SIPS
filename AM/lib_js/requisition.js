@@ -471,6 +471,7 @@ var requisition = function(geral_path, options_ext) {
                 }, function(data1) {
                     if (data1) {
                         EData.bInfo.push({
+                            'ID encomenda': data1[0].id + "",
                             'User': data1[0].user + "",
                             'Tipo': data1[0].type + "",
                             'Id Client': data1[0].lead_id + "",
@@ -535,7 +536,7 @@ var requisition = function(geral_path, options_ext) {
                 id: EData.id_req
             }, function(data) {
                 var doc = new jsPDF('l', 'pt', 'a4', true);
-                doc.table(30, 30, EData.bInfo, [{name: 'User', width: 75}, {name: 'Tipo', width: 50}, {name: 'Id Client', width: 65}, {name: 'Date', width: 125}, {name: 'Order Number', width: 95}, {name: 'Client Ref.', width: 75}, {name: 'Status', width: 120}], {
+                doc.table(30, 30, EData.bInfo, [{name: 'ID encomenda', width: 100}, {name: 'User', width: 75}, {name: 'Tipo', width: 50}, {name: 'Id Client', width: 65}, {name: 'Date', width: 125}, {name: 'Order Number', width: 95}, {name: 'Client Ref.', width: 75}, {name: 'Status', width: 120}], {
                     autoSize: false,
                     printHeaders: true
                 });

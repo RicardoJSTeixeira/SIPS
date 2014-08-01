@@ -303,12 +303,10 @@
 
                 },
                 FileUploaded: function(up, file, info) {
-                    var message = info.response.split("&&&");
-                    
-                    
-                    
-                    file.id_final = message[1] + "_-_" + file.name;
-                    $.jGrowl(message[0], {life: 3000});
+
+                    var message = jQuery.parseJSON(info.response);
+                    file.id_final = message.id + "_-_" + file.name;
+                    $.jGrowl(message.message, {life: 3000});
                 }
 
             }
@@ -317,12 +315,13 @@
         uploader.init();
         $("#filelist").on("click", ".delete_anexo_line", function() {
             var file_name = uploader.getFile($(this).data().id).id_final;
-            console.log(uploader.getFile($(this).data().id));
+ 
 
             if (uploader.removeFile(uploader.getFile($(this).data().id))) {
 
                 $(this).closest("tr").remove();
                 $.post('/AM/ajax/upload_file.php', {action: "delete", name: file_name}, function(data) {
+                  
                     $.jGrowl(data, 4000);
                 }, "json");
             }
@@ -332,9 +331,7 @@
         var client = getUrlVars();
 
         requisition1 = new requisition($("#extra_div"), {uploader: uploader});
-        requisition1.init(function()
-        {
-
+        requisition1.init(function()      {
             requisition1.new_requisition($("#new_requisition_div"), (client.id) ? atob(client.id) : '');
         });
     });
