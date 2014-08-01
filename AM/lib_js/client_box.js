@@ -23,6 +23,8 @@ var clientBox = function(configs) {
                                 <div class='user-date' id='client_postal'></div>\n\
                                 <div class='user-date' id='client_local'></div>\n\
                                 <div class='user-date' id='client_tel'></div>\n\
+                                <div class='user-date' id='client_tel1'></div>\n\
+                                <div class='user-date' id='client_tel2'></div>\n\
                                 <div class='user-date' id='client_birth_date'></div>\n\
                                 <div class='user-date' id='client_date'></div>\n\
                                 <div class='user-date' id='client_rsc'></div>\n\
@@ -61,6 +63,12 @@ var clientBox = function(configs) {
                     .end()
                     .find("#client_tel")
                     .text(clientI.phone)
+                    .end()
+                    .find("#client_tel1")
+                    .text(clientI.phone1)
+                    .end()
+                    .find("#client_tel2")
+                    .text(clientI.phone2)
                     .end()
                     .find("#client_birth_date")
                     .text(clientI.bDay)
