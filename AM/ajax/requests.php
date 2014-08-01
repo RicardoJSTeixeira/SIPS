@@ -38,6 +38,8 @@ switch ($action) {
 
     //ADDs
     case "criar_relatorio_frota":
+        if (!is_array($ocorrencias))
+            $ocorrencias = Array();
         echo json_encode($relatorio_frota->create($data, $matricula, $km, $viatura, $ocorrencias, $comments));
         break;
 

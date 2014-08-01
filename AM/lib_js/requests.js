@@ -265,7 +265,7 @@ var requests = function(basic_path, options_ext) {
                     e.preventDefault();
                     var can_submit = 1;
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate")) {
-                        if (rf_zone.find("#table_tbody_rf tr").length) {
+                        /*if (rf_zone.find("#table_tbody_rf tr").length) {*/
                             $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
                                 if (~~$(this).autoNumeric('get') > ~~rf_zone.find("#input_km").autoNumeric('get')) {
                                     $.jGrowl("O número de Kms numa das ocorrências é superior aos Kms totais no relatório");
@@ -301,9 +301,9 @@ var requests = function(basic_path, options_ext) {
                                 });
 
                             }
-                        }
+                       /* }
                         else
-                            $.jGrow("selecione pelo menos uma ocorrencia", {life: 4000});
+                            $.jGrow("selecione pelo menos uma ocorrencia", {life: 4000});*/
                     }
                 });
             });
