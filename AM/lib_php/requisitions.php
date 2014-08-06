@@ -36,7 +36,7 @@ Class requisitions {
                     if ($row[6])
                         $row[6] = "$row[6]";
                     else
-                        $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input span validate[custom[onlyNumberSp]]' data-clientID='$row[3]' type='text'/>";
+                        $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input span validate[custom[onlyNumberSp]]' data-clientID='$row[13]' type='text'/>";
                 }
                 else {
                     if (!$row[6])
