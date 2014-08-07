@@ -17,7 +17,7 @@ if (!(checkDateTime($start) && checkDateTime($end))) {
 
 $query = "Select count(*) existe FROM sips_sd_reservations 
 		WHERE id_resource='" . mysql_real_escape_string($resource) . "' 
-		AND start_date='" . $start . "' AND end_date='" . $end . "';";
+		AND start_date='" . $start . "' AND end_date='" . $end . "' AND del=0 AND gone=0;";
 
 $result = mysql_query($query, $link) or die(mysql_error());
 $row = mysql_fetch_assoc($result);
