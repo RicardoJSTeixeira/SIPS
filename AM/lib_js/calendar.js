@@ -309,11 +309,13 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     color: this.color,
                     rtype: this.id,
                     min: this.min,
-                    max: this.max
+                    max: this.max,
+                    sale: this.sale,
+                    useful: this.useful
                 };
                 temp_elements = temp_elements + "<div class=\"external-event\" style=\"background-color: " + this.color + "\" data-eventobject=" + JSON.stringify(n) + " >" + this.text + "</div>";
             }
-            temp_classes = temp_classes + ".t" + this.id + " {background-color: " + this.color + "}";
+            temp_classes = temp_classes + this.css;
         });
         $("#external-events .grid-content").html(temp_elements);
         $("#reserve_types").html(temp_classes);
