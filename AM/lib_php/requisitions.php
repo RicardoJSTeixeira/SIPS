@@ -26,7 +26,7 @@ Class requisitions {
                 //User
                 $row[11] = ($row[9] == 0 ? 1 : ($row[9] == 1 ? 2 : 0));
             }
-            $row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
+            #$row[4] = date("d-m-Y H:i:s", strtotime($row[4]));
             if ($row[2] == "mensal") {
                 $row[2] = "Mensal";
                 $row[6] = "<i class='icon-ban-circle'></i>";
