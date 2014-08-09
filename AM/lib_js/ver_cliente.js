@@ -32,8 +32,13 @@ var cliente_info = function(lead_id, options_ext) {
                             client_info.append(temp);
                             break;
                         case "address1":
+                        case "address2":
+                        case "country_code":
+                        case "province":
+                        case "state":
                         case "city":
                         case "postal_code":
+                        case "extra10":
                             client_address.append(temp);
                             break;
 
