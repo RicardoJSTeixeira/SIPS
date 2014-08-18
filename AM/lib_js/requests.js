@@ -33,20 +33,20 @@ var requests = function(basic_path, options_ext) {
                         });
                 am_zone.find("#data_inicio1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
-                            $("#data_inicio2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
+                            $("#data_inicio2").datetimepicker('setStartDate', moment(moment().format('YYYY-MM-DDT' + $(this).val())).add("minutes", 30).format("YYYY-MM-DDTHH:mm"));
                         });
                 am_zone.find("#data_inicio2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
-                            $("#data_inicio1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
-                            $("#data_fim1").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
+                            $("#data_inicio1").datetimepicker('setEndDate', moment(moment().format('YYYY-MM-DDT' + $(this).val())).subtract("minutes", 30).format("YYYY-MM-DDTHH:mm"));
+                            $("#data_fim1").datetimepicker('setStartDate', moment(moment().format('YYYY-MM-DDT' + $(this).val())).add("minutes", 30).format("YYYY-MM-DDTHH:mm"));
                         });
                 am_zone.find("#data_fim1").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
-                            $("#data_fim2").datetimepicker('setStartDate', moment().format('YYYY-MM-DDT' + $(this).val()));
+                            $("#data_fim2").datetimepicker('setStartDate', moment(moment().format('YYYY-MM-DDT' + $(this).val())).add("minutes", 30).format("YYYY-MM-DDTHH:mm"));
                         });
                 am_zone.find("#data_fim2").datetimepicker({format: 'hh:ii', autoclose: true, language: "pt", startView: 1, maxView: 1, startDate: moment().format("YYYY-MM-DD"), minuteStep: 30})
                         .on('changeDate', function() {
-                            $("#data_fim1").datetimepicker('setEndDate', moment().format('YYYY-MM-DDT' + $(this).val()));
+                            $("#data_fim1").datetimepicker('setEndDate', moment(moment().format('YYYY-MM-DDT' + $(this).val())).subtract("minutes", 30).format("YYYY-MM-DDTHH:mm"));
                         });
                 //Adiciona Linhas
                 am_zone.find("#button_ldptable_add_line").click(function(e) {
@@ -150,7 +150,7 @@ var requests = function(basic_path, options_ext) {
                     {"sTitle": "Estado", "sWidth": "60px"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
                     {"sTitle": "sort", "bVisible": false},
-                 {"sTitle": "object", "bVisible": false}],
+                    {"sTitle": "object", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function(event) {
@@ -266,44 +266,44 @@ var requests = function(basic_path, options_ext) {
                     var can_submit = 1;
                     if (rf_zone.find("#relatorio_frota_form").validationEngine("validate")) {
                         /*if (rf_zone.find("#table_tbody_rf tr").length) {*/
-                            $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
-                                if (~~$(this).autoNumeric('get') > ~~rf_zone.find("#input_km").autoNumeric('get')) {
-                                    $.jGrowl("O número de Kms numa das ocorrências é superior aos Kms totais no relatório");
-                                    can_submit = 0; 
-                                }
-                            });
-                            if (can_submit) {
-                                var ocorrencias_array = [];
-                                $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
-                                    if ($(this).find(".linha_data").val().length && $(this).find(".linha_ocorrencia").val().length && $(this).find(".linha_km").val().length)
-                                        ocorrencias_array.push({
-                                            data: $(this).find(".linha_data").val(),
-                                            ocorrencia: $(this).find(".linha_ocorrencia").val(),
-                                            km: $(this).find(".linha_km").autoNumeric('get')});
-                                });
-                                $("#relatorio_frota_form :input").attr('readonly', true);
-                                $.msg();
-                                $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
-                                    data: rf_zone.find("#input_data").val(),
-                                    matricula: rf_zone.find("#input_matricula").val(),
-                                    km: rf_zone.find("#input_km").autoNumeric('get'),
-                                    viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
-                                    ocorrencias: ocorrencias_array,
-                                    comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
-                                function() {
-                                    rf_zone.find("#relatorio_frota_form").get(0).reset();
-                                    $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
-                                    $("#relatorio_frota_form :input").attr('readonly', false);
-                                    $.msg('unblock');
-                                }, "json").fail(function(data) {
-                                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                                    $.msg('unblock', 5000);
-                                });
-
+                        $.each(rf_zone.find("#table_tbody_rf").find(".linha_km"), function() {
+                            if (~~$(this).autoNumeric('get') > ~~rf_zone.find("#input_km").autoNumeric('get')) {
+                                $.jGrowl("O número de Kms numa das ocorrências é superior aos Kms totais no relatório");
+                                can_submit = 0;
                             }
-                       /* }
-                        else
-                            $.jGrow("selecione pelo menos uma ocorrencia", {life: 4000});*/
+                        });
+                        if (can_submit) {
+                            var ocorrencias_array = [];
+                            $.each(rf_zone.find("#table_tbody_rf").find("tr"), function() {
+                                if ($(this).find(".linha_data").val().length && $(this).find(".linha_ocorrencia").val().length && $(this).find(".linha_km").val().length)
+                                    ocorrencias_array.push({
+                                        data: $(this).find(".linha_data").val(),
+                                        ocorrencia: $(this).find(".linha_ocorrencia").val(),
+                                        km: $(this).find(".linha_km").autoNumeric('get')});
+                            });
+                            $("#relatorio_frota_form :input").attr('readonly', true);
+                            $.msg();
+                            $.post("/AM/ajax/requests.php", {action: "criar_relatorio_frota",
+                                data: rf_zone.find("#input_data").val(),
+                                matricula: rf_zone.find("#input_matricula").val(),
+                                km: rf_zone.find("#input_km").autoNumeric('get'),
+                                viatura: rf_zone.find(":radio[name='rrf']:checked").val(),
+                                ocorrencias: ocorrencias_array,
+                                comments: rf_zone.find("#input_comments").val().length ? rf_zone.find("#input_comments").val() : ""},
+                            function() {
+                                rf_zone.find("#relatorio_frota_form").get(0).reset();
+                                $.jGrowl('Pedido Efectuado com sucesso', {life: 5000});
+                                $("#relatorio_frota_form :input").attr('readonly', false);
+                                $.msg('unblock');
+                            }, "json").fail(function(data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
+
+                        }
+                        /* }
+                         else
+                         $.jGrow("selecione pelo menos uma ocorrencia", {life: 4000});*/
                     }
                 });
             });
