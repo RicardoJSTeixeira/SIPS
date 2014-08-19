@@ -23,4 +23,4 @@ if ($result != 0) {
     die();
 }
 
-echo json_encode(array("path" => preg_replace("|" . preg_quote($apache_path . "sips-admin/inbound/") . "|", "", $new)));
+echo json_encode(array("path" => preg_replace("|" . preg_quote("sips-admin/inbound/") . "|", "", $new)));
