@@ -196,6 +196,9 @@ Class Calendars {
     }
 
     public function newReserva($user, $lead_id, $start, $end, $rtype, $resource, $obs = "", $extraid = "") {
+        if ($start == $end) {
+            throw new Exception("Start and End date are the same.");
+        }
         $query = "INSERT INTO `sips_sd_reservations`(`start_date`, `end_date`, `has_accessories`, `id_reservation_type`, `id_resource`,`id_user`,`lead_id`,`obs`,`extra_id`) VALUES (:start, :end, '0', :rtype, :resource, :user, :lead_id, :obs, :extra_id)";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource, ":obs" => $obs, ":extra_id" => $extraid));
