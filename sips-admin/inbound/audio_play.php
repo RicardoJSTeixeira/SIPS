@@ -12,11 +12,11 @@ $original=$ast_sounds_path.$file;
 $new=  preg_replace('"\.(gsm|wav|sln)$"', ".ogg", $apache_path."sips-admin/inbound/tmp/".basename($file));
 
  $soxCommand="sox ".escapeshellarg($original)." ".escapeshellarg($new)." pad 0 0.25";
- exec($soxCommand, $output, $result);
+ system($soxCommand, $result);
 
             //  Deal with result
             if ($result != 0) {
-                echo json_encode(array("error" => $result, "output"=>$output));
+                echo json_encode(array("error" => $result));
                 header('HTTP/1.1 500 Internal Server Error');
               die();
             }
