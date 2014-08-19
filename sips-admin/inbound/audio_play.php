@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 if(!isset($_POST["file"]))exit;
 
-$apache_path="/srv/www/htdocs/";
+$apache_path=$_SERVER['DOCUMENT_ROOT'];
 $ast_sounds_path="/var/lib/asterisk/sounds/";
 
 $file=$_POST["file"];
