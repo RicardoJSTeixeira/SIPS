@@ -16,7 +16,7 @@ $new=  preg_replace('"\.(gsm|wav|sln)$"', ".ogg", $apache_path."sips-admin/inbou
 
             //  Deal with result
             if ($result != 0) {
-                echo json_encode(array("error" => $result, "output"=>$output));
+                echo json_encode(array("error" => $result, "output"=>$output, "comand"=>$soxCommand));
                 header('HTTP/1.1 500 Internal Server Error');
               die();
             }
