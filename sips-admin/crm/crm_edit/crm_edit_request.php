@@ -91,7 +91,7 @@ switch ($action) {
                 $value[1] = date("H:i:s", strtotime($value[1]));
                 $value[2] = date("H:i:s", strtotime($value[2]));
                 $value[3] = gmdate("H:i:s", $value[3]);
-                if ($user->user_level > 5) {
+                if ($user->user_level > 4) {
                     $mp3File = "#";
                     if (strlen($value["location"]) > 0) {
                         //if lan
