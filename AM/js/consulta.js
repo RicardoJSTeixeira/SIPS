@@ -10,7 +10,7 @@ var
         consult_closed = false,
         client_box,
         gama = ["", "AM 100 (swift 70+)", "AM 90 (swift 90+)", "AM Dual M5", "Acto", "Agil", "Alta", "Alta Pro", "Chili 5", "Chili 7", "Chili 9", "Dual M7", "Dual M9", "AM Hit (BTE)", "AM Hit (Intra, Rite, BTE PW)", "Ino", "Ino Pro", "Intiga 10", "Intiga 6", "Intiga 8", "Nera", "Nera Pro", "Sumo DM"],
-        modelo = ["", "IIC", "CIC", "CIC PW", "MIC", "MIC PW", "ITE", "ITE PW", "CE", "CE PW", "BTE", "MINI-BTE", "RITE", "RITE PW", "MINI-RITE", "MINI-RITE PW"];
+        modelo = ["", "CIC","CIC PW","CIC 75","CIC 85","MIC","MIC PW","MIC 75","MIC 85","ITC","ITC PW","ITC 75","ITC 85","ITC 90","ITC 100","ITE","ITE 75","ITE 85","ITE 90","ITE 100","ITEFS 75","ITEFS 85","ITEFS 90","ITEFS 100","BTE","BTE PW","BTE 85","BTE 100","MINI-BTE","MINI-BTE 85","RITE","RITE M","RITE PW","RITE 85","RITE 100","MINI-RITE M","MINI-RITE PW","MINI-RITE 85","MINI-RITE 100"];
 $(function()
 {
     $.msg();
