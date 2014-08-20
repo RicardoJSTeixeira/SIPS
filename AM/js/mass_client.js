@@ -7,6 +7,8 @@ $(function() {
 
     this.init = function(zone, rid) {
         var recomendado = rid || "";
+        console.log(recomendado)
+        console.log((!~~recomendado))
         zone.append($("<input>", {type: "hidden", value: recomendado, name: "recomendado"}));
 
         zone.find("#plus-client").click(function(e) {
@@ -27,7 +29,7 @@ $(function() {
                             .append($("<input>", {type: "text", name: "cmname[]", placeholder: "", class: "span"}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "clname[]", placeholder: "", class: "span"}))
+                            .append($("<input>", {type: "text", name: "clname[]", placeholder: "", class: "span " + ((!~~recomendado) ? "validate[required]" : ""), 'data-prompt-position': 'topRight:120'}))
                             )
                     .append($("<td>")
                             .append($("<input>", {type: "text", name: "cmorada[]", placeholder: "", class: "span " + ((!~~recomendado) ? "validate[required]" : ""), 'data-prompt-position': 'topRight:120'}))
@@ -36,7 +38,7 @@ $(function() {
                             .append($("<input>", {type: "text", name: "clocal[]", placeholder: "", class: "span validate[required]", 'data-prompt-position': 'topRight:120'}))
                             )
                     .append($("<td>")
-                            .append($("<input>", {type: "text", name: "cpostal[]", placeholder: "", class: "span " + ((!~~recomendado) ? "validate[minSize[4]]" : ""), 'data-prompt-position': 'topRight:120'}))
+                            .append($("<input>", {type: "text", name: "cpostal[]", placeholder: "", class: "span " + ((!~~recomendado) ? "validate[required,minSize[4]]" : ""), 'data-prompt-position': 'topRight:120'}))
                             )
                     .append($("<td>")
                             .append($("<input>", {type: "text", name: "ctel[]", placeholder: "", class: "span validate[required,custom[onlyNumberSp],minSize[9]]", 'data-prompt-position': 'topRight:120'}))
