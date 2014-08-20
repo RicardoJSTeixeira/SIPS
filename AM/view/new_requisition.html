@@ -105,6 +105,7 @@
     .tree input, .tree .add-on, .tree select{
         padding: 1px!important;
     }
+
     .tree select{
         height: 24px!important;
     }
@@ -118,24 +119,18 @@
     #produtos_encomendados .grid{
         margin-top: 4px;
     }
-
-
 </style>
 
 <div id="new_requisition_div" >
-
-
-
-
 
     <div class="row-fluid">
         <div class="span4">
             <div class="grid-transparent">
                 <div id="tipo_especial" class="tipo_div">
                     <form id="form_encomenda_especial">
-                        <span class="input-prepend  ">
+                        <span class="input-prepend">
                             <span class="add-on">Número de contrato</span>
-                            <input id="new_requisition_contract" type="text" class="validate[required,custom[spice_num_contrato]]" >
+                            <input id="new_requisition_contract" maxlength="7" type="text" class="validate[required,custom[spice_num_contrato]]" >
                         </span>
                     </form>
                 </div>
@@ -193,57 +188,34 @@
                     </thead>
                     <tbody id="filelist"></tbody>
                 </table>
-
                 <div class="clear"></div>
-
             </div> 
-
-
-
-
-
 
             <div class="grid" >
                 <div class="grid-title">
                     <div class="pull-left">Observações</div>
-                    <div class="pull-right">
-
-                    </div>
+                    <div class="pull-right"></div>
                 </div> 
                 <div class="grid-content">
                     <textarea style="width:95%; " id="new_requisition_obs"></textarea>
                 </div>
-
                 <div class="clear"></div>
-
             </div> 
-
-
         </div>
-
-
-
-
-
     </div>
 </div> 
-
-
-
 
 <div id="extra_div"></div>
 <script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
 <script type="text/javascript" src="/AM/lib_js/product.js" ></script>
 <script type="text/javascript" src="/AM/lib_js/tree.js" ></script>
-
-
 <script src="/bootstrap/js/plupload.full.min.js"></script>
 <script type="text/javascript" src="/bootstrap/js/plupload_language/pt_BR.js"></script>
-
 
 <script>
     var uploader;
     $(function() {
+        
         var unique_number = (Math.floor(Math.random() * 1000) + 1);
 
         $("#new_requisition_submit_button").data("anexo_random_number", unique_number);
@@ -312,26 +284,26 @@
             }
 
         });
+
         uploader.init();
+
         $("#filelist").on("click", ".delete_anexo_line", function() {
             var file_name = uploader.getFile($(this).data().id).id_final;
- 
 
             if (uploader.removeFile(uploader.getFile($(this).data().id))) {
 
                 $(this).closest("tr").remove();
                 $.post('/AM/ajax/upload_file.php', {action: "delete", name: file_name}, function(data) {
-                  
+
                     $.jGrowl(data, 4000);
                 }, "json");
             }
         });
 
-
         var client = getUrlVars();
 
         requisition1 = new requisition($("#extra_div"), {uploader: uploader});
-        requisition1.init(function()      {
+        requisition1.init(function() {
             requisition1.new_requisition($("#new_requisition_div"), (client.id) ? atob(client.id) : '');
         });
     });
