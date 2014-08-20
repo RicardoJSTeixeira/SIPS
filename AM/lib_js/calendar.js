@@ -127,7 +127,6 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 me.calendar.fullCalendar('renderEvent', cEO, true);
                 $("#external-events").remove();
                 $.msg('unblock');
-                console.log(me.client)
                 if (cEO.sale && (typeof me.client.nc === "undefined")) {
                     newCodMkt(cEO);
                 }
