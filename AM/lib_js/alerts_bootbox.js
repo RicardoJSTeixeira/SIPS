@@ -1,12 +1,12 @@
-var alerts_class = function()
+var alertBoxes = function()
 {
 
-    var alert_lst = [];
-    var me = this;
-    var alert_timeout = "";
+    var
+            alert_lst = [],
+            me = this,
+            alert_timeout = "";
 
-    this.init = function()
-    {
+    this.init = function() {
         alert_timeout = setInterval(me.create_alert, 1000);
     };
 
@@ -28,11 +28,9 @@ var alerts_class = function()
     };
 
 
-    this.create_alert = function(callback)
-    {
+    this.create_alert = function(callback) {
 
-        if ($(".modal:visible").length)
-        {
+        if ($(".modal:visible").length) {
             return false;
         }
 
@@ -42,7 +40,6 @@ var alerts_class = function()
             alert = alert_lst.pop();
         else
             return false;
-
 
         bootbox.alert(alert.message, function(a) {
             if (typeof alert.callback === "function") {
@@ -56,7 +53,6 @@ var alerts_class = function()
 
     };
 
-
     this.clear = function(callback) {
         alert_lst = [];
         if (typeof callback === "function") {
@@ -64,7 +60,4 @@ var alerts_class = function()
         }
     };
 
-
-
-
-}
+};

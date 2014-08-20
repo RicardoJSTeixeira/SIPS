@@ -1,6 +1,6 @@
 var SpiceU = {};
 
-var alerts = new alerts_class();
+var alerts = new alertBoxes();
 $(function() {
     $.post("ajax/user_info.php", function(user) {
         SpiceU = user;
@@ -274,7 +274,6 @@ function get_alerts(callback) {
     });
 }
 
-
 function getUrlVars() {
     var vars = {};
     window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
@@ -283,7 +282,6 @@ function getUrlVars() {
     return vars;
 }
 
-
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
@@ -291,7 +289,7 @@ function consultasMais() {
     if (!localStorage.length) {
         return false;
     }
-    if (SpiceU.user_level > 1) {
+    if (SpiceU.user_level > 4) {
         return false;
     }
 

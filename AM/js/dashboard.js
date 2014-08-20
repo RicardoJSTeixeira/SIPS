@@ -86,7 +86,7 @@ $(function() {
             if (isV6 = (moment().diff(this.start_date, "days") > 6)) {//!!é mesmo isto que se quer não é erro!!
                 v6++;
             }
-            if ((moment().diff(this.start_date, "days") > 3)) {//!!é mesmo isto que se quer não é erro!!
+            if ((moment().diff(this.start_date, "days") > 3)) {
                 v3++;
             }
             temp += "<tr " + ((isV6) ? "class='error'" : "") + ">\n\
@@ -153,8 +153,11 @@ $(function() {
                     }
                 })
                 .find('[data-toggle~="tooltip"]').tooltip({container: 'body'});
-        //localStorage.v6 = v6;
-        //localStorage.v3 = v3;
+        localStorage.clear();
+        if (SpiceU.user_level < 4) {
+            localStorage.v6 = v6;
+            localStorage.v3 = v3;
+        }
         consultasMais();
     }, "json");
 
