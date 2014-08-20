@@ -25,7 +25,7 @@ $(function() {
             client.id = atob(client.id);
             client_box = new clientBox({id: client.id});
             client_box.init(function(clientI) {
-                client = clientI;
+                clientI.nc=client.nc;
                 startC(data, clientI);
             });
         } else {
@@ -44,12 +44,12 @@ $(function() {
     $("#special-event-beg")
             .datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", startDate: moment().format("YYYY-MM-DD hh:ii"), minuteStep: 15})
             .on('changeDate', function() {
-                $("#special-event-end").datetimepicker('setStartDate', moment($(this).val(),"YYYY-MM-DD HH:mm").add("minutes",15).format("YYYY-MM-DD HH:mm"));
+                $("#special-event-end").datetimepicker('setStartDate', moment($(this).val(), "YYYY-MM-DD HH:mm").add("minutes", 15).format("YYYY-MM-DD HH:mm"));
             });
     $("#special-event-end")
             .datetimepicker({format: 'yyyy-mm-dd hh:ii', autoclose: true, language: "pt", startDate: moment().format("YYYY-MM-DD hh:ii"), minuteStep: 15})
             .on('changeDate', function() {
-                $("#special-event-beg").datetimepicker('setEndDate', moment($(this).val(),"YYYY-MM-DD HH:mm").subtract("minutes",15).format("YYYY-MM-DD HH:mm"));
+                $("#special-event-beg").datetimepicker('setEndDate', moment($(this).val(), "YYYY-MM-DD HH:mm").subtract("minutes", 15).format("YYYY-MM-DD HH:mm"));
             });
 
     $("#special-event-form").submit(function(e) {

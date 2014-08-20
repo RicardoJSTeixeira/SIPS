@@ -127,6 +127,10 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 me.calendar.fullCalendar('renderEvent', cEO, true);
                 $("#external-events").remove();
                 $.msg('unblock');
+                console.log(me.client)
+                if (cEO.sale && (typeof me.client.nc === "undefined")) {
+                    newCodMkt(cEO);
+                }
             },
                     "json").fail(function(data) {
                 $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
@@ -182,7 +186,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
                     title: event.title,
                     content: (function() {
                         if (!event.system) {
-                            return '<dl class="dl-horizontal"><dt>Nome</dt><dd>' + event.client_name + '</dd><dt>Cod. Mkt.</dt><dd>' + event.codCamp + '</dd><dt>Cod Postal</dt><dd>' + event.postal + '</dd></dl>';
+                            return '<dl class="dl-horizontal"><dt>Nome</dt><dd>- ' + event.client_name + '</dd><dt>Cod. Mkt.</dt><dd>- ' + event.codCamp + '</dd><dt>Cod Postal</dt><dd>- ' + event.postal + '</dd></dl>';
                         } else {
                             return event.obs;
                         }
@@ -828,6 +832,25 @@ var calendar = function(selector, data, modals, ext, client, user) {
     this.resource = (typeof data.config !== "undefined" && typeof data.config.events !== "undefined") ? data.config.events.data.resource : "all";
     var config = $.extend(true, this.config, data.config);
     this.calendar = selector.fullCalendar(config);
+
+    function newCodMkt(cEO) {
+        bootbox.prompt("Qual o Codigo de Marketing?", function(result) {
+            if (result === null || result.length < 4) {
+                $.msg({
+                    content: "Tem de colocar um novo codigo de marketing",
+                    beforeUnblock: function() {
+                        newCodMkt(cEO);
+                    },
+                    autoUnblock: true
+                });
+            } else {
+                $.post("ajax/client.php", {action: 'update_cod_mkt', codmkt: result, id: cEO.lead_id}, function() {
+                    cEO.codCamp = result;
+                    me.calendar.fullCalendar('updateEvent', cEO);
+                });
+            }
+        });
+    }
 
     $("body").off().keydown(function(e) {
         var actions = {

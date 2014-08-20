@@ -100,7 +100,7 @@ $(function() {
                                 $("[name='PROVINCE']").val(that.concelho);
                                 $("[name='STATE']").val(that.distrito);
                                 bootbox.hideAll();
-                            })
+                            });
 
                             $("#postal_code_table_check").DataTable();
                         }, "json");
@@ -274,10 +274,7 @@ $("#form_create_client").submit(function(e) {
     }
 });
 
-
-
-
 $("#btn_criar_marcacao").click(function() {
     var en = btoa($("#criar_marcacao").modal("hide").data("client_id"));
-    $.history.push("view/calendar.html?id=" + en);
+    $.history.push("view/calendar.html?id=" + en+"&nc=1");
 });

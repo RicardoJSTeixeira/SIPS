@@ -13,6 +13,7 @@ $action = filter_var($_POST['action']);
 $what = filter_var($_POST['what']);
 $value = filter_var($_POST['value']);
 $postal_code = filter_var($_POST['postal_code']);
+$codmkt = filter_var($_POST['codmkt']);
 switch ($action) {
     case 'byName':
         $query = "SELECT  first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id limit 1";
@@ -123,8 +124,15 @@ switch ($action) {
         }
         break;
 
+    case 'update_cod_mkt':
+        $query = "UPDATE vicidial_list SET extra1=:codmkt where lead_id=:id";
+        $stmt = $db->prepare($query);
+        $js= $stmt->execute(array(":codmkt" => $codmkt, ":id" => $id));
+
+        break;
+
     default:
-        echo 'Are you a noob hacker? Or just a noob?'; 
+        echo 'Are you a noob hacker? Or just a noob?';
         break;
 }
 
