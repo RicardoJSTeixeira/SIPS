@@ -38,6 +38,9 @@ switch ($action) {
     case "consulta_result_fecho":
         include 'includes/consulta_result_fecho.php';
         break;
+    case "consultas":
+        include 'includes/consultas.php';
+        break;
 
 
 
