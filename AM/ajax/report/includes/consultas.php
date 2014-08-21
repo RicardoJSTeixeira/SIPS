@@ -1,7 +1,7 @@
 <?php
 
 $curTime = date("Y-m-d_H:i:s");
-$filename = "novas_leads_followUp" . $curTime;
+$filename = "consultas" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
