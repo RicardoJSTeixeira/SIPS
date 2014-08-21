@@ -72,8 +72,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if ($row["user_level"] == 5) {
             $info[$row["user"]]["children"] = [];
             $temp = explode('","', $row["closer_campaigns"]);
-            if ($temp)
+            if ($temp) {
                 $info[$row["user"]]["children"] = $temp;
+            }
         }
         if (count($row["terceira_pessoa"])) {
             $info[$row["user"]]["terceira_pessoa"] = 1;
