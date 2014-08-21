@@ -15,9 +15,6 @@ foreach ($_GET as $key => $value) {
 
 $user = new UserLogin($db);
 
-
-
-
 $variables = array();
 $unique_id = filter_var($_POST['reservation_id']);
 switch ($action) {
@@ -33,15 +30,9 @@ switch ($action) {
 
 
         foreach ($result as $key => $value) {
-            $variables = array();
-            $query = "insert into spice_audiograma (lead_id,uniqueid,name,value,date) values(?,?,?,?,?)";
-            $variables[] = $lead_id;
-            $variables[] = $unique_id;
-            $variables[] = $key;
-            $variables[] = json_encode($value);
-            $variables[] = date('Y-m-d H:i:s');
+            $query = "INSERT INTO spice_audiograma (lead_id, uniqueid, name, value, date) VALUES (:lead_id, :unique_id, :name, :value, :date)";
             $stmt = $db->prepare($query);
-            $stmt->execute($variables);
+            $stmt->execute(array(":lead_id" => $lead_id, ":unique_id" => $unique_id, ":name" => $key, ":value" => json_encode($value), ":date" => date('Y-m-d H:i:s')));
         }
         echo json_encode(1);
         break;
@@ -49,10 +40,9 @@ switch ($action) {
 
     case "populate":
         $result = array();
-        $query = "SELECT name,value FROM spice_audiograma where lead_id=? order by date desc ,name asc limit 6 ";
-        $variables[] = $lead_id;
+        $query = "SELECT name, value FROM spice_audiograma WHERE lead_id=:lead_id ORDER BY date DESC, name ASC LIMIT 6 ";
         $stmt = $db->prepare($query);
-        $stmt->execute($variables);
+        $stmt->execute(array(":lead_id" => $lead_id));
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row["value"] = json_decode($row["value"]);
