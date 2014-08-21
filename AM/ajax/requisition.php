@@ -42,9 +42,9 @@ switch ($action) {
     case "criar_encomenda":
         echo json_encode($requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments));
         break;
-    
+
     case "get_encomenda":
-            echo json_encode($requisitions->get_requisitions_by_id($id_req));
+        echo json_encode($requisitions->get_requisitions_by_id($id_req));
         break;
 
 
@@ -64,6 +64,7 @@ switch ($action) {
     case "accept_requisition":
         $result = $requisitions->accept_requisition($id);
         if ($result) {
+            $alert->update("S_ENC", $id);
             if ($message) {
                 $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id", "S_ENC", $id, 1);
             }
