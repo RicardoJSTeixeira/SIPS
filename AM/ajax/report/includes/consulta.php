@@ -38,8 +38,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         (int) $row["venda"] ? $info[$row["user"]]["venda"] += 1 : $info[$row["user"]]["n_venda"] += 1;
         (int) $row["closed"] ? $info[$row["user"]]["closed"] += 1 : $info[$row["user"]]["n_closed"] += 1;
 
-        if ((int) $row["left_ear"] > 35 || (int) $row["right_ear"] > 35)
+        if ((int) $row["left_ear"] > 35 || (int) $row["right_ear"] > 35) {
             $info[$row["user"]]["perda"] += 1;
+        }
 
 
         if (count($row["terceira_pessoa"])) {
@@ -59,10 +60,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $info[$row["user"]]["n_closed"] = (int) $row["closed"] ? 0 : 1;
 
 
-        if ((int) $row["left_ear"] > 35 || (int) $row["right_ear"] > 35)
+        if ((int) $row["left_ear"] > 35 || (int) $row["right_ear"] > 35) {
             $info[$row["user"]]["perda"] = 1;
-        else
+        } else {
             $info[$row["user"]]["perda"] = 0;
+        }
         $info[$row["user"]]["user"] = $row["user"];
         $info[$row["user"]]["user_level"] = $row["user_level"];
         $info[$row["user"]]["full_name"] = $row["full_name"];
@@ -73,10 +75,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($temp)
                 $info[$row["user"]]["children"] = $temp;
         }
-        if (count($row["terceira_pessoa"]))
+        if (count($row["terceira_pessoa"])) {
             $info[$row["user"]]["terceira_pessoa"] = 1;
-        else
+        } else {
             $info[$row["user"]]["terceira_pessoa"] = 0;
+        }
     }
 }
 
@@ -89,8 +92,9 @@ foreach ($info as &$value) {
 
 foreach ($final as &$value) {
     foreach ($value["children"] as &$value1) {
-        if ($info[$value1])
+        if ($info[$value1]) {
             $value["dispenser"][] = $info[$value1];
+        }
     }
 }
 
@@ -160,11 +164,3 @@ fputcsv($output, array(
 
 
 fclose($output);
-<?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
