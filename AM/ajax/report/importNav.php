@@ -98,7 +98,7 @@ while (!feof($file)) {
             continue;
         }
         $stmtGetRsc->closeCursor();
-        
+
         $nc = array(
             ":user" => $u->username,
             ":list_id" => $u->list_id,
@@ -134,15 +134,20 @@ while (!feof($file)) {
 
             $start = strtotime($buffer[29] . " " . $buffer[28]);
             $resType = getResType($buffer[23], $tRes);
-            $stmtSetRes->execute(array(
-                ":start" => date('Y-m-d H:i:s', $start),
-                ":end" => date('Y-m-d H:i:s', strtotime("+" . $resType->max . " minutes", $start)),
-                ":res_type" => $resType->id,
-                ":id_rsc" => $rsc->id,
-                ":user" => $u->username,
-                ":lead_id" => $db->lastInsertId(),
-                ":nav_id" => $buffer[40]
-            ));
+            if ($stmtSetRes->execute(array(
+                        ":start" => date('Y-m-d H:i:s', $start),
+                        ":end" => date('Y-m-d H:i:s', strtotime("+" . $resType->max . " minutes", $start)),
+                        ":res_type" => $resType->id,
+                        ":id_rsc" => $rsc->id,
+                        ":user" => $u->username,
+                        ":lead_id" => $db->lastInsertId(),
+                        ":nav_id" => $buffer[40]
+                    ))) {
+                $ok++;
+            } else {
+                $notok++;
+                $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Import: Client não importado.');
+            }
         } else {
             $notok++;
             $notoklist[] = array("line" => $total + 1, "navid" => $buffer[40], "id" => $buffer[39], "error" => 'Import: Client não importado.');
