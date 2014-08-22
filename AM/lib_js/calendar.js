@@ -277,6 +277,7 @@ var calendar = function(selector, data, modals, ext, client, user) {
         }
     };
     this.change = function(event, dayDelta, minuteDelta, revertFunc) {
+        $(".popover").remove();
         if (!confirm("Pretende mesmo mudar a data/hora?")) {
             revertFunc();
         } else {
@@ -860,8 +861,10 @@ var calendar = function(selector, data, modals, ext, client, user) {
                 $("#calendar").fullCalendar('next');
             }
         };
-        if (typeof actions[e.keyCode] === "function")
+        if (typeof actions[e.keyCode] === "function") {
             actions[e.keyCode]();
+            $(".popover").remove();
+        }
     });
 
     if (me.user.user_level > 4 || 1) {
