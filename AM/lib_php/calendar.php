@@ -149,14 +149,14 @@ Class Calendars {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    protected function _getExcecoes($id, $is_scheduler) {
+    protected function _getExcecoes($beg, $end, $id, $is_scheduler) {
         if ($is_scheduler) {
-            $query = "SELECT a.id_execao,a.id_resource, a.start_date, a.end_date FROM sips_sd_execoes a LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource WHERE b.id_scheduler=:id";
+            $query = "SELECT a.id_execao,a.id_resource, a.start_date, a.end_date FROM sips_sd_execoes a LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource WHERE b.id_scheduler=:id AND a.start_date < :end AND a.end_date > :start;";
         } else {
-            $query = "SELECT id_execao,id_resource, start_date, end_date FROM sips_sd_execoes WHERE id_resource=:id";
+            $query = "SELECT id_execao,id_resource, start_date, end_date FROM sips_sd_execoes WHERE id_resource=:id AND start_date < :end AND end_date > :start;";
         }
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":id" => $id));
+        $stmt->execute(array(":id" => $id, ":start" => $beg, ":end" => $end));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -331,8 +331,8 @@ class Calendar extends Calendars {
         return parent::_getSeries((($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource), $this->_is_scheduler);
     }
 
-    protected function _getExcecoes($id = "", $is_scheduler = "") {
-        return parent::_getExcecoes(($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, $this->_is_scheduler);
+    protected function _getExcecoes($beg, $end, $id = "", $is_scheduler = "") {
+        return parent::_getExcecoes(($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, $this->_is_scheduler, $beg, $end);
     }
 
     public function getBloqueios($beg, $end) {
@@ -353,7 +353,7 @@ class Calendar extends Calendars {
             }
             $aux_date = strtotime("+1 day", $aux_date);
         } while (date('Y-m-d', $aux_date) != date('Y-m-d', $end));
-        $excepcoes = $this->_getExcecoes();
+        $excepcoes = $this->_getExcecoes($beg, $end);
         foreach ($excepcoes as $excepcao) {
             $blocks[] = array(
                 'start' => $excepcao->start_date,
