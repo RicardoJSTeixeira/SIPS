@@ -111,7 +111,7 @@ var clientBox = function(configs) {
             });
 
 
-            $("#button_proposta_comercial").click(function() {
+            $(config.target).find("#button_proposta_comercial").click(function() {
                 $.msg();
                 var propostas = "";
                 var final = "<h5>Data de criação da proposta comercial</h5>";
@@ -125,8 +125,9 @@ var clientBox = function(configs) {
                             });
                             menu = "<div>\n\
                                         <div class='formRow'>\n\
-                                            <label>" + this.data + "</label><button class='btn right' onclick='$(this).next(\".formRight\").toggle(); '><i class='icon-eye-open icon-alone'></i></button>\n\
-                                            <div class='formRight' style='display:none'>\n\
+                                            <label>" + this.data + "</label><button class='btn icon-alone right btnPropToggle' ><i class='icon-eye-open'></i></button>\n\
+                                            <div class='clear'></div>\n\
+                                            <div class='dTableProposta' style='display:none; margin-top:5px'>\n\
                                                 <table class='table table-striped table-mod table-bordered'>\n\
                                                     <thead>\n\
                                                         <tr>\n\
@@ -146,12 +147,20 @@ var clientBox = function(configs) {
                             final += menu;
                             propostas = "";
                         });
-                        bootbox.alert(final, function() {
+                        bootbox.alert(final);
+                        $(".btnPropToggle").click(function() {
+                            $(this)
+                                    .find("i")
+                                    .toggleClass("icon-eye-open")
+                                    .toggleClass("icon-eye-close")
+                                    .end()
+                                    .parent()
+                                    .find(".dTableProposta")
+                                    .toggle();
                         });
                     }
                     else {
-                        bootbox.alert("Cliente sem propostas comerciais.", function() {
-                        });
+                        bootbox.alert("Cliente sem propostas comerciais.");
                     }
                     $.msg('unblock');
                 }, "json").fail(function(data) {
