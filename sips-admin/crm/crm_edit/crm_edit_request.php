@@ -50,24 +50,24 @@ switch ($action) {
 
         $has_script = false;
         $output['aaData'] = array();
-        $calls_out = $crmEdit->get_calls_outbound($lead_id,$campaign_id);
-        $calls_in = $crmEdit->get_calls_inbound($lead_id,$campaign_id);
+        $calls_out = $crmEdit->get_calls_outbound($lead_id, $campaign_id);
+        $calls_in = $crmEdit->get_calls_inbound($lead_id, $campaign_id);
         foreach ($calls_out as $value) {
             $calls[] = $value;
         }
         foreach ($calls_in as $value) {
             $calls[] = $value;
-        } 
+        }
 
         if (count($calls, 1) > 0) {
             foreach ($calls as $key => &$value) {
                 $value[1] = gmdate("H:i:s", $value[1]);
                 $has_script = false;
-                $count = $crmEdit->check_has_script($value["campaign_id"],$lead_id);
-    
+                $count = $crmEdit->check_has_script($value["campaign_id"], $lead_id);
+
                 if ($value[2] != "N/A")
                     $value[2] = gmdate("H:i:s", $value[2]) . " Posição: " . $value[13];
-                if ($count  > 0) {
+                if ($count > 0) {
                     $has_script = true;
                 }
                 if ($user->user_level > 5 && $has_script) {
@@ -140,7 +140,8 @@ switch ($action) {
         echo json_encode($crmEdit->get_info_crm_confirm_feedback($lead_id));
         break;
     case "resubmit_contact":
-        echo json_encode($crmEdit->resubmit_contact($lead_id,$campaign_id,$list_id));
+        echo json_encode($crmEdit->resubmit_contact($lead_id, $campaign_id, $list_id));
+        log_admin("Leads", "Resubmit", $lead_id, "");
         break;
 }
 
@@ -176,4 +177,17 @@ function reserved_ip($ip) {
         }
     }
     return FALSE;
+}
+
+function log_admin($topic, $event, $id, $query, $comments = "") {
+    global $link;
+    
+    $PHP_AUTH_USER = $_SERVER[PHP_AUTH_USER];
+    $IP = $_SERVER[REMOTE_ADDR];
+
+    $stmt = "INSERT INTO vicidial_admin_log set event_date=NOW(), user='$PHP_AUTH_USER', ip_address='$IP', event_section='$topic', event_type='ADD', record_id='$id', event_code='$event', event_sql='" . mysql_real_escape_string($query) . "', event_notes='$comments';";
+    $rslt = mysql_query($stmt, $link);
+    if (!$rslt) {
+        echo "Log Error: " . mysql_error() . " Whole query:" . $stmt;
+    }
 }
