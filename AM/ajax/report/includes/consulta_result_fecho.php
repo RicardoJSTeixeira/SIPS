@@ -2,14 +2,22 @@
 
 require "$root/AM/lib_php/calendar.php";
 $calendar = new Calendars($db);
+$users = new UserControler($db, $user);
 
 $curTime = date("Y-m-d_H:i:s");
 $filename = "consulta_result_fecho_" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
+//tipos de exame
 $rs = $calendar->getResTypeRaw();
 $rs = implode(",", $rs);
+
+//users obj
+$oUsers = $users->getAll(5);
+foreach ($oUsers as $value) {
+    $value->siblings = json_decode($value->siblings);
+}
 
 fputcsv($output, array(
     'User',
@@ -21,21 +29,22 @@ fputcsv($output, array(
     'Fechadas',
     '% Fechadas'), ";");
 
-$query_log = "SELECT b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, c.user, c.user_level, c.full_name, b.left_ear, b.right_ear, c.siblings "
+$query_log = "SELECT b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa,b.left_ear, b.right_ear, a.id_resource "
         . "from sips_sd_reservations a "
         . "inner join spice_consulta b on a.id_reservation=b.reserva_id "
-        . "inner join vicidial_users c on c.user=b.user "
-        . "where c.user_group='SPICE' AND a.id_reservation_type in ($rs) and a.start_date between :data_inicial and :data_final ";
+        . "where a.id_reservation_type in ($rs) and a.start_date between :data_inicial and :data_final ";
 
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
+
 $info = array();
-$total = array();
-$total["total_consulta"] = 0;
-$total["total_consulta_aberta"] = 0;
-$total["total_consulta_nova"] = 0;
-$total["total_consulta_remarcada"] = 0;
-$total["total_consulta_fechada"] = 0;
+$total = array(
+    "total_consulta" => 0,
+    "total_consulta_aberta" => 0,
+    "total_consulta_nova" => 0,
+    "total_consulta_remarcada" => 0,
+    "total_consulta_fechada" => 0,
+);
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if ($info[$row["user"]]) {
@@ -51,10 +60,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $info[$row["user"]]["total_consulta_aberta"] = (int) $row["closed"] == 0 ? 1 : 0;
         $info[$row["user"]]["total_consulta_fechada"] = (int) $row["closed"];
         $info[$row["user"]]["total_consulta"] = $info[$row["user"]]["total_consulta_aberta"] + $info[$row["user"]]["total_consulta_fechada"];
-        $info[$row["user"]]["user"] = $row["user"];
-        $info[$row["user"]]["user_level"] = $row["user_level"];
-        $info[$row["user"]]["full_name"] = $row["full_name"];
-        $info[$row["user"]]["children"] = json_decode($row["siblings"]);
     }
 }
 
@@ -67,8 +72,9 @@ foreach ($info as &$value) {
 
 foreach ($final as &$value) {
     foreach ($value["children"] as &$value1) {
-        if ($info[$value1])
+        if ($info[$value1]) {
             $value["dispenser"][] = $info[$value1];
+        }
     }
 }
 
