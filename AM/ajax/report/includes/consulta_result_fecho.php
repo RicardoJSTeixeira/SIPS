@@ -14,9 +14,11 @@ $rs = $calendar->getResTypeRaw();
 $rs = implode(",", $rs);
 
 //users obj
-$oUsers = $users->getAll(5);
-foreach ($oUsers as $value) {
+$oUsersTMP = $users->getAll(5);
+$oUsers = Array();
+foreach ($oUsersTMP as &$value) {
     $value->siblings = json_decode($value->siblings);
+    $oUsers[$value->user] = $value;
 }
 
 fputcsv($output, array(
@@ -29,92 +31,84 @@ fputcsv($output, array(
     'Fechadas',
     '% Fechadas'), ";");
 
-$query_log = "SELECT b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa,b.left_ear, b.right_ear, a.id_resource "
-        . "from sips_sd_reservations a "
-        . "inner join spice_consulta b on a.id_reservation=b.reserva_id "
-        . "where a.id_reservation_type in ($rs) and a.start_date between :data_inicial and :data_final ";
+$query_log = "SELECT b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource "
+        . "FROM sips_sd_reservations a "
+        . "INNER JOIN spice_consulta b ON a.id_reservation=b.reserva_id "
+        . "WHERE a.id_reservation_type IN ($rs) AND a.start_date BETWEEN :data_inicial AND :data_final ";
 
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
 $info = array();
-$total = array(
+$default = array(
     "total_consulta" => 0,
     "total_consulta_aberta" => 0,
     "total_consulta_nova" => 0,
     "total_consulta_remarcada" => 0,
     "total_consulta_fechada" => 0,
 );
+$total = $default;
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    if ($info[$row["user"]]) {
-        $info[$row["user"]]["total_consulta"] += 1;
-        $info[$row["user"]]["total_consulta_nova"] += (int) $row["changed"] == 0 ? 1 : 0;
-        $info[$row["user"]]["total_consulta_remarcada"] += (int) $row["changed"];
-        $info[$row["user"]]["total_consulta_aberta"] +=(int) $row["closed"] == 0 ? 1 : 0;
-        $info[$row["user"]]["total_consulta_fechada"] += (int) $row["closed"];
-    } else {
-        $info[$row["user"]]["total_consulta"] = 1;
-        $info[$row["user"]]["total_consulta_nova"] = (int) $row["changed"] == 0 ? 1 : 0;
-        $info[$row["user"]]["total_consulta_remarcada"] = (int) $row["changed"];
-        $info[$row["user"]]["total_consulta_aberta"] = (int) $row["closed"] == 0 ? 1 : 0;
-        $info[$row["user"]]["total_consulta_fechada"] = (int) $row["closed"];
-        $info[$row["user"]]["total_consulta"] = $info[$row["user"]]["total_consulta_aberta"] + $info[$row["user"]]["total_consulta_fechada"];
+    if (!$info[$row["user"]]) {
+        $info[$row["user"]] = $default;
     }
+    $info[$row["user"]]["total_consulta"] += 1;
+    $info[$row["user"]]["total_consulta_nova"] += (int) $row["changed"] == 0 ? 1 : 0;
+    $info[$row["user"]]["total_consulta_remarcada"] += (int) $row["changed"];
+    $info[$row["user"]]["total_consulta_aberta"] +=(int) $row["closed"] == 0 ? 1 : 0;
+    $info[$row["user"]]["total_consulta_fechada"] += (int) $row["closed"];
 }
 
 $final = array();
-foreach ($info as &$value) {
-    if ($value["user_level"] == 5) {
-        $final[$value["user"]] = $value;
+foreach ($info as $username => $userData) {
+    if ($oUsers[$username]->user_level == UserControler::ASM) {
+        $final[$username] = $userData;
     }
 }
 
-foreach ($final as &$value) {
-    foreach ($value["children"] as &$value1) {
-        if ($info[$value1]) {
-            $value["dispenser"][] = $info[$value1];
+foreach ($final as $username => &$dadData) {
+    foreach ($oUsers[$username]->siblings as $sibling) {
+        if ($info[$sibling]) {
+            $dadData["dispenser"][] = $info[$sibling];
         }
     }
 }
 
-
-foreach ($final as &$value) {
+foreach ($final as &$dadData) {
     fputcsv($output, array("ASM"), ";");
     fputcsv($output, array(
-        $value['user'],
-        $value['total_consulta'],
-        $value['total_consulta_nova'],
-        $value['total_consulta_remarcada'],
-        $value['total_consulta_aberta'],
-        round($value['total_consulta_aberta'] / $value['total_consulta'], 2),
-        $value['total_consulta_fechada'],
-        round($value['total_consulta_fechada'] / $value['total_consulta'], 2)), ";");
+        $dadData['user'],
+        $dadData['total_consulta'],
+        $dadData['total_consulta_nova'],
+        $dadData['total_consulta_remarcada'],
+        $dadData['total_consulta_aberta'],
+        round($dadData['total_consulta_aberta'] / $dadData['total_consulta'], 2),
+        $dadData['total_consulta_fechada'],
+        round($dadData['total_consulta_fechada'] / $dadData['total_consulta'], 2)), ";");
 
-    $total["total_consulta"] += (int) $value["total_consulta"];
-    $total["total_consulta_aberta"] += (int) $value["total_consulta_aberta"];
-    $total["total_consulta_nova"] += (int) $value["total_consulta_nova"];
-    $total["total_consulta_remarcada"] += (int) $value["total_consulta_remarcada"];
-    $total["total_consulta_fechada"] += (int) $value["total_consulta_fechada"];
+    $total["total_consulta"] += (int) $dadData["total_consulta"];
+    $total["total_consulta_aberta"] += (int) $dadData["total_consulta_aberta"];
+    $total["total_consulta_nova"] += (int) $dadData["total_consulta_nova"];
+    $total["total_consulta_remarcada"] += (int) $dadData["total_consulta_remarcada"];
+    $total["total_consulta_fechada"] += (int) $dadData["total_consulta_fechada"];
 
+    foreach ($dadData["dispenser"] as $userData) {
 
-    foreach ($value["dispenser"] as $value1) {
-
-
-        $total["total_consulta"] += (int) $value1["total_consulta"];
-        $total["total_consulta_aberta"] += (int) $value1["total_consulta_aberta"];
-        $total["total_consulta_nova"] += (int) $value1["total_consulta_nova"];
-        $total["total_consulta_remarcada"] += (int) $value1["total_consulta_remarcada"];
-        $total["total_consulta_fechada"] += (int) $value1["total_consulta_fechada"];
+        $total["total_consulta"] += (int) $userData["total_consulta"];
+        $total["total_consulta_aberta"] += (int) $userData["total_consulta_aberta"];
+        $total["total_consulta_nova"] += (int) $userData["total_consulta_nova"];
+        $total["total_consulta_remarcada"] += (int) $userData["total_consulta_remarcada"];
+        $total["total_consulta_fechada"] += (int) $userData["total_consulta_fechada"];
         fputcsv($output, array(
-            $value1['user'],
-            $value1['total_consulta'],
-            $value1['total_consulta_nova'],
-            $value1['total_consulta_remarcada'],
-            $value1['total_consulta_aberta'],
-            round($value1['total_consulta_aberta'] / $value1['total_consulta'], 2),
-            $value1['total_consulta_fechada'],
-            round($value1['total_consulta_fechada'] / $value1['total_consulta'], 2)), ";");
+            $userData['user'],
+            $userData['total_consulta'],
+            $userData['total_consulta_nova'],
+            $userData['total_consulta_remarcada'],
+            $userData['total_consulta_aberta'],
+            round($userData['total_consulta_aberta'] / $userData['total_consulta'], 2),
+            $userData['total_consulta_fechada'],
+            round($userData['total_consulta_fechada'] / $userData['total_consulta'], 2)), ";");
     }
 }
 
@@ -128,6 +122,5 @@ fputcsv($output, array(
     round($total['total_consulta_aberta'] / $total['total_consulta'], 2),
     $total['total_consulta_fechada'],
     round($total['total_consulta_fechada'] / $total['total_consulta'], 2)), ";");
-
 
 fclose($output);
