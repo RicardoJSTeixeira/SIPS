@@ -111,5 +111,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $row['extra6'],
         $row['id_reservation']
             ), ";");
-};
+}
+
 fclose($output);
