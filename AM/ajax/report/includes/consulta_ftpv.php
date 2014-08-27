@@ -89,7 +89,7 @@ foreach ($final as $username => &$dadData) {
 }
 
 
-foreach ($final as &$dadData) {
+foreach ($final as $admName => &$dadData) {
     fputcsv($output, array(
         "ASM",
         "",
@@ -109,7 +109,7 @@ foreach ($final as &$dadData) {
     $total["terceira_pessoa"] += (int) $dadData["terceira_pessoa"];
 
     fputcsv($output, array(
-        $dadData['user'],
+        $admName,
         $cons_fechadas,
         $dadData['consulta'],
         ($dadData['consulta'] != 0 AND $cons_fechadas != 0) ? round($dadData['consulta'] / $cons_fechadas, 2) * 100 : 0,
@@ -120,7 +120,7 @@ foreach ($final as &$dadData) {
         $dadData['terceira_pessoa'],
         ($dadData['terceira_pessoa'] != 0 AND $cons_fechadas != 0) ? round($dadData['terceira_pessoa'] / $cons_fechadas, 2) * 100 : 0), ";");
 
-    foreach ($dadData["dispenser"] as $userData) {
+    foreach ($dadData["dispenser"] as $username => $userData) {
         $cons_fechadas = $userData['consulta'] + $userData['perda'] + $userData['n_venda'];
         $total["consulta_fechada"] +=$cons_fechadas;
         $total["consulta"] += (int) $userData["consulta"];
@@ -128,7 +128,7 @@ foreach ($final as &$dadData) {
         $total["n_venda"] += (int) $userData["n_venda"];
         $total["terceira_pessoa"] += (int) $userData["terceira_pessoa"];
         fputcsv($output, array(
-            $userData['user'],
+            $username,
             $cons_fechadas,
             $userData['consulta'],
             ($userData['consulta'] != 0 AND $cons_fechadas != 0) ? round($userData['consulta'] / $cons_fechadas, 2) * 100 : 0,
