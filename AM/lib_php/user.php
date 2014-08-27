@@ -131,8 +131,8 @@ class UserControler {
         return (object) array("user" => $row->user, "pass" => $row->pass, "full_name" => $row->full_name, "user_level" => $row->user_level, "active" => $row->active, "siblings" => json_decode($row->siblings));
     }
 
-    public function getAll() {
-        $query = "SELECT `user`, `full_name`, `user_level`, `active` FROM `vicidial_users` WHERE user_group=:user_group;";
+    public function getAll($userlevel = false) {
+        $query = "SELECT `user`, `full_name`, `user_level`, `active`, `siblings` FROM `vicidial_users` WHERE user_group=:user_group ".(($userlevel)?" AND user_level=$userlevel":"").";";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -144,8 +144,8 @@ class UserControler {
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
-    
-    public function getTypes(){
+
+    public function getTypes() {
         return $this->_ULalias;
     }
 
