@@ -66,7 +66,7 @@ foreach ($info as $username => $userData) {
         $final[$username] = $userData;
     }
 }
-var_dump($info);exit;
+
 foreach ($final as $username => &$dadData) {
     foreach ($oUsers[$username]->siblings as $sibling) {
         if ($info[$sibling]) {
