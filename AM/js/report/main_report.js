@@ -20,15 +20,6 @@ $(function() {
         }
     });
     
-    $.post("ajax/report/reports.php", {action: "get_agents"}, function(data) {
-        $.each(data, function() {
-            $("#agent_selector").append("<option  value='" + this.user + "' >" + this.full_name + "</option>");
-        });
-    }, "json").fail(function(data) {
-        $.msg();
-        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-        $.msg('unblock', 5000);
-    });
 });
 
 $("#download_report").click(function() {
