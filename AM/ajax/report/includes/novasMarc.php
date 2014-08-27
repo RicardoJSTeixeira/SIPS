@@ -108,7 +108,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $row['comments'],
         "",
         "",
-        $row['extra6'],
+        "NO",
         $row['id_reservation']
             ), ";");
 }
