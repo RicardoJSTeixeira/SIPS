@@ -855,10 +855,10 @@ var calendar = function(selector, data, modals, ext, client, user) {
     $("body").off().keydown(function(e) {
         var actions = {
             37: function() {
-                $("#calendar").fullCalendar('prev');
+                me.calendar.fullCalendar('prev');
             },
             39: function() {
-                $("#calendar").fullCalendar('next');
+                me.calendar.fullCalendar('next');
             }
         };
         if (typeof actions[e.keyCode] === "function") {
