@@ -292,6 +292,7 @@ if ($_POST['nc_flag'] == "nc_post") {
                                         <option value="C/MED"> Mêda </option>
                                         <option value="C/MRD"> Mirandela </option>
                                         <option value="C/MTN"> Montemor-o-Novo </option>
+                                        <option value="C/MTV"> Montemor-o-Velho </option>
                                         <option value="C/MOC"> Moscavide </option>
                                         <option value="C/MUR"> Moura </option>
                                         <option value="C/NIS"> Nisa </option>
