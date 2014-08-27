@@ -15,6 +15,7 @@ foreach ($_GET as $key => $value) {
 header('Content-Encoding: UTF-8');
 header('Content-type: text/csv; charset=UTF-8');
 echo "\xEF\xBB\xBF";
+
 $user = new UserLogin($db);
 $user->confirm_login();
 
@@ -41,29 +42,6 @@ switch ($action) {
     case "consultas":
         include 'includes/consultas.php';
         break;
-
-
-
-
-
-
-
-
-
-
-
-
-    case 'get_agents':
-        $query = "SELECT user,full_name FROM vicidial_users where user_group='SPICE'";
-        $stmt = $db->prepare($query);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $js[] = array("user" => $row["user"], "full_name" => $row["full_name"]);
-        }
-        echo json_encode($js);
-        break;
-
-
     default:
-        break;
+        echo 'fail...';
 }
