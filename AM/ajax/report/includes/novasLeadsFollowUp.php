@@ -74,9 +74,9 @@ $query_log = "SELECT "
         . "a.comments "
         . "FROM vicidial_list a "
         . "INNER JOIN vicidial_users b ON a.user=b.user "
-        . "WHERE a.entry_date BETWEEN :data_inicial AND :data_final AND a.extra6=:type AND b.user_group='SPICE';";
+        . "WHERE a.entry_date BETWEEN :data_inicial AND :data_final AND a.extra6=:type AND b.user_group=:user_group;";
 $stmt = $db->prepare($query_log);
-$stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":type" => $dispens_cc));
+$stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":type" => $dispens_cc, ":user_group" => $u->user_group));
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     fputcsv($output, array(
