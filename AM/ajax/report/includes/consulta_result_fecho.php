@@ -31,7 +31,7 @@ fputcsv($output, array(
     'Fechadas',
     '% Fechadas'), ";");
 
-$query_log = "SELECT b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource "
+$query_log = "SELECT b.user, b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource "
         . "FROM sips_sd_reservations a "
         . "INNER JOIN spice_consulta b ON a.id_reservation=b.reserva_id "
         . "WHERE a.id_reservation_type IN ($rs) AND a.start_date BETWEEN :data_inicial AND :data_final ";
@@ -66,7 +66,7 @@ foreach ($info as $username => $userData) {
         $final[$username] = $userData;
     }
 }
-
+var_dump($info);exit;
 foreach ($final as $username => &$dadData) {
     foreach ($oUsers[$username]->siblings as $sibling) {
         if ($info[$sibling]) {
