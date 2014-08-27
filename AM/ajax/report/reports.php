@@ -42,6 +42,9 @@ switch ($action) {
     case "consultas":
         include 'includes/consultas.php';
         break;
+    case "audiograma":
+        include 'includes/audiograma.php';
+        break;
     default:
         echo 'fail...';
 }
