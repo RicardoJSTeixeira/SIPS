@@ -83,9 +83,9 @@ foreach ($final as $admName => &$dadData) {
         $dadData['novas'],
         $dadData['remarcadas'],
         $dadData['abertas'],
-        ($dadData['abertas'] != 0 || $dadData['total'] != 0) ? round($dadData['abertas'] / $dadData['total'], 2) : 0,
+        ($dadData['abertas'] != 0 || $dadData['total'] != 0) ? round($dadData['abertas'] / $dadData['total'], 2)*100 : 0,
         $dadData['fechadas'],
-        ($dadData['fechadas'] != 0 || $dadData['total'] != 0) ? round($dadData['fechadas'] / $dadData['total'], 2) : 0), ";");
+        ($dadData['fechadas'] != 0 || $dadData['total'] != 0) ? round($dadData['fechadas'] / $dadData['total'], 2)*100 : 0), ";");
 
     $total["total"] += (int) $dadData["total"];
     $total["abertas"] += (int) $dadData["abertas"];
@@ -106,9 +106,9 @@ foreach ($final as $admName => &$dadData) {
             $userData['novas'],
             $userData['remarcadas'],
             $userData['abertas'],
-            ($userData['abertas'] != 0 || $userData['total'] != 0) ? round($userData['abertas'] / $userData['total'], 2) : 0,
+            ($userData['abertas'] != 0 || $userData['total'] != 0) ? round($userData['abertas'] / $userData['total'], 2)*100 : 0,
             $userData['fechadas'],
-            ($userData['fechadas'] != 0 || $userData['total'] != 0) ? round($userData['fechadas'] / $userData['total'], 2) : 0), ";");
+            ($userData['fechadas'] != 0 || $userData['total'] != 0) ? round($userData['fechadas'] / $userData['total'], 2)*100 : 0), ";");
     }
 }
 
@@ -119,8 +119,8 @@ fputcsv($output, array(
     $total['novas'],
     $total['remarcadas'],
     $total['abertas'],
-    ($total['abertas'] != 0 || $total['total'] != 0) ? round($total['abertas'] / $total['total'], 2) : 0,
+    ($total['abertas'] != 0 || $total['total'] != 0) ? round($total['abertas'] / $total['total'], 2)*100 : 0,
     $total['fechadas'],
-    ($total['fechadas'] != 0 || $total['total'] != 0) ? round($total['fechadas'] / $total['total'], 2) : 0), ";");
+    ($total['fechadas'] != 0 || $total['total'] != 0) ? round($total['fechadas'] / $total['total'], 2)*100 : 0), ";");
 
 fclose($output);
