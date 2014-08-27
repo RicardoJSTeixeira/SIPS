@@ -21,6 +21,6 @@ $(function() {
     
     $('#export_btn').click(function(event) {
         event.preventDefault();
-        table2csv(table_consults, 'full', '#table_audiograma');
+        table2csv(table_consults, 'view', '#table_audiograma');
     });
 });
