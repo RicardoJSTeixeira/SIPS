@@ -47,6 +47,7 @@ $default = array(
     "n_closed" => 0,
     "perda" => 0,
     "consulta" => 0,
+    "terceira_pessoa" => 0
 );
 $total = array(
     "consulta_fechada" => 0,
@@ -61,6 +62,7 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     if (!$info[$row->user]) {
         $info[$row->user] = $default;
     }
+    
     (int) $row->consulta ? $info[$row->user]["consulta"] ++ : $info[$row->user]["n_consulta"] ++;
     (int) $row->exame ? $info[$row->user]["exame"] ++ : $info[$row->user]["n_exame"] ++;
     (int) $row->venda ? $info[$row->user]["venda"] ++ : $info[$row->user]["n_venda"] ++;
