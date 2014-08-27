@@ -32,7 +32,7 @@ fputcsv($output, array(
     'Fechadas',
     '% Fechadas'), ";");
 
-$query_log = "SELECT b.user, b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource "
+$query_log = "SELECT b.user, b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource, a.changed "
         . "FROM sips_sd_reservations a "
         . "INNER JOIN spice_consulta b ON a.id_reservation=b.reserva_id "
         . "WHERE a.id_reservation_type IN ($rs) AND a.start_date BETWEEN :data_inicial AND :data_final ";
@@ -56,7 +56,7 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     }
     $info[$row->user]["total"] += 1;
     $info[$row->user]["novas"] += (int) $row->changed == 0 ? 1 : 0;
-    $info[$row->user]["remarcadas"] += (int) $row->changed;
+    $info[$row->user]["remarcadas"] += (int) ($row->changed) ? 1 : 0;
     $info[$row->user]["abertas"] +=(int) $row->closed == 0 ? 1 : 0;
     $info[$row->user]["fechadas"] += (int) $row->closed;
 }
@@ -83,9 +83,9 @@ foreach ($final as $admName => &$dadData) {
         $dadData['novas'],
         $dadData['remarcadas'],
         $dadData['abertas'],
-        ($dadData['abertas'] != 0 AND $dadData['total'] != 0) ? round($dadData['abertas'] / $dadData['total'], 2)*100 : 0,
+        ($dadData['abertas'] != 0 AND $dadData['total'] != 0) ? round($dadData['abertas'] / $dadData['total'], 2) * 100 : 0,
         $dadData['fechadas'],
-        ($dadData['fechadas'] != 0 AND $dadData['total'] != 0) ? round($dadData['fechadas'] / $dadData['total'], 2)*100 : 0), ";");
+        ($dadData['fechadas'] != 0 AND $dadData['total'] != 0) ? round($dadData['fechadas'] / $dadData['total'], 2) * 100 : 0), ";");
 
     $total["total"] += (int) $dadData["total"];
     $total["abertas"] += (int) $dadData["abertas"];
@@ -106,9 +106,9 @@ foreach ($final as $admName => &$dadData) {
             $userData['novas'],
             $userData['remarcadas'],
             $userData['abertas'],
-            ($userData['abertas'] != 0 AND $userData['total'] != 0) ? round($userData['abertas'] / $userData['total'], 2)*100 : 0,
+            ($userData['abertas'] != 0 AND $userData['total'] != 0) ? round($userData['abertas'] / $userData['total'], 2) * 100 : 0,
             $userData['fechadas'],
-            ($userData['fechadas'] != 0 AND $userData['total'] != 0) ? round($userData['fechadas'] / $userData['total'], 2)*100 : 0), ";");
+            ($userData['fechadas'] != 0 AND $userData['total'] != 0) ? round($userData['fechadas'] / $userData['total'], 2) * 100 : 0), ";");
     }
 }
 
@@ -119,8 +119,8 @@ fputcsv($output, array(
     $total['novas'],
     $total['remarcadas'],
     $total['abertas'],
-    ($total['abertas'] != 0 AND $total['total'] != 0) ? round($total['abertas'] / $total['total'], 2)*100 : 0,
+    ($total['abertas'] != 0 AND $total['total'] != 0) ? round($total['abertas'] / $total['total'], 2) * 100 : 0,
     $total['fechadas'],
-    ($total['fechadas'] != 0 AND $total['total'] != 0) ? round($total['fechadas'] / $total['total'], 2)*100 : 0), ";");
+    ($total['fechadas'] != 0 AND $total['total'] != 0) ? round($total['fechadas'] / $total['total'], 2) * 100 : 0), ";");
 
 fclose($output);
