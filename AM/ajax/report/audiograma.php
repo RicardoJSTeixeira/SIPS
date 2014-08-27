@@ -22,7 +22,7 @@ switch ($action) {
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
         $output['aaData'] = array();
-        $query = "SELECT extra2 'codCliente', '' as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode' , MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL' "
+        $query = "SELECT extra2 'codCliente', a.extra_id as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode' , MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL' "
                 . "FROM sips_sd_reservations a "
                 . "INNER JOIN sips_sd_resources b ON a.id_resource = b.id_resource "
                 . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
