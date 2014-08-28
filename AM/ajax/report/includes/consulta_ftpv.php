@@ -62,31 +62,31 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     if (!$info[$row->user]) {
         $info[$row->user] = $default;
     }
-    
-    if((int) $row->consulta){
-        $info[$row->user]["consulta"] ++ ;
-    }else{
-         $info[$row->user]["n_consulta"] ++;
+
+    if ((int) $row->consulta) {
+        $info[$row->user]["consulta"] ++;
+    } else {
+        $info[$row->user]["n_consulta"] ++;
     }
-    
-    if((int) $row->exame){
-        $info[$row->user]["exame"] ++ ;
-    }else{
-         $info[$row->user]["n_exame"] ++;
+
+    if ((int) $row->exame) {
+        $info[$row->user]["exame"] ++;
+    } else {
+        $info[$row->user]["n_exame"] ++;
     }
-    
-    if((int) $row->venda){
-        $info[$row->user]["venda"] ++ ;
-    }else{
-         $info[$row->user]["n_venda"] ++;
+
+    if ((int) $row->venda) {
+        $info[$row->user]["venda"] ++;
+    } else {
+        $info[$row->user]["n_venda"] ++;
     }
-    
-    if((int) $row->closed){
-        $info[$row->user]["closed"] ++ ;
-    }else{
-         $info[$row->user]["n_closed"] ++;
+
+    if ((int) $row->closed) {
+        $info[$row->user]["closed"] ++;
+    } else {
+        $info[$row->user]["n_closed"] ++;
     }
-    
+
     if ((int) $row->left_ear > 35 || (int) $row->right_ear > 35) {
         $info[$row->user]["perda"] ++;
     }
@@ -122,43 +122,43 @@ foreach ($final as $admName => &$dadData) {
         "",
         "",
         ""), ";");
-    $cons_fechadas = $dadData['consulta'] + $dadData['perda'] + $dadData['n_venda'];
-    $total["consulta_fechada"] +=$cons_fechadas;
+
+    $total["consulta_fechada"] += $dadData["closed"];
     $total["consulta"] += (int) $dadData["consulta"];
-    $total["perda"] +=(int) $info[$dadData["user"]]["perda"];
+    $total["perda"] += (int) $info[$dadData["user"]]["perda"];
     $total["n_venda"] += (int) $dadData["n_venda"];
     $total["terceira_pessoa"] += (int) $dadData["terceira_pessoa"];
 
     fputcsv($output, array(
         $admName,
-        $cons_fechadas,
+        $dadData["closed"],
         $dadData['consulta'],
-        ($dadData['consulta'] != 0 AND $cons_fechadas != 0) ? round($dadData['consulta'] / $cons_fechadas, 2) * 100 : 0,
+        ($dadData['consulta'] != 0 AND $dadData["closed"] != 0) ? round($dadData['consulta'] / $dadData["closed"], 2) * 100 : 0,
         $dadData['perda'],
-        ($dadData['perda'] != 0 AND $cons_fechadas != 0) ? round($dadData['perda'] / $cons_fechadas, 2) * 100 : 0,
+        ($dadData['perda'] != 0 AND $dadData["closed"] != 0) ? round($dadData['perda'] / $dadData["closed"], 2) * 100 : 0,
         $dadData['n_venda'],
-        ($dadData['n_venda'] != 0 AND $cons_fechadas != 0) ? round($dadData['n_venda'] / $cons_fechadas, 2) * 100 : 0,
+        ($dadData['n_venda'] != 0 AND $dadData["closed"] != 0) ? round($dadData['n_venda'] / $dadData["closed"], 2) * 100 : 0,
         $dadData['terceira_pessoa'],
-        ($dadData['terceira_pessoa'] != 0 AND $cons_fechadas != 0) ? round($dadData['terceira_pessoa'] / $cons_fechadas, 2) * 100 : 0), ";");
+        ($dadData['terceira_pessoa'] != 0 AND $dadData["closed"] != 0) ? round($dadData['terceira_pessoa'] / $dadData["closed"], 2) * 100 : 0), ";");
 
     foreach ($dadData["dispenser"] as $username => $userData) {
-        $cons_fechadas = $userData['consulta'] + $userData['perda'] + $userData['n_venda'];
-        $total["consulta_fechada"] +=$cons_fechadas;
+
+        $total["consulta_fechada"] +=$userData["closed"];
         $total["consulta"] += (int) $userData["consulta"];
         $total["perda"] +=(int) $info[$userData["user"]]["perda"];
         $total["n_venda"] += (int) $userData["n_venda"];
         $total["terceira_pessoa"] += (int) $userData["terceira_pessoa"];
         fputcsv($output, array(
             $username,
-            $cons_fechadas,
+            $userData["closed"],
             $userData['consulta'],
-            ($userData['consulta'] != 0 AND $cons_fechadas != 0) ? round($userData['consulta'] / $cons_fechadas, 2) * 100 : 0,
+            ($userData['consulta'] != 0 AND $userData["closed"] != 0) ? round($userData['consulta'] / $userData["closed"], 2) * 100 : 0,
             $userData['perda'],
-            ($userData['perda'] != 0 AND $cons_fechadas != 0) ? round($userData['perda'] / $cons_fechadas, 2) * 100 : 0,
+            ($userData['perda'] != 0 AND $userData["closed"] != 0) ? round($userData['perda'] / $userData["closed"], 2) * 100 : 0,
             $userData['n_venda'],
-            ($userData['n_venda'] != 0 AND $cons_fechadas != 0) ? round($userData['n_venda'] / $cons_fechadas, 2) * 100 : 0,
+            ($userData['n_venda'] != 0 AND $userData["closed"] != 0) ? round($userData['n_venda'] / $userData["closed"], 2) * 100 : 0,
             $userData['terceira_pessoa'],
-            ($userData['terceira_pessoa'] != 0 AND $cons_fechadas != 0) ? round($userData['terceira_pessoa'] / $cons_fechadas, 2) * 100 : 0), ";");
+            ($userData['terceira_pessoa'] != 0 AND $userData["closed"] != 0) ? round($userData['terceira_pessoa'] / $userData["closed"], 2) * 100 : 0), ";");
     }
 }
 
