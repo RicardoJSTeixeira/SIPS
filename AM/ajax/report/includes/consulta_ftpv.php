@@ -63,11 +63,30 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
         $info[$row->user] = $default;
     }
     
-    (int) $row->consulta ? $info[$row->user]["consulta"] ++ : $info[$row->user]["n_consulta"] ++;
-    (int) $row->exame ? $info[$row->user]["exame"] ++ : $info[$row->user]["n_exame"] ++;
-    (int) $row->venda ? $info[$row->user]["venda"] ++ : $info[$row->user]["n_venda"] ++;
-    (int) $row->closed ? $info[$row->user]["closed"] ++ : $info[$row->user]["n_closed"] ++;
-
+    if((int) $row->consulta){
+        $info[$row->user]["consulta"] ++ ;
+    }else{
+         $info[$row->user]["n_consulta"] ++;
+    }
+    
+    if((int) $row->exame){
+        $info[$row->user]["exame"] ++ ;
+    }else{
+         $info[$row->user]["n_exame"] ++;
+    }
+    
+    if((int) $row->venda){
+        $info[$row->user]["venda"] ++ ;
+    }else{
+         $info[$row->user]["n_venda"] ++;
+    }
+    
+    if((int) $row->closed){
+        $info[$row->user]["closed"] ++ ;
+    }else{
+         $info[$row->user]["n_closed"] ++;
+    }
+    
     if ((int) $row->left_ear > 35 || (int) $row->right_ear > 35) {
         $info[$row->user]["perda"] ++;
     }
