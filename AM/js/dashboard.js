@@ -165,15 +165,19 @@ $(function() {
         var en = btoa($(this).data().lead_id);
         $.history.push("view/calendar.html?id=" + en);
     });
-    
+
     $("#div_master").on("click", ".recomendacoes", function() {
         var en = btoa($(this).data().lead_id);
         $.history.push("view/mass_client.html?id=" + en);
     });
-    
+
     $("#div_master").on("click", ".ver_consulta", function() {
-        var lead_id = btoa($(this).data().lead_id);
-        var reserva_id = btoa($(this).data().reserva_id);
+        var
+                data = $(this).data(),
+                lead_id = btoa(data.lead_id),
+                reserva_id = btoa(data.reserva_id);
+                
+        console.log("view/consulta.html?id=" + encodeURIComponent(lead_id) + "&rs=" + encodeURIComponent(reserva_id));
         $.history.push("view/consulta.html?id=" + encodeURIComponent(lead_id) + "&rs=" + encodeURIComponent(reserva_id));
     });
 
