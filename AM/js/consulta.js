@@ -171,13 +171,13 @@ $(function()
                 var status = consult_audiogra.calculate();
                 $("#main_consulta_div #exam_outcome_div").show();
 
-                if (status !== "0") { //COM PERDA
+                if (status) { //COM PERDA
                     right_ear = $("#main_consulta_div #right_ear_value").val();
                     left_ear = $("#main_consulta_div #left_ear_value").val();
                     $("#main_consulta_div #terminar_consulta_div").show();
                     ha_perda = 1;
                 }
-                else if (status === "0") { // SEM PERDA 
+                else if (status) { // SEM PERDA 
                     $("#main_consulta_div #terminar_consulta_div").show();
                     ha_perda = 0;
                 }
