@@ -23,12 +23,12 @@ fputcsv($output, array(
     "3a Pessoa",
     "Nome 3a Pessoa"), ";");
 
-$query = "SELECT extra2 'cod cliente', a.extra_id as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date, exame_razao, venda_razao, f.user, alias_code as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO'), feedback, terceira_pessoa "
-        . "FROM sips_sd_reservations a "
-        . "INNER JOIN sips_sd_resources g ON a.id_resource = g.id_resource "
-        . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
-        . "INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
-        . "WHERE f.closed=1 AND a.start_date BETWEEN :data_inicial AND :data_final;";
+$query = "SELECT extra2 'cod cliente', a.extra_id as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date, exame_razao, venda_razao, f.user, alias_code as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO'), feedback, terceira_pessoa
+            FROM sips_sd_reservations a
+            INNER JOIN sips_sd_resources g ON a.id_resource = g.id_resource
+            LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
+            INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
+            WHERE f.closed=1 AND a.start_date BETWEEN :data_inicial AND :data_final;";
 
 $stmt = $db->prepare($query);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
