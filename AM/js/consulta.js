@@ -168,18 +168,16 @@ $(function()
             script.validate_manual(function() {
                 that.hide();
                 $('html, body').animate({scrollTop: $(document).height()}, 'fast');
-                var status = consult_audiogra.calculate();
+                ha_perda = consult_audiogra.calculate();
                 $("#main_consulta_div #exam_outcome_div").show();
 
-                if (status) { //COM PERDA
+                if (ha_perda) { //COM PERDA
                     right_ear = $("#main_consulta_div #right_ear_value").val();
                     left_ear = $("#main_consulta_div #left_ear_value").val();
                     $("#main_consulta_div #terminar_consulta_div").show();
-                    ha_perda = 1;
                 }
-                else if (status) { // SEM PERDA 
+                else { // SEM PERDA 
                     $("#main_consulta_div #terminar_consulta_div").show();
-                    ha_perda = 0;
                 }
             });
         }, false);
