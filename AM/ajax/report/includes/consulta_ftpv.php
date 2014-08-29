@@ -50,6 +50,7 @@ $info = array();
 $default = array(
     "closed" => 0,
     "n_consulta" => 0,
+    "consulta" => 0,
     "n_exame" => 0,
     "exame" => 0,
     "n_perda" => 0,
@@ -94,8 +95,6 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     } else {
         $info[$row->user]["n_consulta"]++;
     }
-
-
 
 
     if ((int)$row->closed) {
@@ -143,7 +142,6 @@ foreach ($final as $admName => &$dadData) {
         "",
         "",
         ""), ";");
-
 
     $total["closed"] += $dadData["closed"];
     $total["n_consulta"] += (int)$dadData["n_consulta"];
@@ -232,6 +230,5 @@ fputcsv($output, array(
     ($total['venda'] != 0 AND $total["perda"] != 0) ? round($total['venda'] / $total["perda"], 2) * 100 : 0,
     $total['terceira_pessoa'],
     ($total['terceira_pessoa'] != 0 AND $total["closed"] != 0) ? round($total['terceira_pessoa'] / $total["closed"], 2) * 100 : 0), ";");
-
 
 fclose($output);
