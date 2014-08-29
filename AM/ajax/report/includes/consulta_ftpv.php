@@ -74,15 +74,23 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 
     if ((int)$row->exame) {
         $info[$row->user]["exame"]++;
+
+        if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
+            $info[$row->user]["perda"]++;
+        } else {
+            $info[$row->user]["n_perda"]++;
+        }
+
+        if ((int)$row->venda) {
+            $info[$row->user]["venda"]++;
+        } else {
+            $info[$row->user]["n_venda"]++;
+        }
+
     } else {
         $info[$row->user]["n_exame"]++;
     }
 
-    if ((int)$row->venda) {
-        $info[$row->user]["venda"]++;
-    } else {
-        $info[$row->user]["n_venda"]++;
-    }
 
     if ((int)$row->closed) {
         $info[$row->user]["closed"]++;
@@ -90,11 +98,6 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
         $info[$row->user]["n_closed"]++;
     }
 
-    if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
-        $info[$row->user]["perda"]++;
-    } else {
-        $info[$row->user]["n_perda"]++;
-    }
 
     if (count($row->terceira_pessoa)) {
         $info[$row->user]["terceira_pessoa"]++;
@@ -190,6 +193,8 @@ foreach ($final as $admName => &$dadData) {
             ($userData['perda'] != 0 AND $userData["closed"] != 0) ? round($userData['perda'] / $userData["closed"], 2) * 100 : 0,
             $userData['n_venda'],
             ($userData['n_venda'] != 0 AND $userData["closed"] != 0) ? round($userData['n_venda'] / $userData["closed"], 2) * 100 : 0,
+            $userData['venda'],
+            ($userData['venda'] != 0 AND $userData["closed"] != 0) ? round($userData['venda'] / $userData["closed"], 2) * 100 : 0,
             $userData['terceira_pessoa'],
             ($userData['terceira_pessoa'] != 0 AND $userData["closed"] != 0) ? round($userData['terceira_pessoa'] / $userData["closed"], 2) * 100 : 0), ";");
     }
@@ -211,6 +216,8 @@ fputcsv($output, array(
     ($total['perda'] != 0 AND $total["closed"] != 0) ? round($total['perda'] / $total["closed"], 2) * 100 : 0,
     $total['n_venda'],
     ($total['n_venda'] != 0 AND $total["closed"] != 0) ? round($total['n_venda'] / $total["closed"], 2) * 100 : 0,
+    $total['venda'],
+    ($total['venda'] != 0 AND $total["closed"] != 0) ? round($total['venda'] / $total["closed"], 2) * 100 : 0,
     $total['terceira_pessoa'],
     ($total['terceira_pessoa'] != 0 AND $total["closed"] != 0) ? round($total['terceira_pessoa'] / $total["closed"], 2) * 100 : 0), ";");
 
