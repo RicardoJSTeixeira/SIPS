@@ -126,7 +126,7 @@ if (isset($report_marc_outbound)) {
                         JOIN vicidial_list c ON a.lead_id = c.lead_id
                         Left JOIN sips_sd_reservations e ON a.lead_id = e.lead_id
                         JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id
-                        where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND e.start_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
+                        where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' ";
 
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
@@ -616,13 +616,13 @@ if (isset($report_marc_inbound)) {
                         JOIN vicidial_list c ON a.lead_id = c.lead_id
                         Left JOIN sips_sd_reservations e ON a.lead_id = e.lead_id
                         JOIN vicidial_campaigns d ON b.campaign_id = d.campaign_id
-                        where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'AND e.start_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
+                        where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
         for ($i = 0; $i < mysql_num_rows($query_log); $i++) {
             $row = mysql_fetch_assoc($query_log);
 
-            $custom_row = mysql_query("SELECT * FROM custom_" . $row['linhainbound'] . " where lead_id LIKE '$row[lead_id]' ");
+            $custom_row = mysql_query("SELECT * FROM custom_$row[linhainbound] where lead_id LIKE '$row[lead_id]' ");
             if (mysql_num_rows($custom_row) == 0) {
                 continue;
             }
