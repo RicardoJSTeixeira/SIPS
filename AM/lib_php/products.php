@@ -2,11 +2,24 @@
 
 Class products {
 
+    protected $_db;
+    protected $_id;
+    protected $_name;
+    protected $_max_req_m;
+    protected $_max_req_s;
+    protected $_parent;
+    protected $_category;
+    protected $_type;
+    protected $_color;
+    protected $_active;
+    protected $_size;
+
+
     public function __construct($db) {
         $this->_db = $db;
     }
 
-    public function get_products_to_datatable($product_editable) {
+    public function get_products_to_datatable($product_editable=false) {
         $output['aaData'] = array();
         $stmt = $this->_db->prepare("SELECT id,name,max_req_m,max_req_s,category,type,color,active,deleted,size from spice_product where deleted=0");
         $stmt->execute();
@@ -149,12 +162,12 @@ Class products {
 
     public function add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active, $size) {
 
-        $stmt = $this->_db->prepare("insert into spice_product ( `name`,`max_req_m`,`max_req_s`,`category`,`type`,`color`,`active`,`deleted`,`size`) values (:name, :max_req_m,:max_req_s,:category,:type,:color,1,0,:size) ");
+        $stmt = $this->_db->prepare("insert into spice_product ( name,max_req_m,max_req_s,category,type,color,active,deleted,size) values (:name, :max_req_m,:max_req_s,:category,:type,:color,1,0,:size) ");
         $stmt->execute(array(":name" => $name, ":max_req_m" => $max_req_m, ":max_req_s" => $max_req_s, ":category" => $category, ":type" => json_encode($type), ":color" => $color ? json_encode($color) : json_encode(array()), ":size" => json_encode($size)));
         $last_id = $this->_db->lastInsertId();
 
         if (isset($parent)) {
-            $stmt1 = $this->_db->prepare("insert into spice_product_assoc (`parent`, `child`) values (:parent,:child) ");
+            $stmt1 = $this->_db->prepare("insert into spice_product_assoc (parent, child) values (:parent,:child) ");
             foreach ($parent as $value) {
                 $stmt1->execute(array(":parent" => $value, ":child" => $last_id));
             }
@@ -214,7 +227,7 @@ class product extends products {
         $stmt->execute(array(":child" => $this->_id));
         if (isset($parent)) {
             foreach ($parent as $value) {
-                $stmt = $this->_db->prepare("insert into spice_product_assoc (`parent`, `child`) values (:parent,:child) ");
+                $stmt = $this->_db->prepare("insert into spice_product_assoc (parent, child) values (:parent,:child) ");
                 $stmt->execute(array(":parent" => $value, ":child" => $this->_id));
             }
         }
@@ -227,7 +240,7 @@ class product extends products {
     }
 
     public function add_promotion($active, $highlight, $data_inicio, $data_fim) {
-        $stmt = $this->_db->prepare("insert into spice_promocao ( `product_id`,   `highlight`, `active`, `data_inicio`,`data_fim`) values (:product_id, :highlight,:active,:data_inicio,:data_fim) ");
+        $stmt = $this->_db->prepare("insert into spice_promocao ( product_id,   highlight, active, data_inicio,data_fim) values (:product_id, :highlight,:active,:data_inicio,:data_fim) ");
         $stmt->execute(array(":product_id" => $this->_id, ":highlight" => $highlight == "true" ? 1 : 0, ":active" => $active == "true" ? 1 : 0, ":data_inicio" => $data_inicio, ":data_fim" => $data_fim));
         return $this->_db->lastInsertId();
     }

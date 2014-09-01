@@ -17,7 +17,7 @@ foreach ($_GET as $key => $value) {
 }
 $user = new mysiblings($db);
 $products = new products($db);
-$apoio_marketing = new apoio_marketing($db, $user->user_level, $user->id);
+
 switch ($action) {
     case "download_excel_csm":
         header('Content-Encoding: UTF-8');
@@ -58,9 +58,7 @@ switch ($action) {
         };
         echo(json_encode($temp));
         break;
-    case "listar_produtos_to_datatable_by_parent":
-        echo(json_encode($products->get_products_to_datatable_by_id($parent)));
-        break;
+
     case "listar_produtos":
         echo(json_encode($products->get_products()));
         break;
@@ -71,16 +69,13 @@ switch ($action) {
         echo(json_encode($products->remove_products()));
         break;
     case "criar_produto":
-        echo(json_encode($products->add_product($name, $parent, $max_req_m, $max_req_s, $category, $type)));
+        echo(json_encode($products->add_product($name, $parent, $max_req_m, $max_req_s, $category, $type, $color, $active, $size)));
         break;
     case "editar_produto":
         $product = new product($db, $id);
-        echo($product->edit_product($name, $parent, $max_req_m, $max_req_s, $category, $type));
+        echo($product->edit_product($name, $parent, $max_req_m, $max_req_s, $category, $type,$color,$active,$size));
         break;
-    case "listar_produto":
-        $product = new product($db, $id, 0);
-        echo(json_encode($product->get_info()));
-        break;
+
     case"get_agentes":
         echo(json_encode($user->get_agentes()));
         break;
