@@ -14,11 +14,17 @@ $rs = $calendar->getResTypeRaw();
 $rs = implode(",", $rs);
 
 //users obj
-$oUsersTMP = $users->getAll(UserControler::ASM);
-$oUsers = Array();
-foreach ($oUsersTMP as &$user) {
+$oASMTMP = $users->getAll(UserControler::ASM);
+$oASM = Array();
+foreach ($oASMTMP as &$user) {
     $siblings = json_decode($user->siblings);
     $user->siblings = (is_array($siblings)) ? $siblings : Array();
+    $oASM[$user->user] = $user;
+}
+
+$oUsersTMP = $users->getAll();
+$oUsers = Array();
+foreach ($oUsersTMP as &$user) {
     $oUsers[$user->user] = $user;
 }
 
@@ -32,10 +38,10 @@ fputcsv($output, array(
     'Fechadas',
     '% Fechadas'), ";");
 
-$query_log = "SELECT b.user, b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource, a.changed "
-        . "FROM sips_sd_reservations a "
-        . "INNER JOIN spice_consulta b ON a.id_reservation=b.reserva_id "
-        . "WHERE a.id_reservation_type IN ($rs) AND a.start_date BETWEEN :data_inicial AND :data_final ";
+$query_log = "SELECT b.user, b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource, a.changed
+                FROM sips_sd_reservations a
+                INNER JOIN spice_consulta b ON a.id_reservation=b.reserva_id
+                WHERE a.id_reservation_type IN ($rs) AND a.start_date BETWEEN :data_inicial AND :data_final ";
 
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
@@ -51,27 +57,25 @@ $default = array(
 $total = $default;
 
 while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
-    if (!$info[$row->user]) {
-        $info[$row->user] = $default;
+    if (!$info[$oUsers[$row->user]->alias]) {
+        $info[$oUsers[$row->user]->alias] = $default;
     }
-    $info[$row->user]["total"] += 1;
-    $info[$row->user]["novas"] += (int) $row->changed == 0 ? 1 : 0;
-    $info[$row->user]["remarcadas"] += (int) ($row->changed) ? 1 : 0;
-    $info[$row->user]["abertas"] +=(int) $row->closed == 0 ? 1 : 0;
-    $info[$row->user]["fechadas"] += (int) $row->closed;
+    $info[$oUsers[$row->user]->alias]["total"] += 1;
+    $info[$oUsers[$row->user]->alias]["novas"] += (int)$row->changed == 0 ? 1 : 0;
+    $info[$oUsers[$row->user]->alias]["remarcadas"] += (int)($row->changed) ? 1 : 0;
+    $info[$oUsers[$row->user]->alias]["abertas"] += (int)$row->closed == 0 ? 1 : 0;
+    $info[$oUsers[$row->user]->alias]["fechadas"] += (int)$row->closed;
 }
 
 $final = array();
-foreach ($oUsers as $user) {
-    if ($user->user_level == UserControler::ASM) {
-        $final[$user->user] = ($info[$user->user]) ? $info[$user->user] : $default;
-    }
+foreach ($oASM as $user) {
+        $final[$user->user] = ($info[$oUsers[$user->user]->alias]) ? $info[$user->user] : $default;
 }
-#var_dump($info);exit;
+
 foreach ($final as $username => &$dadData) {
     $dadData["dispenser"] = Array();
-    foreach ($oUsers[$username]->siblings as $sibling) {
-        $dadData["dispenser"][$sibling] = ($info[$sibling]) ? $info[$sibling] : $default;
+    foreach ($oASM[$username]->siblings as $sibling) {
+        $dadData["dispenser"][$oUsers[$sibling]->alias] = ($info[$oUsers[$sibling]->alias]) ? $info[$oUsers[$sibling]->alias] : $default;
     }
 }
 
@@ -83,32 +87,32 @@ foreach ($final as $admName => &$dadData) {
         $dadData['novas'],
         $dadData['remarcadas'],
         $dadData['abertas'],
-        ($dadData['abertas'] != 0 AND $dadData['total'] != 0) ? round($dadData['abertas'] / $dadData['total'], 2) * 100 : 0,
+        divide($dadData['abertas'], $dadData['total']),
         $dadData['fechadas'],
-        ($dadData['fechadas'] != 0 AND $dadData['total'] != 0) ? round($dadData['fechadas'] / $dadData['total'], 2) * 100 : 0), ";");
+        divide($dadData['fechadas'], $dadData['total'])), ";");
 
-    $total["total"] += (int) $dadData["total"];
-    $total["abertas"] += (int) $dadData["abertas"];
-    $total["novas"] += (int) $dadData["novas"];
-    $total["remarcadas"] += (int) $dadData["remarcadas"];
-    $total["fechadas"] += (int) $dadData["fechadas"];
+    $total["total"] += (int)$dadData["total"];
+    $total["abertas"] += (int)$dadData["abertas"];
+    $total["novas"] += (int)$dadData["novas"];
+    $total["remarcadas"] += (int)$dadData["remarcadas"];
+    $total["fechadas"] += (int)$dadData["fechadas"];
 
     foreach ($dadData["dispenser"] as $username => $userData) {
 
-        $total["total"] += (int) $userData["total"];
-        $total["abertas"] += (int) $userData["abertas"];
-        $total["novas"] += (int) $userData["novas"];
-        $total["remarcadas"] += (int) $userData["remarcadas"];
-        $total["fechadas"] += (int) $userData["fechadas"];
+        $total["total"] += (int)$userData["total"];
+        $total["abertas"] += (int)$userData["abertas"];
+        $total["novas"] += (int)$userData["novas"];
+        $total["remarcadas"] += (int)$userData["remarcadas"];
+        $total["fechadas"] += (int)$userData["fechadas"];
         fputcsv($output, array(
             $username,
             $userData['total'],
             $userData['novas'],
             $userData['remarcadas'],
             $userData['abertas'],
-            ($userData['abertas'] != 0 AND $userData['total'] != 0) ? round($userData['abertas'] / $userData['total'], 2) * 100 : 0,
+            divide($userData['abertas'] ,$userData['total']),
             $userData['fechadas'],
-            ($userData['fechadas'] != 0 AND $userData['total'] != 0) ? round($userData['fechadas'] / $userData['total'], 2) * 100 : 0), ";");
+            divide($userData['fechadas'] , $userData['total'])), ";");
     }
 }
 
@@ -119,8 +123,8 @@ fputcsv($output, array(
     $total['novas'],
     $total['remarcadas'],
     $total['abertas'],
-    ($total['abertas'] != 0 AND $total['total'] != 0) ? round($total['abertas'] / $total['total'], 2) * 100 : 0,
+    divide($total['abertas'] , $total['total']),
     $total['fechadas'],
-    ($total['fechadas'] != 0 AND $total['total'] != 0) ? round($total['fechadas'] / $total['total'], 2) * 100 : 0), ";");
+    divide($total['fechadas'] , $total['total'])), ";");
 
 fclose($output);
