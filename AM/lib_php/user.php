@@ -27,7 +27,7 @@ class UserLogin {
     }
 
     protected function _checkCredentials() {
-        $stmt = $this->_db->prepare('SELECT `user`, `pass`, a.`user_group`, `user_level`, `full_name`, `allowed_campaigns`, `siblings` from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group WHERE user=:user and active=:active');
+        $stmt = $this->_db->prepare('SELECT user, pass, a.user_group, user_level, full_name, allowed_campaigns, siblings from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group WHERE user=:user and active=:active');
         $stmt->execute(array(":user" => $this->_username, ":active" => 'Y'));
         if ($stmt->rowCount()) {
             $user = $stmt->fetch(PDO::FETCH_OBJ);
@@ -124,7 +124,7 @@ class UserControler {
     }
 
     public function get($username) {
-        $query = "SELECT `user`, `pass`, `full_name`, `user_level`, `active`, `siblings`,`alias` FROM `vicidial_users` WHERE user_group=:user_group and user=:username;";
+        $query = "SELECT user, pass, full_name, user_level, active, siblings,alias FROM vicidial_users WHERE user_group=:user_group and user=:username;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup, ":username" => $username));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
@@ -132,14 +132,14 @@ class UserControler {
     }
 
     public function getAll($userlevel = false) {
-        $query = "SELECT `user`, `full_name`, `user_level`, `active`, `siblings`,`alias` FROM `vicidial_users` WHERE user_group=:user_group " . (($userlevel) ? " AND user_level=$userlevel" : "") . ";";
+        $query = "SELECT user, full_name, user_level, active, siblings,alias FROM vicidial_users WHERE user_group=:user_group " . (($userlevel) ? " AND user_level=$userlevel" : "") . ";";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function getActive() {
-        $query = "SELECT `user`, `full_name`, `user_level`, `active` FROM `vicidial_users` WHERE user_group=:user_group and active='Y';";
+        $query = "SELECT user, full_name, user_level, active FROM vicidial_users WHERE user_group=:user_group and active='Y';";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -150,37 +150,37 @@ class UserControler {
     }
 
     public function set($username, $pass, $desc,$alias, $ulevel) {
-        $query = "INSERT INTO `vicidial_users` (`user`, `pass`, `full_name`, `user_level`, `user_group`, `active`, `siblings`,`alias`) VALUES (:username, :pass, :desc, :ulevel, :user_group, 'Y', '[]',:alias);";
+        $query = "INSERT INTO vicidial_users (user, pass, full_name, user_level, user_group, active, siblings,alias) VALUES (:username, :pass, :desc, :ulevel, :user_group, 'Y', '[]',:alias);";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":user_group" => $this->_ugroup,":alias"=>$alias));
     }
 
     public function edit($username, $pass, $desc, $alias, $ulevel, $active, $siblings) {
-        $query = "UPDATE `vicidial_users` SET `pass`=:pass, `full_name`=:desc, `user_level`=:ulevel, `active`=:active, `siblings`=:siblings,`alias`=:alias WHERE `user`=:username;";
+        $query = "UPDATE vicidial_users SET pass=:pass, full_name=:desc, user_level=:ulevel, active=:active, siblings=:siblings,alias=:alias WHERE user=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":active" => $active, ":siblings" => json_encode($siblings), ":alias" => $alias));
     }
 
     public function editPass($username, $pass) {
-        $query = "UPDATE `vicidial_users` SET `pass`=:pass WHERE `user`=:username;";
+        $query = "UPDATE vicidial_users SET pass=:pass WHERE user=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":pass" => $pass));
     }
 
     public function editActive($username, $active) {
-        $query = "UPDATE `vicidial_users` SET `active`=:active WHERE `user`=:username;";
+        $query = "UPDATE vicidial_users SET active=:active WHERE user=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":active" => $active));
     }
 
     public function save_proposta($lead_id, $reserva_id, $proposta) {
-        $query = "INSERT INTO `spice_proposta` (`lead_id`, `reserva_id`, `data`, `proposta`) VALUES (:lead_id, :reserva_id, :data, :proposta);";
+        $query = "INSERT INTO spice_proposta (lead_id, reserva_id, data, proposta) VALUES (:lead_id, :reserva_id, :data, :proposta);";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":lead_id" => $lead_id, ":reserva_id" => $reserva_id, ":data" => date('Y-m-d H:i:s'), ":proposta" => json_encode($proposta)));
     }
 
     public function get_propostas($lead_id) {
-        $query = "SELECT reserva_id,data,proposta FROM `spice_proposta` WHERE lead_id=:lead_id;";
+        $query = "SELECT reserva_id,data,proposta FROM spice_proposta WHERE lead_id=:lead_id;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $js = array();
