@@ -8,11 +8,17 @@ header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
 //users obj
-$oUsersTMP = $users->getAll(UserControler::ASM);
-$oUsers = Array();
-foreach ($oUsersTMP as &$user) {
+$oASMTMP = $users->getAll(UserControler::ASM);
+$oASM = Array();
+foreach ($oASMTMP as &$user) {
     $siblings = json_decode($user->siblings);
     $user->siblings = (is_array($siblings)) ? $siblings : Array();
+    $oASM[$user->user] = $user;
+}
+
+$oUsersTMP = $users->getAll();
+$oUsers = Array();
+foreach ($oUsersTMP as &$user) {
     $oUsers[$user->user] = $user;
 }
 
@@ -65,58 +71,63 @@ $total = $default;
 while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     $row->terceira_pessoa = json_decode($row->terceira_pessoa);
 
-    if (!$info[$row->user]) {
-        $info[$row->user] = $default;
+    if (!$info[$oUsers[$row->user]->alias]) {
+        $info[$oUsers[$row->user]->alias] = $default;
     }
+
     if ((int)$row->consulta) {
-        $info[$row->user]["consulta"]++;
+        $info[$oUsers[$row->user]->alias]["consulta"]++;
+
         if ((int)$row->exame) {
-            $info[$row->user]["exame"]++;
+            $info[$oUsers[$row->user]->alias]["exame"]++;
+
             if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
-                $info[$row->user]["perda"]++;
+                $info[$oUsers[$row->user]->alias]["perda"]++;
+
                 if ((int)$row->venda) {
-                    $info[$row->user]["venda"]++;
+                    $info[$oUsers[$row->user]->alias]["venda"]++;
                 } else {
-                    $info[$row->user]["n_venda"]++;
+                    $info[$oUsers[$row->user]->alias]["n_venda"]++;
                 }
+
             } else {
-                $info[$row->user]["n_perda"]++;
+                $info[$oUsers[$row->user]->alias]["n_perda"]++;
             }
+
         } else {
-            $info[$row->user]["n_exame"]++;
+            $info[$oUsers[$row->user]->alias]["n_exame"]++;
         }
+
     } else {
-        $info[$row->user]["n_consulta"]++;
+        $info[$oUsers[$row->user]->alias]["n_consulta"]++;
     }
+
 
     if ((int)$row->closed) {
-        $info[$row->user]["closed"]++;
+        $info[$oUsers[$row->user]->alias]["closed"]++;
     } else {
-        $info[$row->user]["n_closed"]++;
+        $info[$oUsers[$row->user]->alias]["n_closed"]++;
     }
 
+
     if (count($row->terceira_pessoa)) {
-        $info[$row->user]["terceira_pessoa"]++;
+        $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
     }
 }
 $final = array();
-foreach ($oUsers as $user) {
-    if ($user->user_level == UserControler::ASM) {
-        $final[$user->user] = ($info[$user->user]) ? $info[$user->user] : $default;
-    }
+foreach ($oASM as $user) {
+    $final[$user->user] = ($info[$user->alias]) ? $info[$user->alias] : $default;
 }
 
 foreach ($final as $username => &$dadData) {
     $dadData["dispenser"] = Array();
-    foreach ($oUsers[$username]->siblings as $sibling) {
-        $dadData["dispenser"][$sibling] = ($info[$oUsers[$sibling]->user]) ? $info[$oUsers[$sibling]->user] : $default;
+    foreach ($oASM[$username]->siblings as $sibling) {
+        $dadData["dispenser"][$oUsers[$sibling]->alias] = ($info[$oUsers[$sibling]->alias]) ? $info[$oUsers[$sibling]->alias] : $default;
     }
 }
 
 $to_check = $u->user_level < 7;
-
 foreach ($final as $admName => &$dadData) {
-
     if ($to_check) {
         if ($u->username != $admName)
             continue;
@@ -154,23 +165,23 @@ foreach ($final as $admName => &$dadData) {
         $admName,
         $dadData["closed"],
         $dadData['n_consulta'],
-        ($dadData['n_consulta'] != 0 AND $dadData["closed"] != 0) ? round($dadData['n_consulta'] / $dadData["closed"], 2) * 100 : 0,
+        divide($dadData['n_consulta'], $dadData["closed"]),
         $dadData['consulta'],
-        ($dadData['consulta'] != 0 AND $dadData["closed"] != 0) ? round($dadData['consulta'] / $dadData["closed"], 2) * 100 : 0,
+        divide($dadData['consulta'], $dadData["closed"]),
         $dadData['n_exame'],
-        ($dadData['n_exame'] != 0 AND $dadData["consulta"] != 0) ? round($dadData['n_exame'] / $dadData["consulta"], 2) * 100 : 0,
+        divide($dadData['n_exame'], $dadData["consulta"]),
         $dadData['exame'],
-        ($dadData['exame'] != 0 AND $dadData["consulta"] != 0) ? round($dadData['exame'] / $dadData["consulta"], 2) * 100 : 0,
+        divide($dadData['exame'], $dadData["consulta"]),
         $dadData['n_perda'],
-        ($dadData['n_perda'] != 0 AND $dadData["exame"] != 0) ? round($dadData['n_perda'] / $dadData["exame"], 2) * 100 : 0,
+        divide($dadData['n_perda'], $dadData["exame"]),
         $dadData['perda'],
-        ($dadData['perda'] != 0 AND $dadData["exame"] != 0) ? round($dadData['perda'] / $dadData["exame"], 2) * 100 : 0,
+        divide($dadData['perda'], $dadData["exame"]),
         $dadData['n_venda'],
-        ($dadData['n_venda'] != 0 AND $dadData["perda"] != 0) ? round($dadData['n_venda'] / $dadData["perda"], 2) * 100 : 0,
+        divide($dadData['n_venda'], $dadData["perda"]),
         $dadData['venda'],
-        ($dadData['venda'] != 0 AND $dadData["perda"] != 0) ? round($dadData['venda'] / $dadData["perda"], 2) * 100 : 0,
+        divide($dadData['venda'], $dadData["perda"]),
         $dadData['terceira_pessoa'],
-        ($dadData['terceira_pessoa'] != 0 AND $dadData["closed"] != 0) ? round($dadData['terceira_pessoa'] / $dadData["closed"], 2) * 100 : 0), ";");
+        divide($dadData['terceira_pessoa'], $dadData["closed"])), ";");
 
     foreach ($dadData["dispenser"] as $username => $userData) {
 
@@ -186,23 +197,23 @@ foreach ($final as $admName => &$dadData) {
             $username,
             $userData["closed"],
             $userData['n_consulta'],
-            ($userData['n_consulta'] != 0 AND $userData["closed"] != 0) ? round($userData['n_consulta'] / $userData["closed"], 2) * 100 : 0,
+            divide($userData['n_consulta'], $userData["closed"]),
             $userData['consulta'],
-            ($userData['consulta'] != 0 AND $userData["closed"] != 0) ? round($userData['consulta'] / $userData["closed"], 2) * 100 : 0,
+            divide($userData['consulta'], $userData["closed"]),
             $userData['n_exame'],
-            ($userData['n_exame'] != 0 AND $userData["consulta"] != 0) ? round($userData['n_exame'] / $userData["consulta"], 2) * 100 : 0,
+            divide($userData['n_exame'], $userData["consulta"]),
             $userData['exame'],
-            ($userData['exame'] != 0 AND $userData["consulta"] != 0) ? round($userData['exame'] / $userData["consulta"], 2) * 100 : 0,
+            divide($userData['exame'], $userData["consulta"]),
             $userData['n_perda'],
-            ($userData['n_perda'] != 0 AND $userData["exame"] != 0) ? round($userData['n_perda'] / $userData["exame"], 2) * 100 : 0,
+            divide($userData['n_perda'], $userData["exame"]),
             $userData['perda'],
-            ($userData['perda'] != 0 AND $userData["exame"] != 0) ? round($userData['perda'] / $userData["exame"], 2) * 100 : 0,
+            divide($userData['perda'], $userData["exame"]),
             $userData['n_venda'],
-            ($userData['n_venda'] != 0 AND $userData["perda"] != 0) ? round($userData['n_venda'] / $userData["perda"], 2) * 100 : 0,
+            divide($userData['n_venda'], $userData["perda"]),
             $userData['venda'],
-            ($userData['venda'] != 0 AND $userData["perda"] != 0) ? round($userData['venda'] / $userData["perda"], 2) * 100 : 0,
+            divide($userData['venda'], $userData["perda"]),
             $userData['terceira_pessoa'],
-            ($userData['terceira_pessoa'] != 0 AND $userData["closed"] != 0) ? round($userData['terceira_pessoa'] / $userData["closed"], 2) * 100 : 0), ";");
+            divide($userData['terceira_pessoa'], $userData["closed"])), ";");
     }
 }
 
@@ -211,22 +222,24 @@ fputcsv($output, array(
     "Total",
     $total["closed"],
     $total['n_consulta'],
-    ($total['n_consulta'] != 0 AND $total["closed"] != 0) ? round($total['n_consulta'] / $total["closed"], 2) * 100 : 0,
+    divide($total['n_consulta'], $total["closed"]),
     $total['consulta'],
-    ($total['consulta'] != 0 AND $total["closed"] != 0) ? round($total['consulta'] / $total["closed"], 2) * 100 : 0,
+    divide($total['consulta'] / $total["closed"]),
     $total['n_exame'],
-    ($total['n_exame'] != 0 AND $total["consulta"] != 0) ? round($total['n_exame'] / $total["consulta"], 2) * 100 : 0,
+    divide($total['n_exame'] / $total["consulta"]),
     $total['exame'],
-    ($total['exame'] != 0 AND $total["consulta"] != 0) ? round($total['exame'] / $total["consulta"], 2) * 100 : 0,
+    divide($total['exame'] / $total["consulta"]),
     $total['n_perda'],
-    ($total['n_perda'] != 0 AND $total["exame"] != 0) ? round($total['n_perda'] / $total["exame"], 2) * 100 : 0,
+    divide($total['n_perda'] / $total["exame"]),
     $total['perda'],
-    ($total['perda'] != 0 AND $total["exame"] != 0) ? round($total['perda'] / $total["exame"], 2) * 100 : 0,
+    divide($total['perda'] / $total["exame"]),
     $total['n_venda'],
-    ($total['n_venda'] != 0 AND $total["perda"] != 0) ? round($total['n_venda'] / $total["perda"], 2) * 100 : 0,
+    divide($total['n_venda'] / $total["perda"]),
     $total['venda'],
-    ($total['venda'] != 0 AND $total["perda"] != 0) ? round($total['venda'] / $total["perda"], 2) * 100 : 0,
+    divide($total['venda'] / $total["perda"]),
     $total['terceira_pessoa'],
-    ($total['terceira_pessoa'] != 0 AND $total["closed"] != 0) ? round($total['terceira_pessoa'] / $total["closed"], 2) * 100 : 0), ";");
+    divide($total['terceira_pessoa'] / $total["closed"])), ";");
 
 fclose($output);
+
+
