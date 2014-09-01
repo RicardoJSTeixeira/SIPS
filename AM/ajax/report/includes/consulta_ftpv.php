@@ -65,60 +65,60 @@ $total = $default;
 while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     $row->terceira_pessoa = json_decode($row->terceira_pessoa);
 
-    if (!$info[$row->user]) {
-        $info[$row->user] = $default;
+    if (!$info[$oUsers[$row->user]->alias]) {
+        $info[$oUsers[$row->user]->alias] = $default;
     }
 
     if ((int)$row->consulta) {
-        $info[$row->user]["consulta"]++;
+        $info[$oUsers[$row->user]->alias]["consulta"]++;
 
         if ((int)$row->exame) {
-            $info[$row->user]["exame"]++;
+            $info[$oUsers[$row->user]->alias]["exame"]++;
 
             if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
-                $info[$row->user]["perda"]++;
+                $info[$oUsers[$row->user]->alias]["perda"]++;
 
                 if ((int)$row->venda) {
-                    $info[$row->user]["venda"]++;
+                    $info[$oUsers[$row->user]->alias]["venda"]++;
                 } else {
-                    $info[$row->user]["n_venda"]++;
+                    $info[$oUsers[$row->user]->alias]["n_venda"]++;
                 }
 
             } else {
-                $info[$row->user]["n_perda"]++;
+                $info[$oUsers[$row->user]->alias]["n_perda"]++;
             }
 
         } else {
-            $info[$row->user]["n_exame"]++;
+            $info[$oUsers[$row->user]->alias]["n_exame"]++;
         }
 
     } else {
-        $info[$row->user]["n_consulta"]++;
+        $info[$oUsers[$row->user]->alias]["n_consulta"]++;
     }
 
 
     if ((int)$row->closed) {
-        $info[$row->user]["closed"]++;
+        $info[$oUsers[$row->user]->alias]["closed"]++;
     } else {
-        $info[$row->user]["n_closed"]++;
+        $info[$oUsers[$row->user]->alias]["n_closed"]++;
     }
 
 
     if (count($row->terceira_pessoa)) {
-        $info[$row->user]["terceira_pessoa"]++;
+        $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
     }
 }
 $final = array();
 foreach ($oUsers as $user) {
     if ($user->user_level == UserControler::ASM) {
-        $final[$user->user] = ($info[$user->user]) ? $info[$user->user] : $default;
+        $final[$user->alias] = ($info[$user->alias]) ? $info[$user->alias] : $default;
     }
 }
 
 foreach ($final as $username => &$dadData) {
     $dadData["dispenser"] = Array();
     foreach ($oUsers[$username]->siblings as $sibling) {
-        $dadData["dispenser"][$sibling] = ($info[$sibling]) ? $info[$sibling] : $default;
+        $dadData["dispenser"][$sibling] = ($info[$oUsers[$sibling]->alias]) ? $info[$oUsers[$sibling]->alias] : $default;
     }
 }
 
