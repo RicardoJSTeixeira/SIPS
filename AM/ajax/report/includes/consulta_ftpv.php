@@ -65,64 +65,62 @@ $total = $default;
 while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     $row->terceira_pessoa = json_decode($row->terceira_pessoa);
 
-    if (!$info[$oUsers[$row->user]->alias]) {
-        $info[$oUsers[$row->user]->alias] = $default;
+    if (!$info[$row->user]) {
+        $info[$row->user] = $default;
     }
-
     if ((int)$row->consulta) {
-        $info[$oUsers[$row->user]->alias]["consulta"]++;
-
+        $info[$row->user]["consulta"]++;
         if ((int)$row->exame) {
-            $info[$oUsers[$row->user]->alias]["exame"]++;
-
+            $info[$row->user]["exame"]++;
             if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
-                $info[$oUsers[$row->user]->alias]["perda"]++;
-
+                $info[$row->user]["perda"]++;
                 if ((int)$row->venda) {
-                    $info[$oUsers[$row->user]->alias]["venda"]++;
+                    $info[$row->user]["venda"]++;
                 } else {
-                    $info[$oUsers[$row->user]->alias]["n_venda"]++;
+                    $info[$row->user]["n_venda"]++;
                 }
-
             } else {
-                $info[$oUsers[$row->user]->alias]["n_perda"]++;
+                $info[$row->user]["n_perda"]++;
             }
-
         } else {
-            $info[$oUsers[$row->user]->alias]["n_exame"]++;
+            $info[$row->user]["n_exame"]++;
         }
-
     } else {
-        $info[$oUsers[$row->user]->alias]["n_consulta"]++;
+        $info[$row->user]["n_consulta"]++;
     }
-
 
     if ((int)$row->closed) {
-        $info[$oUsers[$row->user]->alias]["closed"]++;
+        $info[$row->user]["closed"]++;
     } else {
-        $info[$oUsers[$row->user]->alias]["n_closed"]++;
+        $info[$row->user]["n_closed"]++;
     }
 
-
     if (count($row->terceira_pessoa)) {
-        $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
+        $info[$row->user]["terceira_pessoa"]++;
     }
 }
 $final = array();
 foreach ($oUsers as $user) {
     if ($user->user_level == UserControler::ASM) {
-        $final[$user->alias] = ($info[$user->alias]) ? $info[$user->alias] : $default;
+        $final[$user->user] = ($info[$user->user]) ? $info[$user->user] : $default;
     }
 }
 
 foreach ($final as $username => &$dadData) {
     $dadData["dispenser"] = Array();
     foreach ($oUsers[$username]->siblings as $sibling) {
-        $dadData["dispenser"][$sibling] = ($info[$oUsers[$sibling]->alias]) ? $info[$oUsers[$sibling]->alias] : $default;
+        $dadData["dispenser"][$sibling] = ($info[$oUsers[$sibling]->user]) ? $info[$oUsers[$sibling]->user] : $default;
     }
 }
 
+$to_check = $u->user_level < 7;
+
 foreach ($final as $admName => &$dadData) {
+
+    if ($to_check) {
+        if ($u->username != $admName)
+            continue;
+    }
     fputcsv($output, array(
         "ASM",
         "",
