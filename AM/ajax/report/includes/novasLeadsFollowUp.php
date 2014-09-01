@@ -50,31 +50,31 @@ if ($type == "dispenser") {
     $dispens_cc = "YES";
 }
 
-$query_log = "SELECT "
-        . "a.title,"
-        . "a.extra1,"
-        . "a.first_name,"
-        . "a.middle_initial,"
-        . "a.last_name,"
-        . "a.address1,"
-        . "a.address2,"
-        . "a.address3,"
-        . "a.state,"
-        . "a.postal_code,"
-        . "a.extra3,"
-        . "a.extra10,"
-        . "a.city,"
-        . "a.province,"
-        . "a.country_code,"
-        . "a.phone_number,"
-        . "a.alt_phone,"
-        . "a.email,"
-        . "a.date_of_birth,"
-        . "a.extra2,"
-        . "a.comments "
-        . "FROM vicidial_list a "
-        . "INNER JOIN vicidial_users b ON a.user=b.user "
-        . "WHERE a.entry_date BETWEEN :data_inicial AND :data_final AND a.extra6=:type AND a.status='NEW' AND b.user_group=:user_group AND b.user_level<5;";
+$query_log = "SELECT
+                a.title,
+                a.extra1,
+                a.first_name,
+                a.middle_initial,
+                a.last_name,
+                a.address1,
+                a.address2,
+                a.address3,
+                a.state,
+                a.postal_code,
+                a.extra3,
+                a.extra10,
+                a.city,
+                a.province,
+                a.country_code,
+                a.phone_number,
+                a.alt_phone,
+                a.email,
+                a.date_of_birth,
+                a.extra2,
+                a.comments
+                FROM vicidial_list a
+                INNER JOIN vicidial_users b ON a.user=b.user
+                WHERE a.entry_date BETWEEN :data_inicial AND :data_final AND a.extra6=:type AND a.status='NEW' AND b.user_group=:user_group AND b.user_level<5;";
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":type" => $dispens_cc, ":user_group" => $u->user_group));
 
