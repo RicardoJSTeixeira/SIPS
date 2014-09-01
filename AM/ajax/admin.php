@@ -65,10 +65,7 @@ switch ($action) {
     case "apagar_produto":
         echo(json_encode($products->remove_product($id)));
         break;
-    case "apagar_produtos":
-        echo(json_encode($products->remove_products()));
-        break;
-    case "criar_produto":
+       case "criar_produto":
         echo(json_encode($products->add_product($name, $parent, $max_req_m, $max_req_s, $category, $type, $color, $active, $size)));
         break;
     case "editar_produto":
