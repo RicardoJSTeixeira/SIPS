@@ -21,30 +21,16 @@ $user->confirm_login();
 
 $u = $user->getUser();
 
-switch ($action) {
-    case "novasMarc":
-        include 'includes/novasMarc.php';
-        break;
-    case "lead_id_follow_up_cc":
-        $type = "cc";
-        include 'includes/novasLeadsFollowUp.php';
-        break;
-    case "lead_id_follow_up_dispenser":
-        $type = "dispenser";
-        include 'includes/novasLeadsFollowUp.php';
-        break;
-    case "consulta_ftpv":
-        include 'includes/consulta_ftpv.php';
-        break;
-    case "consulta_result_fecho":
-        include 'includes/consulta_result_fecho.php';
-        break;
-    case "consultas":
-        include 'includes/consultas.php';
-        break;
-    case "audiograma":
-        include 'includes/audiograma.php';
-        break;
-    default:
-        echo 'fail...';
-}
+$includes = array(
+    "novasMarc" => 'includes/novasMarc.php',
+    "lead_id_follow_up_cc" => 'includes/novasLeadsFollowUp.php',
+    "lead_id_follow_up_dispenser" => 'includes/novasLeadsFollowUp.php',
+    "consulta_ftpv" => 'includes/consulta_ftpv.php',
+    "consulta_result_fecho" => 'includes/consulta_result_fecho.php',
+    "consultas" => 'includes/consultas.php',
+    "audiograma" => 'includes/audiograma.php');
+
+if (array_key_exists($action, $includes))
+    include $includes[$action];
+else
+    echo 'Fail';
