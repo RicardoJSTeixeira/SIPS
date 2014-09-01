@@ -30,7 +30,7 @@ switch ($action) {
     case "getAllDT":
         $allU = $users->getAll();
         while ($Cuser = array_pop($allU)) {
-            $js["aaData"][] = array($Cuser->user, $Cuser->full_name, $users->_ULalias[$Cuser->user_level] . '<div class="view-button"><a href="#" data-user=' . $Cuser->user . ' data-active=' . $Cuser->active . ' class="btn btn-mini activator"><i class="icon-check' . (($Cuser->active == "Y") ? "" : "-empty" ) . '" ></i><span>' . (($Cuser->active == "Y") ? "Activo" : "Inactivo") . '</span></a><a href="#" data-user=' . $Cuser->user . ' class="btn btn-mini editor"><i class="icon-edit" ></i><span>Editar</span></a></div>');
+            $js["aaData"][] = array($Cuser->user, $Cuser->full_name,$Cuser->alias, $users->_ULalias[$Cuser->user_level] . '<div class="view-button"><a href="#" data-user=' . $Cuser->user . ' data-active=' . $Cuser->active . ' class="btn btn-mini activator"><i class="icon-check' . (($Cuser->active == "Y") ? "" : "-empty" ) . '" ></i><span>' . (($Cuser->active == "Y") ? "Activo" : "Inactivo") . '</span></a><a href="#" data-user=' . $Cuser->user . ' class="btn btn-mini editor"><i class="icon-edit" ></i><span>Editar</span></a></div>');
         }
         echo json_encode($js);
         break;
@@ -45,7 +45,7 @@ switch ($action) {
 
     case "create":
         try {
-            echo json_encode($users->set($username, $pass, $desc, $ulevel));
+            echo json_encode($users->set($username, $pass, $desc,$alias, $ulevel));
         } catch (PDOException $exc) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             if ($exc->getCode() == 23000) {
@@ -61,7 +61,7 @@ switch ($action) {
         break;
 
     case "edit":
-        echo json_encode($users->edit($username, $pass, $desc, $ulevel, $active, $siblings));
+        echo json_encode($users->edit($username, $pass, $desc,$alias, $ulevel, $active, $siblings));
         $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)));
         break;
     
