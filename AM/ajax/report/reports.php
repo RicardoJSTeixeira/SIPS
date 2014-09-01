@@ -34,3 +34,9 @@ if (array_key_exists($action, $includes))
     include $includes[$action];
 else
     echo 'Fail';
+
+
+function divide($a, $b)
+{
+    return ($a != 0 AND $b != 0) ? round($a / $b, 2) * 100 : 0;
+}
