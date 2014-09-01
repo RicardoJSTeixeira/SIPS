@@ -23,6 +23,10 @@
                     <input class="input-xpecial validate[required]" id="TEdesc" type="text" placeholder="Descrição">
                 </div>
                 <div class="input-prepend">
+                    <span class="add-on">&</span>
+                    <input class="input-xpecial validate[required]" id="TEalias" type="text" placeholder="Alias">
+                </div>
+                <div class="input-prepend">
                     <span class="add-on"><i class="icon-user-md"></i></span>
                     <select class="input-xpecial validate[required]" id="SEulevel" >
                         <option value="">Seleccione um tipo</option>
@@ -87,6 +91,11 @@
                             <input class="input-xpecial validate[required]" id="Tdesc" type="text" placeholder="Descrição">
                         </div>
                         <div class="input-prepend">
+                            <span class="add-on">&</span>
+                            <input class="input-xpecial validate[required]" id="Talias" type="text" placeholder="Alias">
+                        </div>
+
+                        <div class="input-prepend">
                             <span class="add-on"><i class="icon-user-md"></i></span>
                             <select class="input-xpecial validate[required]" id="Sulevel" >
                                 <option value="">Seleccione um tipo</option>
@@ -119,7 +128,7 @@
             "fnServerParams": function(aoData) {
                 aoData.push({"name": "action", "value": "getAllDT"});
             },
-            "aoColumns": [{"sTitle": "User"}, {"sTitle": "Descrição"}, {"sTitle": "Tipo"}],
+            "aoColumns": [{"sTitle": "User"}, {"sTitle": "Descrição"}, {"sTitle": "Alias"}, {"sTitle": "Tipo"}],
             "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
         });
 
@@ -131,13 +140,13 @@
                     .append($options)
                     .chosen({no_results_text: "Sem resultados", width: "100%"});
         }, "json");
-        
+
         $.post("/AM/ajax/users.php", {action: "getTypes"}, function(data) {
-            $options=[];
-            $.each(data,function(i,v){
+            $options = [];
+            $.each(data, function(i, v) {
                 $options.push(new Option(v, i));
             });
-            
+
             $("#Sulevel,#SEulevel").append($options);
         }, "json");
 
@@ -152,6 +161,7 @@
                 action: "create",
                 username: $("#Tusername").val(),
                 desc: $("#Tdesc").val(),
+                alias: $("#Talias").val(),
                 ulevel: $("#Sulevel").val(),
                 pass: $("#Tpassword").val()
             }, function() {
@@ -177,6 +187,7 @@
                 action: "edit",
                 username: $("#TEusername").val(),
                 desc: $("#TEdesc").val(),
+                alias: $("#TEalias").val(),
                 ulevel: $("#SEulevel").val(),
                 pass: $("#TEpassword").val(),
                 active: $("[name=REactive]:checked").val(),
@@ -229,10 +240,10 @@
                 action: "get",
                 username: user
             }, function(data) {
-                console.log(data);
                 $("#Museredit").modal("show");
                 $("#TEusername").val(data.user);
                 $("#TEdesc").val(data.full_name);
+                $("#TEalias").val(data.alias);
                 $("#SEulevel").val(data.user_level);
                 $("#TEpassword").val(data.pass);
                 $("[name=REactive]").val([data.active]);

@@ -124,15 +124,15 @@ class UserControler {
     }
 
     public function get($username) {
-        $query = "SELECT `user`, `pass`, `full_name`, `user_level`, `active`, `siblings` FROM `vicidial_users` WHERE user_group=:user_group and user=:username;";
+        $query = "SELECT `user`, `pass`, `full_name`, `user_level`, `active`, `siblings`,`alias` FROM `vicidial_users` WHERE user_group=:user_group and user=:username;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup, ":username" => $username));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
-        return (object) array("user" => $row->user, "pass" => $row->pass, "full_name" => $row->full_name, "user_level" => $row->user_level, "active" => $row->active, "siblings" => json_decode($row->siblings));
+        return (object) array("user" => $row->user, "pass" => $row->pass, "full_name" => $row->full_name, "user_level" => $row->user_level, "active" => $row->active, "siblings" => json_decode($row->siblings), "alias" => $row->alias);
     }
 
     public function getAll($userlevel = false) {
-        $query = "SELECT `user`, `full_name`, `user_level`, `active`, `siblings` FROM `vicidial_users` WHERE user_group=:user_group ".(($userlevel)?" AND user_level=$userlevel":"").";";
+        $query = "SELECT `user`, `full_name`, `user_level`, `active`, `siblings`,`alias` FROM `vicidial_users` WHERE user_group=:user_group " . (($userlevel) ? " AND user_level=$userlevel" : "") . ";";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -149,16 +149,16 @@ class UserControler {
         return $this->_ULalias;
     }
 
-    public function set($username, $pass, $desc, $ulevel) {
-        $query = "INSERT INTO `vicidial_users` (`user`, `pass`, `full_name`, `user_level`, `user_group`, `active`, `siblings`) VALUES (:username, :pass, :desc, :ulevel, :user_group, 'Y', '[]');";
+    public function set($username, $pass, $desc,$alias, $ulevel) {
+        $query = "INSERT INTO `vicidial_users` (`user`, `pass`, `full_name`, `user_level`, `user_group`, `active`, `siblings`,`alias`) VALUES (:username, :pass, :desc, :ulevel, :user_group, 'Y', '[]',:alias);";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":user_group" => $this->_ugroup));
+        return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":user_group" => $this->_ugroup,":alias"=>$alias));
     }
 
-    public function edit($username, $pass, $desc, $ulevel, $active, $siblings) {
-        $query = "UPDATE `vicidial_users` SET `pass`=:pass, `full_name`=:desc, `user_level`=:ulevel, `active`=:active, `siblings`=:siblings WHERE `user`=:username;";
+    public function edit($username, $pass, $desc, $alias, $ulevel, $active, $siblings) {
+        $query = "UPDATE `vicidial_users` SET `pass`=:pass, `full_name`=:desc, `user_level`=:ulevel, `active`=:active, `siblings`=:siblings,`alias`=:alias WHERE `user`=:username;";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":active" => $active, ":siblings" => json_encode($siblings)));
+        return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":active" => $active, ":siblings" => json_encode($siblings), ":alias" => $alias));
     }
 
     public function editPass($username, $pass) {
