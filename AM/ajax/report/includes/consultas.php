@@ -5,6 +5,13 @@ $filename = "consultas" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
+$users = new UserControler($db, $u);
+$oUsersTMP = $users->getAll();
+$oUsers = Array();
+foreach ($oUsersTMP as &$user) {
+    $oUsers[$user->user] = $user;
+}
+
 fputcsv($output, array(
     "Contact No.",
     "Interaction Log Entry No.",
@@ -33,7 +40,8 @@ $query = "SELECT extra2 'cod cliente', a.extra_id as 'interaction log', a.lead_i
 $stmt = $db->prepare($query);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
-while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $row["user"]=$oUsers[$row["user"]]->alias;
     $terceira_pessoa = json_decode(array_pop($row));
     if (count($terceira_pessoa)) {
         $row[] = $terceira_pessoa->tipo;
