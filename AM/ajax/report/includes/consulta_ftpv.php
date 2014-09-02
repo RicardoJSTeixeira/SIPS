@@ -37,7 +37,7 @@ fputcsv($output, array(
     'Consultas sem perda',
     '% Consultas sem perda',
     'Consultas com perda',
-    '% Consultas sem perda',
+    '% Consultas com perda',
     'Consultas sem venda',
     '% Consultas sem venda',
     'Consultas com venda',
@@ -78,6 +78,10 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     if ((int)$row->consulta) {
         $info[$oUsers[$row->user]->alias]["consulta"]++;
 
+        if (count($row->terceira_pessoa)) {
+            $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
+        }
+
         if ((int)$row->exame) {
             $info[$oUsers[$row->user]->alias]["exame"]++;
 
@@ -109,10 +113,6 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
         $info[$oUsers[$row->user]->alias]["n_closed"]++;
     }
 
-
-    if (count($row->terceira_pessoa)) {
-        $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
-    }
 }
 $final = array();
 foreach ($oASM as $user) {
