@@ -181,7 +181,7 @@ foreach ($final as $admName => &$dadData) {
         $dadData['venda'],
         divide($dadData['venda'], $dadData["perda"]),
         $dadData['terceira_pessoa'],
-        divide($dadData['terceira_pessoa'], $dadData["closed"])), ";");
+        divide($dadData['terceira_pessoa'], $dadData["consulta"])), ";");
 
     foreach ($dadData["dispenser"] as $username => $userData) {
 
@@ -213,7 +213,7 @@ foreach ($final as $admName => &$dadData) {
             $userData['venda'],
             divide($userData['venda'], $userData["perda"]),
             $userData['terceira_pessoa'],
-            divide($userData['terceira_pessoa'], $userData["closed"])), ";");
+            divide($userData['terceira_pessoa'], $userData["consulta"])), ";");
     }
 }
 
@@ -238,7 +238,7 @@ fputcsv($output, array(
     $total['venda'],
     divide($total['venda'] , $total["perda"]),
     $total['terceira_pessoa'],
-    divide($total['terceira_pessoa'] , $total["closed"])), ";");
+    divide($total['terceira_pessoa'] , $total["consulta"])), ";");
 
 fclose($output);
 
