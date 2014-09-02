@@ -28,7 +28,12 @@ $includes = array(
     "consulta_ftpv" => 'includes/consulta_ftpv.php',
     "consulta_result_fecho" => 'includes/consulta_result_fecho.php',
     "consultas" => 'includes/consultas.php',
-    "audiograma" => 'includes/audiograma.php');
+    "audiograma" => 'includes/audiograma.php',
+    "log_movimentacao" => 'includes/log_movimentacao.php',
+    "log_requisition" => 'includes/log_requisition.php',
+    "log_frota" => 'includes/log_frota.php',
+    "log_correio" => 'includes/log_correio.php',
+    "log_stock" => 'includes/log_stock.php');
 
 if (array_key_exists($action, $includes))
     include $includes[$action];
@@ -36,7 +41,6 @@ else
     echo 'Fail';
 
 
-function divide($a, $b)
-{
+function divide($a, $b){
     return ($a != 0 AND $b != 0) ? round($a / $b, 2) * 100 : 0;
 }
