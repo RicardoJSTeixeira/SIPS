@@ -20,10 +20,13 @@ $(function () {
         }
     });
 
-    if (SpiceU.user_level > 7)
-        $("#report_selector").find("[data-admin='false']").remove().end().trigger("chosen:updated") ;
-        else
-        $("#report_selector").find('[data-admin="true"]').remove().end().trigger("chosen:updated") ;
+    if (SpiceU.user_level === 7) {
+        $("#report_selector").find("[data-admin='false']").remove().end().trigger("chosen:updated");
+        $(".span6").last().remove();
+        $(".span6").removeClass("span6").addClass("span12");
+    }
+    else
+        $("#report_selector").find('[data-admin="true"]').remove().end().trigger("chosen:updated");
 
 
 });
@@ -35,7 +38,7 @@ $("#download_report").click(function () {
 
 function init_plupload() {
     uploader = new plupload.Uploader({
-        browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
+        browse_button: 'browse',
         url: '/AM/ajax/upload_file.php?action=upload_report',
         filters: {
             mime_types: [
@@ -59,7 +62,7 @@ function init_plupload() {
                                                     <td>' + file.name + '</td>\n\
                                                     <td>\n\
                                                         <div class="progress progress-warning active progress-striped">\n\
-                                                        <div class="bar" style="width: 0%"></div>\n\
+                                                        <div class="bar" style="width: 0"></div>\n\
                                                         </div>\n\
                                                     </td>\n\
                                                     <td>' + plupload.formatSize(file.size) + '\n\
