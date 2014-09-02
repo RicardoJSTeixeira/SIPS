@@ -154,11 +154,13 @@ foreach ($final as $admName => &$dadData) {
 
     $total["closed"] += $dadData["closed"];
     $total["n_consulta"] += (int)$dadData["n_consulta"];
+    $total["consulta"] += (int)$dadData["consulta"];
     $total["n_exame"] += (int)$dadData["n_exame"];
     $total["exame"] += (int)$dadData["exame"];
     $total["n_perda"] += (int)$dadData["n_perda"];
     $total["perda"] += (int)$dadData["perda"];
     $total["n_venda"] += (int)$dadData["n_venda"];
+    $total["venda"] += (int)$dadData["venda"];
     $total["terceira_pessoa"] += (int)$dadData["terceira_pessoa"];
 
     fputcsv($output, array(
@@ -187,11 +189,13 @@ foreach ($final as $admName => &$dadData) {
 
         $total["closed"] += $userData["closed"];
         $total["n_consulta"] += (int)$userData["n_consulta"];
+        $total["consulta"] += (int)$userData["consulta"];
         $total["n_exame"] += (int)$userData["n_exame"];
         $total["exame"] += (int)$userData["exame"];
         $total["n_perda"] += (int)$userData["n_perda"];
         $total["perda"] += (int)$userData["perda"];
         $total["n_venda"] += (int)$userData["n_venda"];
+        $total["venda"] += (int)$userData["venda"];
         $total["terceira_pessoa"] += (int)$userData["terceira_pessoa"];
         fputcsv($output, array(
             $username,
