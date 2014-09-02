@@ -37,7 +37,7 @@ fputcsv($output, array(
     'Consultas sem perda',
     '% Consultas sem perda',
     'Consultas com perda',
-    '% Consultas sem perda',
+    '% Consultas com perda',
     'Consultas sem venda',
     '% Consultas sem venda',
     'Consultas com venda',
@@ -78,6 +78,10 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     if ((int)$row->consulta) {
         $info[$oUsers[$row->user]->alias]["consulta"]++;
 
+        if (count($row->terceira_pessoa)) {
+            $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
+        }
+
         if ((int)$row->exame) {
             $info[$oUsers[$row->user]->alias]["exame"]++;
 
@@ -109,10 +113,6 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
         $info[$oUsers[$row->user]->alias]["n_closed"]++;
     }
 
-
-    if (count($row->terceira_pessoa)) {
-        $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
-    }
 }
 $final = array();
 foreach ($oASM as $user) {
@@ -154,11 +154,13 @@ foreach ($final as $admName => &$dadData) {
 
     $total["closed"] += $dadData["closed"];
     $total["n_consulta"] += (int)$dadData["n_consulta"];
+    $total["consulta"] += (int)$dadData["consulta"];
     $total["n_exame"] += (int)$dadData["n_exame"];
     $total["exame"] += (int)$dadData["exame"];
     $total["n_perda"] += (int)$dadData["n_perda"];
     $total["perda"] += (int)$dadData["perda"];
     $total["n_venda"] += (int)$dadData["n_venda"];
+    $total["venda"] += (int)$dadData["venda"];
     $total["terceira_pessoa"] += (int)$dadData["terceira_pessoa"];
 
     fputcsv($output, array(
@@ -181,17 +183,19 @@ foreach ($final as $admName => &$dadData) {
         $dadData['venda'],
         divide($dadData['venda'], $dadData["perda"]),
         $dadData['terceira_pessoa'],
-        divide($dadData['terceira_pessoa'], $dadData["closed"])), ";");
+        divide($dadData['terceira_pessoa'], $dadData["consulta"])), ";");
 
     foreach ($dadData["dispenser"] as $username => $userData) {
 
         $total["closed"] += $userData["closed"];
         $total["n_consulta"] += (int)$userData["n_consulta"];
+        $total["consulta"] += (int)$userData["consulta"];
         $total["n_exame"] += (int)$userData["n_exame"];
         $total["exame"] += (int)$userData["exame"];
         $total["n_perda"] += (int)$userData["n_perda"];
         $total["perda"] += (int)$userData["perda"];
         $total["n_venda"] += (int)$userData["n_venda"];
+        $total["venda"] += (int)$userData["venda"];
         $total["terceira_pessoa"] += (int)$userData["terceira_pessoa"];
         fputcsv($output, array(
             $username,
@@ -213,7 +217,7 @@ foreach ($final as $admName => &$dadData) {
             $userData['venda'],
             divide($userData['venda'], $userData["perda"]),
             $userData['terceira_pessoa'],
-            divide($userData['terceira_pessoa'], $userData["closed"])), ";");
+            divide($userData['terceira_pessoa'], $userData["consulta"])), ";");
     }
 }
 
@@ -238,7 +242,7 @@ fputcsv($output, array(
     $total['venda'],
     divide($total['venda'] , $total["perda"]),
     $total['terceira_pessoa'],
-    divide($total['terceira_pessoa'] , $total["closed"])), ";");
+    divide($total['terceira_pessoa'] , $total["consulta"])), ";");
 
 fclose($output);
 
