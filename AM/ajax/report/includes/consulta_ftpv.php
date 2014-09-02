@@ -224,22 +224,21 @@ fputcsv($output, array(
     $total['n_consulta'],
     divide($total['n_consulta'], $total["closed"]),
     $total['consulta'],
-    divide($total['consulta'] / $total["closed"]),
+    divide($total['consulta'] , $total["closed"]),
     $total['n_exame'],
-    divide($total['n_exame'] / $total["consulta"]),
+    divide($total['n_exame'] , $total["consulta"]),
     $total['exame'],
-    divide($total['exame'] / $total["consulta"]),
+    divide($total['exame'] , $total["consulta"]),
     $total['n_perda'],
-    divide($total['n_perda'] / $total["exame"]),
+    divide($total['n_perda'] , $total["exame"]),
     $total['perda'],
-    divide($total['perda'] / $total["exame"]),
+    divide($total['perda'] , $total["exame"]),
     $total['n_venda'],
-    divide($total['n_venda'] / $total["perda"]),
+    divide($total['n_venda'] , $total["perda"]),
     $total['venda'],
-    divide($total['venda'] / $total["perda"]),
+    divide($total['venda'] , $total["perda"]),
     $total['terceira_pessoa'],
-    divide($total['terceira_pessoa'] / $total["closed"])), ";");
+    divide($total['terceira_pessoa'] , $total["closed"])), ";");
 
 fclose($output);
-
 
