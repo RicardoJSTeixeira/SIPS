@@ -1,28 +1,34 @@
 var uploader;
 
-$(function() {
+$(function () {
     $("#input_data_inicio").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, endDate: moment().format("YYYY-MM-DD")})
-            .on('changeDate', function() {
-                $("#input_data_fim").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
-            });
+        .on('changeDate', function () {
+            $("#input_data_fim").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
+        });
     $("#input_data_fim").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, endDate: moment().format("YYYY-MM-DD")})
-            .on('changeDate', function() {
-                $("#input_data_inicio").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
-            });
-            
+        .on('changeDate', function () {
+            $("#input_data_inicio").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
+        });
+
     $(".chosen-select").chosen(({no_results_text: "Sem resultados"}));
-    
+
     init_plupload();
-    
-    $("#filelist").on("click", ".delete_anexo_line", function() {
+
+    $("#filelist").on("click", ".delete_anexo_line", function () {
         if (uploader.removeFile(uploader.getFile($(this).data().id))) {
             $(this).closest("tr").remove();
         }
     });
-    
+
+    if (SpiceU.user_level > 7)
+        $("#report_selector").find("[data-admin='false']").remove().end().trigger("chosen:updated") ;
+        else
+        $("#report_selector").find('[data-admin="true"]').remove().end().trigger("chosen:updated") ;
+
+
 });
 
-$("#download_report").click(function() {
+$("#download_report").click(function () {
     if ($("#report_form").validationEngine("validate"))
         document.location.href = "/AM/ajax/report/reports.php?action=" + $("#report_selector option:selected").val() + "&data_inicial=" + $("#input_data_inicio").val() + "&data_final=" + $("#input_data_fim").val();
 });
@@ -33,21 +39,22 @@ function init_plupload() {
         url: '/AM/ajax/upload_file.php?action=upload_report',
         filters: {
             mime_types: [
-                {title: "Text file", extensions: "txt"}],
+                {title: "Text file", extensions: "txt"}
+            ],
             max_file_size: "20mb",
             prevent_duplicates: true
         },
         init: {
-            PostInit: function() {
+            PostInit: function () {
                 document.getElementById('filelist').innerHTML = '';
-                document.getElementById('start-upload').onclick = function() {
+                document.getElementById('start-upload').onclick = function () {
                     uploader.start();
                     return false;
                 };
             },
-            FilesAdded: function(up, files) {
+            FilesAdded: function (up, files) {
                 if (up.files.length === 1) {
-                    plupload.each(files, function(file) {
+                    plupload.each(files, function (file) {
                         $('#filelist').append(' <tr id="' + file.id + '">\n\
                                                     <td>' + file.name + '</td>\n\
                                                     <td>\n\
@@ -65,21 +72,21 @@ function init_plupload() {
                     $("#start-upload").show();
                 }
             },
-            UploadProgress: function(up, file) {
+            UploadProgress: function (up, file) {
                 document.getElementById(file.id).getElementsByClassName('bar')[0].style.width = file.percent + '%';
             },
-            Error: function(up, err) {
+            Error: function (up, err) {
                 $.jGrowl(err.file.name + "&#8594;" + err.message, {life: 3000});
             },
-            FileUploaded: function(up, file, info) {
+            FileUploaded: function (up, file, info) {
                 if (~~info.response) {
                     $.msg();
                     $.post('/AM/ajax/report/importNav.php', {
                         file: file.name
-                    }, function(data) {
+                    },function (data) {
                         if (data.notok) {
                             var trs = "";
-                            $.each(data.notoklist, function() {
+                            $.each(data.notoklist, function () {
                                 trs += "<tr>\n\
                                             <td>" + this.line + "</td>\n\
                                             <td>" + this.navid + "</td>\n\
@@ -102,7 +109,9 @@ function init_plupload() {
                                                     " + trs + "\n\
                                                 </tbody>\n\
                                             </table>",
-                        [{'OK': true, "label": "OK"}], {customClass: 'container'});
+                                [
+                                    {'OK': true, "label": "OK"}
+                                ], {customClass: 'container'});
                             $.msg('unblock');
                         }
                         else {
@@ -111,7 +120,7 @@ function init_plupload() {
                         }
                         uploader.destroy();
                         init_plupload();
-                    }, "json").fail(function(data) {
+                    }, "json").fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 1000);
                     });

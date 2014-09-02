@@ -22,13 +22,18 @@
                     <span>Relatório</span>
                     <div class="formRight">
                         <select id='report_selector' class="chosen-select"   data-placeholder="Selecione um relatório" >
-                            <option value='novasMarc'>Novas Marcações</option>
-                            <option value='lead_id_follow_up_cc'>Novas Leads Call Center</option>
-                            <option value='lead_id_follow_up_dispenser'>Novas Leads Dispenser</option>
-                            <option value="consulta_ftpv">[KPI] Total consultas fechadas, c/ consulta, c/perda e c/venda</option>
-                            <option value="consulta_result_fecho">Total consultas fechadas, abertas, novas e remarcadas</option>
-                            <option value="consultas">Consultas</option>
-                            <option value="audiograma">Audiograma</option>
+                            <option data-admin="false" value='novasMarc'>Novas Marcações</option>
+                            <option data-admin="false" value='lead_id_follow_up_cc'>Novas Leads Call Center</option>
+                            <option data-admin="false" value='lead_id_follow_up_dispenser'>Novas Leads Dispenser</option>
+                            <option data-admin="false" value="consulta_ftpv">[KPI] Total consultas fechadas, c/ consulta, c/perda e c/venda</option>
+                            <option data-admin="false" value="consulta_result_fecho">Total consultas fechadas, abertas, novas e remarcadas</option>
+                            <option data-admin="false" value="consultas">Consultas</option>
+                            <option data-admin="false" value="audiograma">Audiograma</option>
+                            <option data-admin="true" value="log_requisition">Log de encomendas</option>
+                            <option data-admin="true" value="log_frota">Log de frota</option>
+                            <option data-admin="true" value="log_correio">Log de correio</option>
+                            <option data-admin="true" value="log_movimentacao">Log de movimentaçao</option>
+                            <option data-admin="true" value="log_stock">Log de stock</option>
                         </select>
                     </div>
                 </div>
