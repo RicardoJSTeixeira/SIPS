@@ -40,7 +40,7 @@ fputcsv($output, array(
 
 $query_log = "SELECT b.user, b.consulta, b.exame, b.venda, b.closed, b.terceira_pessoa, b.left_ear, b.right_ear, a.id_resource, a.changed
                 FROM sips_sd_reservations a
-                INNER JOIN spice_consulta b ON a.id_reservation=b.reserva_id
+                LEFT JOIN spice_consulta b ON a.id_reservation=b.reserva_id
                 WHERE a.id_reservation_type IN ($rs) AND a.start_date BETWEEN :data_inicial AND :data_final ";
 
 $stmt = $db->prepare($query_log);
