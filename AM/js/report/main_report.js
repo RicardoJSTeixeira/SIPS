@@ -22,8 +22,7 @@ $(function () {
 
     if (SpiceU.user_level === 7) {
         $("#report_selector").find("[data-admin='false']").remove().end().trigger("chosen:updated");
-        $(".span6").last().remove();
-        $(".span6").removeClass("span6").addClass("span12");
+        $(".span6").last().remove().end().removeClass("span6").addClass("span12");
     }
     else
         $("#report_selector").find('[data-admin="true"]').remove().end().trigger("chosen:updated");
