@@ -25,7 +25,7 @@ foreach ($oUsersTMP as &$user) {
 
 fputcsv($output, array(
     'User',
-    'Total de consultas Fechadas',
+    'Consultas fechadas',
     'No Show',
     '% No Show',
     'Show',
@@ -71,44 +71,46 @@ $total = $default;
 while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     $row->terceira_pessoa = json_decode($row->terceira_pessoa);
 
+    //verifica se o alias já existe no obj, se não cria com o default
     if (!$info[$oUsers[$row->user]->alias]) {
         $info[$oUsers[$row->user]->alias] = $default;
     }
 
-    if ((int)$row->consulta) {
-        $info[$oUsers[$row->user]->alias]["consulta"]++;
+    //logica de contabilização dos dados
+    if ((int)$row->closed) {
+        $info[$oUsers[$row->user]->alias]["closed"]++;
 
-        if (count($row->terceira_pessoa)) {
-            $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
-        }
+        if ((int)$row->consulta) {
+            $info[$oUsers[$row->user]->alias]["consulta"]++;
 
-        if ((int)$row->exame) {
-            $info[$oUsers[$row->user]->alias]["exame"]++;
+            if (count($row->terceira_pessoa)) {
+                $info[$oUsers[$row->user]->alias]["terceira_pessoa"]++;
+            }
 
-            if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
-                $info[$oUsers[$row->user]->alias]["perda"]++;
+            if ((int)$row->exame) {
+                $info[$oUsers[$row->user]->alias]["exame"]++;
 
-                if ((int)$row->venda) {
-                    $info[$oUsers[$row->user]->alias]["venda"]++;
+                if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
+                    $info[$oUsers[$row->user]->alias]["perda"]++;
+
+                    if ((int)$row->venda) {
+                        $info[$oUsers[$row->user]->alias]["venda"]++;
+                    } else {
+                        $info[$oUsers[$row->user]->alias]["n_venda"]++;
+                    }
+
                 } else {
-                    $info[$oUsers[$row->user]->alias]["n_venda"]++;
+                    $info[$oUsers[$row->user]->alias]["n_perda"]++;
                 }
 
             } else {
-                $info[$oUsers[$row->user]->alias]["n_perda"]++;
+                $info[$oUsers[$row->user]->alias]["n_exame"]++;
             }
 
         } else {
-            $info[$oUsers[$row->user]->alias]["n_exame"]++;
+            $info[$oUsers[$row->user]->alias]["n_consulta"]++;
         }
 
-    } else {
-        $info[$oUsers[$row->user]->alias]["n_consulta"]++;
-    }
-
-
-    if ((int)$row->closed) {
-        $info[$oUsers[$row->user]->alias]["closed"]++;
     } else {
         $info[$oUsers[$row->user]->alias]["n_closed"]++;
     }
@@ -152,7 +154,7 @@ foreach ($final as $admName => &$dadData) {
         "",
         ""), ";");
 
-    $total["closed"] += $dadData["closed"];
+    $total["closed"] += (int)$dadData["closed"];
     $total["n_consulta"] += (int)$dadData["n_consulta"];
     $total["consulta"] += (int)$dadData["consulta"];
     $total["n_exame"] += (int)$dadData["n_exame"];
@@ -187,7 +189,7 @@ foreach ($final as $admName => &$dadData) {
 
     foreach ($dadData["dispenser"] as $username => $userData) {
 
-        $total["closed"] += $userData["closed"];
+        $total["closed"] += (int)$userData["closed"];
         $total["n_consulta"] += (int)$userData["n_consulta"];
         $total["consulta"] += (int)$userData["consulta"];
         $total["n_exame"] += (int)$userData["n_exame"];
@@ -228,21 +230,21 @@ fputcsv($output, array(
     $total['n_consulta'],
     divide($total['n_consulta'], $total["closed"]),
     $total['consulta'],
-    divide($total['consulta'] , $total["closed"]),
+    divide($total['consulta'], $total["closed"]),
     $total['n_exame'],
-    divide($total['n_exame'] , $total["consulta"]),
+    divide($total['n_exame'], $total["consulta"]),
     $total['exame'],
-    divide($total['exame'] , $total["consulta"]),
+    divide($total['exame'], $total["consulta"]),
     $total['n_perda'],
-    divide($total['n_perda'] , $total["exame"]),
+    divide($total['n_perda'], $total["exame"]),
     $total['perda'],
-    divide($total['perda'] , $total["exame"]),
+    divide($total['perda'], $total["exame"]),
     $total['n_venda'],
-    divide($total['n_venda'] , $total["perda"]),
+    divide($total['n_venda'], $total["perda"]),
     $total['venda'],
-    divide($total['venda'] , $total["perda"]),
+    divide($total['venda'], $total["perda"]),
     $total['terceira_pessoa'],
-    divide($total['terceira_pessoa'] , $total["consulta"])), ";");
+    divide($total['terceira_pessoa'], $total["consulta"])), ";");
 
 fclose($output);
 
