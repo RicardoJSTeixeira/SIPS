@@ -1,5 +1,8 @@
 <?php
 
+$aType=explode("_",$action);
+$type=array_pop($aType);
+
 $curTime = date("Y-m-d_H:i:s");
 $filename = "novas_leads_followUp_$type" ."_". $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
