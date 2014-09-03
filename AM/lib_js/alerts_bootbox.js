@@ -1,4 +1,4 @@
-var alertBoxes = function()
+var AlertBoxes = function()
 {
 
     var

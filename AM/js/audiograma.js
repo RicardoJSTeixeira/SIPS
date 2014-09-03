@@ -1,4 +1,4 @@
-var audiograma = function(lead_id) {
+var Audiograma = function(lead_id) {
     var
             values_regex = /[^0-9\-\+\<\>]+|[\-\+\<\>] *$/g,
             contas_regex = /[^0-9\-]+/g,

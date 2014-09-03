@@ -1,14 +1,8 @@
 var SpiceU = {};
 
-var alerts = new alertBoxes();
-var pageInitialized = false;
+var alerts = new AlertBoxes();
 $(function () {
-
     $.post("ajax/user_info.php", function (user) {
-        console.log(pageInitialized);
-        if (pageInitialized) return false;
-        pageInitialized = true;
-        console.log(pageInitialized);
         SpiceU = user;
         types = {
             "1": "branch",
@@ -23,7 +17,7 @@ $(function () {
         $("#user-name").text(user.name);
         $("#sidebar li.role-" + types[user.user_level])
             .find("a")
-            .attr("is_visible","set")
+            .attr("is_visible", "set")
             .end()
             .show();
         init();
@@ -63,7 +57,6 @@ function init() {
 
     $('#sidebar a').click(function (e) {
         e.preventDefault();
-        console.log("funçao do click");
         if ($(this).hasClass("active") || $(this).parent().hasClass("disabled"))
             return false;
         var href = $(this).attr("href");
@@ -211,7 +204,6 @@ function init() {
     $.msg('overwriteGlobal', 'clickUnblock', false);
     $.msg('overwriteGlobal', 'autoUnblock', false);
     $.msg('overwriteGlobal', 'content', 'Por favor aguarde...');
-
 }
 function get_messages() {
     //GET NEW MESSAGES

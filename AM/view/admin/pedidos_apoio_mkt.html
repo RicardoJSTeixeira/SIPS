@@ -23,7 +23,7 @@
 
     $(function()
     {
-        Rq = new requests($("#admin_extra_zone"), {});
+        Rq = new Requests($("#admin_extra_zone"), {});
 
         Rq.apoio_marketing.init(function(){Rq.apoio_marketing.get_to_datatable($("#pedidos_apoio_marketing_datatable"));});
         

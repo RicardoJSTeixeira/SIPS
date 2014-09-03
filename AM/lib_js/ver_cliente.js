@@ -1,4 +1,4 @@
-var cliente_info = function(lead_id, options_ext) {
+var Cliente_info = function(lead_id, options_ext) {
     var me = this;
 
     this.config = {};

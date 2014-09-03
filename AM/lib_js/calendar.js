@@ -1,4 +1,4 @@
-var calendar = function (selector, data, modals, ext, client, user) {
+var Calendar = function (selector, data, modals, ext, client, user) {
     var me = this;
     this.user = user;
     this.selector = selector;
@@ -370,7 +370,7 @@ var calendar = function (selector, data, modals, ext, client, user) {
                 },
                 function (dat) {
                     me.destroy();
-                    me = new calendar(me.selector, dat, me.modals, me.ext, me.client, me.user);
+                    me = new Calendar(me.selector, dat, me.modals, me.ext, me.client, me.user);
                     me.reserveConstruct(dat.tipo);
                     $.msg('unblock');
                 }, "json").fail(function () {

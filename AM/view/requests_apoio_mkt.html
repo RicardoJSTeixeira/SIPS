@@ -38,7 +38,7 @@
     var product;
     $(function()
     {
-        Rq = new requests($("#admin_extra_zone"), {});
+        Rq = new Requests($("#admin_extra_zone"), {});
         Rq.apoio_marketing.init();
         Rq.apoio_marketing.get_to_datatable($("#pedidos_marketing_datatable"));
     });

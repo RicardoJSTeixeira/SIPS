@@ -12,7 +12,7 @@ $(function() {
         modals.acf = $("#calendar_acf");
 
         function startC(data, client) {
-            sch = new calendar($("#calendar"), data, modals, $('#external-events'), client, user);
+            sch = new Calendar($("#calendar"), data, modals, $('#external-events'), client, user);
 
             sch.initModal(data.refs);
             sch.reserveConstruct(data.tipo);
@@ -23,7 +23,7 @@ $(function() {
 
         if (client.id) {
             client.id = atob(client.id);
-            client_box = new clientBox({id: client.id});
+            client_box = new ClientBox({id: client.id});
             client_box.init(function(clientI) {
                 clientI.nc=client.nc;
                 startC(data, clientI);

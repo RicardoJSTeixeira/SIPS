@@ -1,4 +1,4 @@
-var products = function(geral_path, options_ext) {
+var Products = function(geral_path, options_ext) {
     var me = this,
             product_id = 0,
             datatable_path = "";

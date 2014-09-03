@@ -97,7 +97,7 @@ $(function () {
             var config = {save_overwrite: true, input_disabled: consult_closed};
             script.init(config);
             $main_consulta_div.find('#audiograma_placeholder').load("view/audiograma.html", function () {
-                consult_audiogra = new audiograma(lead_id);
+                consult_audiogra = new Audiograma(lead_id);
                 if (consult_closed) {
                     $main_consulta_div.find("#audiograma_main_div")
                         .find(":input").prop("disabled", true).end()
@@ -113,7 +113,7 @@ $(function () {
                 }
             });
 
-            client_box = new clientBox({id: reserva_id, byReserv: true});
+            client_box = new ClientBox({id: reserva_id, byReserv: true});
             client_box.init();
             $.msg('unblock');
 

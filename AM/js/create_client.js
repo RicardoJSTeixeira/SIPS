@@ -167,7 +167,7 @@ $(function() {
                             $.history.push("view/new_requisition.html?id=" + en);
                         }).on("click", ".ver_cliente", function()
                         {
-                            var client = new cliente_info($(this).data().lead_id, null);
+                            var client = new Cliente_info($(this).data().lead_id, null);
                             client.init(null);
 
                         });

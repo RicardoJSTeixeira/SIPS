@@ -1,4 +1,4 @@
-var tree = function(selector, data, type_encomenda, parent_id, produtos) {
+var Tree = function(selector, data, type_encomenda, parent_id, produtos) {
     var checkbox_count = 1;
     var me = this;
     this.treeRaw = data;

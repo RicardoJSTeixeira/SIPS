@@ -7,8 +7,7 @@ $(function() {
 
     this.init = function(zone, rid) {
         var recomendado = rid || "";
-        console.log(recomendado)
-        console.log((!~~recomendado))
+
         zone.append($("<input>", {type: "hidden", value: recomendado, name: "recomendado"}));
 
         zone.find("#plus-client").click(function(e) {
@@ -94,7 +93,7 @@ $(function() {
 
     if (client.id) {
         $("#clientBox").parent().show();
-        var client_box = new clientBox({id: atob(client.id)});
+        var client_box = new ClientBox({id: atob(client.id)});
         client_box.init();
         me.init(zone, atob(client.id));
         zone.find(".grid-title .pull-left").text('Recomendações Pedidas');

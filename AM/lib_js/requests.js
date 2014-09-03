@@ -1,4 +1,4 @@
-var requests = function(basic_path, options_ext) {
+var Requests = function(basic_path, options_ext) {
     var me = this;
     var basic_path = basic_path;
     this.config = {};

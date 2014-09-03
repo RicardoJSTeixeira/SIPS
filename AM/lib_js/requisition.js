@@ -37,7 +37,7 @@ var requisition = function(geral_path, options_ext) {
             me.tipo = "especial";
             new_requisition_zone.find("#tipo_especial").show();
             var client_box;
-            client_box = new clientBox({
+            client_box = new ClientBox({
                 id: lead_id,
                 byReserv: false
             });
@@ -148,7 +148,7 @@ var requisition = function(geral_path, options_ext) {
             } else {
                 new_requisition_zone.find("#save_single_product").prop("disabled", false);
             }
-            product_tree = new tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val(), produtos);
+            product_tree = new Tree("#tree", [produtos[$(this).val()]], me.tipo, $(this).val(), produtos);
             product_tree.init();
         });
         //----------------------------------------------------------------------------------------------------------------------------------------
@@ -444,7 +444,7 @@ var requisition = function(geral_path, options_ext) {
             table2csv(Table_view_requisition, 'full', '#' + table_path[0].id);
         });
         table_path.on("click", ".ver_cliente", function() {
-            var client = new cliente_info($(this).data("lead_id"), null);
+            var client = new Cliente_info($(this).data("lead_id"), null);
             client.init(null);
         });
         //VER PRODUTOS DE ENCOMENDAS FEITAS

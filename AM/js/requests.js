@@ -1,5 +1,5 @@
 $(function(){
-    var Rq = new requests($("#modal_div"));
+    var Rq = new Requests($("#modal_div"));
 
 //RELATORIO CORREIO
     $("#master_requests_div #button_relatorio_correio").click(function()
