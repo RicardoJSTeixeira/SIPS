@@ -1,8 +1,14 @@
 var SpiceU = {};
 
 var alerts = new alertBoxes();
-$(function() {
-    $.post("ajax/user_info.php", function(user) {
+var pageInitialized = false;
+$(function () {
+
+    $.post("ajax/user_info.php", function (user) {
+        console.log(pageInitialized);
+        if (pageInitialized) return false;
+        pageInitialized = true;
+        console.log(pageInitialized);
         SpiceU = user;
         types = {
             "1": "branch",
@@ -15,17 +21,20 @@ $(function() {
             "9": "admin"};
 
         $("#user-name").text(user.name);
-        $("#sidebar li.role-" + types[user.user_level]).show();
+        $("#sidebar li.role-" + types[user.user_level])
+            .find("a")
+            .attr("is_visible","set")
+            .end()
+            .show();
         init();
         alerts.init();
-
         if (!window.location.hash.length) {
-            $(".menu-sidebar a:visible:eq(0)").click();
+            $(".menu-sidebar a[is_visible='set']:first").click();
         }
     }, "json")
-            .fail(function() {
-                window.location = "logout.php";
-            });
+        .fail(function () {
+            window.location = "logout.php";
+        });
 });
 
 function init() {
@@ -33,11 +42,12 @@ function init() {
         var link = $('link[type="image/vnd\.microsoft\.icon"]').remove().attr("href");
         $('<link href="' + link + '" rel="shortcut icon" type="image/vnd.microsoft.icon" />').appendTo('head');
     }
+
     $.ajaxSetup({
         cache: false
     });
     moment.lang('pt');
-    $.history.on('load change pushed', function(event, url, type) {
+    $.history.on('load change pushed',function (event, url, type) {
         if (event.type === "load" && url !== "view/dashboard.html") {
             consultasMais();
         }
@@ -51,8 +61,9 @@ function init() {
         }
     }).listen('hash');
 
-    $('#sidebar a').click(function(e) {
+    $('#sidebar a').click(function (e) {
         e.preventDefault();
+        console.log("funçao do click");
         if ($(this).hasClass("active") || $(this).parent().hasClass("disabled"))
             return false;
         var href = $(this).attr("href");
@@ -67,84 +78,83 @@ function init() {
     var alerts_timeout = setInterval(get_alerts, 1000 * 60);
 
 
-
     //Init all the modals | for the multiples datatoggles..
-    $(document).on('click.modal.data-api', '[data-toggle!="modal"][data-toggle~="modal"]', function(e) {
+    $(document).on('click.modal.data-api', '[data-toggle!="modal"][data-toggle~="modal"]', function (e) {
         var $this = $(this),
-                href = $this.attr('href'),
-                $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
-                ,
-                option = $target.data('modal') ? 'toggle' : $.extend({
-            remote: !/#/.test(href) && href
-        }, $target.data(), $this.data());
+            href = $this.attr('href'),
+            $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
+            ,
+            option = $target.data('modal') ? 'toggle' : $.extend({
+                remote: !/#/.test(href) && href
+            }, $target.data(), $this.data());
         e.preventDefault();
         $target
-                .modal(option)
-                .one('hide', function() {
-                    $this.focus();
-                });
+            .modal(option)
+            .one('hide', function () {
+                $this.focus();
+            });
     });
     $('#alerts-content,#imessage_placeholder').slimScroll({
         railDraggable: !1
     });
 
-    $(".ichat").on("click", ".dismiss_msg", function() {
+    $(".ichat").on("click", ".dismiss_msg", function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "edit_message_status",
             id_msg: $(this).data().msg_id
-        }, function() {
+        },function () {
             get_messages();
             $.msg('unblock');
-        }, "json").fail(function(data) {
+        }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
     });
-    $("#mark_all_read").click(function() {
+    $("#mark_all_read").click(function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "edit_message_status_by_user"
-        }, function() {
+        },function () {
             get_messages();
             $.msg('unblock');
-        }, "json").fail(function(data) {
+        }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
     });
-    $(".ichat").on("click", ".ok_alert", function() {
+    $(".ichat").on("click", ".ok_alert", function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "set_readed",
             id_msg: $(this).data().id
-        }, function() {
+        },function () {
             get_alerts();
             $.msg('unblock');
-        }, "json").fail(function(data) {
+        }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
     });
-    $("#mark_all_alerts_read").click(function() {
+    $("#mark_all_alerts_read").click(function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "set_all_readed"
-        }, function() {
+        },function () {
             get_alerts();
             $.msg('unblock');
-        }, "json").fail(function(data) {
+        }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
     });
-    $("#notifications").click(function() {
+    $("#notifications").click(function () {
         var a = $("#alert_time");
         a.text(a.data().update.fromNow());
     });
 
 
-    $.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource, fnCallback, bStandingRedraw) {
+    $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallback, bStandingRedraw) {
 // DataTables 1.10 compatibility - if 1.10 then versionCheck exists.
 // 1.10s API has ajax reloading built in, so we use those abilities
 // directly.
@@ -173,12 +183,12 @@ function init() {
         var iStart = oSettings._iDisplayStart;
         var aData = [];
         this.oApi._fnServerParams(oSettings, aData);
-        oSettings.fnServerData.call(oSettings.oInstance, oSettings.sAjaxSource, aData, function(json) {
+        oSettings.fnServerData.call(oSettings.oInstance, oSettings.sAjaxSource, aData, function (json) {
             /* Clear the old information from the table */
             that.oApi._fnClearTable(oSettings);
             /* Got the data - add it to the table */
             var aData = (oSettings.sAjaxDataProp !== "") ?
-                    that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(json) : json;
+                that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(json) : json;
             for (var i = 0; i < aData.length; i++) {
                 that.oApi._fnAddData(oSettings, aData[i]);
             }
@@ -201,15 +211,16 @@ function init() {
     $.msg('overwriteGlobal', 'clickUnblock', false);
     $.msg('overwriteGlobal', 'autoUnblock', false);
     $.msg('overwriteGlobal', 'content', 'Por favor aguarde...');
+
 }
 function get_messages() {
     //GET NEW MESSAGES
     $.post("ajax/general_functions.php", {
         action: "get_unread_messages"
-    }, function(data) {
+    },function (data) {
         $("#imessage_placeholder").empty();
         var msg = "";
-        $.each(data, function() {
+        $.each(data, function () {
             msg = "<div class='imessage'>\n\
                         <div class='imes'>\n\
                             <div class='iauthor'>" + this.from + "</div>\n\
@@ -221,7 +232,7 @@ function get_messages() {
         });
         $("#msg_count").text(data.length);
         $("#imessage_placeholder").append(msg);
-    }, "json").fail(function(data) {
+    }, "json").fail(function (data) {
         $.msg();
         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
         $.msg('unblock', 5000);
@@ -232,17 +243,17 @@ function get_alerts(callback) {
 
     $.post("ajax/general_functions.php", {
         action: "get_alerts"
-    }, function(data) {
+    },function (data) {
         $("#alerts-content").empty();
         $("#alert_time").data("update", moment());
         var msg = "";
         var dismiss_icon = "";
-        $.each(data, function() {
+        $.each(data, function () {
             if (SpiceU.user_level < 5) {
                 if (this.alert.search(/Apoio Mkt./i) !== -1) {
-                    alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function() {
-                            $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
-                        }});
+                    alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function () {
+                        $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
+                    }});
                     return true;
                 }
             }
@@ -267,7 +278,7 @@ function get_alerts(callback) {
         if (typeof callback === "function") {
             callback();
         }
-    }, "json").fail(function(data) {
+    }, "json").fail(function (data) {
         $.msg();
         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
         $.msg('unblock', 5000);
@@ -276,13 +287,13 @@ function get_alerts(callback) {
 
 function getUrlVars() {
     var vars = {};
-    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
         vars[key] = value;
     });
     return vars;
 }
 
-String.prototype.capitalize = function() {
+String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
 function consultasMais() {
@@ -294,12 +305,12 @@ function consultasMais() {
     }
 
     if (~~localStorage.v6 > 1) {
-        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function() {
-                $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
-                $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
-                if ($(".menu-sidebar").find('.active').parent().index() > 1)
-                    $.history.push("view/dashboard.html");
-            }});
+        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function () {
+            $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
+            $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
+            if ($(".menu-sidebar").find('.active').parent().index() > 1)
+                $.history.push("view/dashboard.html");
+        }});
         return false;
     }
     if (~~localStorage.v3 > 3) {
