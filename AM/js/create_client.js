@@ -247,7 +247,7 @@ $(function() {
         $("#inputs_div2").append($("<div>", {class: "clear"}));
         $("#inputs_div3").append($("<div>", {class: "clear"}));
         $("#PHONE_NUMBER").autotab('numeric');
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position', 'topRight:120');
+        $(".form_datetime").datetimepicker({format: 'dd-mm-yyyy', autoclose: true, language: "pt", minView: 2, initialDate: new Date(moment().subtract('years', 65).format())}).attr('data-prompt-position', 'topRight:120');
         $.msg('unblock');
     },
             "json").fail(function(data) {
