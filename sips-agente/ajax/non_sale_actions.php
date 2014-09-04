@@ -23,6 +23,11 @@ if (isset($_GET['dispoAtt'])) {
 }
 
 
+$oPost=mysql_real_escape_string(json_encode($_POST));
+$oGet=mysql_real_escape_string(json_encode($_GET));
+$logQuery="INSERT INTO sales_actions (lead_id, post, get, type) VALUES ('$lead_id', '$oPost', '$oGet', 'non_sale');";
+mysql_query($logQuery, $link);
+
 switch ($client) {
     case 'connecta' : {
             confirmacao($lead_id, $dispoAtt, $link);

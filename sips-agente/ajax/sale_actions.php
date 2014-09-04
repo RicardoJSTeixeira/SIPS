@@ -5,6 +5,10 @@ if (isset($_GET['campaign_id']))  { $campaign_id = $_GET['campaign_id']; } else 
 if (isset($_GET['lead_id']))  { $lead_id = $_GET['lead_id']; } else { $lead_id = $_POST['lead_id']; }
 if (isset($_GET['dispoAtt']))  { $dispoAtt = $_GET['dispoAtt']; } else { $dispoAtt = $_POST['dispoAtt']; }
 
+$oPost=mysql_real_escape_string(json_encode($_POST));
+$oGet=mysql_real_escape_string(json_encode($_GET));
+$logQuery="INSERT INTO sales_actions (lead_id, post, get, type) VALUES ('$lead_id', '$oPost', '$oGet', 'sale');";
+mysql_query($logQuery, $link);
 
 switch ($client) { 
     case 'connecta' : {
@@ -76,7 +80,7 @@ function query($sQuery, $hDb_conn, $sError, $bDebug)
     
     $link = mysql_connect("172.16.7.25", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk");
-    $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('159','153', '155', '160', '156', '157', '154', '161', '165') and unique_id = '$unique_id' order by tag_elemento ASC";
+    $query = "SELECT tag_elemento,valor FROM script_result WHERE tag_elemento IN ('159','153', '155', '160', '156', '157', '154', '161', '165') and unique_id = '$unique_id' order by tag_elemento ASC";
     
     $query = mysql_query($query, $link) or die(mysql_error());
     
@@ -120,11 +124,11 @@ function connectaPostCalendar() {
     
     $link = mysql_connect("172.16.7.25:3306", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk");
-    $query = "SELECT middle_initial FROM `vicidial_list` WHERE lead_id = '$lead_id'";
+    $query = "SELECT middle_initial FROM vicidial_list WHERE lead_id = '$lead_id'";
     $query = mysql_query($query, $link) or die(mysql_error());
     $row = mysql_fetch_assoc($query);
     $origem = utf8_decode($row['middle_initial']); // middle_initial
-    $query = "SELECT tag_elemento,valor FROM `script_result` WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88', '115', '116', '117') and unique_id = '$unique_id' order by tag_elemento ASC";
+    $query = "SELECT tag_elemento,valor FROM script_result WHERE tag_elemento IN ('20','73', '76', '78', '79', '80', '75', '77', '74', '81', '82', '87', '88', '115', '116', '117') and unique_id = '$unique_id' order by tag_elemento ASC";
     
     $query = mysql_query($query, $link) or die(mysql_error());
     
@@ -305,7 +309,7 @@ function SendSms(){
         }
 
         if (mysql_num_rows(mysql_query("SHOW TABLES LIKE 'custom_" . strtoupper(trim($campaign)) . "'"))) {
-            $stmt = "SELECT `marchora`,`marcdata`,`tipoconsulta`,`consultorio`,`consultoriodois`,`postal_code` FROM   `custom_" . strtoupper(trim($campaign)) . "` a INNER JOIN vicidial_list b ON a.lead_id = b.lead_id WHERE a.lead_id='$lead_id'";
+            $stmt = "SELECT marchora,marcdata,tipoconsulta,consultorio,consultoriodois,postal_code FROM   custom_" . strtoupper(trim($campaign)) . " a INNER JOIN vicidial_list b ON a.lead_id = b.lead_id WHERE a.lead_id='$lead_id'";
             $rslt = mysql_query($stmt, $link);
             if (mysql_num_rows($rslt)) {
                 $cons = mysql_fetch_assoc($rslt);
@@ -314,7 +318,7 @@ function SendSms(){
                 } elseif ($cons[tipoconsulta] == 'Home') {
                     $msg[0] = "Caro(a) Cliente, confirmamos a sua consulta auditiva marcada com a ACUSTICA MEDICA para dia " . date("j/", strtotime($cons[marcdata])) . month2mes(date("n", strtotime($cons[marcdata]))) . date("-H\hi", strtotime($cons[marchora])) . " em sua casa. Nosso contacto 808 231 231";
                 } elseif ($cons[tipoconsulta] == 'Branch') {
-                    $q = "SELECT `morada`,`localidade` FROM `sips_sd_asm` WHERE `code` like '$cons[consultoriodois]';";
+                    $q = "SELECT morada,localidade FROM sips_sd_asm WHERE code like '$cons[consultoriodois]';";
                     $r = mysql_query($q, $link);
                     if (mysql_num_rows($r)) {
                         $r = mysql_fetch_assoc($r);
@@ -324,7 +328,7 @@ function SendSms(){
                     }
                 } elseif ($cons[tipoconsulta] == 'CATOS') {
 
-                    $q = "SELECT `morada`,`localidade` FROM `sips_sd_asm` WHERE `code` like '$cons[consultorio]';";
+                    $q = "SELECT morada,localidade FROM sips_sd_asm WHERE code like '$cons[consultorio]';";
                     $r = mysql_query($q, $link);
                     if (mysql_num_rows($r)) {
                         $r = mysql_fetch_assoc($r);
