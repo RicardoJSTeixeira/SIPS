@@ -1,4 +1,5 @@
-var Calendar = function (selector, data, modals, ext, client, user) {
+var Calendar;
+Calendar = function (selector, data, modals, ext, client, user) {
     var me = this;
     this.user = user;
     this.selector = selector;
@@ -54,33 +55,29 @@ var Calendar = function (selector, data, modals, ext, client, user) {
             week: 'semana',
             day: 'dia'
         },
-        eventClick: function (calEvent, jsEvent, view) {
+        eventClick: function (calEvent) {
+            var problem = false;
             if (isBlocked() && calEvent.start > new Date().getTime()) {
                 $.jGrowl("Devido às consultas em atraso por fechar, esta funcionalidade não lhe permite qualquer tipo de acção com marcações posteriores a hoje.", {
                     sticky: 4000
                 });
-                return false;
-            }
-            if (calEvent.useful) {
+                problem = false;
+            } else if (calEvent.useful) {
                 me.openACF(calEvent);
-                return true;
-            }
-
-            if (calEvent.bloqueio && calEvent.system) {
+                problem = true;
+            } else if (calEvent.bloqueio && calEvent.system) {
                 me.openMkt(calEvent);
-                return true;
-            }
-            if (calEvent.bloqueio || calEvent.del) {
-                return false;
-            }
-            if (calEvent.system) {
+                problem = true;
+            } else if (calEvent.bloqueio || calEvent.del) {
+                problem = false;
+            } else if (calEvent.system) {
                 me.openSpecialEvent(calEvent);
-                return true;
-            }
-            if (calEvent.sale) {
+                problem = true;
+            } else if (calEvent.sale) {
                 me.openClient(calEvent);
-                return true;
+                problem = true;
             }
+            return problem;
         },
         droppable: {
             agenda: true,
@@ -88,8 +85,12 @@ var Calendar = function (selector, data, modals, ext, client, user) {
         },
         drop: function (date, allDay) {
             $.msg();
-            var cEO = $.extend({}, $(this).data('eventobject'));
+            var
+                cEO = $.extend({}, $(this).data('eventobject')),
+                problem = false;
+
             cEO.start = moment(date).unix();
+
             if (cEO.min) {
                 cEO.end = moment(date).add("minutes", cEO.min).unix();
             } else {
@@ -100,43 +101,42 @@ var Calendar = function (selector, data, modals, ext, client, user) {
 
             if (!me.calendar.fullCalendar('getView').name.match("agenda")) {
                 $.msg('unblock');
-                return false;
-            }
-            if (date < (moment().subtract('h', '10').format('X') * 1000)) {
+                problem = true;
+            } else if (date < (moment().subtract('h', '10').format('X') * 1000)) {
                 $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
                 $.msg('unblock', 3000);
-                return false;
-            }
-
-            if (me.concorrency(cEO)) {
+                problem = true;
+            } else if (me.concorrency(cEO)) {
                 $.msg('replace', 'Não é permitido marcações concorrentes.');
                 $.msg('unblock', 3000);
-                return false;
+                problem = true;
             }
-
-            $.post("/AM/ajax/calendar.php", {
-                    action: "newReservation",
-                    resource: me.resource,
-                    rtype: cEO.rtype,
-                    lead_id: cEO.lead_id,
-                    start: cEO.start,
-                    end: cEO.end
-                },
-                function (id) {
-                    cEO.id = id;
-                    me.calendar.fullCalendar('renderEvent', cEO, true);
-                    $("#external-events").remove();
-                    $.msg('unblock');
-                    if (cEO.sale && (typeof me.client.nc === "undefined")) {
-                        newCodMkt(cEO);
-                    }
-                },
-                "json").fail(function () {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                });
+            if (!problem) {
+                $.post("/AM/ajax/calendar.php", {
+                        action: "newReservation",
+                        resource: me.resource,
+                        rtype: cEO.rtype,
+                        lead_id: cEO.lead_id,
+                        start: cEO.start,
+                        end: cEO.end
+                    },
+                    function (id) {
+                        cEO.id = id;
+                        me.calendar.fullCalendar('renderEvent', cEO, true);
+                        $("#external-events").remove();
+                        $.msg('unblock');
+                        if (cEO.sale && (typeof me.client.nc === "undefined")) {
+                            newCodMkt(cEO);
+                        }
+                    },
+                    "json").fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+            }
+            return !problem
         },
-        eventRender: function (event, element, view) {
+        eventRender: function (event, element) {
             var d = {
                 bloqueio: false,
                 changed: 0,
@@ -224,56 +224,58 @@ var Calendar = function (selector, data, modals, ext, client, user) {
         },
         eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
             $.msg();
+            var
+                problem = false,
+                msg = '';
             if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
-                $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
-                $.msg('unblock', 3000);
-                revertFunc();
-                return false;
+                problem = true;
+                msg = 'Não é permitido marcar consultas anteriores ao dia actual.';
             }
 
             if (me.concorrency(event)) {
-                $.msg('replace', 'Não é permitido marcações concorrentes.');
-                $.msg('unblock', 3000);
-                revertFunc();
-                return false;
+                problem = true;
+                msg = 'Não é permitido marcações concorrentes.';
             }
-
-            $.msg('unblock');
-            me.change(event, dayDelta, minuteDelta, revertFunc);
+            if (problem) {
+                $.msg('replace', msg);
+                $.msg('unblock', 3000);
+                $(".popover").remove();
+                revertFunc();
+            } else {
+                $.msg('unblock');
+                me.change(event, dayDelta, minuteDelta, revertFunc);
+            }
+            return true;
         },
         eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
             $.msg();
-            if (event.max) {
-                if (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max) {
-                    $.msg("replace', 'A duração maxima deste tipo de maracação é: " + event.max + "m.");
-                    $.msg('unblock', 3000);
-                    revertFunc();
-                    return false;
-                }
-            }
-            if (event.min) {
-                if (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes) {
-                    $.msg('replace', "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m.");
-                    $.msg('unblock', 3000);
-                    revertFunc();
-                    return false;
-                }
-            }
-            if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
-                $.msg('replace', "Não é permitido alterar o passado.");
-                $.msg('unblock', 3000);
-                revertFunc();
-                return false;
+            var
+                problem = false,
+                msg = '';
+            if (event.max && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max)) {
+                problem = true;
+                msg = "A duração maxima deste tipo de maracação é: " + event.max + "m.";
+            } else if (event.min && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes)) {
+                problem = true;
+                msg = "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m.";
+            } else if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
+                problem = true;
+                msg = "Não é permitido alterar o passado.";
+            } else if (me.concorrency(event)) {
+                problem = true;
+                msg = "Não é permitido marcações concorrentes.";
             }
 
-            if (me.concorrency(event)) {
-                $.msg('replace', "Não é permitido marcações concorrentes.");
+            if (problem) {
+                $.msg('replace', msg);
                 $.msg('unblock', 3000);
+                $(".popover").remove();
                 revertFunc();
-                return false;
+            } else {
+                $.msg('unblock');
+                me.change(event, dayDelta, minuteDelta, revertFunc);
             }
-            $.msg('unblock');
-            me.change(event, dayDelta, minuteDelta, revertFunc);
+            return true;
         }
     };
     this.change = function (event, dayDelta, minuteDelta, revertFunc) {
@@ -321,7 +323,7 @@ var Calendar = function (selector, data, modals, ext, client, user) {
             }
             temp_classes = temp_classes + this.css;
         });
-        $("#external-events .grid-content").html(temp_elements);
+        $("#external-events").find(" .grid-content").html(temp_elements);
         $("#reserve_types").html(temp_classes);
 
         var
@@ -361,23 +363,26 @@ var Calendar = function (selector, data, modals, ext, client, user) {
         $.each(Refs, function () {
             temp = temp + "<tr><td class=\"chex-table\"><input type=\"radio\" name=\"single-refs\" value=\"" + this.id + "\" id=\"" + this.id + "\" ><label for=\"" + this.id + "\"><span></span></label></td><td><label for=\"" + this.id + "\" class=\"btn-link\">" + this.name + "</label></td></tr>";
         });
-        $("#refs tbody").html(temp);
-        $("#refs tbody [name=single-refs]").change(function () {
-            $.msg();
-            $.post("/AM/ajax/calendar.php", {
-                    resource: $(this).val(),
-                    action: "getRscContent"
-                },
-                function (dat) {
-                    me.destroy();
-                    me = new Calendar(me.selector, dat, me.modals, me.ext, me.client, me.user);
-                    me.reserveConstruct(dat.tipo);
-                    $.msg('unblock');
-                }, "json").fail(function () {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                });
-        });
+        $("#refs")
+            .find("tbody")
+            .html(temp)
+            .find("[name=single-refs]")
+            .change(function () {
+                $.msg();
+                $.post("/AM/ajax/calendar.php", {
+                        resource: $(this).val(),
+                        action: "getRscContent"
+                    },
+                    function (dat) {
+                        me.destroy();
+                        me = new Calendar(me.selector, dat, me.modals, me.ext, me.client, me.user);
+                        me.reserveConstruct(dat.tipo);
+                        $.msg('unblock');
+                    }, "json").fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+            });
     };
     this.initModal = function (Refs) {
         me.modal_ext
@@ -545,7 +550,7 @@ var Calendar = function (selector, data, modals, ext, client, user) {
                             me.calendar.fullCalendar('removeEvents', id);
                         }
                         $.msg('unblock');
-                    }, "json").fail(function (data) {
+                    }, "json").fail(function () {
                         $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                         $.msg('unblock', 5000);
                     });
@@ -569,9 +574,10 @@ var Calendar = function (selector, data, modals, ext, client, user) {
                     $("#save_mkt").prop('disabled', false);
                     $.jGrowl("Relatório enviado com sucesso!");
                     $.msg('unblock');
-                    $.each($("#calendar").fullCalendar("clientEvents", function (a) {
+                    var eApoio = $("#calendar").fullCalendar("clientEvents", function (a) {
                         return a.extra_id === me.modals.mkt.data().calEvent.extra_id;
-                    }), function () {
+                    });
+                    $.each(eApoio, function () {
                         this.closed = true;
                         me.calendar.fullCalendar('updateEvent', this);
                     });
@@ -586,26 +592,26 @@ var Calendar = function (selector, data, modals, ext, client, user) {
 
 
         me.modals.acf.find("#save_acf").click(function () {
-            if (me.modals.acf.find("#obs_acf").validationEngine('validate'))
-                return false;
-
-            $.msg();
-            $.post("ajax/calendar.php", {
-                action: 'set_reservation_obs',
-                obs: me.modals.acf.find("#obs_acf").val(),
-                id_reservation: ~~me.modals.acf.data("calEvent").id
-            },function () {
-                me.modals.acf.find("#obs_acf").val("");
-                me.modals.acf.modal("hide");
-                me.modals.acf.data().calEvent.closed = 1;
-                me.calendar.fullCalendar('updateEvent', this);
-                $.msg('unblock');
-            }, 'json').fail(function () {
-                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                $.msg('unblock', 5000);
-            });
+            if (me.modals.acf.find("#obs_acf").validationEngine('validate')) {
+                $.msg();
+                $.post("ajax/calendar.php", {
+                    action: 'set_reservation_obs',
+                    obs: me.modals.acf.find("#obs_acf").val(),
+                    id_reservation: ~~me.modals.acf.data("calEvent").id
+                },function () {
+                    me.modals.acf.find("#obs_acf").val("");
+                    me.modals.acf.modal("hide");
+                    me.modals.acf.data().calEvent.closed = 1;
+                    me.calendar.fullCalendar('updateEvent', this);
+                    $.msg('unblock');
+                }, 'json').fail(function () {
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
+            }
         })
-            .end()
+            .
+            end()
             .find(".btn_trash")
             .click(function () {
                 $.msg();
@@ -794,33 +800,37 @@ var Calendar = function (selector, data, modals, ext, client, user) {
         me.modals.acf.modal("show");
     };
     this.concorrency = function (event) {
-        if (moment().diff(event.start, 'days')) {
-            var exist = false;
-            $.each(me.calendar.fullCalendar('clientEvents'),
+        if (!moment().isSame(event.start, 'days')) {
+            var
+                exist = false,
+                events = me.calendar.fullCalendar('clientEvents');
+            $.each(events,
                 function () {
-                    if (this.del)
-                        return true;
-
-                    if (this.id === event.id)
-                        return true;
-
-                    if (
-                        ((moment(this.start).unix() < moment(event.end).unix()) && (moment(this.start).unix() > moment(event.start).unix())) ||
-                            ((moment(this.end).unix() > moment(event.start).unix()) && (moment(this.end).unix() < moment(event.end).unix())) ||
-                            ((moment(this.start).unix() <= moment(event.start).unix()) && (moment(this.end).unix() >= moment(event.end).unix()))
-                        ) {
-                        exist = true;
-                        return false;
+                    var problem;
+                    problem = true;
+                    if (this.del) {
+                        problem = true;
+                    } else if (this.id === event.id) {
+                        problem = true;
+                    } else {
+                        var range = moment.range(this.start, this.end)
+                        if (range.contains(event.start) || range.contains(event.end)) {
+                            exist = true;
+                            problem = false;
+                        }
                     }
-                });
+                    return problem;
+                }
+            );
             return exist;
-        } else {
+        }
+        else {
             return false;
         }
     };
     this.destroy = function () {
         this.calendar.fullCalendar('destroy');
-        $("#external-events .grid-content > div").empty();
+        $("#external-events").find(".grid-content").find(" > div").empty();
         $("#reserve_types").empty();
     };
     this.resource = (typeof data.config !== "undefined" && typeof data.config.events !== "undefined") ? data.config.events.data.resource : "all";
@@ -841,6 +851,8 @@ var Calendar = function (selector, data, modals, ext, client, user) {
                 $.post("ajax/client.php", {action: 'update_cod_mkt', codmkt: result, id: cEO.lead_id}, function () {
                     cEO.codCamp = result;
                     me.calendar.fullCalendar('updateEvent', cEO);
+                    if (me.client.box)
+                        me.client.box.refresh();
                 });
             }
         });
@@ -864,4 +876,5 @@ var Calendar = function (selector, data, modals, ext, client, user) {
     if (me.user.user_level > 4 || 1) {
         me.modal_ext.find("#btn_change").removeClass("hide");
     }
-};
+}
+;

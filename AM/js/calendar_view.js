@@ -26,6 +26,7 @@ $(function() {
             client_box = new ClientBox({id: client.id});
             client_box.init(function(clientI) {
                 clientI.nc=client.nc;
+                clientI.box=client_box;
                 startC(data, clientI);
             });
         } else {
@@ -34,6 +35,7 @@ $(function() {
         }
 
     };
+
     $.post("/AM/ajax/calendar.php",
             {action: "Init"},
     function(data) {
