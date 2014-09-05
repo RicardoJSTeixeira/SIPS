@@ -8,27 +8,37 @@ var ClientBox = function (configs) {
         },
         config = $.extend(defaults, configs),
         template = "<div class='grid'>\n\
-                            <div class='grid-title'>\n\
-                                  <div class='pull-right'>\n\
-                                        <button id='button_proposta_comercial' title='Propostas comerciais' class='btn icon-alone'><i class='icon-money'></i></button>\n\
-                                        <button id='open_pdf' class='btn  icon-alone'><i class='icon-user'></i></button>\n\
-                                   </div>\n\
+                            <div class='grid-title' style='overflow: visible;'>\n\
+                                <div class='pull-left'>Cliente</div>\n\
+                                <div class='pull-right'>\n\
+                                     <div class='dropdown' style='display:inline-block;'>\n\
+                                        <span class='btn icon-alone dropdown-toggle' data-toggle='dropdown' >\n\
+                                            <i class='icon-cog'></i>\n\
+                                        </span>\n\
+                                        <div class='dropdown-menu'>\n\
+                                            <ul>\n\
+                                                <li><a tabindex='-1' href='#' id='button_proposta_comercial' ><i class='icon-money'></i>Propostas comerciais</a></li>\n\
+                                                <li><a tabindex='-1' href='#' id='open_pdf' ><i class='icon-user'></i>Abrir PDF</a></li>\n\
+                                            </ul>\n\
+                                        </div>\n\
+                                </div>\n\
+                                </div>\n\
                             </div>\n\
                             <div class='user c_bg-2'>\n\
-                                <div class='user-name' id='client_cod_camp'></div>\n\
+                                <div class='user-name'  id='client_cod_camp'></div>\n\
                                 <div class='user-email' id='client_ref_client'></div>\n\
                                 <div class='user-email' id='client_compart'></div>\n\
-                                <div class='user-email' style='height:auto; ' id='client_name'></div>\n\
-                                <div class='user-date' id='client_address'></div>\n\
-                                <div class='user-date' id='client_postal'></div>\n\
-                                <div class='user-date' id='client_local'></div>\n\
-                                <div class='user-date' id='client_tel'></div>\n\
-                                <div class='user-date' id='client_tel1'></div>\n\
-                                <div class='user-date' id='client_tel2'></div>\n\
-                                <div class='user-date' id='client_birth_date'></div>\n\
-                                <div class='user-date' id='client_date'></div>\n\
-                                <div class='user-date' id='client_rsc'></div>\n\
-                                <div class='user-date' id='client_comments'></div>\n\
+                                <div class='user-email' id='client_name' style='height:auto;'></div>\n\
+                                <div class='user-date'  id='client_address'></div>\n\
+                                <div class='user-date'  id='client_postal'></div>\n\
+                                <div class='user-date'  id='client_local'></div>\n\
+                                <div class='user-date'  id='client_tel'></div>\n\
+                                <div class='user-date'  id='client_tel1'></div>\n\
+                                <div class='user-date'  id='client_tel2'></div>\n\
+                                <div class='user-date'  id='client_birth_date'></div>\n\
+                                <div class='user-date'  id='client_date'></div>\n\
+                                <div class='user-date'  id='client_rsc'></div>\n\
+                                <div class='user-date'  id='client_comments'></div>\n\
                                 <div class='clear'></div>\n\
                             </div>\n\
                         </div>";
@@ -86,43 +96,62 @@ var ClientBox = function (configs) {
                     .end();
 
 
-                $.post('/AM/ajax/upload_file.php', {
-                    action: "get_pdfs",
-                    navid: me.client_info.navId || "",
-                    ref_cliente: me.client_info.refClient
-                },function (data) {
+                me.getPdf();
 
-                    if (data) {
-                        $("#open_pdf").click(function () {
-                            var c = encodeURIComponent(data);
-                            document.location = '/AM/ajax/downloader.php?file=' + c;
-                        });
-                    }
-                    else {
-                        $("#open_pdf").click(function () {
-                            $.jGrowl("Cliente sem ficheiro associado", 3000);
-                        });
-                    }
-                    $.msg('unblock');
-                }, "json").fail(function (data) {
-                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                    $.msg('unblock', 5000);
-                });
+                me.getProposta();
 
+                if (typeof callback === 'function') {
+                    callback(clientI);
+                }
+            }
+            , "json");
+    };
 
-                $(config.target).find("#button_proposta_comercial").click(function () {
-                    $.msg();
-                    var propostas = "";
-                    var final = "<h5>Data de criação da proposta comercial</h5>";
-                    $.post('/AM/ajax/users.php', {action: "get_propostas", lead_id: me.client_info.id},
-                        function (data) {
-                            if (data.length) {
-                                var menu = "";
-                                $.each(data, function () {
-                                    $.each(this.proposta, function () {
-                                        propostas += " <tr><td>" + this.modelo + "</td><td>" + this.valor + "</td><td>" + this.quantidade + "</td><td>" + this.entrada + "</td><td>" + this.meses + "</td></tr>"
-                                    });
-                                    menu = "<div>\n\
+    this.getPdf = function () {
+        $.post('/AM/ajax/upload_file.php', {
+            action: "get_pdfs",
+            navid: me.client_info.navId || "",
+            ref_cliente: me.client_info.refClient
+        },function (data) {
+            var fnClick;
+            if (data) {
+                fnClick = function (e) {
+                    e.preventDefault();
+                    var c = encodeURIComponent(data);
+                    document.location = '/AM/ajax/downloader.php?file=' + c;
+                }
+            }
+            else {
+                fnClick = function (e) {
+                    e.preventDefault();
+                    $.jGrowl("Cliente sem ficheiro associado", 3000);
+                }
+            }
+
+            $(config.target).find("#open_pdf").click(fnClick);
+
+            $.msg('unblock');
+        }, "json").fail(function (data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
+    };
+
+    this.getProposta = function () {
+        $(config.target).find("#button_proposta_comercial").click(function (e) {
+            e.preventDefault();
+            $.msg();
+            var propostas = "";
+            var final = "<h5>Data de criação da proposta comercial</h5>";
+            $.post('/AM/ajax/users.php', {action: "get_propostas", lead_id: me.client_info.id},
+                function (data) {
+                    if (data.length) {
+                        var menu = "";
+                        $.each(data, function () {
+                            $.each(this.proposta, function () {
+                                propostas += " <tr><td>" + this.modelo + "</td><td>" + this.valor + "</td><td>" + this.quantidade + "</td><td>" + this.entrada + "</td><td>" + this.meses + "</td></tr>"
+                            });
+                            menu = "<div>\n\
                                         <div class='formRow'>\n\
                                             <label>" + this.data + "</label><button class='btn icon-alone right btnPropToggle' ><i class='icon-eye-open'></i></button>\n\
                                             <div class='clear'></div>\n\
@@ -143,41 +172,41 @@ var ClientBox = function (configs) {
                                         </div>\n\
                                     </div>\n\
                                     <div class='clear'></div>";
-                                    final += menu;
-                                    propostas = "";
-                                });
-                                bootbox.alert(final);
-                                $(".btnPropToggle").click(function () {
-                                    $(this)
-                                        .find("i")
-                                        .toggleClass("icon-eye-open")
-                                        .toggleClass("icon-eye-close")
-                                        .end()
-                                        .parent()
-                                        .find(".dTableProposta")
-                                        .toggle();
-                                });
-                            }
-                            else {
-                                bootbox.alert("Cliente sem propostas comerciais.");
-                            }
-                            $.msg('unblock');
-                        }, "json").fail(function (data) {
-
-                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                            $.msg('unblock', 5000);
+                            final += menu;
+                            propostas = "";
                         });
-                });
+                        bootbox.alert(final);
+                        $(".btnPropToggle").click(function () {
+                            $(this)
+                                .find("i")
+                                .toggleClass("icon-eye-open")
+                                .toggleClass("icon-eye-close")
+                                .end()
+                                .parent()
+                                .find(".dTableProposta")
+                                .toggle();
+                        });
+                    }
+                    else {
+                        bootbox.alert("Cliente sem propostas comerciais.");
+                    }
+                    $.msg('unblock');
+                }, "json").fail(function (data) {
 
-                if (typeof callback === 'function') {
-                    callback(clientI);
-                }
-            }
-            , "json");
+                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                    $.msg('unblock', 5000);
+                });
+        });
     };
 
     this.destroy = function () {
-        $(me.target).empty();
+        $(config.target).empty();
+        return me;
+    };
+
+    this.refresh= function(){
+        me.destroy().init();
+        return me;
     };
 
     this.get_info = function () {
