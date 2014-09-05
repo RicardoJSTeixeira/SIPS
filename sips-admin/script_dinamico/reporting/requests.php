@@ -194,36 +194,36 @@ switch ($action) {
 
             if ($value->type == "campo_dinamico") {
                 $client_elements[] = "b." . $value->id;
-                $fields[] = "$value->id as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                $fields[] = "`$value->id` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
             } else if ($value->type == "default") {
 
 
                 switch ($value->param_1) {
                     case "data_chamada":
-                        $fields[] = "date_format($value->field,'%Y-%m-%d') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "date_format(`$value->field`,'%Y-%m-%d') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     case "hora_chamada":
-                        $fields[] = "date_format($value->field,'%H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "date_format(`$value->field`,'%H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     case "data_hora_chamada":
-                        $fields[] = "date_format($value->field,'%Y-%m-%d %H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "date_format(`$value->field`,'%Y-%m-%d %H:%i') as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     case "length_in_sec":
-                        $fields[] = "SEC_TO_TIME($value->field) as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "SEC_TO_TIME(`$value->field`) as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                     default:
-                        $fields[] = "$value->id as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $fields[] = "`$value->id` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                         break;
                 }
             } else {
                 if ($result_filter != 3) {
                     if ($value->type == "tableradio") {
                         $tableradio = rand();
-                        $script_elements[] = " MAX(IF(tag_elemento=' $value->id ' AND param_1= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
-                        $fields[] = "$value->id$tableradio as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ' AND  `param_1`= '$value->param_1',valor,'') ) AS '$value->id$tableradio' ";
+                        $fields[] = "`$value->id$tableradio` as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                     } else {
-                        $script_elements[] = " MAX(IF(tag_elemento=' $value->id ',valor,'') ) AS ' $value->id' ";
-                        $fields[] = "$value->id as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
+                        $script_elements[] = " MAX(IF(`tag_elemento`=' $value->id ',valor,'') ) AS ' $value->id' ";
+                        $fields[] = "`$value->id`  as '" . preg_replace('~[^\p{L}\p{N}]++~u', ' ', $value->texto) . "'";
                     }
                 }
             }
