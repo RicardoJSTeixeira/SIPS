@@ -7,20 +7,20 @@
     <div class="modal-body">
         <form id="edit_product_form" class="check_form">
             <div class="formRow">
-                <span>Nome</span>
+                <span><b>Nome</b></span>
                 <div class="formRight">
                     <input type="text" id="edit_product_name" class="span validate[required]">
                 </div>
             </div>
 
             <div class="formRow">
-                <span>Parente</span>
+                <span><b>Parente</b></span>
                 <div class="formRight">
                     <select class="chosen-select" id="edit_product_parent" multiple data-placeholder="Selecione um parent"></select>
                 </div> 
             </div>
             <div class="formRow">
-                <span>Categoria</span>
+                <span><b>Categoria</b></span>
                 <div class="formRight">
                     <select id="edit_product_category" class="span">
                         <option value="BTE">BTE</option>
@@ -37,7 +37,7 @@
                 </div> 
             </div>
             <div class="formRow">
-                <span>Tipo</span>
+                <span><b>Tipo</b></span>
                 <div class="formRight">
                     <input type="checkbox" id="edit_product_check_branch" name="edit_product_tipo_user" value="branch" class="validate[minCheckbox[1]]">
                     <label class="checkbox inline" for="edit_product_check_branch"><span></span>Branch</label>
@@ -46,27 +46,27 @@
                 </div> 
             </div>
             <div class="formRow">
-                <span>Ativo</span>
+                <span><b>Ativo</b></span>
                 <div class="formRight">
                     <input type="checkbox" id="edit_product_active" name="edit_product_active" value="1" checked >
                     <label class="checkbox inline" for="edit_product_active"><span></span>Sim</label>
                 </div> 
             </div>
             <div class="formRow" id="edit_product_size_div" style="display:none">
-                <label >Tamanhos de Aparelho &nbsp; </label>
+                <label ><b>Tamanhos de Aparelho &nbsp; </b></label>
                 <div class=" input-append">
                     <button class="btn btn-mini" id="edit_product_size_plus"><i class="icon-plus"></i></button>
                     <button class="btn btn-mini btn-danger" id="edit_product_size_minus"><i class="icon-minus"></i></button>
                 </div>
                 <div id="edit_product_size_subdiv" class="formRow">
-                    Tamanhos Definidos
+                    <small>Preencha as caixas com os tamanhos desejados</small>
                     <div class="formRow">
                         <input type="number" min='0'   value='0'  class="edit_product_size input-mini validate[required,min[0]]">
                     </div>
                 </div>
             </div>
             <div class="formRow">
-                <span><b>Max Requisições</b></span>
+                <span><b>Maximo de Requisições &nbsp;</b></span>
                 <div class="formRight">
                     <table >
                         <thead>
@@ -85,6 +85,7 @@
                 </div>
             </div>
             <div class="formRow" id="edit_product_color_div" style="display:none">
+                <h5>Cores Disponíveis</h5>
                 <table class="table table-bordered table-mod">
                     <thead>
                         <tr>
@@ -102,7 +103,7 @@
             </div>
             <div class="formRow" id="edit_product_promotion_div">
                 <h5>Promoções</h5>
-                <table class="table table-bordered table-mod" >
+                <table class="table table-bordered table-mod">
                     <thead>
                         <tr>
                             <th>Activo</th>
@@ -181,11 +182,11 @@
 
 <form id="new_product_form" class="check_form" style="display:none">
     <fieldset>
-        <label for="new_product_name">Nome</label>
+        <label for="new_product_name"><b>Nome</b></label>
         <input type="text" id="new_product_name" class="span validate[required]">
-        <label for="new_product_parent">Parente</label>
+        <label for="new_product_parent"><b>Parente</b></label>
         <select class="chosen-select" id="new_product_parent" multiple data-placeholder="Selecione um parent"></select>
-        <label for="new_product_category">Categoria</label>
+        <label for="new_product_category"><b>Categoria</b></label>
         <select id="new_product_category" class="span">
             <option value="BTE">BTE</option>
             <option value="RITE">RITE</option>
@@ -198,26 +199,26 @@
             <option value="Consumiveis">Consumiveis</option>
             <option value="Especificidades" >Especificidades</option>
         </select>
-        <label>Tipo</label>
+        <label><b>Tipo</b></label>
         <input type="checkbox" id="new_product_check_branch" name="new_product_tipo_user" value="branch"  checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_branch"><span></span>Branch</label>
         <input type="checkbox" id="new_product_check_dispenser" name="new_product_tipo_user" value="dispenser" checked class="validate[minCheckbox[1]]">
         <label class="checkbox inline" for="new_product_check_dispenser"><span></span>Dispenser</label>
         <div class="formRow" id="new_product_size_div" style="display:none">
-            <label for="new_product_size">Tamanhos de Aparelho &nbsp; </label>
+            <label for="new_product_size"><b>Tamanhos de Aparelho &nbsp; </b></label>
             <div class=" input-append">
                 <button class="btn btn-mini" id="new_product_size_plus"><i class="icon-plus"></i></button>
                 <button class="btn btn-mini btn-danger" id="new_product_size_minus"><i class="icon-minus"></i></button>
             </div>
             <div id="new_product_size_subdiv">
-                Tamanho
+               <small>Preencha as caixas com os tamanhos desejados</small>
                 <div class='formRow'>
                     <input type="number" min='0'    value='0'  class="new_product_size input-mini validate[required,min[0]]">
                 </div>
             </div>
         </div>
         <div class='clear'></div>
-        <label><b>Max. Requisições</b></label>
+        <label><b>Maximo de Requisições</b></label>
         <table>
             <tbody>
                 <tr>
@@ -240,6 +241,7 @@
         </table>
     </fieldset>
     <div class="formRow" id="new_product_color_div" style="display:none">
+        <label><b>Cores Disponíveis</b></label>
         <table class="table table-bordered table-mod">
             <thead>
                 <tr>
