@@ -280,29 +280,32 @@ Calendar = function (selector, data, modals, ext, client, user) {
     };
     this.change = function (event, dayDelta, minuteDelta, revertFunc) {
         $(".popover").remove();
-        if (!confirm("Pretende mesmo mudar a data/hora?")) {
-            revertFunc();
-        } else {
-            $.msg();
-            $.post("/AM/ajax/calendar.php", {
-                    id: event.id,
-                    action: "change",
-                    start: moment(event.start).unix(),
-                    end: moment(event.end).unix()
-                },
-                function (ok) {
-                    if (!ok) {
+        bootbox.confirm("Pretende mesmo mudar a data/hora?",function(result){
+            if(result){
+                $.msg();
+                $.post("/AM/ajax/calendar.php", {
+                        id: event.id,
+                        action: "change",
+                        start: moment(event.start).unix(),
+                        end: moment(event.end).unix()
+                    },
+                    function (ok) {
+                        if (!ok) {
+                            revertFunc();
+                        }
+                        event.changed++;
+                        me.calendar.fullCalendar('updateEvent', event);
+                        $.msg('unblock');
+                    }, "json").fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
                         revertFunc();
-                    }
-                    event.changed++;
-                    me.calendar.fullCalendar('updateEvent', event);
-                    $.msg('unblock');
-                }, "json").fail(function () {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                    revertFunc();
-                });
-        }
+                    });
+            }else{
+                revertFunc();
+            }
+        })
+
     };
     this.reserveConstruct = function (tipo) {
         var
@@ -813,7 +816,7 @@ Calendar = function (selector, data, modals, ext, client, user) {
                     } else if (this.id === event.id) {
                         problem = true;
                     } else {
-                        var range = moment.range(this.start, this.end)
+                        var range = moment.range(this.start, this.end);
                         if (range.contains(event.start) || range.contains(event.end)) {
                             exist = true;
                             problem = false;
