@@ -14,7 +14,8 @@ $what = filter_var($_POST['what']);
 $value = filter_var($_POST['value']);
 $postal_code = filter_var($_POST['postal_code']);
 $codmkt = filter_var($_POST['codmkt']);
-$js=array();
+$stringas = filter_var($_POST['stringas']);
+$js = array();
 switch ($action) {
     case 'byName':
         $query = "SELECT  first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id limit 1";
@@ -22,13 +23,13 @@ switch ($action) {
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
-            array("name" => "Cod. Mkt.", "value" => (String) $row->codmkt),
-            array("name" => "Ref. Cliente", "value" => (String) $row->refClient),
-            array("name" => "Nome", "value" => (String) $row->first_name . " " . $row->last_name),
-            array("name" => "Localidade", "value" => (String) $row->local),
-            array("name" => "Telefone", "value" => (String) $row->phone_number),
-            array("name" => "Codigo Postal", "value" => (String) $row->postal_code),
-            array("name" => "Morada", "value" => (String) $row->address1 . " " . $row->address2)
+            array("name" => "Cod. Mkt.", "value" => (String)$row->codmkt),
+            array("name" => "Ref. Cliente", "value" => (String)$row->refClient),
+            array("name" => "Nome", "value" => (String)$row->first_name . " " . $row->last_name),
+            array("name" => "Localidade", "value" => (String)$row->local),
+            array("name" => "Telefone", "value" => (String)$row->phone_number),
+            array("name" => "Codigo Postal", "value" => (String)$row->postal_code),
+            array("name" => "Morada", "value" => (String)$row->address1 . " " . $row->address2)
         );
         break;
     case 'default':
@@ -37,39 +38,39 @@ switch ($action) {
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
-            "id" => (int) $row->lead_id,
-            "name" => (String) $row->first_name . " " . $row->last_name,
-            "address" => (String) $row->address1 . " " . $row->address2 . " " . $row->address4,
-            "postalCode" => (String) $row->postal_code,
-            "bDay" => (String) $row->date_of_birth,
-            "codCamp" => (String) $row->codmkt);
+            "id" => (int)$row->lead_id,
+            "name" => (String)$row->first_name . " " . $row->last_name,
+            "address" => (String)$row->address1 . " " . $row->address2 . " " . $row->address4,
+            "postalCode" => (String)$row->postal_code,
+            "bDay" => (String)$row->date_of_birth,
+            "codCamp" => (String)$row->codmkt);
         break;
     case 'byReserv':
         $query = "SELECT a.lead_id, first_name, middle_initial, last_name, phone_number, alt_phone, address1, address2, address3, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', extra5 'compart', comments, start_date, display_text, b.extra_id  "
-                . "FROM vicidial_list a "
-                . "INNER JOIN sips_sd_reservations b ON a.lead_id=b.lead_id "
-                . "INNER JOIN sips_sd_resources c ON b.id_resource=c.id_resource "
-                . "WHERE id_reservation=:id limit 1";
+            . "FROM vicidial_list a "
+            . "INNER JOIN sips_sd_reservations b ON a.lead_id=b.lead_id "
+            . "INNER JOIN sips_sd_resources c ON b.id_resource=c.id_resource "
+            . "WHERE id_reservation=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
-            "id" => (int) $row->lead_id,
-            "phone" => (int) $row->phone_number,
-            "phone1" => (int) $row->alt_phone,
-            "phone2" => (int) $row->address3,
-            "name" => (String) $row->first_name . " " . $row->last_name,
-            "address" => (String) $row->address1 . " " . $row->address2 . " " . $row->address4,
-            "local" => (String) $row->local,
-            "postalCode" => (String) $row->postal_code,
-            "bDay" => (String) $row->date_of_birth,
-            "refClient" => (String) $row->refClient,
-            "codCamp" => (String) $row->codmkt,
-            "compart" => (String) $row->compart,
-            "date" => (String) $row->start_date,
-            "rscName" => (String) $row->display_text,
-            "navId" => (String) $row->extra_id,
-            "comments" => (String) $row->comments);
+            "id" => (int)$row->lead_id,
+            "phone" => (int)$row->phone_number,
+            "phone1" => (int)$row->alt_phone,
+            "phone2" => (int)$row->address3,
+            "name" => (String)$row->first_name . " " . $row->last_name,
+            "address" => (String)$row->address1 . " " . $row->address2 . " " . $row->address4,
+            "local" => (String)$row->local,
+            "postalCode" => (String)$row->postal_code,
+            "bDay" => (String)$row->date_of_birth,
+            "refClient" => (String)$row->refClient,
+            "codCamp" => (String)$row->codmkt,
+            "compart" => (String)$row->compart,
+            "date" => (String)$row->start_date,
+            "rscName" => (String)$row->display_text,
+            "navId" => (String)$row->extra_id,
+            "comments" => (String)$row->comments);
         break;
     case 'byLeadToInfo':
         $js = array();
@@ -97,15 +98,15 @@ switch ($action) {
         $stmt->execute(array(":value" => $value));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $js[] = array(
-                "id" => (string) $row->lead_id,
-                "name" => (string) $row->first_name . " " . $row->middle_initial . " " . $row->last_name,
-                "nif" => (string) $row->nif,
-                "phone" => (string) $row->phone_number,
-                "date_of_birth" => (string) $row->date_of_birth,
-                "refClient" => (string) $row->refClient,
-                "address1" => (string) $row->address1,
-                "postal_code" => (string) $row->postal_code,
-                "city" => (string) $row->city);
+                "id" => (string)$row->lead_id,
+                "name" => (string)$row->first_name . " " . $row->middle_initial . " " . $row->last_name,
+                "nif" => (string)$row->nif,
+                "phone" => (string)$row->phone_number,
+                "date_of_birth" => (string)$row->date_of_birth,
+                "refClient" => (string)$row->refClient,
+                "address1" => (string)$row->address1,
+                "postal_code" => (string)$row->postal_code,
+                "city" => (string)$row->city);
         }
         break;
 
@@ -115,28 +116,41 @@ switch ($action) {
         $stmt->execute(array(":postal_code" => "%" . $postal_code . "%"));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $js[] = array(
-                "rua" => (string) $row->rua,
-                "cod_postal" => (string) $row->cod_postal,
-                "localidade" => (string) $row->localidade,
-                "zona" => (string) $row->zona,
-                "freguesia" => (string) $row->freguesia,
-                "distrito" => (string) $row->distrito,
-                "concelho" => (string) $row->concelho);
+                "rua" => (string)$row->rua,
+                "cod_postal" => (string)$row->cod_postal,
+                "localidade" => (string)$row->localidade,
+                "zona" => (string)$row->zona,
+                "freguesia" => (string)$row->freguesia,
+                "distrito" => (string)$row->distrito,
+                "concelho" => (string)$row->concelho);
         }
         break;
 
     case 'update_cod_mkt':
         $query = "UPDATE vicidial_list SET extra1=:codmkt where lead_id=:id";
         $stmt = $db->prepare($query);
-        $js= $stmt->execute(array(":codmkt" => $codmkt, ":id" => $id));
+        $js = $stmt->execute(array(":codmkt" => $codmkt, ":id" => $id));
 
+        break;
+
+    case "edit_info":
+        $query_string = "";
+        $stringas = json_decode($stringas);
+        foreach ($stringas as $string) {
+
+            $query_string = $query_string . strtolower($string->key) . " = '" . $string->value . "',";
+        }
+        $query_string = rtrim($query_string, ",");
+        $query = "UPDATE vicidial_list SET $query_string where lead_id=:id";
+
+        $stmt = $db->prepare($query);
+        $js = $stmt->execute(array(":id" => $id));
         break;
 
     default:
         echo 'Are you a noob hacker? Or just a noob?';
         break;
 }
-
 
 
 echo json_encode($js);
