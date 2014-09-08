@@ -171,7 +171,7 @@ Class Calendars
         }
         $query = "INSERT INTO sips_sd_reservations(start_date, end_date, has_accessories, id_reservation_type, id_resource,id_user,lead_id,obs,extra_id) VALUES (:start, :end, '0', :rtype, :resource, :user, :lead_id, :obs, :extra_id)";
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource, ":obs" => $obs, ":extra_id" => $extraid));
+        $stmt->execute(array(":user" => $user, ":lead_id" => $lead_id, ":start" => \date('Y-m-d H:i:s', $start), ":end" => \date('Y-m-d H:i:s', $end), ":rtype" => $rtype, ":resource" => $resource, ":obs" => $obs, ":extra_id" => $extraid));
         return (int)$this->_db->lastInsertId();
     }
 
@@ -200,7 +200,7 @@ Class Calendars
     {
         $query = "UPDATE sips_sd_reservations SET start_date=:start,end_date=:end, changed=changed+1 WHERE id_reservation=:id";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":id" => $id, ":start" => date('Y-m-d H:i:s', $start), ":end" => date('Y-m-d H:i:s', $end)));
+        return $stmt->execute(array(":id" => $id, ":start" => \date('Y-m-d H:i:s', $start), ":end" => \date('Y-m-d H:i:s', $end)));
     }
 
     public function changeReservaResource($id, $rsc_id)
@@ -214,7 +214,7 @@ Class Calendars
     {
         $query = "Update sips_sd_reservations SET obs = :obs, has_accessories=1 WHERE id_reservation = :id_reservation";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":obs" => json_encode(array("date" => date('Y-m-d H:i:s'), "obs" => $obs)), ":id_reservation" => $id_reservation));
+        return $stmt->execute(array(":obs" => json_encode(array("date" => \date('Y-m-d H:i:s'), "obs" => $obs)), ":id_reservation" => $id_reservation));
     }
 
     public function get_obs($id_reservation)
@@ -259,7 +259,7 @@ Class Calendars
             $query = "SELECT id_execao,id_resource, start_date, end_date FROM sips_sd_execoes WHERE id_resource=:id AND start_date < :end AND end_date > :start;";
         }
         $stmt = $this->_db->prepare($query);
-        $stmt->execute(array(":id" => $id, ":start" => $beg, ":end" => $end));
+        $stmt->execute(array(":id" => $id, ":start" => \date('Y-m-d H:i:s', $beg), ":end" => \date('Y-m-d H:i:s', $end)));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -440,26 +440,26 @@ class Calendar extends Calendars
         );
 
         while ($bl = array_pop($events)) {
-                foreach ($block as $key => &$nbl) {
-                    //var_dump($bl); //desbloqueio programado
-                    //var_dump($nbl);
-                    if ((strtotime($nbl['start']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
-                        unset($block[$key]);
-                    } elseif ((strtotime($nbl['start']) < strtotime($bl['end'])) && (strtotime($nbl['start']) >= strtotime($bl['start']))) {
-                        $nbl['start'] = $bl['end'];
-                    } elseif ((strtotime($nbl['end']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
-                        $nbl['end'] = $bl['start'];
-                    } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
-                        $block[] = array(
-                            'start' => $bl['end'],
-                            'end' => $nbl['end'],
-                            'editable' => false,
-                            'className' => "bloqueado",
-                            'bloqueio' => true
-                        );
-                        $nbl['end'] = $bl['start'];
-                    }
+            foreach ($block as $key => &$nbl) {
+                //var_dump($bl); //desbloqueio programado
+                //var_dump($nbl);
+                if ((strtotime($nbl['start']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
+                    unset($block[$key]);
+                } elseif ((strtotime($nbl['start']) < strtotime($bl['end'])) && (strtotime($nbl['start']) >= strtotime($bl['start']))) {
+                    $nbl['start'] = $bl['end'];
+                } elseif ((strtotime($nbl['end']) >= strtotime($bl['start'])) && (strtotime($nbl['end']) <= strtotime($bl['end']))) {
+                    $nbl['end'] = $bl['start'];
+                } elseif ((strtotime($nbl['start']) < strtotime($bl['start'])) && (strtotime($nbl['end']) > strtotime($bl['end']))) {
+                    $block[] = array(
+                        'start' => $bl['end'],
+                        'end' => $nbl['end'],
+                        'editable' => false,
+                        'className' => "bloqueado",
+                        'bloqueio' => true
+                    );
+                    $nbl['end'] = $bl['start'];
                 }
+            }
         }
         return $block;
     }
