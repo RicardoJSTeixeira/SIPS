@@ -6,6 +6,8 @@ var ClientBox = function (configs) {
             id: 0,
             byReserv: false
         },
+
+
         config = $.extend(defaults, configs),
         template = "<div class='grid'>\n\
                             <div class='grid-title' style='overflow: visible;'>\n\
@@ -19,6 +21,7 @@ var ClientBox = function (configs) {
                                             <ul>\n\
                                                 <li><a tabindex='-1' href='#' id='button_proposta_comercial' ><i class='icon-money'></i>Propostas comerciais</a></li>\n\
                                                 <li><a tabindex='-1' href='#' id='open_pdf' ><i class='icon-user'></i>Abrir PDF</a></li>\n\
+                                                <li><a tabindex='-1' href='#' id='edit_client_info' ><i class='icon-edit'></i>Editar Info. Cliente</a></li>\n\
                                             </ul>\n\
                                         </div>\n\
                                 </div>\n\
@@ -48,6 +51,8 @@ var ClientBox = function (configs) {
         $.msg();
         $.post("/AM/ajax/client.php", {action: action, id: config.id}, function (clientI) {
                 me.client_info = clientI;
+                me.lead_id = clientI.id;
+
                 $(config.target)
                     .append(template)
                     .find("#client_name")
@@ -94,12 +99,9 @@ var ClientBox = function (configs) {
                     .find("#client_comments")
                     .text(clientI.comments)
                     .end();
-
-
                 me.getPdf();
-
+                me.edit_client_info();
                 me.getProposta();
-
                 if (typeof callback === 'function') {
                     callback(clientI);
                 }
@@ -127,13 +129,18 @@ var ClientBox = function (configs) {
                     $.jGrowl("Cliente sem ficheiro associado", 3000);
                 }
             }
-
             $(config.target).find("#open_pdf").click(fnClick);
-
             $.msg('unblock');
         }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
+        });
+    };
+
+    this.edit_client_info = function () {
+        $(config.target).find("#edit_client_info").click(function (e) {
+            e.preventDefault();
+            me.client_info_editing();
         });
     };
 
@@ -204,7 +211,7 @@ var ClientBox = function (configs) {
         return me;
     };
 
-    this.refresh= function(){
+    this.refresh = function () {
         me.destroy().init();
         return me;
     };
@@ -212,6 +219,285 @@ var ClientBox = function (configs) {
     this.get_info = function () {
         return me.client_info;
     };
+
+
+    this.client_info_editing = function () {
+        $.post("ajax/create_client.php", {action: "get_fields"},
+            function (data) {
+                $("#inputs_div1,#inputs_div2,#inputs_div3").empty();
+                var input,
+                    custom_class = "",
+                    div = $("<div>", {id: "master", class: "row-fluid"})
+                        .append($("<div>", {id: "input1", class: "span4"}))
+                        .append($("<div>", {id: "input2", class: "span4"}))
+                        .append($("<div>", {id: "input3", class: "span4"})),
+                    elmt,
+                    specialE,
+                    hide = "";
+                $.each(data, function () {
+                    if (this.name === "extra5") {
+                        elmt = $("<select>", {id: this.name, name: this.name});
+                        var optionsRaw = ["", "ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça", "OUTRAS"];
+                        options = optionsRaw.map(function (v) {
+                            return new Option(v, v);
+                        });
+                        magia = function () {
+                            if ($(this).val() === "OUTRAS") {
+                                $(this).replaceWith(
+                                    $('<div>', {class: 'input-append'})
+                                        .append(
+                                            $("<input>", {type: "text", id: $(this).prop("id"), name: $(this).prop("name")})
+                                        )
+                                        .append(
+                                            $('<btn>', {class: 'btn icon-alone'})
+                                                .append(
+                                                    $('<i>', {class: 'icon-undo'})
+                                                )
+                                                .click(function () {
+                                                    $(this).parent().replaceWith(specialE.val("").change(magia));
+                                                })
+                                        )
+                                );
+                            }
+                        };
+                        elmt
+                            .append(options)
+                            .change(magia);
+                        specialE = elmt;
+                    } else if (this.name === "TITLE") {
+                        elmt = $("<select>", {id: this.name, name: this.name, class: "input-mini"}).attr('data-prompt-position', 'topRight:120').append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]);
+                    } else if (this.name === "extra6") {
+                        elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
+                    } else if (this.name === "SECURITY_PHRASE") {
+                        elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
+                    } else if (this.name === "POSTAL_CODE") {
+                        elmt = $("<input>", {type: "text", id: this.name, name: this.name}).change(function () {
+                            if ((this.value.length)) {
+                                $.post("ajax/client.php", {action: "check_postal_code", postal_code: this.value}, function (data1) {
+                                    var postal_codes = "";
+                                    $.each(data1, function () {
+                                        postal_codes += "<tr>\n\
+                                 <td>" + this.rua + "</td>\n\
+                                 <td>" + this.zona + "</td>\n\
+                                 <td>" + this.localidade + "</td>\n\
+                                 <td>" + this.concelho + "</td>\n\
+                                 <td>" + this.distrito + "</td>\n\
+                                 <td>" + this.cod_postal + "<div class='view-button'><button class='btn btn-mini postal_code_populate' data-mor='" + JSON.stringify(this) + "'><i class='icon-copy'></i> Copiar</button></div></td>\n\
+                                            </tr>";
+                                    });
+                                    bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um/varios codigos postais semelhantes.</div>\n\
+                                        <table id='postal_code_table_check' class='table table-mod table-bordered table-striped table-condensed'>\n\
+                                            <thead>\n\
+                                                <tr>\n\
+                                                    <td>Rua</td>\n\
+                                                    <td>Zona</td>\n\
+                                                    <td>Localidade</td>\n\
+                                                   <td>Concelho</td>\n\
+                                                    <td>Distrito</td>\n\
+                                                    <td>Codigo Postal</td>\n\
+                                                    </tr>\n\
+                                            </thead>\n\
+                                            <tbody>\n\
+                                            " + postal_codes + "\n\
+                                            </tbody>\n\
+                                        </table><div class='clear'></div>", [
+                                        {'OK': true, "label": "OK"}
+                                    ], {customClass: 'container'});
+                                    $("#postal_code_table_check").on("click", ".postal_code_populate", function (e) {
+                                        e.preventDefault();
+                                        var that = $(this).data().mor;
+                                        $("[name='ADDRESS1']").val(that.rua);
+                                        $("[name='POSTAL_CODE']").val(that.cod_postal);
+                                        $("[name='CITY']").val(that.localidade);
+                                        $("[name='PROVINCE']").val(that.concelho);
+                                        $("[name='STATE']").val(that.distrito);
+                                        bootbox.hideAll();
+                                    });
+
+                                    $("#postal_code_table_check").DataTable();
+                                }, "json");
+                            }
+                        });
+                    } else {
+                        elmt = $("<input>", {type: "text", id: this.name, name: this.name});
+                    }
+
+                    if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "extra8") {
+                        elmt.change(function () {
+                            if (this.value.length < 9 && (this.name === "PHONE_NUMBER" || this.name === "extra8"))
+                                return false;
+                            $.post("ajax/client.php", {action: "byWhat", what: this.name, value: this.value}, function (clients) {
+                                if (!clients.length)
+                                    return false;
+                                var trs = "";
+                                $.each(clients, function () {
+                                    trs += "<tr>\n\
+                                        <td>" + this.refClient + "</td>\n\
+                                        <td>" + this.nif + "</td>\n\
+                                        <td>" + this.name + "</td>\n\
+                                        <td>" + this.address1 + "</td>\n\
+                                        <td>" + this.postal_code + "</td>\n\
+                                        <td>" + this.city + "</td>\n\
+                                        <td>" + this.phone + "</td>\n\
+                                        <td>" + this.date_of_birth + "\n\
+                                            <div class='view-button'>\n\
+                                                <button class='btn btn-mini icon-alone ver_cliente' data-lead_id='" + this.id + "' title='Ver Cliente'><i class='icon-edit'></i></button>\n\
+                                                <button class = 'btn btn-mini icon-alone criar_encomenda' data-lead_id ='" + this.id + "' title='Nova Encomenda'> <i class='icon-shopping-cart'></i></button>\n\
+                                                <button class = 'btn btn-mini icon-alone criar_marcacao' data-lead_id ='" + this.id + "' title='Marcar Consulta'> <i class='icon-calendar'></i></button>\n\
+                                            </div>\n\
+                                        </td>\n\
+                                   </tr>";
+                                });
+                                bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um cliente com estes dados.</div>\n\
+                                        <table class='table table-mod table-bordered table-striped table-condensed'>\n\
+                                            <thead>\n\
+                                                <tr>\n\
+                                                    <td>Ref. Cliente</td>\n\
+                                                    <td>Nif</td>\n\
+                                                    <td>Nome</td>\n\
+                                                    <td>Morada</td>\n\
+                                                    <td>Cod. Postal</td>\n\
+                                                    <td>Localidade</td>\n\
+                                                    <td>Telefone</td>\n\
+                                                    <td style='width:170px';>Data de Nasc.</td>\n\
+                                               </tr>\n\
+                                            </thead>\n\
+                                            <tbody>\n\
+                                            " + trs + "\n\
+                                            </tbody>\n\
+                                   </table>", [
+                                    {'OK': true, "label": "OK"}
+                                ], {customClass: 'container'}).on("click", ".criar_marcacao",function () {
+                                    bootbox.hideAll();
+                                    var en = btoa($(this).data().lead_id);
+                                    $.history.push("view/calendar.html?id=" + en);
+                                }).on("click", ".criar_encomenda",function () {
+                                    bootbox.hideAll();
+                                    var
+                                        data = $(this).data(),
+                                        en = btoa(data.lead_id);
+                                    $.history.push("view/new_requisition.html?id=" + en);
+                                }).on("click", ".ver_cliente", function () {
+                                    var client = new Cliente_info($(this).data().lead_id, null);
+                                    client.init(null);
+
+                                });
+                            }, "json");
+                        });
+                    }
+
+                    switch (this.name) {
+                        case "PHONE_NUMBER":
+                            custom_class = "validate[required,custom[onlyNumberSp],minSize[9]]";
+                            input = div.find("#input1");
+                            break;
+                        case "ADDRESS3":
+                        case "ALT_PHONE":
+                            custom_class = "validate[custom[onlyNumberSp]]";
+                            input = div.find("#input1");
+                            break;
+                        case "FIRST_NAME":
+                            custom_class = "validate[required]";
+                            input = div.find("#input1");
+                            break;
+                        case "DATE_OF_BIRTH":
+                            custom_class = "form_datetime input-small validate[required]";
+                            input = div.find("#input1");
+                            break;
+                        case "EMAIL":
+                            input = div.find("#input1");
+                            custom_class = "validate[custom[email]]";
+                            break;
+                        case "TITLE":
+                            custom_class = "validate[required]";
+                        case "extra8":
+                            input = div.find("#input1");
+                            break;
+                        case "extra2":
+                        case "LAST_NAME":
+                        case "MIDDLE_INITIAL":
+                            input = div.find("#input1");
+                            break;
+                        case "ADDRESS1":
+                        case "CITY":
+                            custom_class = "validate[required]";
+                        case "POSTAL_CODE":
+                            custom_class = "validate[required]";
+                        case "ADDRESS2":
+                        case "PROVINCE":
+                        case "STATE":
+                        case "COUNTRY_CODE":
+                        case "extra3":
+                        case "extra4":
+                        case "extra10":
+                            input = div.find("#input2");
+                            break;
+                        case "extra6":
+                        case "extra7":
+                        case "SECURITY_PHRASE":
+                            hide = " hide";
+                            input = div.find("#input3");
+                            break;
+                        case "extra1":
+                            custom_class = "validate[required]";
+                            input = div.find("#input3");
+                            break;
+                        default:
+                            hide = "";
+                            input = div.find("#input3");
+                            break;
+                    }
+                    elmt.addClass(custom_class);
+                    input.append($("<div>", {class: "formRow" + hide})
+                        .append($("<label>").text(this.display_name))
+                        .append($("<div>", {class: "formRight"})
+                            .append(elmt)));
+                    custom_class = "";
+                });
+
+                $.post("ajax/client.php", {action: "byLeadToInfo", id: me.lead_id}, function (data) {
+                    bootbox.dialog(div, [
+                        {
+                            "label": "Gravar Alterações",
+                            "class": "btn-success",
+                            "callback": function () {
+
+                                $.post("ajax/client.php", {action: "edit_info", id: me.lead_id, stringas: function () {
+                                    var strings = [];
+                                    $.each($("#master :input"), function () {
+                                        strings.push({key: $(this).prop("name"), value: $(this).val()});
+                                    })
+                                    return JSON.stringify(strings);
+                                }}, function () {
+                                    me.refresh();
+                                });
+                            }
+                        },
+                        {
+                            "label": "Cancelar",
+                            "class": "btn"
+                        }
+                    ], {customClass: 'container'});
+
+
+                    data = JSON.parse(data)
+                    $("#PHONE_NUMBER").autotab('numeric');
+                    $(".form_datetime").datetimepicker({format: 'dd-mm-yyyy', autoclose: true, language: "pt", minView: 2}).attr('data-prompt-position', 'topRight:120');
+
+                    $.each(data, function () {
+                        div.find("#" + this.name).val(this.value);
+                    })
+
+
+                });
+                return true;
+                $.msg('unblock');
+            },
+            "json").fail(function (data) {
+                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                $.msg('unblock', 5000);
+            });
+    }
 
 
 };
