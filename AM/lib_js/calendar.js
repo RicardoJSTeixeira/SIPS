@@ -86,8 +86,7 @@ Calendar = function (selector, data, modals, ext, client, user) {
         drop: function (date, allDay) {
             $.msg();
             var
-                cEO = $.extend({}, $(this).data('eventobject')),
-                problem = false;
+                cEO = $.extend({}, $(this).data('eventobject'));
 
             cEO.start = moment(date).unix();
 
@@ -97,21 +96,35 @@ Calendar = function (selector, data, modals, ext, client, user) {
                 cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
             }
 
-            cEO.allDay = allDay;
+            var testes = [
+                {
+                    test: function () {
+                        return !me.calendar.fullCalendar('getView').name.match("agenda");
+                    }, msg: "Não é permitido marcar consultas em modo de visualização mensal."
+                },
+                {
+                    test: function () {
+                        return date < (moment().subtract('h', '10').format('X') * 1000);
+                    },
+                    msg: "Não é permitido marcar consultas anteriores ao dia actual."
+                },
+                {
+                    test: function () {
+                        return me.concorrency(cEO);
+                    },
+                    msg: "Não é permitido marcações concorrentes."
+                }
+            ];
 
-            if (!me.calendar.fullCalendar('getView').name.match("agenda")) {
-                $.msg('unblock');
-                problem = true;
-            } else if (date < (moment().subtract('h', '10').format('X') * 1000)) {
-                $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
+            result = me.assert(testes);
+
+            if (result !== true) {
+                $.msg('replace', result.msg);
                 $.msg('unblock', 3000);
-                problem = true;
-            } else if (me.concorrency(cEO)) {
-                $.msg('replace', 'Não é permitido marcações concorrentes.');
-                $.msg('unblock', 3000);
-                problem = true;
-            }
-            if (!problem) {
+                $(".popover").remove();
+                return false;
+            } else {
+
                 $.post("/AM/ajax/calendar.php", {
                         action: "newReservation",
                         resource: me.resource,
@@ -133,8 +146,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
                         $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                         $.msg('unblock', 5000);
                     });
+                return true;
             }
-            return !problem
         },
         eventRender: function (event, element) {
             var d = {
@@ -225,19 +238,27 @@ Calendar = function (selector, data, modals, ext, client, user) {
         eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
             $.msg();
             var
-                problem = false,
-                msg = '';
-            if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
-                problem = true;
-                msg = 'Não é permitido marcar consultas anteriores ao dia actual.';
-            }
+                testes = [
+                    {
+                        test: function () {
+                            return event.start < (moment().subtract('h', '10').format('X') * 1000);
+                        },
+                        msg: 'Não é permitido marcar consultas anteriores ao dia actual.'
+                    },
+                    {
+                        test: function () {
+                            return me.concorrency(event);
+                        },
+                        msg: 'Não é permitido marcações concorrentes.'
+                    }
+                ],
+                result;
 
-            if (me.concorrency(event)) {
-                problem = true;
-                msg = 'Não é permitido marcações concorrentes.';
-            }
-            if (problem) {
-                $.msg('replace', msg);
+
+            result = me.assert(testes);
+
+            if (result !== true) {
+                $.msg('replace', result.msg);
                 $.msg('unblock', 3000);
                 $(".popover").remove();
                 revertFunc();
@@ -250,38 +271,63 @@ Calendar = function (selector, data, modals, ext, client, user) {
         eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
             $.msg();
             var
-                problem = false,
-                msg = '';
-            if (event.max && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max)) {
-                problem = true;
-                msg = "A duração maxima deste tipo de maracação é: " + event.max + "m.";
-            } else if (event.min && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes)) {
-                problem = true;
-                msg = "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m.";
-            } else if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
-                problem = true;
-                msg = "Não é permitido alterar o passado.";
-            } else if (me.concorrency(event)) {
-                problem = true;
-                msg = "Não é permitido marcações concorrentes.";
-            }
+                testes = [
+                    {
+                        test: function () {
+                            return event.max && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max);
+                        },
+                        msg: "A duração maxima deste tipo de maracação é: " + event.max + "m."
+                    },
+                    {
+                        test: function () {
+                            return event.min && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes);
+                        },
+                        msg: "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m."
+                    },
+                    {
+                        test: function () {
+                            return event.start < (moment().subtract('h', '10').format('X') * 1000)
+                        },
+                        msg: "Não é permitido alterar o passado."
+                    },
+                    {
+                        test: function () {
+                            return me.concorrency(event)
+                        },
+                        msg: "Não é permitido marcações concorrentes."
+                    }
+                ],
+                result;
 
-            if (problem) {
-                $.msg('replace', msg);
+            result = me.assert(testes);
+
+            if (result !== true) {
+                $.msg('replace', result.msg);
                 $.msg('unblock', 3000);
                 $(".popover").remove();
-                revertFunc();
+                revertFunc()
             } else {
                 $.msg('unblock');
                 me.change(event, dayDelta, minuteDelta, revertFunc);
             }
             return true;
         }
+    }
+    ;
+
+    this.assert = function (testes) {
+        while (test = testes.shift()) {
+            if (test.test()) {
+                return test;
+            }
+        }
+        return true;
     };
+
     this.change = function (event, dayDelta, minuteDelta, revertFunc) {
         $(".popover").remove();
-        bootbox.confirm("Pretende mesmo mudar a data/hora?",function(result){
-            if(result){
+        bootbox.confirm("Pretende mesmo mudar a data/hora?", function (result) {
+            if (result) {
                 $.msg();
                 $.post("/AM/ajax/calendar.php", {
                         id: event.id,
@@ -301,7 +347,7 @@ Calendar = function (selector, data, modals, ext, client, user) {
                         $.msg('unblock', 5000);
                         revertFunc();
                     });
-            }else{
+            } else {
                 revertFunc();
             }
         })
@@ -595,7 +641,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
 
 
         me.modals.acf.find("#save_acf").click(function () {
-            if (me.modals.acf.find("#obs_acf").validationEngine('validate')) {
+            //in single element validations on the contrary (ﾉಠ_ಠ)ﾉ
+            if (!me.modals.acf.find("#obs_acf").validationEngine('validate')) {
                 $.msg();
                 $.post("ajax/calendar.php", {
                     action: 'set_reservation_obs',
@@ -613,8 +660,7 @@ Calendar = function (selector, data, modals, ext, client, user) {
                 });
             }
         })
-            .
-            end()
+            .end()
             .find(".btn_trash")
             .click(function () {
                 $.msg();
@@ -803,7 +849,17 @@ Calendar = function (selector, data, modals, ext, client, user) {
         me.modals.acf.modal("show");
     };
     this.concorrency = function (event) {
-        if (!moment().isSame(event.start, 'days')) {
+        var start, end;
+
+        if (event.start instanceof Date) {
+            start = event.start;
+            end = event.end;
+        }else{
+            start = moment.unix(event.start);
+            end = moment.unix(event.end);
+        }
+
+        if (!moment().isSame(start, 'days')) {
             var
                 exist = false,
                 events = me.calendar.fullCalendar('clientEvents');
@@ -816,8 +872,10 @@ Calendar = function (selector, data, modals, ext, client, user) {
                     } else if (this.id === event.id) {
                         problem = true;
                     } else {
-                        var range = moment.range(this.start, this.end);
-                        if (range.contains(event.start) || range.contains(event.end)) {
+                        var
+                            rangeOther = moment.range(this.start, this.end),
+                            rangeMe = moment.range(start, end);
+                        if (rangeOther.intersect(rangeMe)) {
                             exist = true;
                             problem = false;
                         }
@@ -880,4 +938,3 @@ Calendar = function (selector, data, modals, ext, client, user) {
         me.modal_ext.find("#btn_change").removeClass("hide");
     }
 }
-;
