@@ -228,9 +228,9 @@ var ClientBox = function (configs) {
                 var input,
                     custom_class = "",
                     div = $("<div>", {id: "master", class: "row-fluid"})
-                        .append($("<div>", {id: "input1", class: "span12"}))
-                        .append($("<div>", {id: "input2", class: "span12"}))
-                        .append($("<div>", {id: "input3", class: "span12"}))                       ,
+                        .append($("<div>", {id: "input1", class: "span4"}))
+                        .append($("<div>", {id: "input2", class: "span4"}))
+                        .append($("<div>", {id: "input3", class: "span4"})),
                     elmt,
                     specialE,
                     hide = "";
@@ -271,7 +271,7 @@ var ClientBox = function (configs) {
                     } else if (this.name === "SECURITY_PHRASE") {
                         elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
                     } else if (this.name === "POSTAL_CODE") {
-                        elmt = $("<input>", {type: "text", id: this.name, name: this.name}).focusout(function () {
+                        elmt = $("<input>", {type: "text", id: this.name, name: this.name}).change(function () {
                             if ((this.value.length)) {
                                 $.post("ajax/client.php", {action: "check_postal_code", postal_code: this.value}, function (data1) {
                                     var postal_codes = "";
@@ -461,16 +461,14 @@ var ClientBox = function (configs) {
                             "label": "Gravar Alterações",
                             "class": "btn-success",
                             "callback": function () {
-                                console.log(config);
+
                                 $.post("ajax/client.php", {action: "edit_info", id: me.lead_id, stringas: function () {
                                     var strings = [];
                                     $.each($("#master :input"), function () {
-
-                                            strings.push({key: $(this).prop("name"), value: $(this).val()});
-
+                                        strings.push({key: $(this).prop("name"), value: $(this).val()});
                                     })
                                     return JSON.stringify(strings);
-                                }}, function (data) {
+                                }}, function () {
                                     me.refresh();
                                 });
                             }
@@ -479,7 +477,7 @@ var ClientBox = function (configs) {
                             "label": "Cancelar",
                             "class": "btn"
                         }
-                    ]);
+                    ], {customClass: 'container'});
 
 
                     data = JSON.parse(data)

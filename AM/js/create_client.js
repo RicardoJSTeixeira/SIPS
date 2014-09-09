@@ -61,7 +61,7 @@ $(function() {
             } else if (this.name === "SECURITY_PHRASE") {
                 elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
             } else if (this.name === "POSTAL_CODE") {
-                elmt = $("<input>", {type: "text", id: this.name, name: this.name}).focusout(function() {
+                elmt = $("<input>", {type: "text", id: this.name, name: this.name}).change(function() {
                     if ((this.value.length)) {
                         $.post("ajax/client.php", {action: "check_postal_code", postal_code: this.value}, function(data1) {
                             var postal_codes = "";
