@@ -14,7 +14,7 @@
     text-shadow: none !important;
 }
 table.dataTable tbody tr.selected {
-    background-color:rgba(153, 51, 0, 0.54);
+    background-color:rgba(163, 0, 0, 0.42);
 }
 
 #note_selection_div .dataTables_filter{

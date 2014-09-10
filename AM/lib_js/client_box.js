@@ -209,23 +209,16 @@ var ClientBox = function (configs) {
         this.notas = function () {
             $(config.target).find("#notes").click(function (e) {
                 e.preventDefault();
-
-
                 var final = $("<div>", {class: "container-fluid"})
-                        .append("<div>", {class: "row-fluid"})
-
-                        .append($("<div>", {id: "new_note_area_div", class: "span7"}))
-
-                        .append($("<div>", {id: "note_area_div", class: "span7"}))
-                        .append($("<div>", {id: "note_selection_div", class: "span4"}))
-                    ;
-
-
+                    .append("<div>", {class: "row-fluid"})
+                    .append($("<div>", {id: "new_note_area_div", class: "span7"}))
+                    .append($("<div>", {id: "note_area_div", class: "span7"}))
+                    .append($("<div>", {id: "note_selection_div", class: "span4"}));
                 var note_area_div = final.find("#note_area_div");
                 note_area_div.hide();
                 var new_note_area_div = final.find("#new_note_area_div");
 
-                //Create Table
+                //Create Table===============================================================
                 final.find("#note_selection_div").append(
                     "<table id='note_table' class='table table-mod-2 table-bordered'></table>");
                 var table = final.find("#note_selection_div #note_table");
@@ -261,7 +254,6 @@ var ClientBox = function (configs) {
                         new_note_area_div.show();
                     }
                     else {
-
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
                         $(".edit_buttons_class").removeClass("hidden");
@@ -269,43 +261,42 @@ var ClientBox = function (configs) {
                         new_note_area_div.hide();
                     }
                 });
-
+                //==========================================================================
                 //preview area
                 note_area_div.append(
                     "<div id='preview_note_div'>\
-                    <div class='page-header'>\
-                    <h3 id='page_header'>Notas de Cliente</h3>\
-                    </div>\
-                    <form id='note_form'>\
-                    <label>Titulo</label>\
-                    <input class='validate[required] input-xlarge' id='note_title' maxlength='45'  type='text' placeholder='Titulo da Nota'> \
-                    </h4><label>Nota</label>\
-                    <textarea class='validate[required]' id='note_textarea' placeholder='Visualização de notas' style='width: 100%;height: 220px'></textarea>\
-                    <button class='btn btn succed  'id='save_note_edit'>Gravar alterações</button>\
-                    <button class='btn  ' id='cancel_note_edit'>Cancelar</button>\
-                     <button class='btn btn-danger  ' id='delete_note_edit'>Apagar Nota</button>\
-                    </form> \
-                    <div>\
-                                   </div>\
+                        <div class='page-header'>\
+                            <h3 id='page_header'>Notas de Cliente</h3>\
+                        </div>\
+                            <form id='note_form'>\
+                                <label>Titulo</label>\
+                                    <input class='validate[required] input-xlarge' id='note_title' maxlength='45'  type='text' placeholder='Titulo da Nota'> \
+                                <label>Nota</label>\
+                                    <textarea class='validate[required]' id='note_textarea' placeholder='Visualização de notas' style='width: 100%;height: 160px'></textarea>\
+                                        <button class='btn btn-success  'id='save_note_edit'>Gravar alterações</button>\
+                                        <button class='btn' id='cancel_note_edit'>Cancelar</button>\
+                                        <button class='btn btn-danger  ' id='delete_note_edit'>Apagar Nota</button>\
+                        </form> \
+                        <div>\
+                        </div>\
                     </div>");
-
 
                 //new note area
                 new_note_area_div.append(
                     "<div id='new_note_div'>\
-                    <div class='page-header'>\
-                    <h3 id='page_header'>Nova Nota</h3>\
-                    </div>\
-                    <form id='new_note_form'>\
-                    <label>Titulo</label>\
-                    <input class='validate[required] input-xlarge' id='new_note_title' maxlength='45' type='text' placeholder='Titulo da Nota'> \
-                    </h4><label>Nota</label>\
-                    <textarea class='validate[required]' id='new_note_textarea' placeholder='Nova nota' style='width: 100%;height: 220px'></textarea>\
-                     <button class='btn btn primary  'id='save_note_new'>Criar Nova Nota</button>\
-                    <button class='btn btn-danger  ' id='cancel_note_new'>Limpar</button>\
-                    </form>\
-                    <div>\
-                    </div>\
+                        <div class='page-header'>\
+                            <h3 id='page_header'>Criação de notas de cliente</h3>\
+                        </div>\
+                        <form id='new_note_form'>\
+                             <label>Titulo</label>\
+                                <input class='validate[required] input-xlarge' id='new_note_title' maxlength='45' type='text' placeholder='Escreva aqui o titulo da nota'> \
+                             <label>Nota</label>\
+                                 <textarea class='validate[required]' id='new_note_textarea' placeholder='Texto da nota' style='width: 100%;height: 160px'></textarea>\
+                                      <button class='btn btn-success  'id='save_note_new'>Criar Nota</button>\
+                                      <button class='btn btn-danger  ' id='cancel_note_new'>Limpar</button>\
+                        </form>\
+                        <div>\
+                        </div>\
                     </div>");
 
                 //PREVIEW AND EDIT NOTE----------------------------------------------------------------------------------
@@ -319,8 +310,7 @@ var ClientBox = function (configs) {
                                 table.fnReloadAjax();
                                 clear_note_preview();
                                 $.msg('unblock');
-                            },
-                            "json"
+                            },                            "json"
                         ).fail(function (data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                 $.msg('unblock', 5000);
@@ -335,8 +325,9 @@ var ClientBox = function (configs) {
 
                 note_area_div.on("click", "#delete_note_edit", function (e) {
                     e.preventDefault();
-                    bootbox.dialog("<label>Tem a certeza que quer remover esta nota?</label>", [
-                        {'OK': true, class: "btn-danger", "label": "Apagar", callback: function () {
+
+                    bootbox.confirm("Tem a certeza que quer remover esta nota?", function (result) {
+                        if (result) {
                             $.msg();
                             $.post('/AM/ajax/users.php', {action: "delete_notes", note_id: note_area_div.find("#note_title").data("selected_note")},
                                 function (data) {
@@ -345,16 +336,12 @@ var ClientBox = function (configs) {
                                     clear_note_preview();
                                     $.msg('unblock');
                                 },
-                                "json"
-                            ).fail(function (data) {
+                                "json").fail(function (data) {
                                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                     $.msg('unblock', 5000);
                                 });
-                        }},
-                        {'OK': true, "label": "Cancelar"}
-                    ], {customClass: 'container'});
-
-
+                        }
+                    })
                 });
                 function clear_note_preview() {
                     note_area_div.find("#note_title").val("");
