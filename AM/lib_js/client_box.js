@@ -231,21 +231,17 @@ var ClientBox = function (configs) {
                     "sAjaxSource": '/AM/ajax/users.php',
                     "fnServerParams": function (aoData) {
                         aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {"name": "lead_id", "value": me.client_info.id});
-                    },
-                    "aoColumns": [
-                        {"sTitle": "ID", "sWidth": "50px", bVisible: false},
+                    },"aoColumns": [
+                        {"sTitle": "ID",  bVisible: false},
                         {"sTitle": "Titulo", "sWidth": "50px"},
-                        {"sTitle": "Nota", "sWidth": "50px", bVisible: false},
+                        {"sTitle": "Nota",  bVisible: false},
                         {"sTitle": "Data criação", "sWidth": "50px"},
                         {"sTitle": "Data modificação", "sWidth": "50px"}
-                    ],
-                    "fnDrawCallback": function () {
-                    },
-                    "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+                    ],"oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
                 }).on('click', 'tr', function (event) {
-                    var data = table.fnGetData(table.fnGetPosition(this));    // getting the value of the first (invisible) column
-                    note_area_div.find("#note_title").val(data[1]).data("selected_note", data[0]);
-                    note_area_div.find("#note_textarea").val(data[2]);
+                    var data = table.fnGetData(table.fnGetPosition(this));
+                    note_area_div.find("#note_title").val(data[1]).data("selected_note", data[0]).end()
+                        .find("#note_textarea").val(data[2]);
                     if ($(this).hasClass('selected')) {
                         $(this).removeClass('selected');
                         $(".edit_buttons_class").addClass("hidden");
@@ -310,22 +306,19 @@ var ClientBox = function (configs) {
                                 table.fnReloadAjax();
                                 clear_note_preview();
                                 $.msg('unblock');
-                            },                            "json"
+                            }, "json"
                         ).fail(function (data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                 $.msg('unblock', 5000);
                             });
                     }
                 });
-
                 note_area_div.on("click", "#cancel_note_edit", function (e) {
                     e.preventDefault();
                     clear_note_preview();
                 });
-
                 note_area_div.on("click", "#delete_note_edit", function (e) {
                     e.preventDefault();
-
                     bootbox.confirm("Tem a certeza que quer remover esta nota?", function (result) {
                         if (result) {
                             $.msg();
@@ -335,8 +328,7 @@ var ClientBox = function (configs) {
                                     table.fnReloadAjax();
                                     clear_note_preview();
                                     $.msg('unblock');
-                                },
-                                "json").fail(function (data) {
+                                },                                "json").fail(function (data) {
                                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                     $.msg('unblock', 5000);
                                 });
@@ -349,10 +341,7 @@ var ClientBox = function (configs) {
                     toggle_menus();
                     table.$('tr.selected').removeClass('selected');
                 }
-
-                //-----------------------------------------------------------------------------------------------------------
-
-
+               //-----------------------------------------------------------------------------------------------------------
                 //NEW NOTE//////////////////////////////////////////////////////////////////////////////////////////////////////////
                 new_note_area_div.on("click", "#save_note_new", function (e) {
                     e.preventDefault();
@@ -379,9 +368,7 @@ var ClientBox = function (configs) {
                     new_note_area_div.find("#new_note_title").val("");
                     new_note_area_div.find("#new_note_textarea").val("");
                 }
-
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////7
-
                 function toggle_menus() {
                     note_area_div.toggle();
                     new_note_area_div.toggle();
@@ -390,8 +377,6 @@ var ClientBox = function (configs) {
                 bootbox.dialog(final, [
                     {'OK': true, "label": "OK"}
                 ], {customClass: 'container'});
-
-
             });
         };
 
