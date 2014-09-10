@@ -216,11 +216,12 @@ class UserControler
         $query = "Select * from spice_usernotes where lead_id=:lead_id and deleted=0 order by modify_date desc";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
+
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
     public function get_notes_to_datatable($lead_id)
     {
-        $query = "Select id,title,entry_date,modify_date from spice_usernotes where lead_id=:lead_id and deleted=0 ";
+        $query = "Select id,title,note,entry_date,modify_date from spice_usernotes where lead_id=:lead_id and deleted=0 ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData']=$stmt->fetchAll(PDO::FETCH_NUM);
