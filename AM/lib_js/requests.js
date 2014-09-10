@@ -77,9 +77,9 @@ var Requests = function(basic_path, options_ext) {
                 //SUBMIT
                 am_zone.find("#apoio_am_form").submit(function(e) {
                     e.preventDefault();
-                    am_zone.find("#submit_am").prop('disabled', true);
                     if (am_zone.find("#apoio_am_form").validationEngine("validate")) {
                         if (am_zone.find("#table_tbody_ldp tr").length) {
+                            am_zone.find("#submit_am").prop('disabled', true);
                             $("#apoio_am_form :input").attr('readonly', true);
                             var local_publicidade_array = [];
                             $.each(am_zone.find("#table_tbody_ldp").find("tr"), function() {

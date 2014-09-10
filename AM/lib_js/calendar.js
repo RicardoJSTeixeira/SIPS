@@ -1,287 +1,368 @@
+/* Author RTeixeira
+ *
+ *
+ * Requires:
+ * jQuery 1.9.0+,
+ * jQuery msg plugin 1.0.0+ http://dreamerslab.com/demos/jquery-blockui-alternative-with-jquery-msg-plugin
+ * jQuery bootbox plugin 3.0.0+ http://bootboxjs.com/
+ * jQuery fullcalendar plugin v1.6.4 https://github.com/arshaw/fullcalendar/releases/tag/v1.6.4
+ * MomentJS http://momentjs.com/
+ */
+
 var Calendar;
-Calendar = function (selector, data, modals, ext, client, user) {
-    var me = this;
-    this.user = user;
-    this.selector = selector;
-    this.client = client || {};
-    this.ext = ext;
-    this.resource = "all";
-    this.modals = modals;
-    this.modal_ext = modals.client;
+Calendar = (function () {
+    function Calendar(selector, data, modals, ext, client, user){
+        var me = this;
+        this.user = user;
+        this.selector = selector;
+        this.client = client || {};
+        this.ext = ext;
+        this.resource = "all";
+        this.modals = modals;
+        this.modal_ext = modals.client;
 
-    this.modal_special = modals.special;
-    this.calendar = undefined;
-    this.config = {
-        header: {
-            center: 'agendaDay agendaWeek month'
-        },
-        events: {
-            url: "/AM/ajax/calendar.php",
-            type: "POST",
-            data: {
-                action: "GetReservations",
-                resource: "all"
-            }
-        },
-        columnFormat: {
-            month: 'ddd',
-            week: 'ddd d/M',
-            day: 'dddd'
-        },
-        titleFormat: {
-            month: 'MMMM yyyy',
-            week: "MMMM yyyy",
-            day: 'd MMMM yyyy'
-        },
-        slotMinutes: 15,
-        allDaySlot: false,
-        defaultView: "agendaWeek",
-        allDayDefault: false,
-        unselectAuto: true,
-        slotEventOverlap: false,
-        timeFormat: 'H:mm{ - H:mm}',
-        axisFormat: 'H:mm',
-        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        firstDay: 1,
-        firstHour: (function () {
-            return~~new Date().getUTCHours() - 2;
-        })(),
-        buttonText: {
-            today: 'hoje',
-            month: 'mês',
-            week: 'semana',
-            day: 'dia'
-        },
-        eventClick: function (calEvent) {
-            var problem = false;
-            if (isBlocked() && calEvent.start > new Date().getTime()) {
-                $.jGrowl("Devido às consultas em atraso por fechar, esta funcionalidade não lhe permite qualquer tipo de acção com marcações posteriores a hoje.", {
-                    sticky: 4000
-                });
-                problem = false;
-            } else if (calEvent.useful) {
-                me.openACF(calEvent);
-                problem = true;
-            } else if (calEvent.bloqueio && calEvent.system) {
-                me.openMkt(calEvent);
-                problem = true;
-            } else if (calEvent.bloqueio || calEvent.del) {
-                problem = false;
-            } else if (calEvent.system) {
-                me.openSpecialEvent(calEvent);
-                problem = true;
-            } else if (calEvent.sale) {
-                me.openClient(calEvent);
-                problem = true;
-            }
-            return problem;
-        },
-        droppable: {
-            agenda: true,
-            month: false
-        },
-        drop: function (date, allDay) {
-            $.msg();
-            var
-                cEO = $.extend({}, $(this).data('eventobject')),
-                problem = false;
+        this.modal_special = modals.special;
+        this.calendar = undefined;
+        this.config = {
+            header: {
+                center: 'agendaDay agendaWeek month'
+            },
+            events: {
+                url: "/AM/ajax/calendar.php",
+                type: "POST",
+                data: {
+                    action: "GetReservations",
+                    resource: "all"
+                }
+            },
+            columnFormat: {
+                month: 'ddd',
+                week: 'ddd d/M',
+                day: 'dddd'
+            },
+            titleFormat: {
+                month: 'MMMM yyyy',
+                week: "MMMM yyyy",
+                day: 'd MMMM yyyy'
+            },
+            slotMinutes: 15,
+            allDaySlot: false,
+            defaultView: "agendaWeek",
+            allDayDefault: false,
+            unselectAuto: true,
+            slotEventOverlap: false,
+            timeFormat: 'H:mm{ - H:mm}',
+            axisFormat: 'H:mm',
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            firstDay: 1,
+            firstHour: (function () {
+                return~~new Date().getUTCHours() - 2;
+            })(),
+            buttonText: {
+                today: 'hoje',
+                month: 'mês',
+                week: 'semana',
+                day: 'dia'
+            },
+            eventClick: function (calEvent) {
+                var problem = false;
+                if (isBlocked() && calEvent.start > new Date().getTime()) {
+                    $.msg({content:"Devido às consultas em atraso por fechar, esta funcionalidade não lhe permite qualquer tipo de acção com marcações posteriores a hoje.",autoUnblock:true,timeOut:"5000"});
+                    problem = false;
+                } else if (calEvent.useful) {
+                    me.openACF(calEvent);
+                    problem = true;
+                } else if (calEvent.bloqueio && calEvent.system) {
+                    me.openMkt(calEvent);
+                    problem = true;
+                } else if (calEvent.bloqueio || calEvent.del) {
+                    problem = false;
+                } else if (calEvent.system) {
+                    me.openSpecialEvent(calEvent);
+                    problem = true;
+                } else if (calEvent.sale) {
+                    me.openClient(calEvent);
+                    problem = true;
+                }
+                return problem;
+            },
+            droppable: {
+                agenda: true,
+                month: false
+            },
+            drop: function (date) {
+                $.msg();
+                var
+                    cEO = $.extend({}, $(this).data('eventobject'));
 
-            cEO.start = moment(date).unix();
+                cEO.start = moment(date).unix();
 
-            if (cEO.min) {
-                cEO.end = moment(date).add("minutes", cEO.min).unix();
-            } else {
-                cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
-            }
+                if (cEO.min) {
+                    cEO.end = moment(date).add("minutes", cEO.min).unix();
+                } else {
+                    cEO.end = moment(date).add("minutes", config.defaultEventMinutes).unix();
+                }
 
-            cEO.allDay = allDay;
-
-            if (!me.calendar.fullCalendar('getView').name.match("agenda")) {
-                $.msg('unblock');
-                problem = true;
-            } else if (date < (moment().subtract('h', '10').format('X') * 1000)) {
-                $.msg('replace', 'Não é permitido marcar consultas anteriores ao dia actual.');
-                $.msg('unblock', 3000);
-                problem = true;
-            } else if (me.concorrency(cEO)) {
-                $.msg('replace', 'Não é permitido marcações concorrentes.');
-                $.msg('unblock', 3000);
-                problem = true;
-            }
-            if (!problem) {
-                $.post("/AM/ajax/calendar.php", {
-                        action: "newReservation",
-                        resource: me.resource,
-                        rtype: cEO.rtype,
-                        lead_id: cEO.lead_id,
-                        start: cEO.start,
-                        end: cEO.end
+                var testes = [
+                    {
+                        test: function () {
+                            return !me.calendar.fullCalendar('getView').name.match("agenda");
+                        }, msg: "Não é permitido marcar consultas em modo de visualização mensal."
                     },
-                    function (id) {
-                        cEO.id = id;
-                        me.calendar.fullCalendar('renderEvent', cEO, true);
-                        $("#external-events").remove();
-                        $.msg('unblock');
-                        if (cEO.sale && (typeof me.client.nc === "undefined")) {
-                            newCodMkt(cEO);
-                        }
+                    {
+                        test: function () {
+                            return date < (moment().subtract('h', '10').format('X') * 1000);
+                        },
+                        msg: "Não é permitido marcar consultas anteriores ao dia actual."
                     },
-                    "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
-            }
-            return !problem
-        },
-        eventRender: function (event, element) {
-            var d = {
-                bloqueio: false,
-                changed: 0,
-                className: "",
-                client_name: "",
-                closed: false,
-                codCamp: "",
-                del: false,
-                editable: false,
-                end: "",
-                id: 0,
-                lead_id: 0,
-                max: 0,
-                min: 0,
-                obs: "",
-                postal: "",
-                rsc: 0,
-                start: "",
-                system: false,
-                title: "",
-                user: ""
-            };
+                    {
+                        test: function () {
+                            return me.concorrency(cEO);
+                        },
+                        msg: "Não é permitido marcações concorrentes."
+                    }
+                ];
 
-            event = $.extend(d, event);
+                result = assert(testes);
 
-            if (!event.url && !event.bloqueio) {
-                element.popover({
-                    placement: function (context, source) {
-                        var position = $(source).position();
+                if (result !== true) {
+                    $.msg('replace', result.msg);
+                    $.msg('unblock', 3000);
+                    $(".popover").remove();
+                    return false;
+                } else {
 
-                        if (position.top < 110) {
-                            return "bottom";
-                        }
-                        if (me.calendar.fullCalendar('getView').name === "agendaDay") {
+                    $.post("/AM/ajax/calendar.php", {
+                            action: "newReservation",
+                            resource: me.resource,
+                            rtype: cEO.rtype,
+                            lead_id: cEO.lead_id,
+                            start: cEO.start,
+                            end: cEO.end
+                        },
+                        function (id) {
+                            cEO.id = id;
+                            me.calendar.fullCalendar('renderEvent', cEO, true);
+                            $("#external-events").remove();
+                            $.msg('unblock');
+                            if (cEO.sale && (typeof me.client.nc === "undefined")) {
+                                me.newCodMkt(cEO);
+                            }
+                        },
+                        "json").fail(function () {
+                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                            $.msg('unblock', 5000);
+                        });
+                    return true;
+                }
+            },
+            eventRender: function (event, element) {
+                var d = {
+                    bloqueio: false,
+                    changed: 0,
+                    className: "",
+                    client_name: "",
+                    closed: false,
+                    codCamp: "",
+                    del: false,
+                    editable: false,
+                    end: "",
+                    id: 0,
+                    lead_id: 0,
+                    max: 0,
+                    min: 0,
+                    obs: "",
+                    postal: "",
+                    rsc: 0,
+                    start: "",
+                    system: false,
+                    title: "",
+                    user: ""
+                };
+
+                event = $.extend(d, event);
+
+                if (!event.url && !event.bloqueio) {
+                    element.popover({
+                        placement: function (context, source) {
+                            var position = $(source).position();
+
+                            if (position.top < 110) {
+                                return "bottom";
+                            }
+                            if (me.calendar.fullCalendar('getView').name === "agendaDay") {
+                                return "top";
+                            }
+                            if (position.left > 515) {
+                                return "left";
+                            }
+                            if (position.left < 515) {
+                                return "right";
+                            }
                             return "top";
-                        }
-                        if (position.left > 515) {
-                            return "left";
-                        }
-                        if (position.left < 515) {
-                            return "right";
-                        }
-                        return "top";
-                    },
-                    html: true,
-                    title: event.title,
-                    content: (function () {
-                        if (!event.system) {
-                            return '<dl class="dl-horizontal"><dt>Nome</dt><dd>- ' + event.client_name + '</dd><dt>Cod. Mkt.</dt><dd>- ' + event.codCamp + '</dd><dt>Cod Postal</dt><dd>- ' + event.postal + '</dd></dl>';
-                        } else {
-                            return event.obs;
-                        }
-                    })(),
-                    trigger: 'hover',
-                    container: 'body'
-                });
-            }
-            element
-                .find(".fc-event-time")
-                .before($("<span>", {
-                    class: "fc-event-icons"
-                })
-                    .append(function () {
-                        return (event.changed) ? $("<b>", {
-                            text: "R" + event.changed + " "
-                        }) : "";
+                        },
+                        html: true,
+                        title: event.title,
+                        content: (function () {
+                            if (!event.system) {
+                                return '<dl class="dl-horizontal"><dt>Nome</dt><dd>- ' + event.client_name + '</dd><dt>Cod. Mkt.</dt><dd>- ' + event.codCamp + '</dd><dt>Cod Postal</dt><dd>- ' + event.postal + '</dd></dl>';
+                            } else {
+                                return event.obs;
+                            }
+                        })(),
+                        trigger: 'hover',
+                        container: 'body'
+                    });
+                }
+                element
+                    .find(".fc-event-time")
+                    .before($("<span>", {
+                        class: "fc-event-icons"
                     })
-                    .append(function () {
-                        return (!event.system || (event.bloqueio && event.system)) ? $("<i>", {
-                            class: ((event.closed) ? "icon-lock" : "icon-unlock")
-                        }) : "";
-                    }))
-                .append($("<span>", {
-                    text: (function (obs) {
-                        try {
-                            return JSON.parse(obs).obs;
+                        .append(function () {
+                            return (event.changed) ? $("<b>", {
+                                text: "R" + event.changed + " "
+                            }) : "";
+                        })
+                        .append(function () {
+                            return (!event.system || (event.bloqueio && event.system)) ? $("<i>", {
+                                class: ((event.closed) ? "icon-lock" : "icon-unlock")
+                            }) : "";
+                        }))
+                    .append($("<span>", {
+                        text: (function (obs) {
+                            try {
+                                return JSON.parse(obs).obs;
+                            }
+                            catch (e) {
+                                return obs;
+                            }
+                        })(event.obs),
+                        class: "fc-event-obs"
+                    }));
+
+            },
+            eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
+                $.msg();
+                var
+                    testes = [
+                        {
+                            test: function () {
+                                return event.start < (moment().subtract('h', '10').format('X') * 1000);
+                            },
+                            msg: 'Não é permitido marcar consultas anteriores ao dia actual.'
+                        },
+                        {
+                            test: function () {
+                                return me.concorrency(event);
+                            },
+                            msg: 'Não é permitido marcações concorrentes.'
                         }
-                        catch (e) {
-                            return obs;
+                    ],
+                    result;
+
+
+                result = assert(testes);
+
+                if (result !== true) {
+                    $.msg('replace', result.msg);
+                    $.msg('unblock', 3000);
+                    $(".popover").remove();
+                    revertFunc();
+                } else {
+                    $.msg('unblock');
+                    me.change(event, dayDelta, minuteDelta, revertFunc);
+                }
+                return true;
+            },
+            eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+                $.msg();
+                var
+                    testes = [
+                        {
+                            test: function () {
+                                return event.max && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max);
+                            },
+                            msg: "A duração maxima deste tipo de maracação é: " + event.max + "m."
+                        },
+                        {
+                            test: function () {
+                                return event.min && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes);
+                            },
+                            msg: "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m."
+                        },
+                        {
+                            test: function () {
+                                return event.start < (moment().subtract('h', '10').format('X') * 1000)
+                            },
+                            msg: "Não é permitido alterar o passado."
+                        },
+                        {
+                            test: function () {
+                                return me.concorrency(event)
+                            },
+                            msg: "Não é permitido marcações concorrentes."
                         }
-                    })(event.obs),
-                    class: "fc-event-obs"
-                }));
+                    ],
+                    result;
 
-        },
-        eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
-            $.msg();
-            var
-                problem = false,
-                msg = '';
-            if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
-                problem = true;
-                msg = 'Não é permitido marcar consultas anteriores ao dia actual.';
-            }
+                result = assert(testes);
 
-            if (me.concorrency(event)) {
-                problem = true;
-                msg = 'Não é permitido marcações concorrentes.';
+                if (result !== true) {
+                    $.msg('replace', result.msg);
+                    $.msg('unblock', 3000);
+                    $(".popover").remove();
+                    revertFunc()
+                } else {
+                    $.msg('unblock');
+                    me.change(event, dayDelta, minuteDelta, revertFunc);
+                }
+                return true;
             }
-            if (problem) {
-                $.msg('replace', msg);
-                $.msg('unblock', 3000);
+        };
+
+        this.resource = (typeof data.config !== "undefined" && typeof data.config.events !== "undefined") ? data.config.events.data.resource : "all";
+        var config = $.extend(true, this.config, data.config);
+        this.calendar = selector.fullCalendar(config);
+
+        $("body").off().keydown(function (e) {
+            var actions = {
+                37: function () {
+                    me.calendar.fullCalendar('prev');
+                },
+                39: function () {
+                    me.calendar.fullCalendar('next');
+                }
+            };
+            if (typeof actions[e.keyCode] === "function") {
+                actions[e.keyCode]();
                 $(".popover").remove();
-                revertFunc();
-            } else {
-                $.msg('unblock');
-                me.change(event, dayDelta, minuteDelta, revertFunc);
             }
-            return true;
-        },
-        eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
-            $.msg();
-            var
-                problem = false,
-                msg = '';
-            if (event.max && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() > event.max)) {
-                problem = true;
-                msg = "A duração maxima deste tipo de maracação é: " + event.max + "m.";
-            } else if (event.min && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes)) {
-                problem = true;
-                msg = "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m.";
-            } else if (event.start < (moment().subtract('h', '10').format('X') * 1000)) {
-                problem = true;
-                msg = "Não é permitido alterar o passado.";
-            } else if (me.concorrency(event)) {
-                problem = true;
-                msg = "Não é permitido marcações concorrentes.";
-            }
+        });
 
-            if (problem) {
-                $.msg('replace', msg);
-                $.msg('unblock', 3000);
-                $(".popover").remove();
-                revertFunc();
-            } else {
-                $.msg('unblock');
-                me.change(event, dayDelta, minuteDelta, revertFunc);
-            }
-            return true;
+        if (me.user.user_level > 4 || 1) {
+            me.modal_ext.find("#btn_change").removeClass("hide");
         }
+    }
+
+
+    var assert = function (testes) {
+        while (test = testes.shift()) {
+            if (test.test()) {
+                return test;
+            }
+        }
+        return true;
     };
-    this.change = function (event, dayDelta, minuteDelta, revertFunc) {
+
+    Calendar.prototype.change = function (event, dayDelta, minuteDelta, revertFunc) {
+        var me = this;
         $(".popover").remove();
-        bootbox.confirm("Pretende mesmo mudar a data/hora?",function(result){
-            if(result){
+        bootbox.confirm("Pretende mesmo mudar a data/hora?", function (result) {
+            if (result) {
                 $.msg();
                 $.post("/AM/ajax/calendar.php", {
                         id: event.id,
@@ -301,14 +382,14 @@ Calendar = function (selector, data, modals, ext, client, user) {
                         $.msg('unblock', 5000);
                         revertFunc();
                     });
-            }else{
+            } else {
                 revertFunc();
             }
         })
 
     };
-    this.reserveConstruct = function (tipo) {
-        var
+    Calendar.prototype.reserveConstruct = function (tipo) {
+        var me = this,
             n,
             temp_elements = "",
             temp_classes = "";
@@ -361,7 +442,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
             me.ext.hide();
         }
     };
-    this.makeRefController = function (Refs) {
+    Calendar.prototype.makeRefController = function (Refs) {
+        var me = this;
         var temp = "<tr><td class=\"chex-table\"><input type=\"radio\" checked name=\"single-refs\" value=\"all\" id=\"all\" ><label for=\"all\"><span></span></label></td><td><label for=\"all\" class=\"btn-link\">Todos</label></td></tr>";
         $.each(Refs, function () {
             temp = temp + "<tr><td class=\"chex-table\"><input type=\"radio\" name=\"single-refs\" value=\"" + this.id + "\" id=\"" + this.id + "\" ><label for=\"" + this.id + "\"><span></span></label></td><td><label for=\"" + this.id + "\" class=\"btn-link\">" + this.name + "</label></td></tr>";
@@ -387,7 +469,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
                     });
             });
     };
-    this.initModal = function (Refs) {
+    Calendar.prototype.initModal = function (Refs) {
+        var me = this;
         me.modal_ext
             .find("#btn_no_consult")
             .popover({
@@ -595,7 +678,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
 
 
         me.modals.acf.find("#save_acf").click(function () {
-            if (me.modals.acf.find("#obs_acf").validationEngine('validate')) {
+            //in single element validations on the contrary (ﾉಠ_ಠ)ﾉ
+            if (!me.modals.acf.find("#obs_acf").validationEngine('validate')) {
                 $.msg();
                 $.post("ajax/calendar.php", {
                     action: 'set_reservation_obs',
@@ -604,7 +688,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
                 },function () {
                     me.modals.acf.find("#obs_acf").val("");
                     me.modals.acf.modal("hide");
-                    me.modals.acf.data().calEvent.closed = 1;
+                    me.modals.acf.data().calEvent.closed = true;
+                    me.modals.acf.data().calEvent.editable = false;
                     me.calendar.fullCalendar('updateEvent', this);
                     $.msg('unblock');
                 }, 'json').fail(function () {
@@ -613,8 +698,7 @@ Calendar = function (selector, data, modals, ext, client, user) {
                 });
             }
         })
-            .
-            end()
+            .end()
             .find(".btn_trash")
             .click(function () {
                 $.msg();
@@ -636,7 +720,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
             });
 
     };
-    this.openClient = function (calEvent) {
+    Calendar.prototype.openClient = function (calEvent) {
+        var me = this;
         $.msg();
         $.post("/AM/ajax/client.php", {
             id: calEvent.lead_id,
@@ -691,7 +776,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
             $.msg('unblock', 5000);
         });
     };
-    this.openSpecialEvent = function (calEvent) {
+    Calendar.prototype.openSpecialEvent = function (calEvent) {
+        var me = this;
 
         if (calEvent.user !== me.user.username && me.user.user_level < 5) {
             me.modal_special
@@ -712,7 +798,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
             })
             .modal();
     };
-    this.openMkt = function (calEvent) {
+    Calendar.prototype.openMkt = function (calEvent) {
+        var me = this;
         $.msg();
         $.post("ajax/requests.php", {
             action: 'get_one_mkt',
@@ -760,7 +847,8 @@ Calendar = function (selector, data, modals, ext, client, user) {
             $.msg('unblock', 5000);
         });
     };
-    this.openACF = function (calEvent) {
+    Calendar.prototype.openACF = function (calEvent) {
+        var me = this;
         me.modals.acf
             .data("calEvent", calEvent)
             .find("h3")
@@ -802,8 +890,19 @@ Calendar = function (selector, data, modals, ext, client, user) {
 
         me.modals.acf.modal("show");
     };
-    this.concorrency = function (event) {
-        if (!moment().isSame(event.start, 'days')) {
+    Calendar.prototype.concorrency = function (event) {
+        var me = this;
+        var start, end;
+
+        if (event.start instanceof Date) {
+            start = event.start;
+            end = event.end;
+        }else{
+            start = moment.unix(event.start);
+            end = moment.unix(event.end);
+        }
+
+        if (!moment().isSame(start, 'days')) {
             var
                 exist = false,
                 events = me.calendar.fullCalendar('clientEvents');
@@ -816,8 +915,10 @@ Calendar = function (selector, data, modals, ext, client, user) {
                     } else if (this.id === event.id) {
                         problem = true;
                     } else {
-                        var range = moment.range(this.start, this.end);
-                        if (range.contains(event.start) || range.contains(event.end)) {
+                        var
+                            rangeOther = moment.range(this.start, this.end),
+                            rangeMe = moment.range(start, end);
+                        if (rangeOther.intersect(rangeMe)) {
                             exist = true;
                             problem = false;
                         }
@@ -831,22 +932,19 @@ Calendar = function (selector, data, modals, ext, client, user) {
             return false;
         }
     };
-    this.destroy = function () {
+    Calendar.prototype.destroy = function () {
         this.calendar.fullCalendar('destroy');
         $("#external-events").find(".grid-content").find(" > div").empty();
         $("#reserve_types").empty();
     };
-    this.resource = (typeof data.config !== "undefined" && typeof data.config.events !== "undefined") ? data.config.events.data.resource : "all";
-    var config = $.extend(true, this.config, data.config);
-    this.calendar = selector.fullCalendar(config);
-
-    function newCodMkt(cEO) {
+    Calendar.prototype.newCodMkt=function(cEO) {
+        var me = this;
         bootbox.prompt("Qual o Codigo de Marketing?", function (result) {
             if (result === null || result.length < 4) {
                 $.msg({
                     content: "Tem de colocar um novo codigo de marketing",
                     beforeUnblock: function () {
-                        newCodMkt(cEO);
+                        me.newCodMkt(cEO);
                     },
                     autoUnblock: true
                 });
@@ -859,25 +957,7 @@ Calendar = function (selector, data, modals, ext, client, user) {
                 });
             }
         });
-    }
+    };
 
-    $("body").off().keydown(function (e) {
-        var actions = {
-            37: function () {
-                me.calendar.fullCalendar('prev');
-            },
-            39: function () {
-                me.calendar.fullCalendar('next');
-            }
-        };
-        if (typeof actions[e.keyCode] === "function") {
-            actions[e.keyCode]();
-            $(".popover").remove();
-        }
-    });
-
-    if (me.user.user_level > 4 || 1) {
-        me.modal_ext.find("#btn_change").removeClass("hide");
-    }
-}
-;
+    return Calendar;
+})();

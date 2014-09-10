@@ -64,21 +64,21 @@ Class Calendars
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false)
     {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful "
-                . "FROM sips_sd_reservations a "
-                . "LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id "
-                . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
-                . "LEFT JOIN sips_sd_reservations_types e ON a.id_reservation_type=e.id_reservations_types "
-                . "LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
-                . "WHERE b.id_scheduler=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful
+                FROM sips_sd_reservations a
+                LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
+                LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource
+                LEFT JOIN sips_sd_reservations_types e ON a.id_reservation_type=e.id_reservations_types
+                LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id
+                WHERE b.id_scheduler=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful "
-                . "FROM sips_sd_reservations a "
-                . "LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id "
-                . "LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource "
-                . "LEFT JOIN sips_sd_reservations_types d ON a.id_reservation_type=d.id_reservations_types "
-                . "LEFT JOIN spice_consulta e ON a.id_reservation=e.reserva_id "
-                . "WHERE a.id_resource=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful
+                FROM sips_sd_reservations a
+                LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id
+                LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource
+                LEFT JOIN sips_sd_reservations_types d ON a.id_reservation_type=d.id_reservations_types
+                LEFT JOIN spice_consulta e ON a.id_reservation=e.reserva_id
+                WHERE a.id_resource=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         }
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id, ":end" => $end, ":beg" => $beg));
@@ -95,7 +95,7 @@ Class Calendars
                 'postal' => (string)$row->postal_code,
                 'start' => (string)$row->start_date,
                 'end' => (string)$row->end_date,
-                'editable' => (bool)!(((bool)$row->closed || $forceUneditable) || ($system_types[$row->id_reservation_type])),
+                'editable' => (bool)!(((bool)$row->closed || $row->has_accessories || $forceUneditable) || ($system_types[$row->id_reservation_type])),
                 'closed' => (bool)$row->closed || $row->has_accessories,
                 'changed' => (int)$row->changed,
                 'className' => (string)"t" . $row->id_reservation_type . (((bool)$row->del) ? " del" : ""),
