@@ -6,6 +6,7 @@ set_time_limit(1);
 require '../lib_php/db.php';
 require '../lib_php/calendar.php';
 require '../lib_php/user.php';
+require '../lib_php/logger.php';
 $user = new UserLogin($db);
 $user->confirm_login();
 $id = filter_var($_POST['id']);
@@ -16,6 +17,7 @@ $postal_code = filter_var($_POST['postal_code']);
 $codmkt = filter_var($_POST['codmkt']);
 $stringas = filter_var($_POST['stringas']);
 $js = array();
+$log = new Logger($db, $user->getUser());
 switch ($action) {
     case 'byName':
         $query = "SELECT  first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id limit 1";
@@ -145,6 +147,7 @@ switch ($action) {
 
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":id" => $id));
+        $log->set($id, Logger::T_UPD, Logger::S_USER, json_encode(array("alterações" => $query_string )));
         break;
 
     default:

@@ -76,6 +76,27 @@ switch ($action) {
     case "get_propostas":
         echo json_encode($users->get_propostas($lead_id));
         break;
+
+    case "get_notes":
+        echo json_encode($users->get_notes($lead_id));
+        break;
+
+    case "get_notes_to_datatable":
+        echo json_encode($users->get_notes_to_datatable($lead_id));
+              break;
+    case "insert_notes":
+        echo json_encode($users->insert_notes($lead_id, $note, $title));
+        break;
+
+
+    case "edit_notes":
+        echo json_encode($users->edit_notes($note_id, $note, $title));
+        break;
+
+    case "delete_notes":
+        echo json_encode($users->delete_notes($note_id));
+        break;
+
     default:
         break;
 }

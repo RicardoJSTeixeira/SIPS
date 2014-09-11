@@ -1,18 +1,21 @@
 <?php
 
-class UserLogin {
+class UserLogin
+{
 
-    protected $_username;    // using protected so they can be accessed
+    protected $_username; // using protected so they can be accessed
     protected $_password; // and overidden if necessary
-    protected $_db;       // stores the database handler
-    protected $_user;     // stores the user data
+    protected $_db; // stores the database handler
+    protected $_user; // stores the user data
 
-    public function __construct(PDO $db) {
+    public function __construct(PDO $db)
+    {
         $this->_db = $db;
         session_start();
     }
 
-    public function login($username, $password) {
+    public function login($username, $password)
+    {
         $this->_username = $username;
         $this->_password = $password;
         $user = $this->_checkCredentials();
@@ -26,7 +29,8 @@ class UserLogin {
         return false;
     }
 
-    protected function _checkCredentials() {
+    protected function _checkCredentials()
+    {
         $stmt = $this->_db->prepare('SELECT user, pass, a.user_group, user_level, full_name, allowed_campaigns, siblings from vicidial_users a left join vicidial_user_groups b on a.user_group=b.user_group WHERE user=:user and active=:active');
         $stmt->execute(array(":user" => $this->_username, ":active" => 'Y'));
         if ($stmt->rowCount()) {
@@ -39,7 +43,8 @@ class UserLogin {
         return false;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         $camp = preg_replace("/-ALL-CAMPAIGNS-/", '', $this->_user->allowed_campaigns);
         $camp = explode(" ", trim(rtrim($camp, " -")));
         $camp = $camp[0];
@@ -49,10 +54,11 @@ class UserLogin {
         $list = $lists[0]->list_id;
         $siblings = json_decode($this->_user->siblings);
         $siblings[] = $this->_user->user;
-        return (object) array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign" => $camp, "list_id" => $list, "user_level" => $this->_user->user_level, "user_group" => $this->_user->user_group, "siblings" => $siblings);
+        return (object)array("name" => $this->_user->full_name, "username" => $this->_user->user, "campaign" => $camp, "list_id" => $list, "user_level" => $this->_user->user_level, "user_group" => $this->_user->user_group, "siblings" => $siblings);
     }
 
-    public function logout() {
+    public function logout()
+    {
         if (isset($_SESSION['status'])) {
             unset($_SESSION['status']);
 
@@ -63,7 +69,8 @@ class UserLogin {
         }
     }
 
-    public function confirm_login() {
+    public function confirm_login()
+    {
         /* if (time() - $_SESSION['created'] < 1800) {
           session_regenerate_id(true);
           $_SESSION['created'] = time();
@@ -89,7 +96,8 @@ class UserLogin {
 
 }
 
-class UserControler {
+class UserControler
+{
 
     private $_db;
     private $_user;
@@ -116,70 +124,81 @@ class UserControler {
         "8" => "Administrador Pedidos do Marketing",
         "9" => "Administradores Gerais");
 
-    public function __construct(PDO $db, $user) {
+    public function __construct(PDO $db, $user)
+    {
         $this->_db = $db;
         $this->_user = $user->username;
         $this->_ulevel = $user->user_level;
         $this->_ugroup = $user->user_group;
     }
 
-    public function get($username) {
+    public function get($username)
+    {
         $query = "SELECT user, pass, full_name, user_level, active, siblings,alias FROM vicidial_users WHERE user_group=:user_group and user=:username;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup, ":username" => $username));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
-        return (object) array("user" => $row->user, "pass" => $row->pass, "full_name" => $row->full_name, "user_level" => $row->user_level, "active" => $row->active, "siblings" => json_decode($row->siblings), "alias" => $row->alias);
+        return (object)array("user" => $row->user, "pass" => $row->pass, "full_name" => $row->full_name, "user_level" => $row->user_level, "active" => $row->active, "siblings" => json_decode($row->siblings), "alias" => $row->alias);
     }
 
-    public function getAll($userlevel = false) {
+    public function getAll($userlevel = false)
+    {
         $query = "SELECT user, full_name, user_level, active, siblings,alias FROM vicidial_users WHERE user_group=:user_group " . (($userlevel) ? " AND user_level=$userlevel" : "") . ";";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function getActive() {
+    public function getActive()
+    {
         $query = "SELECT user, full_name, user_level, active FROM vicidial_users WHERE user_group=:user_group and active='Y';";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function getTypes() {
+    public function getTypes()
+    {
         return $this->_ULalias;
     }
 
-    public function set($username, $pass, $desc,$alias, $ulevel) {
+    public function set($username, $pass, $desc, $alias, $ulevel)
+    {
         $query = "INSERT INTO vicidial_users (user, pass, full_name, user_level, user_group, active, siblings,alias) VALUES (:username, :pass, :desc, :ulevel, :user_group, 'Y', '[]',:alias);";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":user_group" => $this->_ugroup,":alias"=>$alias));
+        return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":user_group" => $this->_ugroup, ":alias" => $alias));
     }
 
-    public function edit($username, $pass, $desc, $alias, $ulevel, $active, $siblings) {
+    public function edit($username, $pass, $desc, $alias, $ulevel, $active, $siblings)
+    {
         $query = "UPDATE vicidial_users SET pass=:pass, full_name=:desc, user_level=:ulevel, active=:active, siblings=:siblings,alias=:alias WHERE user=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":pass" => $pass, ":desc" => $desc, ":ulevel" => $ulevel, ":active" => $active, ":siblings" => json_encode($siblings), ":alias" => $alias));
     }
 
-    public function editPass($username, $pass) {
+    public function editPass($username, $pass)
+    {
         $query = "UPDATE vicidial_users SET pass=:pass WHERE user=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":pass" => $pass));
     }
 
-    public function editActive($username, $active) {
+    public function editActive($username, $active)
+    {
         $query = "UPDATE vicidial_users SET active=:active WHERE user=:username;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":username" => $username, ":active" => $active));
     }
 
-    public function save_proposta($lead_id, $reserva_id, $proposta) {
+    public function save_proposta($lead_id, $reserva_id, $proposta)
+    {
         $query = "INSERT INTO spice_proposta (lead_id, reserva_id, data, proposta) VALUES (:lead_id, :reserva_id, :data, :proposta);";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":lead_id" => $lead_id, ":reserva_id" => $reserva_id, ":data" => date('Y-m-d H:i:s'), ":proposta" => json_encode($proposta)));
     }
 
-    public function get_propostas($lead_id) {
+    public function get_propostas($lead_id)
+    {
         $query = "SELECT reserva_id,data,proposta FROM spice_proposta WHERE lead_id=:lead_id;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
@@ -188,8 +207,56 @@ class UserControler {
             $row["proposta"] = json_decode($row["proposta"]);
             $js[] = $row;
         }
-
         return $js;
     }
+
+
+    public function get_notes($lead_id)
+    {
+        $query = "Select * from spice_usernotes where lead_id=:lead_id and deleted=0 order by modify_date desc";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":lead_id" => $lead_id));
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    public function get_notes_to_datatable($lead_id)
+    {
+        $query = "Select id,title,note,entry_date,modify_date from spice_usernotes where lead_id=:lead_id and deleted=0 ";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":lead_id" => $lead_id));
+        $output['aaData']=$stmt->fetchAll(PDO::FETCH_NUM);
+        return $output;
+    }
+    public function get_note($note_id)
+    {
+        $query = "Select * from spice_usernotes where id=:note_id ";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":note_id" => $note_id));
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function insert_notes($lead_id, $note, $title)
+    {
+        $query = "INSERT INTO spice_usernotes (entry_date,modify_date, note, title,lead_id,deleted) VALUES (:entry_date,:modify_date,:note,:title,:lead_id,:deleted );";
+        $stmt = $this->_db->prepare($query);
+         $stmt->execute(array(":entry_date" => date('Y-m-d H:i:s'), ":modify_date" =>null, ":note" => $note, ":title" => $title, ":lead_id" => $lead_id, ":deleted" => 0));
+    return array("id"=>$this->_db->lastInsertId(),"entry_date" => date('Y-m-d H:i:s'), "modify_date" =>null, "note" => $note, "title" => $title, "lead_id" => $lead_id, "deleted" => 0);
+    }
+
+    public function edit_notes($note_id, $note, $title)
+    {
+        $query = "Update spice_usernotes set note=:note,title=:title,modify_date=:modify_date where id=:note_id;";
+        $stmt = $this->_db->prepare($query);
+         $stmt->execute(array(":note" => $note, ":title" => $title, ":modify_date" => date('Y-m-d H:i:s'), ":note_id" => $note_id));
+           return $this->get_note($note_id);
+    }
+
+    public function delete_notes($note_id)
+    {
+        $query = "Update spice_usernotes set deleted=:deleted where id=:note_id;";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":deleted" => 1,":note_id"=>$note_id));
+    }
+
 
 }
