@@ -351,6 +351,7 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="C/TVR"> Tavira</option>
             <option value="C/TDL"> Tondela</option>
             <option value="C/VCB"> Vale de Cambra</option>
+            <option value="C/VNF"> Vila Nova de Famalicão</option>
             <option value="C/VSA"> Vila Real de Santo António</option>
             <option value="C/PDV"> Povoa do Varzim</option>
             <option value="C/CDX"> Condeixa</option>
