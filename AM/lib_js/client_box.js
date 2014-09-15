@@ -233,7 +233,7 @@ var ClientBox = function (configs) {
                         aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {"name": "lead_id", "value": me.client_info.id});
                     },"aoColumns": [
                         {"sTitle": "ID",  bVisible: false},
-                        {"sTitle": "Titulo", "sWidth": "50px"},
+                        {"sTitle": "Tit\ulo", "sWidth": "50px"},
                         {"sTitle": "Nota",  bVisible: false},
                         {"sTitle": "Data criação", "sWidth": "50px"},
                         {"sTitle": "Data modificação", "sWidth": "50px"}
