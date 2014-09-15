@@ -417,14 +417,15 @@ var ClientBox = function (configs) {
                     var input,
                         custom_class = "",
                         div = $("<div>", {id: "master", class: "row-fluid"})
-                            .append($("<div>", { class: "span4 grid"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Dados Pessoais")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input1", class:"grid-content"})))
-                            .append($("<div>",  {class: "span4 grid"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Local/Morada")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input2", class:"grid-content"})))
-                            .append($("<div>", { class: "span4 grid"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Extras")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input3", class:"grid-content"}))),
+                            .append($("<div>", { class: "span4  grid-transparent"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Dados Pessoais")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input1", class:"grid-content"})))
+                            .append($("<div>",  {class: "span4  grid-transparent"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Local/Morada")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input2", class:"grid-content"})))
+                            .append($("<div>", { class: "span4  grid-transparent"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Extras")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input3", class:"grid-content"}))),
                         elmt,
                         specialE,
                         hide = "";
                     $.each(data, function () {
                         if (this.name === "extra5") {
+                            custom_class="span ";
                             elmt = $("<select>", {id: this.name, name: this.name});
                             var optionsRaw = ["", "ADM (ADME/ADMA/ADMFA)", "ADSE", "APL", "CGD", "Centro Nac. de Protecção Contra Riscos Profissionais", "EDP", "PETROGAL", "PT/CTT ACS", "SAD-PSP", "SAD/GNR (ADMG)", "SAMS", "SEG. SOCIAL", "Serviços Sociais do Ministério da Justiça", "OUTRAS"];
                             options = optionsRaw.map(function (v) {
@@ -586,7 +587,7 @@ var ClientBox = function (configs) {
                                 input = div.find("#input1");
                                 break;
                             case "FIRST_NAME":
-                                custom_class = "validate[required]";
+                                custom_class = "validate[required] span";
                                 input = div.find("#input1");
                                 break;
                             case "DATE_OF_BIRTH":
@@ -595,21 +596,27 @@ var ClientBox = function (configs) {
                                 break;
                             case "EMAIL":
                                 input = div.find("#input1");
-                                custom_class = "validate[custom[email]]";
+                                custom_class = "validate[custom[email]] span";
                                 break;
                             case "TITLE":
                                 custom_class = "validate[required]";
+                                input = div.find("#input1");
+                                break;
                             case "extra8":
+                                custom_class = "span";
                                 input = div.find("#input1");
                                 break;
                             case "extra2":
+                                input = div.find("#input1");
+                                break;
                             case "LAST_NAME":
                             case "MIDDLE_INITIAL":
+                                custom_class = "span";
                                 input = div.find("#input1");
                                 break;
                             case "ADDRESS1":
                             case "CITY":
-                                custom_class = "validate[required]";
+                                custom_class = "validate[required] span";
                             case "POSTAL_CODE":
                                 custom_class = "validate[required]";
                             case "ADDRESS2":
@@ -619,15 +626,18 @@ var ClientBox = function (configs) {
                             case "extra3":
                             case "extra4":
                             case "extra10":
+                                custom_class = "span";
                                 input = div.find("#input2");
                                 break;
                             case "extra6":
                             case "extra7":
                             case "SECURITY_PHRASE":
+                                custom_class = "span";
                                 hide = " hide";
                                 input = div.find("#input3");
                                 break;
                             case "extra1":
+                                custom_class = "span";
                                 custom_class = "validate[required]";
                                 input = div.find("#input3");
                                 break;
