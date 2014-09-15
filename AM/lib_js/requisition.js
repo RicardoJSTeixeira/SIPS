@@ -1,20 +1,18 @@
-var requisition = function(geral_path, options_ext) {
+var requisition = function (geral_path, options_ext) {
 
-    var me = this;
-    this.file_uploaded = false;
     this.config = {};
     this.tipo = "mensal";
     var
-            me = this,
-            product_tree,
-            modal = "",
-            modal_anexo = "",
-            table_path = "",
-            produtos = [],
-            EData;
+        me = this,
+        product_tree,
+        modal = "",
+        modal_anexo = "",
+        table_path = "",
+        produtos = [],
+        EData;
     $.extend(true, this.config, options_ext);
-    this.init = function(callback) {
-        $.get("/AM/view/requisitions/requisition.html", function(data) {
+    this.init = function (callback) {
+        $.get("/AM/view/requisitions/requisition.html", function (data) {
             geral_path.append(data);
             geral_path.find("#new_requisition_div").hide();
             modal = geral_path.find("#ver_product_requisition_modal");
@@ -23,12 +21,12 @@ var requisition = function(geral_path, options_ext) {
                 callback();
         });
     };
-    this.get_current_requisitions = function(table_path1) {
+    this.get_current_requisitions = function (table_path1) {
         table_path = table_path1;
         get_encomendas_atuais(table_path);
     };
     //NEW REQUISITION------------------------------------------------------------------------------------------------------------------------------------------------
-    this.new_requisition = function(new_requisition_zone, lead_id) {
+    this.new_requisition = function (new_requisition_zone, lead_id) {
         var must_have_anexo = false;
         $("#product_selector").chosen({
             no_results_text: "Sem resultados"
@@ -48,21 +46,21 @@ var requisition = function(geral_path, options_ext) {
         }
         $.msg();
         $.post('/AM/ajax/products.php', {
-            action: "get_produtos"
-        },
-        function(data) {
-            var option = "<option value='0'>Escolha um produto</option>";
-            $("#product_selector").append(option);
-            var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
-                        <optgroup value='2' label='RITE'></optgroup>\n\
-                        <optgroup value='3' label='INTRA'></optgroup>\n\
-                        <optgroup value='4' label='Pilhas'></optgroup>\n\
-                        <optgroup value='5' label='Acessórios'></optgroup>\n\
-                        <optgroup value='6' label='Moldes'></optgroup>\n\
-                        <optgroup value='7' label='Economato'></optgroup>\n\
-                                <optgroup value='8' label='Gama'></optgroup>\n\
-                        <optgroup value='9' label='Consumiveis'></optgroup>\n\
-                        <optgroup value='10' label='Especificidades'></optgroup>",
+                action: "get_produtos"
+            },
+            function (data) {
+                var
+                    option = "<option value='0'>Escolha um produto</option>",
+                    temp = "<optgroup data-alias='bte' label='BTE'></optgroup>\n\
+                            <optgroup data-alias='rite' label='RITE'></optgroup>\n\
+                            <optgroup data-alias='intr' label='INTRA'></optgroup>\n\
+                            <optgroup data-alias='pilh' label='Pilhas'></optgroup>\n\
+                            <optgroup data-alias='aces' label='Acessórios'></optgroup>\n\
+                            <optgroup data-alias='mold' label='Moldes'></optgroup>\n\
+                            <optgroup data-alias='econ' label='Economato'></optgroup>\n\
+                            <optgroup data-alias='gama' label='Gama'></optgroup>\n\
+                            <optgroup data-alias='cons' label='Consumiveis'></optgroup>\n\
+                            <optgroup data-alias='espe' label='Especificidades'></optgroup>",
                     BTE = [],
                     RITE = [],
                     INTRA = [],
@@ -73,73 +71,76 @@ var requisition = function(geral_path, options_ext) {
                     gama = [],
                     consumiveis = [],
                     especificidades = [];
-            $("#product_selector").append(temp);
+                $("#product_selector")
+                    .append(option)
+                    .append(temp);
 
-            $.each(data, function() {
-                produtos[this.id] = (this);
-                if (me.tipo === "especial") {
-                    if (this.max_req_s < 1)
-                        return true;
-                } else {
-                    if (this.max_req_m < 1)
-                        return true;
-                }
-                option = "<option value='" + this.id + "'>" + this.name + "</option>";
-                switch (this.category) {
-                    case "BTE":
-                        BTE.push(option);
-                        break;
-                    case "RITE":
-                        RITE.push(option);
-                        break;
-                    case "INTRA":
-                        INTRA.push(option);
-                        break;
-                    case "Pilha":
-                        pilha.push(option);
-                        break;
-                    case "Acessório":
-                        acessorio.push(option);
-                        break;
-                    case "Molde":
-                        molde.push(option);
-                        break;
-                    case "Economato":
-                        economato.push(option);
-                        break;
-                    case "Gama":
-                        gama.push(option);
-                        break;
-                    case "Consumiveis":
-                        consumiveis.push(option);
-                        break;
-                    case "Especificidades":
-                        especificidades.push(option);
-                        break;
-                }
+                $.each(data, function () {
+                    produtos[this.id] = (this);
+                    if (me.tipo === "especial") {
+                        if (this.max_req_s < 1)
+                            return true;
+                    } else {
+                        if (this.max_req_m < 1)
+                            return true;
+                    }
+                    option = "<option value='" + this.id + "'>" + this.name + "</option>";
+                    switch (this.category) {
+                        case "BTE":
+                            BTE.push(option);
+                            break;
+                        case "RITE":
+                            RITE.push(option);
+                            break;
+                        case "INTRA":
+                            INTRA.push(option);
+                            break;
+                        case "Pilha":
+                            pilha.push(option);
+                            break;
+                        case "Acessório":
+                            acessorio.push(option);
+                            break;
+                        case "Molde":
+                            molde.push(option);
+                            break;
+                        case "Economato":
+                            economato.push(option);
+                            break;
+                        case "Gama":
+                            gama.push(option);
+                            break;
+                        case "Consumiveis":
+                            consumiveis.push(option);
+                            break;
+                        case "Especificidades":
+                            especificidades.push(option);
+                            break;
+                    }
+                });
+                $("#product_selector")
+                    .find("optgroup[data-alias='bte']").append(BTE).end()
+                    .find("optgroup[data-alias='rite']").append(RITE).end()
+                    .find("optgroup[data-alias='intr']").append(INTRA).end()
+                    .find("optgroup[data-alias='pilh']").append(pilha).end()
+                    .find("optgroup[data-alias='aces']").append(acessorio).end()
+                    .find("optgroup[data-alias='mold']").append(molde).end()
+                    .find("optgroup[data-alias='econ']").append(economato).end()
+                    .find("optgroup[data-alias='gama']").append(gama).end()
+                    .find("optgroup[data-alias='cons']").append(consumiveis).end()
+                    .find("optgroup[data-alias='espe']").append(especificidades).end().trigger("chosen:updated");
+                $.msg('unblock');
+            }, "json").fail(function (data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
             });
-            $("#product_selector").find("optgroup[value='1']").append(BTE).end()
-                    .find("optgroup[value='2']").append(RITE).end()
-                    .find("optgroup[value='3']").append(INTRA).end()
-                    .find("optgroup[value='4']").append(pilha).end()
-                    .find("optgroup[value='5']").append(acessorio).end()
-                    .find("optgroup[value='6']").append(molde).end()
-                    .find("optgroup[value='7']").append(economato).end()
-                    .find("optgroup[value='8']").append(gama).end()
-                    .find("optgroup[value='9']").append(consumiveis).end()
-                    .find("optgroup[value='10']").append(especificidades).end().trigger("chosen:updated");
-            $.msg('unblock');
-        }, "json").fail(function(data) {
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
-        });
         new_requisition_zone.off();
         new_requisition_zone.find('.fileupload').fileupload().end()
-                .find("#form_encomenda_especial").validationEngine().end()
-                .find("#form_encomenda_especial").show().end()
-                .find(".tipo_div").hide();
+            .find("#form_encomenda_especial").validationEngine().end()
+            .find("#form_encomenda_especial").show().end()
+            .find(".tipo_div").hide();
         new_requisition_zone.find("#save_single_product").prop("disabled", true);
-        $(new_requisition_zone).on("change", "#product_selector", function() {
+        $(new_requisition_zone).on("change", "#product_selector", function () {
             if (product_tree)
                 product_tree.destroy();
             if (~~$(this).val() === 0) {
@@ -153,11 +154,11 @@ var requisition = function(geral_path, options_ext) {
         });
         //----------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------SAVE SINGLE PRODUCT--------------------------
-        $(new_requisition_zone).on("click", '#save_single_product', function(e) {
+        $(new_requisition_zone).on("click", '#save_single_product', function () {
             var produtos_single = [],
-                    duplicate_array = [],
-                    has_products = 0;
-            $.each($("#tree").find(".product_item"), function() {
+                duplicate_array = [],
+                has_products = 0;
+            $.each($("#tree").find(".product_item"), function () {
                 if ($(this).find("input[type=checkbox]").is(":checked")) {
                     if ($(this).prop("category_product") === "Molde" || $(this).prop("category_product") === "INTRA")
                         must_have_anexo = true;
@@ -195,43 +196,43 @@ var requisition = function(geral_path, options_ext) {
                 return false;
             }
             new_requisition_zone.find("#product_selector").val(0).trigger("change");
-            var new_product = "";
-            new_product = ($("<div>", {
-                class: "grid"
-            }).append($("<div>")));
+            var
+                new_product = ($("<div>", {
+                    class: "grid"
+                }).append($("<div>")));
             var produtos_in_text = new_product
-                    .find("div:last")
-                    .append($("<table>", {
-                        class: "table table-mod table-striped table-condensed"
-                    })
-                            .append($("<thead>")
-                                    .append($("<tr>")
-                                            .append($("<th>").text("Nome").css("width", "420px"))
-                                            .append($("<th>").text("Categoria").css("width", "120px"))
-                                            .append($("<th>").text("Q.").attr("title", "Quantidade").css("width", "50px"))
-                                            .append($("<th>").text("Tamanho").attr("title", "Tamanho").css("width", "60px"))
-                                            .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"})
-                                                    .append($("<i>", {class: "icon icon-trash"}))))))
-                            .append($("<tbody>")))
-                    .find("tbody");
-            $.each(produtos_single, function() {
+                .find("div:last")
+                .append($("<table>", {
+                    class: "table table-mod table-striped table-condensed"
+                })
+                    .append($("<thead>")
+                        .append($("<tr>")
+                            .append($("<th>").text("Nome").css("width", "420px"))
+                            .append($("<th>").text("Categoria").css("width", "120px"))
+                            .append($("<th>").text("Q.").attr("title", "Quantidade").css("width", "50px"))
+                            .append($("<th>").text("Tamanho").attr("title", "Tamanho").css("width", "60px"))
+                            .append($("<th>").text("Cor").css("width", "150px").append($("<button>", {class: "btn btn-danger btn-mini icon-alone right remove_produto_encomendado"})
+                                .append($("<i>", {class: "icon icon-trash"}))))))
+                    .append($("<tbody>")))
+                .find("tbody");
+            $.each(produtos_single, function () {
                 produtos_in_text.append($("<tr>", {class: "product_line"})
-                        .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
-                        .append($("<td>", {class: "td_category"}).text(this.category))
-                        .append($("<td>", {class: "td_quantity"}).text(this.quantity))
-                        .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
-                        .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
-                        );
+                    .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
+                    .append($("<td>", {class: "td_category"}).text(this.category))
+                    .append($("<td>", {class: "td_quantity"}).text(this.quantity))
+                    .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
+                    .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
+                );
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
             new_requisition_zone.find("#product_selector").val(0).trigger("chosen:updated");
         });
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------- SUBMITAR A ENCOMENDA------------------------------
-        $(new_requisition_zone).on("click", "#new_requisition_submit_button", function() {
+        $(new_requisition_zone).on("click", "#new_requisition_submit_button", function () {
 
             var upload_complete = 1;
-            $.each(me.config.uploader.files, function() {
+            $.each(me.config.uploader.files, function () {
                 if (this.percent !== 100) {
                     upload_complete = 0;
                     $.jGrowl('Certifique-se de que os ficheiros de anexo foram carregados para o servidor', {
@@ -244,7 +245,7 @@ var requisition = function(geral_path, options_ext) {
                 var anexo_random_number = $(this).data().anexo_random_number;
                 var produtos_encomenda = [];
                 var count = 0;
-                $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function() {
+                $.each(new_requisition_zone.find(" #produtos_encomendados tr"), function () {
                     if ($(this).hasClass("product_line")) {
                         count++;
                         produtos_encomenda.push({
@@ -273,49 +274,49 @@ var requisition = function(geral_path, options_ext) {
                         $("#new_requisition_submit_button").prop("disabled", true);
                         $.msg();
                         $.post('ajax/requisition.php', {
-                            action: "criar_encomenda",
-                            type: me.tipo,
-                            lead_id: lead_id,
-                            contract_number: new_requisition_zone.find("#new_requisition_contract").val(),
-                            attachment: me.config.uploader.files.length,
-                            products_list: produtos_encomenda,
-                            comments: new_requisition_zone.find("#new_requisition_obs").val()
-                        },
-                        function(data) {
-                            $("#form_encomenda_especial :input").attr('readonly', false);
-                            $("#new_requisition_submit_button").prop("disabled", false);
-                            $.jGrowl('Encomenda realizada com sucesso', {
-                                life: 4000
-                            });
-                            $.post('/AM/ajax/upload_file.php', {
-                                action: "move_files_to_new_folder",
-                                old_id: anexo_random_number,
-                                new_id: data[0]
+                                action: "criar_encomenda",
+                                type: me.tipo,
+                                lead_id: lead_id,
+                                contract_number: new_requisition_zone.find("#new_requisition_contract").val(),
+                                attachment: me.config.uploader.files.length,
+                                products_list: produtos_encomenda,
+                                comments: new_requisition_zone.find("#new_requisition_obs").val()
                             },
-                            function(data) {
-                                if (me.tipo === "mensal")
-                                    $.history.push("view/new_requisition.html");
-                                else
-                                    $.history.push("view/admin/pedidos.html?enc=0");
-                                $.msg('unblock');
-                            }, "json").fail(function(data) {
+                            function (data) {
+                                $("#form_encomenda_especial :input").attr('readonly', false);
+                                $("#new_requisition_submit_button").prop("disabled", false);
+                                $.jGrowl('Encomenda realizada com sucesso', {
+                                    life: 4000
+                                });
+                                $.post('/AM/ajax/upload_file.php', {
+                                        action: "move_files_to_new_folder",
+                                        old_id: anexo_random_number,
+                                        new_id: data[0]
+                                    },
+                                    function () {
+                                        if (me.tipo === "mensal")
+                                            $.history.push("view/new_requisition.html");
+                                        else
+                                            $.history.push("view/admin/pedidos.html?enc=0");
+                                        $.msg('unblock');
+                                    }, "json").fail(function (data) {
+                                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                        $.msg('unblock', 5000);
+                                    });
+                            }, "json").fail(function (data) {
                                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                 $.msg('unblock', 5000);
                             });
-                        }, "json").fail(function(data) {
-                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                            $.msg('unblock', 5000);
-                        });
                     }
                 }
             }
         });
 
-        $(new_requisition_zone).on("click", " .remove_produto_encomendado", function(e) {
+        $(new_requisition_zone).on("click", " .remove_produto_encomendado", function () {
             var this_button = $(this);
-            bootbox.confirm("Tem a certeza que pretende remover esta encomenda? Certifique-se que não tem produtos selecionados na zona da Hierarquia", function(result) {
+            bootbox.confirm("Tem a certeza que pretende remover esta encomenda? Certifique-se que não tem produtos selecionados na zona da Hierarquia", function (result) {
                 if (result) {
-                    $.each(this_button.closest(".grid").find("tr"), function() {
+                    $.each(this_button.closest(".grid").find("tr"), function () {
                         if ($(this).hasClass("product_line")) {
                             if (me.tipo === "especial")
                                 produtos[$(this).find(".td_name").attr("id_product")].max_req_s = produtos[$(this).find(".td_name").attr("id_product")].max_req_s + ~~$(this).find(".td_quantity").text();
@@ -328,7 +329,7 @@ var requisition = function(geral_path, options_ext) {
                     this_button.closest(".grid").remove();
                     //verificar se ainda ficou algum molde ou intra na encomenda (obrigatoriadade dos anexos)
                     must_have_anexo = false;
-                    $.each($("#produtos_encomendados .product_line").find(".td_category"), function() {
+                    $.each($("#produtos_encomendados .product_line").find(".td_category"), function () {
                         if ($(this).text() === "INTRA" || $(this).text() === "Molde") {
                             must_have_anexo = true;
                             return false;
@@ -337,96 +338,112 @@ var requisition = function(geral_path, options_ext) {
                 }
             });
         });
-        $(new_requisition_zone).on("submit", " #form_encomenda_especial", function(e) {
+        $(new_requisition_zone).on("submit", " #form_encomenda_especial", function (e) {
             e.preventDefault();
         });
     };
 
     function get_encomendas_atuais(table_path) {
         var Table_view_requisition = table_path.dataTable({
-            "aaSorting": [[11, "asc"]],
+            "aaSorting": [
+                [11, "asc"]
+            ],
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
             "bAutoWidth": false,
             "sPaginationType": "full_numbers",
             "sAjaxSource": '/AM/ajax/requisition.php',
-            "fnServerParams": function(aoData) {
+            "fnServerParams": function (aoData) {
                 aoData.push({
                     "name": "action",
                     "value": "listar_requisition_to_datatable"
                 });
             },
-            "fnDrawCallback": function() {
-                $.each(Table_view_requisition.find(".cod_cliente_input"), function() {
+            "fnDrawCallback": function () {
+                $.each(Table_view_requisition.find(".cod_cliente_input"), function () {
                     if (!$(this).val())
                         $(this).parent().parent().addClass("error");
                 });
             },
-            "aoColumns": [{
+            "aoColumns": [
+                {
                     "sTitle": "Id"
-                }, {
+                },
+                {
                     "sTitle": "User",
                     "bVisible": SpiceU.user_level > 5,
                     "sWidth": "75px"
-                }, {
+                },
+                {
                     "sTitle": "Tipo",
                     "sWidth": "60px"
-                }, {
+                },
+                {
                     "sTitle": "Nome Cliente",
                     "sWidth": "90px"
 
-                }, {
+                },
+                {
                     "sTitle": "Data",
                     "sWidth": "125px"
-                }, {
+                },
+                {
                     "sTitle": "Nº de contrato"
-                }, {
+                },
+                {
                     "sTitle": "Ref. Cliente"
-                }, {
+                },
+                {
                     "sTitle": "Anexo",
                     "sWidth": "80px"
-                }, {
+                },
+                {
                     "sTitle": "Produtos",
                     "sWidth": "50px"
-                }, {
+                },
+                {
                     "sTitle": "Estado",
                     "sWidth": "95px"
-                }, {
+                },
+                {
                     "sTitle": "Opções",
                     "sWidth": "60px",
                     "bVisible": SpiceU.user_level > 5
-                }, {
+                },
+                {
                     "sTitle": "sort",
                     "bVisible": false
-                }, {
+                },
+                {
                     "sTitle": "object",
                     "bVisible": false
-                }],
+                }
+            ],
             "oLanguage": {
                 "sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"
             }
         });
         if (SpiceU.user_level > 5) {
-            Table_view_requisition.on("change", ".cod_cliente_input", function() {
+            Table_view_requisition.on("change", ".cod_cliente_input", function () {
                 var that = $(this);
                 if (!$(this).validationEngine("validate")) {
                     if (that.val().length)
-                        bootbox.confirm("Tem a certeza que pretende actualizar para o codigo:" + that.val() + "?", function(result) {
+                        bootbox.confirm("Tem a certeza que pretende actualizar para o codigo:" + that.val() + "?", function (result) {
                             if (result) {
                                 $.msg();
                                 $.post('/AM/ajax/requisition.php', {
                                     action: "editar_encomenda",
                                     "clientID": that.data().clientid,
                                     "cod_cliente": that.val()
-                                }, function(data) {
+                                },function () {
                                     that.closest("tr")
-                                            .removeClass("error")
-                                            .end()
-                                            .replaceWith(that.val());
+                                        .removeClass("error")
+                                        .end()
+                                        .replaceWith(that.val());
                                     Table_view_requisition.fnReloadAjax();
                                     $.msg('unblock');
-                                }, "json").fail(function(data) {
+                                }, "json").fail(function (data) {
                                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                     $.msg('unblock', 5000);
                                 });
@@ -439,26 +456,24 @@ var requisition = function(geral_path, options_ext) {
             $("#print_requisition").hide();
         }
 
-        $('#export_ENC').click(function(event) {
+        $('#export_ENC').click(function (event) {
             event.preventDefault();
             table2csv(Table_view_requisition, 'full', '#' + table_path[0].id);
         });
-        table_path.on("click", ".ver_cliente", function() {
+        table_path.on("click", ".ver_cliente", function () {
             var client = new Cliente_info($(this).data("lead_id"), null);
             client.init(null);
         });
         //VER PRODUTOS DE ENCOMENDAS FEITAS
-        table_path.on("click", ".ver_requisition_products", function() {
+        table_path.on("click", ".ver_requisition_products", function () {
             var that = this;
             $.msg();
             $.post('ajax/requisition.php', {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
-            }, function(data) {
+            },function (data) {
                 var
-                        modal_tbody = modal.find("#show_requisition_products_tbody").empty(),
-                        EInfotmp = [],
-                        EInfo = [];
+                    modal_tbody = modal.find("#show_requisition_products_tbody").empty();
                 EData = {
                     bInfo: [],
                     products: [],
@@ -468,7 +483,7 @@ var requisition = function(geral_path, options_ext) {
                 $.post('ajax/requisition.php', {
                     action: "get_encomenda",
                     id_req: EData.id_req
-                }, function(data1) {
+                }, function (data1) {
                     if (data1) {
                         EData.bInfo.push({
                             'ID encomenda': data1[0].id + "",
@@ -483,7 +498,7 @@ var requisition = function(geral_path, options_ext) {
                     }
                     else
                         EData.bInfo.push({});
-                    $.each(data.product, function() {
+                    $.each(data.product, function () {
                         this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
                         EData.products.push({
                             Name: this.name,
@@ -503,81 +518,88 @@ var requisition = function(geral_path, options_ext) {
                     modal.modal("show");
                     $.msg('unblock');
                 }, "json");
-            }, "json").fail(function(data) {
+            }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
         });
-        table_path.on("click", ".ver_requisition_anexo", function() {
+        table_path.on("click", ".ver_requisition_anexo", function () {
             modal_anexo.modal("show");
             var this_folder = $(this).val() + "_encomenda";
             $.msg();
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_anexos",
                 folder: this_folder
-            }, function(data) {
+            },function (data) {
                 var options = "";
-                $.each(data, function() {
+                $.each(data, function () {
                     options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
                 });
                 modal_anexo.find("#show_requisition_anexos_tbody").html(options);
                 $.msg('unblock');
-            }, "json").fail(function(data) {
+            }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
         });
-        modal.on("click", "#print_requisition", function() {
+        modal.on("click", "#print_requisition", function () {
             $.msg();
             var lead_id = ~~EData.bInfo[0]['Id Client'];
             //Ir buscar os comentarios
             $.post('ajax/requisition.php', {
                 action: "listar_comments_por_encomenda",
                 id: EData.id_req
-            }, function(data) {
+            },function (data) {
                 var doc = new jsPDF('l', 'pt', 'a4', true);
-                doc.table(30, 30, EData.bInfo, [{name: 'ID encomenda', width: 100}, {name: 'User', width: 75}, {name: 'Tipo', width: 50}, {name: 'Id Client', width: 65}, {name: 'Date', width: 125}, {name: 'Order Number', width: 95}, {name: 'Client Ref.', width: 75}, {name: 'Status', width: 120}], {
+                doc.table(30, 30, EData.bInfo, [
+                    {name: 'ID encomenda', width: 100},
+                    {name: 'User', width: 75},
+                    {name: 'Tipo', width: 50},
+                    {name: 'Id Client', width: 65},
+                    {name: 'Date', width: 125},
+                    {name: 'Order Number', width: 95},
+                    {name: 'Client Ref.', width: 75},
+                    {name: 'Status', width: 120}
+                ], {
                     autoSize: false,
                     printHeaders: true
                 });
 
                 var
-                        fonts = [['Times', 'Roman']],
-                        size = 16,
-                        lines,
-                        verticalOffset = 0.5, // inches on a 8.5 x 11 inch sheet.
-                        text = data;
+                    size = 16,
+                    lines,
+                    text = data;
 
                 lines = doc.setFont('Times', 'Roman')
-                        .setFontSize(size)
-                        .splitTextToSize(text, 350);
+                    .setFontSize(size)
+                    .splitTextToSize(text, 350);
 
 
                 $.post('ajax/audiograma.php', {
                     action: "populate",
                     lead_id: lead_id
-                }, function(data1) {
-                    if (data1.length) {
+                },function (oAudiograma) {
+                    if (oAudiograma.length) {
                         if (data.length) {
                             lines = doc.setFont('Times', 'Roman')
-                                    .setFontSize(size)
-                                    .splitTextToSize(text, 350);
-                            doc.text(428, doc.lastCellPos.y + 262, "Obs.");
-                            doc.text(445, doc.lastCellPos.y + 285, lines);
+                                .setFontSize(size)
+                                .splitTextToSize(text, 350);
+                            doc.text(428, doc.lastCellPos.y + 142, "Obs.");
+                            doc.text(445, doc.lastCellPos.y + 165, lines);
                         }
                         var that = "";
                         var titles = [], values = [];
                         var temp_values = {};
-                        $.each(data1, function() {
+                        $.each(oAudiograma, function () {
                             that = this;
-                            $.each(that.value, function() {
+                            $.each(that.value, function () {
                                 titles.push(this.name);
                                 temp_values[this.name] = this.value;
                             });
                             values.push(temp_values);
                             doc.setFontSize(10);
-                            doc.text(30, doc.lastCellPos.y + 52, that.name);
-                            doc.table(32, doc.lastCellPos.y + 60, values, titles, {
+                            //doc.text(30, doc.lastCellPos.y + 52, that.name);
+                            doc.table(30, doc.lastCellPos.y + 20, values, titles, {
                                 autoSize: true,
                                 printHeaders: true,
                                 fontSize: 10
@@ -586,21 +608,33 @@ var requisition = function(geral_path, options_ext) {
                             values = [];
                             temp_values = {};
                         });
-                        doc.addPage();
-                        doc.table(30, 20, EData.products, [{name: 'Name', width: 200}, {name: 'Category', width: 100}, {name: 'Color', width: 75}, {name: 'Qt', width: 50}, {name: 'Size', width: 50}], {
+                        //doc.addPage();
+                        doc.table(30, doc.lastCellPos.y + 20, EData.products, [
+                            {name: 'Name', width: 200},
+                            {name: 'Category', width: 100},
+                            {name: 'Color', width: 75},
+                            {name: 'Qt', width: 50},
+                            {name: 'Size', width: 50}
+                        ], {
                             autoSize: false,
                             printHeaders: true
                         });
                     }
                     else {
-                        doc.table(30, doc.lastCellPos.y + 60, EData.products, [{name: 'Name', width: 200}, {name: 'Category', width: 100}, {name: 'Color', width: 75}, {name: 'Qt', width: 50}, {name: 'Size', width: 50}], {
+                        doc.table(30, doc.lastCellPos.y + 60, EData.products, [
+                            {name: 'Name', width: 200},
+                            {name: 'Category', width: 100},
+                            {name: 'Color', width: 75},
+                            {name: 'Qt', width: 50},
+                            {name: 'Size', width: 50}
+                        ], {
                             autoSize: false,
                             printHeaders: true
                         });
                         if (data.length) {
                             lines = doc.setFont('Times', 'Roman')
-                                    .setFontSize(size)
-                                    .splitTextToSize(text, 750);
+                                .setFontSize(size)
+                                .splitTextToSize(text, 750);
                             doc.text(20, doc.lastCellPos.y + 52, "Obs.");
                             doc.text(45, doc.lastCellPos.y + 75, lines);
                         }
@@ -608,52 +642,52 @@ var requisition = function(geral_path, options_ext) {
 
 
                     doc.save(moment().format());
-                }, "json").fail(function(data1) {
+                }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                     $.msg('unblock', 5000);
                 });
 
 
                 $.msg('unblock');
-            }, "json").fail(function(data) {
+            }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
 
 
         });
-        table_path.on("click", ".accept_requisition", function() {
+        table_path.on("click", ".accept_requisition", function () {
             var this_button = $(this);
-            bootbox.prompt("Comentários?", function(result) {
+            bootbox.prompt("Comentários?", function (result) {
                 if (result !== null) {
                     $.msg();
                     $.post('ajax/requisition.php', {
                         action: "accept_requisition",
                         id: this_button.val(),
                         message: result
-                    }, function() {
+                    },function () {
                         Table_view_requisition.fnReloadAjax();
                         $.msg('unblock');
-                    }).fail(function(data) {
+                    }).fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 5000);
                     });
                 }
             });
         });
-        table_path.on("click", ".decline_requisition", function() {
+        table_path.on("click", ".decline_requisition", function () {
             var this_button = $(this);
-            bootbox.prompt("Motivo?", function(result) {
+            bootbox.prompt("Motivo?", function (result) {
                 if (result !== null) {
                     $.msg();
                     $.post('ajax/requisition.php', {
                         action: "decline_requisition",
                         id: this_button.val(),
                         message: result
-                    }, function() {
+                    },function () {
                         Table_view_requisition.fnReloadAjax();
                         $.msg('unblock');
-                    }).fail(function(data) {
+                    }).fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 5000);
                     });
