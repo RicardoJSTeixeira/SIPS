@@ -91,7 +91,8 @@ function init() {
         railDraggable: !1
     });
 
-    $(".ichat").on("click", ".dismiss_msg", function () {
+    $(".ichat")
+        .on("click", ".dismiss_msg", function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "edit_message_status",
@@ -103,20 +104,7 @@ function init() {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
-    });
-    $("#mark_all_read").click(function () {
-        $.msg();
-        $.post("ajax/general_functions.php", {
-            action: "edit_message_status_by_user"
-        },function () {
-            get_messages();
-            $.msg('unblock');
-        }, "json").fail(function (data) {
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
-        });
-    });
-    $(".ichat").on("click", ".ok_alert", function () {
+    }).on("click", ".ok_alert", function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "set_readed",
@@ -129,6 +117,20 @@ function init() {
             $.msg('unblock', 5000);
         });
     });
+
+    $("#mark_all_read").click(function () {
+        $.msg();
+        $.post("ajax/general_functions.php", {
+            action: "edit_message_status_by_user"
+        },function () {
+            get_messages();
+            $.msg('unblock');
+        }, "json").fail(function (data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
+    });
+
     $("#mark_all_alerts_read").click(function () {
         $.msg();
         $.post("ajax/general_functions.php", {
@@ -210,7 +212,6 @@ function get_messages() {
     $.post("ajax/general_functions.php", {
         action: "get_unread_messages"
     },function (data) {
-        $("#imessage_placeholder").empty();
         var msg = "";
         $.each(data, function () {
             msg = "<div class='imessage'>\n\
@@ -223,7 +224,7 @@ function get_messages() {
                     </div>" + msg;
         });
         $("#msg_count").text(data.length);
-        $("#imessage_placeholder").append(msg);
+        $("#imessage_placeholder").html(msg);
     }, "json").fail(function (data) {
         $.msg();
         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -236,7 +237,6 @@ function get_alerts(callback) {
     $.post("ajax/general_functions.php", {
         action: "get_alerts"
     },function (data) {
-        $("#alerts-content").empty();
         $("#alert_time").data("update", moment());
         var msg = "";
         var dismiss_icon = "";
@@ -266,7 +266,7 @@ function get_alerts(callback) {
         });
 
         $("#alerts-count").text(data.length);
-        $("#alerts-content").append(msg);
+        $("#alerts-content").html(msg);
         if (typeof callback === "function") {
             callback();
         }
@@ -288,6 +288,19 @@ function getUrlVars() {
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
+
+var guid = (function() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+  }
+  return function() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+  };
+})();
+
 function consultasMais() {
     if (!localStorage.length) {
         return false;
@@ -315,8 +328,8 @@ function consultasMais() {
 }
 
 function dropOneConsult() {
-    //localStorage.v3 = ~~localStorage.v3 - 1;
-    //localStorage.v6 = ~~localStorage.v6 - 1;
+    localStorage.v3 = ~~localStorage.v3 - 1;
+    localStorage.v6 = ~~localStorage.v6 - 1;
 }
 
 function isBlocked() {
@@ -324,9 +337,7 @@ function isBlocked() {
 }
 
 function scrollTop() {
-
     $("html, body").animate({
         scrollTop: 0
     }, "fast");
-
 }
