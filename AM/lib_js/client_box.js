@@ -417,9 +417,9 @@ var ClientBox = function (configs) {
                     var input,
                         custom_class = "",
                         div = $("<div>", {id: "master", class: "row-fluid"})
-                            .append($("<div>", {id: "input1", class: "span4"}))
-                            .append($("<div>", {id: "input2", class: "span4"}))
-                            .append($("<div>", {id: "input3", class: "span4"})),
+                            .append($("<div>", { class: "span4 grid"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Dados Pessoais")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input1", class:"grid-content"})))
+                            .append($("<div>",  {class: "span4 grid"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Local/Morada")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input2", class:"grid-content"})))
+                            .append($("<div>", { class: "span4 grid"}).append($("<div>",{class:"grid-title"}).append($("<div>",{class:"pull-left"}).text("Extras")).append($("<div>",{class:"clear"}))).append($("<div>",{id: "input3", class:"grid-content"}))),
                         elmt,
                         specialE,
                         hide = "";
@@ -637,9 +637,9 @@ var ClientBox = function (configs) {
                                 break;
                         }
                         elmt.addClass(custom_class);
-                        input.append($("<div>", {class: "formRow" + hide})
-                            .append($("<label>").text(this.display_name))
-                            .append($("<div>", {class: "formRight"})
+                        input.append($("<div>", {class: "control-group" + hide})
+                            .append($("<label>",{class:"control-label"}).text(this.display_name))
+                            .append($("<div>", {class: "controls"})
                                 .append(elmt)));
                         custom_class = "";
                     });
