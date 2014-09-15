@@ -131,7 +131,7 @@ function startDash($db, $user) {
     echo json_encode($js);
 }
 
-function startDefault($db, $user) {
+function startDefault($db,UserLogin $user) {
     $calendar = new Calendars($db);
     $js = (object) array("refs" => "", "tipo" => "");
     $js->refs = $calendar->getNames($user->getUser()->username);
@@ -141,7 +141,7 @@ function startDefault($db, $user) {
     echo json_encode($js);
 }
 
-function getAllReservations($db, $user, $start, $end) {
+function getAllReservations($db,UserLogin $user, $start, $end) {
     $calendar = new Calendars($db);
     $reservas = $calendar->getByRefs($user->getUser()->username, $start, $end);
     echo json_encode($reservas);
