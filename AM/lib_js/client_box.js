@@ -231,13 +231,25 @@ var ClientBox = function (configs) {
                     "sAjaxSource": '/AM/ajax/users.php',
                     "fnServerParams": function (aoData) {
                         aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {"name": "lead_id", "value": me.client_info.id});
-                    },"aoColumns": [
-                        {"sTitle": "ID",  bVisible: false},
-                        {"sTitle": "Tit\ulo", "sWidth": "50px"},
-                        {"sTitle": "Nota",  bVisible: false},
+                    }, "aoColumns": [
+                        {"sTitle": "ID", bVisible: false},
+                        {"sTitle": "Titulo", "sWidth": "50px"},
+                        {"sTitle": "Nota", bVisible: false},
                         {"sTitle": "Data criação", "sWidth": "50px"},
                         {"sTitle": "Data modificação", "sWidth": "50px"}
-                    ],"oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"}
+                    ], "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"},
+                    "aoColumnDefs": [
+                        {                            "aTargets": [ 3, 4 ],
+                            "fnRender": function (data, value, row) {
+                                if (value.length) {
+                                                          return  moment(value).fromNow();
+                                }
+                                else {
+                                    return "N/A";
+                                }
+                            }
+                        }
+                    ]
                 }).on('click', 'tr', function (event) {
                     var data = table.fnGetData(table.fnGetPosition(this));
                     note_area_div.find("#note_title").val(data[1]).data("selected_note", data[0]).end()
@@ -328,7 +340,7 @@ var ClientBox = function (configs) {
                                     table.fnReloadAjax();
                                     clear_note_preview();
                                     $.msg('unblock');
-                                },                                "json").fail(function (data) {
+                                }, "json").fail(function (data) {
                                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                                     $.msg('unblock', 5000);
                                 });
@@ -341,7 +353,8 @@ var ClientBox = function (configs) {
                     toggle_menus();
                     table.$('tr.selected').removeClass('selected');
                 }
-               //-----------------------------------------------------------------------------------------------------------
+
+                //-----------------------------------------------------------------------------------------------------------
                 //NEW NOTE//////////////////////////////////////////////////////////////////////////////////////////////////////////
                 new_note_area_div.on("click", "#save_note_new", function (e) {
                     e.preventDefault();
@@ -368,6 +381,7 @@ var ClientBox = function (configs) {
                     new_note_area_div.find("#new_note_title").val("");
                     new_note_area_div.find("#new_note_textarea").val("");
                 }
+
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////7
                 function toggle_menus() {
                     note_area_div.toggle();
