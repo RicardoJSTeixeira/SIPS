@@ -3777,7 +3777,7 @@ $h++;
                                 </td>
                             </tr>   
 
-                            <tr onClick="redial();" style='cursor:pointer;'>
+                            <tr onClick="redial();" style='cursor:pointer;<?= ($curClient[0]=="connecta")?"display:none;":"" ?>'>
                                 <td><i class="fam-arrow-undo"></i></td>
                                 <td class='btn-link'>Re-Marcar</td>
                             </tr>  
