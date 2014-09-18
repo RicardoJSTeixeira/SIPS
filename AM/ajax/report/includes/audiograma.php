@@ -7,7 +7,7 @@ $output = fopen('php://output', 'w');
 
 $u = $user->getUser();
 
-$query = "SELECT extra2 'codCliente', a.extra_id as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode', f.produtos, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
+$query = "SELECT extra2 'codCliente', a.extra_id as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode', f.produtos, f.venda, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
                 FROM sips_sd_reservations a
                 INNER JOIN sips_sd_resources b ON a.id_resource = b.id_resource
                 INNER JOIN vicidial_list d ON a.lead_id = d.lead_id
@@ -134,8 +134,12 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     $bcr = array_map($extractor, json_decode($row->BCR));
     $ulll = array_map($extractor, json_decode($row->ULLL));
     $ullr = array_map($extractor, json_decode($row->ULLR));
-    $produtos = json_decode($row->produtos,true);
-    $produtos = (is_array($produtos)) ? array_replace_recursive($defaultProdutos, $produtos) : $defaultProdutos;
+    if ((bool)$row->venda) {
+        $produtos = json_decode($row->produtos, true);
+        $produtos = (is_array($produtos)) ? array_replace_recursive($defaultProdutos, $produtos) : $defaultProdutos;
+    } else {
+        $produtos = $defaultProdutos;
+    }
 
     $audioResult = audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
     fputcsv($output, array_merge(

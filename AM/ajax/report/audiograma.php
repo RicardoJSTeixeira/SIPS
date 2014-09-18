@@ -22,17 +22,17 @@ switch ($action) {
     case "populate_consults"://ALL MARCAÇOES
         $u = $user->getUser();
         $output['aaData'] = array();
-        $query = "SELECT extra2 'codCliente', a.extra_id as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode', f.produtos , MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL' "
-                . "FROM sips_sd_reservations a "
-                . "INNER JOIN sips_sd_resources b ON a.id_resource = b.id_resource "
-                . "INNER JOIN vicidial_list d ON a.lead_id = d.lead_id "
-                . "INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id "
-                . "INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid "
-                . "WHERE f.closed=1 group by g.uniqueid limit 20000";
+        $query = "SELECT extra2 'codCliente', a.extra_id as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode', f.produtos, f.venda, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
+                FROM sips_sd_reservations a
+                INNER JOIN sips_sd_resources b ON a.id_resource = b.id_resource
+                INNER JOIN vicidial_list d ON a.lead_id = d.lead_id
+                INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
+                INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid
+                WHERE f.closed=1 group by g.uniqueid limit 20000";
 
         $stmt = $db->prepare($query);
         $stmt->execute();
-        $extractor = function($a) {
+        $extractor = function ($a) {
             return $a->value;
         };
         $defaultProdutos = array(
@@ -48,9 +48,10 @@ switch ($action) {
             ),
             "tipo" => ""
         );
-        function audioCalc($ar500, $al500, $ar1000, $al1000, $ar2000, $al2000, $ar4000, $al4000) {
-            $right_ear = (object) array("value" => 0, "text" => "");
-            $left_ear = (object) array("value" => 0, "text" => "");
+        function audioCalc($ar500, $al500, $ar1000, $al1000, $ar2000, $al2000, $ar4000, $al4000)
+        {
+            $right_ear = (object)array("value" => 0, "text" => "");
+            $left_ear = (object)array("value" => 0, "text" => "");
 
             $right_ear->value = (($ar500 * 4) + ($ar1000 * 3) + ($ar2000 * 2) + ($ar4000 * 1)) / 10;
             $left_ear->value = (($al500 * 4) + ($al1000 * 3) + ($al2000 * 2) + ($al4000 * 1)) / 10;
@@ -70,7 +71,7 @@ switch ($action) {
                     $left_ear->text = "Perda Power";
                 }
             }
-            return (object) array("right" => $right_ear, "left" => $left_ear, "result" => $result);
+            return (object)array("right" => $right_ear, "left" => $left_ear, "result" => $result);
         }
 
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -80,17 +81,21 @@ switch ($action) {
             $bcr = array_map($extractor, json_decode($row->BCR));
             $ulll = array_map($extractor, json_decode($row->ULLL));
             $ullr = array_map($extractor, json_decode($row->ULLR));
-            $produtos = json_decode($row->produtos,true);
-            $produtos = (is_array($produtos)) ? array_replace_recursive($defaultProdutos, $produtos) : $defaultProdutos;
+            if ((bool)$row->venda) {
+                $produtos = json_decode($row->produtos, true);
+                $produtos = (is_array($produtos)) ? array_replace_recursive($defaultProdutos, $produtos) : $defaultProdutos;
+            } else {
+                $produtos = $defaultProdutos;
+            }
 
             $audioResult = audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
             $output['aaData'][] = array_merge(array(
-                $row->codCliente,
-                $row->itLogID,
-                $row->id_reservation,
-                $row->lead_id,
-                $row->entry_date,
-                $row->user),
+                    $row->codCliente,
+                    $row->itLogID,
+                    $row->id_reservation,
+                    $row->lead_id,
+                    $row->entry_date,
+                    $row->user),
                 $al,
                 $ar,
                 $bcl,
