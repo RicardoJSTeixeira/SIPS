@@ -337,9 +337,9 @@ class Calendar extends Calendars
         return implode(" ", $name_arr);
     }
 
-    public function getReservas($beg, $end, $username)
+    public function getReservas($beg, $end)
     {
-        return parent::_getReservas($this->_is_scheduler, ($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end), false, $username);
+        return parent::_getReservas($this->_is_scheduler, ($this->_is_scheduler) ? $this->_id_scheduler : $this->_id_resource, \date('Y-m-d H:i:s', $beg), \date('Y-m-d H:i:s', $end), false);
     }
 
     public function getTipoReservas($user_groups = array())
