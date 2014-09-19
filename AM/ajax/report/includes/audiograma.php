@@ -37,8 +37,8 @@ $defaultProdutos = array(
 
 function audioCalc($ar500, $al500, $ar1000, $al1000, $ar2000, $al2000, $ar4000, $al4000)
 {
-    $right_ear = (object)array("value" => 0, "text" => "");
-    $left_ear = (object)array("value" => 0, "text" => "");
+    $right_ear = (object)array("value" => 0, "text" => "Sem Perda");
+    $left_ear = (object)array("value" => 0, "text" => "Sem Perda");
 
     $right_ear->value = (($ar500 * 4) + ($ar1000 * 3) + ($ar2000 * 2) + ($ar4000 * 1)) / 10;
     $left_ear->value = (($al500 * 4) + ($al1000 * 3) + ($al2000 * 2) + ($al4000 * 1)) / 10;
