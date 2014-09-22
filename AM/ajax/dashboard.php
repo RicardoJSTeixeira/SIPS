@@ -52,7 +52,7 @@ switch ($action) {
    INNER JOIN vicidial_list b ON a.lead_id=b.lead_id
    INNER JOIN vicidial_users c ON b.user=c.user
    LEFT JOIN spice_consulta d ON d.reserva_id=a.id_reservation
-   WHERE c.user_group=:user_group AND DATE(a.start_date)>'2014-07-28' AND a.id_reservation_type IN ($rs) AND a.gone=0  GROUP BY a.lead_id limit 20000";
+   WHERE c.user_group=:user_group AND DATE(a.start_date)>'2014-07-28' AND a.id_reservation_type IN ($rs) AND a.gone=0 limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $calendar = new Calendars($db);
@@ -85,7 +85,7 @@ switch ($action) {
    INNER JOIN sips_sd_resources e ON a.id_resource=e.id_resource
    INNER JOIN vicidial_list b on a.lead_id=b.lead_id 
    LEFT JOIN spice_consulta c on c.reserva_id=a.id_reservation
-   WHERE a.id_resource in ('$refs') AND DATE(a.start_date)>'2014-07-28' AND a.id_reservation_type in ($rs) AND a.gone=0 group by a.lead_id limit 20000";
+   WHERE a.id_resource in ('$refs') AND DATE(a.start_date)>'2014-07-28' AND a.id_reservation_type in ($rs) AND a.gone=0 limit 20000";
         }
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
