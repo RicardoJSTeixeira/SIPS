@@ -75,12 +75,12 @@ switch ($action) {
         }
 
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
-            $al = array_map($extractor, json_decode($row->AL));
             $ar = array_map($extractor, json_decode($row->AR));
-            $bcl = array_map($extractor, json_decode($row->BCL));
+            $al = array_map($extractor, json_decode($row->AL));
             $bcr = array_map($extractor, json_decode($row->BCR));
-            $ulll = array_map($extractor, json_decode($row->ULLL));
+            $bcl = array_map($extractor, json_decode($row->BCL));
             $ullr = array_map($extractor, json_decode($row->ULLR));
+            $ulll = array_map($extractor, json_decode($row->ULLL));
             if ((bool)$row->venda) {
                 $produtos = json_decode($row->produtos, true);
                 $produtos = (is_array($produtos)) ? array_replace_recursive($defaultProdutos, $produtos) : $defaultProdutos;
@@ -96,12 +96,12 @@ switch ($action) {
                     $row->lead_id,
                     $row->entry_date,
                     $row->user),
-                $al,
                 $ar,
-                $bcl,
+                $al,
                 $bcr,
-                $ulll,
+                $bcl,
                 $ullr,
+                $ulll,
                 array(
                     $audioResult->right->text,
                     $audioResult->left->text,
