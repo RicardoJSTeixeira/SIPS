@@ -1,13 +1,15 @@
 <?php
 
-abstract class requests_class {
+abstract class requests_class
+{
 
     protected $_db;
     public $user_level = 0;
     public $user_id = "no_user";
     public $user;
 
-    public function __construct($db, $user_level, $user_id, $user) {
+    public function __construct($db, $user_level, $user_id, $user)
+    {
         $this->user_level = $user_level;
         $this->user_id = $user_id;
         $this->user = $user;
@@ -16,15 +18,18 @@ abstract class requests_class {
 
 }
 
-class apoio_marketing extends requests_class {
+class apoio_marketing extends requests_class
+{
 
-    public function __construct($db, $user_level, $user_id, $user) {
+    public function __construct($db, $user_level, $user_id, $user)
+    {
         parent::__construct($db, $user_level, $user_id, $user);
     }
 
-    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade) {
+    public function create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade)
+    {
         $query = "INSERT INTO `spice_apoio_marketing`(`user`,`data_criacao`, `data_inicial`,`data_final`,`horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`,`status`) "
-                . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status)";
+            . "VALUES (:user,:now,:data_inicial,:data_final,:horario,:localidade,:local,:morada,:comments,:local_pub,:status)";
 
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(
@@ -42,9 +47,10 @@ class apoio_marketing extends requests_class {
         return $this->_db->lastInsertId();
     }
 
-    public function get_to_datatable() {
+    public function get_to_datatable()
+    {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
+        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -87,9 +93,10 @@ class apoio_marketing extends requests_class {
         return $result;
     }
 
-    public function get_horario($id) {
+    public function get_horario($id)
+    {
         $horarios = array();
-        $query = "SELECT horario from spice_apoio_marketing where id=:id";
+        $query = "SELECT horario FROM spice_apoio_marketing WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         if ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -99,9 +106,10 @@ class apoio_marketing extends requests_class {
         return $horarios;
     }
 
-    public function get_locais_publicidade($id) {
+    public function get_locais_publicidade($id)
+    {
         $locais = array();
-        $query = "SELECT local_publicidade from spice_apoio_marketing where id=?";
+        $query = "SELECT local_publicidade FROM spice_apoio_marketing WHERE id=?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -113,42 +121,48 @@ class apoio_marketing extends requests_class {
         return $locais;
     }
 
-    public function get_reservations($id) {
-        $query = "Select id_reservation From spice_apoio_marketing where id=:id";
+    public function get_reservations($id)
+    {
+        $query = "SELECT id_reservation FROM spice_apoio_marketing WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $reservation_id = $stmt->fetch(PDO::FETCH_OBJ);
         return json_decode($reservation_id->id_reservation);
     }
 
-    public function accept($id) {
-        $query = "Update spice_apoio_marketing set status=1 where id=:id";
+    public function accept($id)
+    {
+        $query = "UPDATE spice_apoio_marketing SET status=1 WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }
 
-    public function decline($id) {
-        $query = "Update spice_apoio_marketing set status=2 where id=?";
+    public function decline($id)
+    {
+        $query = "UPDATE spice_apoio_marketing SET status=2 WHERE id=?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    private function getUser($id) {
-        $query = "Select user FROM spice_apoio_marketing where id=:id";
+    private function getUser($id)
+    {
+        $query = "SELECT user FROM spice_apoio_marketing WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function setReservation($id, $ref) {
-        $query = "UPDATE spice_apoio_marketing set id_reservation=:id_reservation where id=:id";
+    public function setReservation($id, $ref)
+    {
+        $query = "UPDATE spice_apoio_marketing SET id_reservation=:id_reservation WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id_reservation" => json_encode($ref), ":id" => $id));
     }
 
-    public function get_one($id) {
+    public function get_one($id)
+    {
         $query = "SELECT `user`, `data_criacao`, `data_inicial`, `data_final`, `horario`, `localidade`, `local`, `morada`, `comments`, `local_publicidade`, `cod`, `total_rastreios`, `rastreios_perda`, `vendas`, `valor`, `closed` FROM `spice_apoio_marketing` WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
@@ -158,29 +172,103 @@ class apoio_marketing extends requests_class {
         return $ap;
     }
 
-    public function set_report($id, $cod, $total_rastreios, $rastreios_perda, $vendas, $valor) {
+    public function set_report($id, $cod, $total_rastreios, $rastreios_perda, $vendas, $valor)
+    {
         $query = "UPDATE spice_apoio_marketing SET cod=:cod, total_rastreios=:total_rastreios, rastreios_perda=:rastreios_perda, vendas=:vendas, valor=:valor, closed=1 WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":cod" => $cod, ":total_rastreios" => $total_rastreios, ":rastreios_perda" => $rastreios_perda, ":vendas" => $vendas, ":valor" => $valor, ":id" => $id));
     }
 
+//CODIGOS DE MARKETING - CREATE,DELETE,EDIT e GET------------------------------------------------------
+    public function create_marketing_code($codmkt, $description)
+    {
+
+        $duplicates = $this->get_marketing_code($codmkt);
+        if (gettype($duplicates) == "object") {
+            return false;
+        } else {
+            $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description)";
+            $stmt = $this->_db->prepare($query);
+
+            return $stmt->execute(array(":codmkt" => $codmkt, ":description" => $description));
+        }
+
+    }
+
+    public function create_multiple_marketing_code($codes)
+    {
+        foreach ($codes as $lines) {
+            $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description) ON DUPLICATE KEY UPDATE codmkt=:codmkt1, description=:description1";
+            $stmt = $this->_db->prepare($query);
+            $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
+        }
+        return json_encode(true);
+    }
+
+
+    public function edit_marketing_code($id_codmkt, $new_codmkt, $description)
+    {
+        $temp = $this->get_marketing_code($new_codmkt);
+        if (gettype($temp) == "object") {
+            if ($temp->id != $id_codmkt)
+
+                return "duplicate";
+        }
+
+        $query = "UPDATE `spice_codigos_mkt` SET codmkt=:new_codmkt,description=:description, modify_date=:modify_date WHERE id=:id_codmkt";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":new_codmkt" => $new_codmkt, ":description" => $description, ":modify_date" => date('Y-m-d H:i:s'), ":id_codmkt" => $id_codmkt));
+    }
+
+    public function get_marketing_code($codmkt)
+    {
+        $query = "SELECT * FROM spice_codigos_mkt WHERE codmkt=:codmkt";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute(array(":codmkt" => $codmkt));
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function get_marketing_code_to_datatable()
+    {
+        $result['aaData'] = array();
+        $query = "SELECT * FROM spice_codigos_mkt";
+        $stmt = $this->_db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+
+
+            $result['aaData'][] = $row;
+        }
+        return $result;
+    }
+
+    public function delete_marketing_code($id)
+    {
+        $stmt = $this->_db->prepare("DELETE FROM spice_codigos_mkt WHERE id=:id");
+        return $stmt->execute(array(":id" => $id));
+    }
+//------------------------------------------------------------------------------------------------------------
 }
 
-class correio extends requests_class {
+class correio extends requests_class
+{
 
-    public function __construct($db, $user_level, $user_id, $user) {
+    public function __construct($db, $user_level, $user_id, $user)
+    {
         parent::__construct($db, $user_level, $user_id, $user);
     }
 
-    public function create($carta_porte, $data, $input_doc_obj_assoc, $comments) {
+    public function create($carta_porte, $data, $input_doc_obj_assoc, $comments)
+    {
         $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
-    public function get_to_datatable() {
+    public function get_to_datatable()
+    {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
+        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -225,22 +313,25 @@ class correio extends requests_class {
         return $result;
     }
 
-    public function accept($id) {
-        $query = "Update spice_report_correio set status = 1 where id = :id";
+    public function accept($id)
+    {
+        $query = "UPDATE spice_report_correio SET status = 1 WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }
 
-    public function decline($id) {
-        $query = "Update spice_report_correio set status = 2 where id = :id";
+    public function decline($id)
+    {
+        $query = "UPDATE spice_report_correio SET status = 2 WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $this->getUser($id);
     }
 
-    public function get_anexo_correio($id) {
-        $query = "select anexo from spice_report_correio where id = :id";
+    public function get_anexo_correio($id)
+    {
+        $query = "SELECT anexo FROM spice_report_correio WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
 
@@ -253,21 +344,24 @@ class correio extends requests_class {
         return $anexos;
     }
 
-    public function save_anexo_correio($id, $anexos) {
-        $query = "update spice_report_correio set anexo = :anexo where id = :id";
+    public function save_anexo_correio($id, $anexos)
+    {
+        $query = "UPDATE spice_report_correio SET anexo = :anexo WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":anexo" => json_encode($anexos)));
     }
 
-    private function getUser($id) {
-        $query = "Select user FROM spice_report_correio where id = :id";
+    private function getUser($id)
+    {
+        $query = "SELECT user FROM spice_report_correio WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function get_one($id) {
-        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio WHERE id=:id";
+    public function get_one($id)
+    {
+        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status FROM spice_report_correio WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $ap = $stmt->fetch(PDO::FETCH_OBJ);
@@ -276,21 +370,25 @@ class correio extends requests_class {
 
 }
 
-class frota extends requests_class {
+class frota extends requests_class
+{
 
-    public function __construct($db, $user_level, $user_id, $user) {
+    public function __construct($db, $user_level, $user_id, $user)
+    {
         parent::__construct($db, $user_level, $user_id, $user);
     }
 
-    public function create($data, $matricula, $km, $viatura, $ocorrencias, $comments) {
+    public function create($data, $matricula, $km, $viatura, $ocorrencias, $comments)
+    {
         $query = "INSERT INTO `spice_report_frota` (`user`, `data`, `matricula`, `km`, `viatura`, `comments`, `ocorrencia`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
     }
 
-    public function get_to_datatable() {
+    public function get_to_datatable()
+    {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
+        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -325,23 +423,26 @@ class frota extends requests_class {
         return $result;
     }
 
-    public function accept($id) {
-        $query = "Update spice_report_frota set status = 1 where id = ?";
+    public function accept($id)
+    {
+        $query = "UPDATE spice_report_frota SET status = 1 WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    public function decline($id) {
-        $query = "Update spice_report_frota set status = 2 where id = ?";
+    public function decline($id)
+    {
+        $query = "UPDATE spice_report_frota SET status = 2 WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $ocorrencia = array();
-        $query = "SELECT ocorrencia from spice_report_frota where id = ?";
+        $query = "SELECT ocorrencia FROM spice_report_frota WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -353,15 +454,17 @@ class frota extends requests_class {
         return $ocorrencia;
     }
 
-    private function getUser($id) {
-        $query = "Select user FROM spice_report_frota where id = :id";
+    private function getUser($id)
+    {
+        $query = "SELECT user FROM spice_report_frota WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function get_one($id) {
-        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota WHERE id=:id";
+    public function get_one($id)
+    {
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status FROM spice_report_frota WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $ap = $stmt->fetch(PDO::FETCH_OBJ);
@@ -370,21 +473,25 @@ class frota extends requests_class {
 
 }
 
-class mensal_stock extends requests_class {
+class mensal_stock extends requests_class
+{
 
-    public function __construct($db, $user_level, $user_id, $user) {
+    public function __construct($db, $user_level, $user_id, $user)
+    {
         parent::__construct($db, $user_level, $user_id, $user);
     }
 
-    public function create($data, $produtos) {
+    public function create($data, $produtos)
+    {
         $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
 
-    public function get_to_datatable() {
+    public function get_to_datatable()
+    {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
+        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -419,23 +526,26 @@ class mensal_stock extends requests_class {
         return $result;
     }
 
-    public function accept($id) {
-        $query = "Update spice_report_stock set status = 1 where id = ?";
+    public function accept($id)
+    {
+        $query = "UPDATE spice_report_stock SET status = 1 WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    public function decline($id) {
-        $query = "Update spice_report_stock set status = 2 where id = ?";
+    public function decline($id)
+    {
+        $query = "UPDATE spice_report_stock SET status = 2 WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $produtos = array();
-        $query = "SELECT produtos from spice_report_stock where id = ?";
+        $query = "SELECT produtos FROM spice_report_stock WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -448,21 +558,24 @@ class mensal_stock extends requests_class {
         return $produtos;
     }
 
-    public function save_stock($id, $produtos) {
-        $query = "update spice_report_stock set produtos = :produtos where id = :id";
+    public function save_stock($id, $produtos)
+    {
+        $query = "UPDATE spice_report_stock SET produtos = :produtos WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":produtos" => json_encode($produtos)));
     }
 
-    private function getUser($id) {
-        $query = "Select user FROM spice_report_stock where id = :id";
+    private function getUser($id)
+    {
+        $query = "SELECT user FROM spice_report_stock WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function get_one($id) {
-        $query = "SELECT id, user, data, produtos, status from spice_report_stock WHERE id=:id";
+    public function get_one($id)
+    {
+        $query = "SELECT id, user, data, produtos, status FROM spice_report_stock WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $ap = $stmt->fetch(PDO::FETCH_OBJ);
@@ -471,21 +584,25 @@ class mensal_stock extends requests_class {
 
 }
 
-class movimentacao_stock extends requests_class {
+class movimentacao_stock extends requests_class
+{
 
-    public function __construct($db, $user_level, $user_id, $user) {
+    public function __construct($db, $user_level, $user_id, $user)
+    {
         parent::__construct($db, $user_level, $user_id, $user);
     }
 
-    public function create($data, $produtos) {
+    public function create($data, $produtos)
+    {
         $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
     }
 
-    public function get_to_datatable() {
+    public function get_to_datatable()
+    {
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6 ) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6 ) ? ' where user like "' . $this->user_id . '" ' : '');
+        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
         $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao $filter limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
@@ -520,23 +637,26 @@ class movimentacao_stock extends requests_class {
         return $result;
     }
 
-    public function accept($id) {
-        $query = "Update spice_report_movimentacao set status = 1 where id = ?";
+    public function accept($id)
+    {
+        $query = "UPDATE spice_report_movimentacao SET status = 1 WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    public function decline($id) {
-        $query = "Update spice_report_movimentacao set status = 2 where id = ?";
+    public function decline($id)
+    {
+        $query = "UPDATE spice_report_movimentacao SET status = 2 WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         return $this->getUser($id);
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $produtos = array();
-        $query = "SELECT produtos from spice_report_movimentacao where id = ?";
+        $query = "SELECT produtos FROM spice_report_movimentacao WHERE id = ?";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($id));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -549,21 +669,24 @@ class movimentacao_stock extends requests_class {
         return $produtos;
     }
 
-    private function getUser($id) {
-        $query = "Select user FROM spice_report_movimentacao where id = :id";
+    private function getUser($id)
+    {
+        $query = "SELECT user FROM spice_report_movimentacao WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function save_mov_stock($id, $produtos) {
-        $query = "update spice_report_movimentacao set produtos = :produtos where id = :id";
+    public function save_mov_stock($id, $produtos)
+    {
+        $query = "UPDATE spice_report_movimentacao SET produtos = :produtos WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":id" => $id, ":produtos" => json_encode($produtos)));
     }
 
-    public function get_one($id) {
-        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao WHERE id=:id";
+    public function get_one($id)
+    {
+        $query = "SELECT id, user, entry_date, produtos, status FROM spice_report_movimentacao WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $ap = $stmt->fetch(PDO::FETCH_OBJ);

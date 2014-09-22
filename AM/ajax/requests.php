@@ -35,7 +35,6 @@ $log = new Logger($db, $user->getUser());
 switch ($action) {
 
 
-
     //ADDs
     case "criar_relatorio_frota":
         if (!is_array($ocorrencias))
@@ -140,6 +139,7 @@ $comments
         echo json_encode($relatorio_movimentacao_stock->create($data, $produtos));
         break;
 
+
     //Gets to Datatables
     case "get_apoio_marketing_to_datatable":
         echo json_encode($apoio_marketing->get_to_datatable());
@@ -160,6 +160,9 @@ $comments
     case "get_relatorio_movimentacao_to_datatable":
         echo json_encode($relatorio_movimentacao_stock->get_to_datatable());
         break;
+
+
+
 
 
 
@@ -189,13 +192,6 @@ $comments
     case "get_mensal_stock":
         echo json_encode($relatorio_mensal_stock->get_anexo_correio($id));
         break;
-
-
-
-
-
-
-
 
 
     //Get extras
@@ -432,33 +428,61 @@ $comments
         echo json_encode(true);
         break;
 
+
+    //MARKETING CODES - CREATE/EDIT/DELETE/
+    case "edit_marketing_code":
+        echo json_encode($apoio_marketing->edit_marketing_code($id_codmkt,$new_codmkt, $description));
+        break;
+
+    case "create_marketing_code":
+        echo json_encode($apoio_marketing->create_marketing_code($codmkt, $description));
+        break;
+
+    case "create_multiple_marketing_code":
+        echo json_encode($apoio_marketing->create_multiple_marketing_code($codes));
+        break;
+
+    case "get_marketing_code_to_datatable":
+        echo json_encode($apoio_marketing->get_marketing_code_to_datatable());
+        break;
+
+    case "get_marketing_code":
+        echo json_encode($apoio_marketing->get_marketing_code($codmkt));
+        break;
+    case "delete_marketing_code":
+        echo json_encode($apoio_marketing->delete_marketing_code($id));
+        break;
+
     default:
         echo 'Are you an hacker? if so, then please come to purosinonimo, where the company parties are full of alcohol and beautifull vanias!';
 }
 
-function send_email($email_address, $email_name, $msg, $assunto) {
+function send_email($email_address, $email_name, $msg, $assunto)
+{
     $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
-            ->setUsername('ccamemail@gmail.com')
-            ->setPassword('ccamemail1234');
+        ->setUsername('ccamemail@gmail.com')
+        ->setPassword('ccamemail1234');
 
     $mailer = Swift_Mailer::newInstance($transport);
     $message = Swift_Message::newInstance($assunto)
-            ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
-            ->setTo(array($email_address => $email_name));
+        ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
+        ->setTo(array($email_address => $email_name));
     $message->setBody($msg, 'text/html');
     $result = $mailer->send($message);
     return ($result >= 1);
 }
 
-function postal2tr($postal) {
+function postal2tr($postal)
+{
     $trs = "";
     foreach ($postal as $value) {
-        $trs.="<tr><td>$value[cp]</td><td>$value[freguesia]</td></tr>";
+        $trs .= "<tr><td>$value[cp]</td><td>$value[freguesia]</td></tr>";
     }
     return $trs;
 }
 
-function horario2mail($horario) {
+function horario2mail($horario)
+{
     switch ($horario[tipo]) {
         case 1:
             return "das $horario[inicio1] às $horario[inicio2] e das $horario[fim1] às $horario[fim2]";

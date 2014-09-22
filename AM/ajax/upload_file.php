@@ -10,7 +10,6 @@ foreach ($_GET as $key => $value) {
 }
 
 
-
 require '../lib_php/db.php';
 
 require '../lib_php/user.php';
@@ -18,12 +17,8 @@ $user = new UserLogin($db);
 $user->confirm_login();
 
 
-
-
-
-
 $destiny = getcwd() . "/files/";
-
+$destiny_excel = getcwd() . "/files/excel/";
 switch ($action) {
 
     case "upload":
@@ -33,12 +28,67 @@ switch ($action) {
             return false;
         } else {
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $id . "_-_" . $fileName))
-                echo json_encode([ "message" => "$fileName Guardado", "id" => $id,]);
+                echo json_encode(["message" => "$fileName Guardado", "id" => $id,]);
             else
-                echo json_encode([ "message" => "$fileName Não Guardado", "id" => $id,]);
+                echo json_encode(["message" => "$fileName Não Guardado", "id" => $id,]);
         }
         break;
 
+    case "upload_excel_mkt_codes":
+        $file = $_FILES["file"]["name"];
+
+        if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny_excel . $file)) {
+
+
+            $docRoot = $_SERVER[DOCUMENT_ROOT];
+            $uploadedfile = $file;
+            $uploadedfile = preg_replace("/[^-\.\_0-9a-zA-Z]/", "_", $file);
+            $ConvertedFile = preg_replace("/\.csv$|\.xls$|\.xlsx$|\.ods$|\.sxc$/i", '.txt', $uploadedfile);
+
+            $file = escapeshellarg($file);
+            $ConvertCommand = "mv $docRoot/AM/ajax/files/excel/$file $docRoot/AM/ajax/files/excel/$uploadedfile";
+
+            $a = passthru($ConvertCommand);
+
+            $ConvertCommand = "$docRoot/sips-admin/campaigns/extras/upload/sheet2tab.pl $docRoot/AM/ajax/files/excel/$uploadedfile $docRoot/AM/ajax/files/excel/$ConvertedFile";
+            $b = passthru($ConvertCommand);
+
+            $file = fopen("$docRoot/AM/ajax/files/excel/$ConvertedFile", "r");
+
+            $headers = explode("\t", trim(fgets($file, 4096)));
+
+            $array_lines = array();
+            while (!feof($file)) {
+
+                $buffer = trim(fgets($file, 4096));
+
+                if (strlen($buffer) > 0) {
+                    $buffer = stripslashes($buffer);
+                    $buffer = explode("\t", $buffer);
+                    $array_lines[] = $buffer;
+                }
+            }
+            $file_name= $_FILES["file"]["name"];
+            echo json_encode( array("message" => "$file_name importado com sucesso", data => $array_lines));
+            break;
+        } else
+            echo  json_encode(array("message" => "$file_name Não Importado", data => null));
+
+
+        break;
+
+    case "upload_report":
+        $fileName = $_FILES["file"]["name"];
+        if (file_exists($destiny . $fileName)) {
+            echo $fileName . " Já existe. ";
+        } else {
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $fileName))
+                echo 1;
+            else {
+                echo "$fileName não carregado";
+            }
+        }
+        break;
 
     case "move_files_to_new_folder":
         if (!file_exists($destiny . $new_id . "_encomenda")) {
@@ -86,7 +136,7 @@ switch ($action) {
         $js = array();
         $dh = @opendir($destiny . $folder);
 
-        while (false !== ( $file = readdir($dh) )) {
+        while (false !== ($file = readdir($dh))) {
             if ($file != "dummy.gitignore" && $file != ".." && $file != ".")
                 $js[] = $file;
         }
@@ -102,7 +152,7 @@ switch ($action) {
 
         $ref_cliente = preg_replace("/[^0-9]/", "", $ref_cliente);
 
-        while (false !== ( $file = readdir($dh) )) {
+        while (false !== ($file = readdir($dh))) {
             if ($file == ".." && $file == ".")
                 continue;
             $split = explode("_", $file);
@@ -128,20 +178,7 @@ switch ($action) {
             echo json_encode(base64_encode(array_pop($files)));
 
 
-
         break;
 
 
-    case "upload_report":
-        $fileName = $_FILES["file"]["name"];
-        if (file_exists($destiny . $fileName)) {
-            echo $fileName . " Já existe. ";
-        } else {
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $fileName))
-                echo 1;
-            else {
-                echo "$fileName não carregado";
-            }
-        }
-        break;
 }
