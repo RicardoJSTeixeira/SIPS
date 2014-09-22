@@ -12,6 +12,13 @@ foreach ($oUsersTMP as &$user) {
     $oUsers[$user->user] = $user;
 }
 
+$tipoFamHack = array(
+    "marido/esposa" => "Marido/Esposa",
+    "filho" => "Filho(a)",
+    "familiar" => "Outro Familiar",
+    "amigo" => "Amigo(a)"
+);
+
 fputcsv($output, array(
     "Contact No.",
     "Interaction Log Entry No.",
@@ -44,7 +51,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $row["user"]=$oUsers[$row["user"]]->alias;
     $terceira_pessoa = json_decode(array_pop($row));
     if (count($terceira_pessoa)) {
-        $row[] = $terceira_pessoa->tipo;
+        $row[] = strtr($terceira_pessoa->tipo,$tipoFamHack);
         $row[] = $terceira_pessoa->nome;
     } else {
         $row[] = "";
