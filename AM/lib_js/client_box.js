@@ -496,7 +496,7 @@ var ClientBox = function (configs) {
                                  <td>" + this.concelho + "</td>\n\
                                  <td>" + this.distrito + "</td>\n\
                                  <td>" + this.cod_postal + "<div class='view-button'><button class='btn btn-mini postal_code_populate' data-mor='" + JSON.stringify(this) + "'><i class='icon-copy'></i> Copiar</button></div></td>\n\
-                                            </tr>";
+                                 </tr>";
                                     });
                                     bootbox.dialog("<div class='alert alert-warning'>Foi encontrado um/varios codigos postais semelhantes.</div>\n\
                                         <table id='postal_code_table_check' class='table table-mod table-bordered table-striped table-condensed'>\n\
@@ -526,7 +526,6 @@ var ClientBox = function (configs) {
                                         $("[name='STATE']").val(that.distrito);
                                         bootbox.hideAll();
                                     });
-
                                     $("#postal_code_table_check").DataTable();
                                 }, "json");
                             }
@@ -708,7 +707,6 @@ var ClientBox = function (configs) {
                         language: "pt",
                         minView: 2
                     }).attr('data-prompt-position', 'topRight:120');
-
                     $.each(data, function () {
                         div.find("#" + this.name).val(this.value);
                     })
