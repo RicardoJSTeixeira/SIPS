@@ -195,10 +195,10 @@ var ClientBox = function (configs) {
                                 .append($("<button>", {class: "btn btn-success left dropdown-toggle"}).attr("data-toggle", "dropdown").text("Opções Extra").append($("<span>", {class: "caret"})))
                                 .append($("<div>", {class: " dropdown-menu"})
                                     .append($("<ul>")
-                                        .append($("<li>").append($("<a>", {class:"icon-calendar",id: "button_nova_marcacao"}).text("Nova Marcação")))
-                                        .append($("<li>").append($("<a>", {class:"icon-money",id: "button_propostas_comerciais"}).text("Propostas comerciais")))
-                                        .append($("<li>").append($("<a>", {class:"icon-user",id: "button_abrir_pdf"}).text("Abrir Pdf")))
-                                        .append($("<li>").append($("<a>", {class:"icon-file",id: "button_notas"}).text("Notas")))
+                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").append($("<a>", {class:"icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").append($("<a>", {class:"icon-money"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").append($("<a>", {class:"icon-user"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").append($("<a>", {class:"icon-file"}))))
                                 )
                             ))
                             .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Cancelar"))
@@ -261,21 +261,20 @@ var ClientBox = function (configs) {
             navid: me.client_info.navId || "",
             ref_cliente: me.client_info.refClient
         }, function (data) {
-            var fnClick;
+
             if (data) {
-                fnClick = function (e) {
-                    e.preventDefault();
+
+
                     var c = encodeURIComponent(data);
                     document.location = '/AM/ajax/downloader.php?file=' + c;
-                }
+
             }
             else {
-                fnClick = function (e) {
-                    e.preventDefault();
+
                     $.jGrowl("Cliente sem ficheiro associado", 3000);
-                }
+                y
             }
-            $(config.target).find("#open_pdf").click(fnClick);
+
             $.msg('unblock');
         }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
