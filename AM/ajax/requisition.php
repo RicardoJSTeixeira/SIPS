@@ -50,7 +50,7 @@ switch ($action) {
 
     case "editar_encomenda":
         echo json_encode($requisitions->edit_requisition($clientID, $cod_cliente));
-        $log->set("various", Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Codigo de Cliente editado", "lead_id" => "$clientID")));
+        $log->set("various", Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Codigo de Cliente editado", "lead_id" => "$clientID")),3);
         break;
 
     case "listar_produtos_por_encomenda":
@@ -69,7 +69,7 @@ switch ($action) {
                 $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id", "S_ENC", $id, 1);
             }
         }
-        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição aceite", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição aceite", "msg" => "$message")),1);
         echo json_encode($result);
         break;
 
@@ -78,7 +78,7 @@ switch ($action) {
         if ($result) {
             $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message ID:$id", "S_ENC", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição Rejeitada", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Requesição Rejeitada", "msg" => "$message")),0);
         echo json_encode($result);
         break;
 

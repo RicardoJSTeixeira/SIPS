@@ -52,17 +52,17 @@ switch ($action) {
                 echo "Operador: $username, já existe.";
             }
         }
-        $log->set($username, Logger::T_INS, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel)));
+        $log->set($username, Logger::T_INS, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel)),0);
         break;
 
     case "active":
         echo json_encode($users->editActive($username, $active));
-        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "active" => $active)));
+        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "active" => $active)),1);
         break;
 
     case "edit":
         echo json_encode($users->edit($username, $pass, $desc,$alias, $ulevel, $active, $siblings));
-        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)));
+        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)),3);
         break;
     
     case "getTypes":

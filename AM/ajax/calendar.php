@@ -62,13 +62,13 @@ switch (filter_var($_POST["action"])) {
     case "remove":
         $calendar = new Calendars($db);
         $return = $calendar->removeReserva($id);
-        $log->set($id, Logger::T_RM, Logger::S_CAL);
+        $log->set($id, Logger::T_RM, Logger::S_CAL,0);
         echo json_encode($return);
         break;
     case "change":
         $calendar = new Calendars($db);
         $return = $calendar->changeReserva($id, $start, $end);
-        $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end, "obs" => "Remarcação")));
+        $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end, "obs" => "Remarcação")),3);
         echo json_encode($return);
         break;
     case "getRscContent":
@@ -81,13 +81,13 @@ switch (filter_var($_POST["action"])) {
     case "newReservation":
         $calendar = new Calendars($db);
         $id = $calendar->newReserva($user->getUser()->username, $lead_id, $start, $end, $rtype, $resource);
-        $log->set($id, Logger::T_INS, Logger::S_CAL, json_encode(array("lead_id" => $lead_id, "start_date" => $start, "end_date" => $end, "reservation_type" => $rtype, "resource_id" => $resource)));
+        $log->set($id, Logger::T_INS, Logger::S_CAL, json_encode(array("lead_id" => $lead_id, "start_date" => $start, "end_date" => $end, "reservation_type" => $rtype, "resource_id" => $resource)),0);
         echo json_encode($id);
         break;
     case "changeReservationResource":
         $calendar = new Calendars($db);
         $ok = $calendar->changeReservaResource($id, $resource);
-        $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("resource_id" => $resource, "obs" => "Alterado o resource")));
+        $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("resource_id" => $resource, "obs" => "Alterado o resource")),3);
         echo json_encode($ok);
         break;
     case "special-event":
@@ -99,11 +99,11 @@ switch (filter_var($_POST["action"])) {
             $id = array();
             while ($ref = array_pop($refs)) {
                 $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $ref->id, $obs);
-                $log->set($id, Logger::T_INS, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end, "reservation_type" => $system_types[$rtype], "resource_id" => $ref->id, "comments" => $obs, "obs" => "Special Events")));
+                $log->set($id, Logger::T_INS, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end, "reservation_type" => $system_types[$rtype], "resource_id" => $ref->id, "comments" => $obs, "obs" => "Special Events")),0);
             }
         } else {
             $id = $calendar->newReserva($userID->username, "", $start, $end, $system_types[$rtype], $resource, $obs);
-            $log->set($id, Logger::T_INS, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end, "reservation_type" => $system_types[$rtype], "resource_id" => $resource, "comments" => $obs, "obs" => "Special Events")));
+            $log->set($id, Logger::T_INS, Logger::S_CAL, json_encode(array("start_date" => $start, "end_date" => $end, "reservation_type" => $system_types[$rtype], "resource_id" => $resource, "comments" => $obs, "obs" => "Special Events")),0);
         }
 
         echo json_encode(true);

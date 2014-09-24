@@ -147,7 +147,7 @@ switch ($action) {
 
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":id" => $id));
-        $log->set($id, Logger::T_UPD, Logger::S_USER, json_encode(array("alterações" => $query_string )));
+        $log->set($id, Logger::T_UPD, Logger::S_USER, json_encode(array("alterações" => $query_string )),3);
         break;
 
     default:

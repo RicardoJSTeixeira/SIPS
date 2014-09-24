@@ -308,7 +308,7 @@ $comments
             else
                 $alert->update("S_APMKT", $id);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Aceite", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Aceite", "msg" => "$message")),1);
         echo json_encode(true);
         break;
 
@@ -325,7 +325,7 @@ $comments
             }
             $alert->make($result->user, "Apoio Mkt. Recusado $message ID:$id", "S_APMKT", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Recusado", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_APMKT, json_encode(array("obs" => "Apoio Mkt. Recusado", "msg" => "$message")),0);
         echo json_encode(true);
         break;
 
@@ -337,7 +337,7 @@ $comments
             else
                 $alert->update("S_MAIL", $id);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Aceite", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Aceite", "msg" => "$message")),1);
         echo json_encode(true);
         break;
 
@@ -350,7 +350,7 @@ $comments
             }
             $alert->make($result->user, "Correio Recusado $message ID:$id", "S_MAIL", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Recusado", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_MAIL, json_encode(array("obs" => "Correio Recusado", "msg" => "$message")),0);
         echo json_encode(true);
         break;
 
@@ -362,7 +362,7 @@ $comments
             else
                 $alert->update("S_FROTA", $id);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Aceite", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Aceite", "msg" => "$message")),1);
         echo json_encode(true);
         break;
 
@@ -374,7 +374,7 @@ $comments
             }
             $alert->make($result->user, "Frota Recusado $message ID:$id", "S_FROTA", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Recusado", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_FROTA, json_encode(array("obs" => "Frota Recusado", "msg" => "$message")),0);
         echo json_encode(true);
         break;
 
@@ -386,7 +386,7 @@ $comments
             else
                 $alert->update("S_STOCK", $id);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Aceite", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Aceite", "msg" => "$message")),1);
         echo json_encode(true);
         break;
 
@@ -399,7 +399,7 @@ $comments
 
             $alert->make($result->user, "Stock Recusado $message ID:$id", "S_STOCK", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Recusado", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_STOCK, json_encode(array("obs" => "Stock Recusado", "msg" => "$message")),0);
         echo json_encode(true);
         break;
 
@@ -411,7 +411,7 @@ $comments
             else
                 $alert->update("S_MOVSTOCK", $id);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock Aceite", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock Aceite", "msg" => "$message")),1);
         echo json_encode(true);
         break;
 
@@ -424,7 +424,7 @@ $comments
             }
             $alert->make($result->user, "Movimentação Recusado: $message ID:$id", "S_MOVSTOCK", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock recusado", "msg" => "$message")));
+        $log->set($id, Logger::T_UPD, Logger::S_MOVSTOCK, json_encode(array("obs" => "Movimentação stock recusado", "msg" => "$message")),0);
         echo json_encode(true);
         break;
 

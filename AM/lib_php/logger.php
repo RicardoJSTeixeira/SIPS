@@ -1,17 +1,20 @@
 <?php
 
 /**
- * Esta class serve para inserir no log geral do spice, 
+ * Esta class serve para inserir no log geral do spice,
  * também tem a possibilidade de retribuir um evento ou o total de uma secção.
  * As secções são constantes desta class
  *
  * @author ricardo
  */
-class Logger {
+class Logger
+{
 
     private $_db;
     private $_username;
 
+    const S_CLT = "Cliente";
+    const S_CNSLT = "Consultas";
     const S_APMKT = "Apoio Mkt";
     const S_CAL = "Calendário";
     const S_ENC = "Encomenda";
@@ -27,25 +30,29 @@ class Logger {
     const T_DEL = "Delete";
     const T_RM = "Remove";
 
-    public function __construct(PDO $db, $user) {
+    public function __construct(PDO $db, $user)
+    {
         $this->_db = $db;
         $this->_username = $user->username;
     }
 
-    public function set($id, $type, $section, $note = "") {
-        $query = "INSERT INTO `spice_log` (`username`, `record_id`, `type`, `note`, `section`) VALUES (:username, :id, :type, :note, :section);";
+    public function set($id, $type, $section, $note = "", $status)
+    {
+        $query = "INSERT INTO `spice_log` (`username`, `record_id`, `type`, `note`, `section`,`status`) VALUES (:username, :id, :type, :note, :section,:status);";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":username" => $this->_username, ":id" => $id, ":type" => $type, ":note" => $note, ":section" => $section));
+        return $stmt->execute(array(":username" => $this->_username, ":id" => $id, ":type" => $type, ":note" => $note, ":section" => $section, ":status" => $status));
     }
 
-    public function get($id, $section) {
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` WHERE record_id=:id and section=:section;";
+    public function get($id, $section)
+    {
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section`,`status` FROM `spice_log` WHERE record_id=:id AND section=:section;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id, ":section" => $section));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function get_all_filtered($section, $date_start, $date_end) {
+    public function get_all_filtered($section, $date_start, $date_end)
+    {
 
         $parameters = array();
         $where = "";
@@ -66,16 +73,16 @@ class Logger {
         }
 
 
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section`,`status` FROM `spice_log` $where  limit 500";
 
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` $where  limit 500";
-        
         $stmt = $this->_db->prepare($query);
         $stmt->execute($parameters);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function getAll() {
-        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section` FROM `spice_log` limit 1000;";
+    public function getAll()
+    {
+        $query = "SELECT `event_date`, `username`, `record_id`, `type`, `note`, `section`,`status` FROM `spice_log` LIMIT 1000;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
