@@ -63,6 +63,11 @@
             "alertText": "* Formato PXXXXXX."
         };
 
+        $.validationEngineLanguage.allRules["spice_ref_cliente"] = {
+            // Good for database fields
+            "regex": /^[N]{1}[0-9]{1,8}$/,
+            "alertText": "* Formato N + XXXXXXXX."
+        };
 
 
 

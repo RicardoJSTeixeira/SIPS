@@ -48,11 +48,11 @@ switch ($action) {
             "codCamp" => (String)$row->codmkt);
         break;
     case 'byReserv':
-        $query = "SELECT a.lead_id, first_name, middle_initial, last_name, phone_number, alt_phone, address1, address2, address3, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', extra5 'compart', comments, start_date, display_text, b.extra_id  "
-            . "FROM vicidial_list a "
-            . "INNER JOIN sips_sd_reservations b ON a.lead_id=b.lead_id "
-            . "INNER JOIN sips_sd_resources c ON b.id_resource=c.id_resource "
-            . "WHERE id_reservation=:id limit 1";
+        $query = "SELECT a.lead_id, first_name, middle_initial, last_name, phone_number, alt_phone, address1, address2, address3, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', extra5 'compart', comments, start_date, display_text, b.extra_id
+            FROM vicidial_list a
+            INNER JOIN sips_sd_reservations b ON a.lead_id=b.lead_id
+            INNER JOIN sips_sd_resources c ON b.id_resource=c.id_resource
+            WHERE id_reservation=:id limit 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);

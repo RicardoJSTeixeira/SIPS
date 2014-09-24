@@ -1,5 +1,6 @@
 $(function () {
-    var init = function (data, user) {
+    var me = this,
+        init = function (data, user) {
         var
             sch,
             modals = {};
@@ -98,6 +99,11 @@ $(function () {
 
     };
 
+    var refresh=function()
+    {
+        me.init();
+    }
+
     $.post("/AM/ajax/calendar.php",
         {action: "dashboardInit"},
         function (data) {
@@ -178,8 +184,7 @@ $(function () {
                             $.jGrowl('Consulta fechada com sucesso!');
                             dropOneConsult();
                             that.closest('tr').remove();
-                        }
-                        , "json");
+                        }, "json");
                 }
             })
             .find('[data-toggle~="tooltip"]').tooltip({container: 'body'});
@@ -192,10 +197,10 @@ $(function () {
     }, "json");
 
     $("#div_master")
-        .on("click", ".criar_marcacao",function () {
+        .on("click", ".criar_marcacao", function () {
             var en = btoa($(this).data().lead_id);
             $.history.push("view/calendar.html?id=" + en);
-        }).on("click", ".recomendacoes",function () {
+        }).on("click", ".recomendacoes", function () {
             var en = btoa($(this).data().lead_id);
             $.history.push("view/mass_client.html?id=" + en);
         }).on("click", ".ver_consulta", function () {
@@ -204,12 +209,14 @@ $(function () {
                 lead_id = btoa(data.lead_id),
                 reserva_id = btoa(data.reserva_id);
 
-            console.log("view/consulta.html?id=" + encodeURIComponent(lead_id) + "&rs=" + encodeURIComponent(reserva_id));
+
             $.history.push("view/consulta.html?id=" + encodeURIComponent(lead_id) + "&rs=" + encodeURIComponent(reserva_id));
         })
         .on("click", ".ver_cliente", function () {
-            var client = new Cliente_info($(this).data("lead_id"), null);
-            client.init(null);
+            var client = new ClientBox();
+
+            client.initModal($(this).data("lead_id"), null);
+
         })
         .on("click", ".criar_encomenda", function () {
             var

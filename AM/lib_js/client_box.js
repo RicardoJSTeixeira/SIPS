@@ -6,8 +6,6 @@ var ClientBox = function (configs) {
             id: 0,
             byReserv: false
         },
-
-
         config = $.extend(defaults, configs),
         template = "<div class='grid'>\n\
                             <div class='grid-title' style='overflow: visible;'>\n\
@@ -20,12 +18,12 @@ var ClientBox = function (configs) {
                                         <div class='dropdown-menu'>\n\
                                             <ul>\n\
                                                 <li><a tabindex='-1' href='#' id='button_proposta_comercial' ><i class='icon-money'></i>Propostas comerciais</a></li>\n\
-                                                <li><a tabindex='-1' href='#' id='open_pdf' ><i class='icon-user'></i>Abrir PDF</a></li>\n\
-                                                <li><a tabindex='-1' href='#' id='edit_client_info' ><i class='icon-edit'></i>Editar Info. Cliente</a></li>\n\
-                                                 <li><a tabindex='-1' href='#' id='notes' ><i class='icon-file'></i>Notas</a></li>\n\
+                                                <li><a tabindex='-1' href='#' id='button_open_pdf' ><i class='icon-user'></i>Abrir PDF</a></li>\n\
+                                                <li><a tabindex='-1' href='#' id='button_edit_client_info' ><i class='icon-edit'></i>Editar Info. Cliente</a></li>\n\
+                                                <li><a tabindex='-1' href='#' id='button_notes' ><i class='icon-file'></i>Notas</a></li>\n\
                                             </ul>\n\
                                         </div>\n\
-                                </div>\n\
+                                    </div>\n\
                                 </div>\n\
                             </div>\n\
                             <div class='user c_bg-2'>\n\
@@ -46,7 +44,10 @@ var ClientBox = function (configs) {
                                 <div class='clear'></div>\n\
                             </div>\n\
                         </div>";
-    this.client_info = [];
+
+
+    this.client_info = {};
+
     this.init = function (callback) {
         var action = (config.byReserv) ? 'byReserv' : 'default';
         $.msg();
@@ -97,16 +98,162 @@ var ClientBox = function (configs) {
                 .end()
                 .find("#client_comments")
                 .text(clientI.comments)
-                .end();
-            me.getPdf();
-            me.edit_client_info();
-            me.getProposta();
-            me.notas();
+                .end().on("click", "#button_proposta_comercial", function (e) {
+                    e.preventDefault();
+                    me.getProposta();
+                }).on("click", "#button_open_pdf", function (e) {
+                    e.preventDefault();
+                    me.getPdf();
+                }).on("click", "#button_edit_client_info", function (e) {
+                    e.preventDefault();
+                    me.client_info_editing(function () {
+                        me.refresh();
+                    });
+
+                }).on("click", "#button_notes", function (e) {
+                    e.preventDefault();
+                    me.notas();
+                });
             if (typeof callback === 'function') {
                 callback(clientI);
             }
-        }, "json");
+            $.msg('unblock');
+        }, "json").fail(function (data) {
+            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+            $.msg('unblock', 5000);
+        });
     };
+
+    this.initModal = function (lead_id, callback) {
+        var client_info = $("<div>"), client_address = $("<div>"), client_extra = $("<div>");
+        var client_extra_count = 0;
+        var temp = "";
+        $.msg();
+        $.post("/AM/ajax/client.php", {
+                action: "byLeadToInfo",
+                id: lead_id
+            },
+            function (clientI) {
+                me.client_info = clientI;
+                me.client_info.id = lead_id;
+                $.each(clientI, function () {
+                    if (this.value) {
+                        temp = ($("<div>", {class: "formRow"})
+                            .append($("<span>").text(this.display_name + ":"))
+                            .append($("<div>", {class: "right"})
+                                .append($("<span>").text(this.value))));
+                        switch (this.name.toLowerCase()) {
+                            case "first_name":
+                            case "middle_initial":
+                            case "last_name":
+                            case "phone_number":
+                            case "alt_phone":
+                            case "email":
+                            case "date_of_birth":
+                                client_info.append(temp);
+                                break;
+                            case "address1":
+                            case "address2":
+                            case "country_code":
+                            case "province":
+                            case "state":
+                            case "city":
+                            case "postal_code":
+                            case "extra10":
+                                client_address.append(temp);
+                                break;
+                            case "comments":
+                            case "extra1":
+                            case "extra2":
+                            case "extra8":
+                            case "extra5":
+                                client_extra.append(temp);
+                                client_extra_count++;
+                                break;
+                        }
+                    }
+                });
+
+
+                var modal_html = ($("<div>", {class: " modal fade", role: "dialog"})
+                    .append($("<div>", {class: "modal-dialog"})
+                        .append($("<div>", {class: "modal-content"})
+                            .append($("<div>", {class: "modal-header"})
+                                .append($("<div>", {class: "modal-title"})
+                                    .append($("<h4>").text("Informação de Cliente"))))
+                            .append($("<div>", {class: "modal-body"})
+                                .append($("<div>", {class: "row-fluid"})
+                                    .append($("<div>", {class: "span6"})
+                                        .append($("<h4>", {class: "icon-user"}).text(" Info de cliente")).append(client_info))
+                                    .append($("<div>", {class: "span6  "})
+                                        .append($("<h4>", {class: "icon-home"}).text(" Morada")).append(client_address)))
+                                .append($("<div>", {class: "row-fluid"})
+                                    .append($("<div>", {class: "span7 ", id: "extra_info_div"})
+                                        .append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)))))
+                        .append($("<div>", {class: "modal-footer"})
+                            .append($("<div>", {class: " btn-group"})
+                                .append($("<button>", {class: "btn btn-success left dropdown-toggle"}).attr("data-toggle", "dropdown").text("Opções Extra").append($("<span>", {class: "caret"})))
+                                .append($("<div>", {class: " dropdown-menu"})
+                                    .append($("<ul>")
+                                        .append($("<li>").append($("<a>", {class:"icon-calendar",id: "button_nova_marcacao"}).text("Nova Marcação")))
+                                        .append($("<li>").append($("<a>", {class:"icon-money",id: "button_propostas_comerciais"}).text("Propostas comerciais")))
+                                        .append($("<li>").append($("<a>", {class:"icon-user",id: "button_abrir_pdf"}).text("Abrir Pdf")))
+                                        .append($("<li>").append($("<a>", {class:"icon-file",id: "button_notas"}).text("Notas")))
+                                )
+                            ))
+                            .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Cancelar"))
+                            .append($("<button>", {class: "btn btn-primary ", id: "button_editar_info_cliente"}).text("Editar Info. Cliente"))
+                    )
+                )).on("click", "#button_nova_marcacao", function () {
+                        var en = btoa(lead_id);
+                        $.history.push("view/calendar.html?id=" + en);
+                        modal_html.modal("hide");
+                    })
+                    .on("click", "#button_editar_info_cliente", function () {
+                        me.client_info_editing(function()                        {
+                            me.destroy().initModal(lead_id);
+                            $(".datables_updatable").each(function(){$(this).dataTable().fnReloadAjax();})
+                        });
+                        modal_html.modal("hide");
+                    })
+                    .
+                    on("click", "#button_propostas_comerciais", function () {
+                        me.getProposta();
+                    })
+                    .
+                    on("click", "#button_abrir_pdf", function () {
+                        me.getPdf();
+                    })
+                    .
+                    on("click", "#button_notas", function () {
+                        me.notas();
+                    });
+
+                if (!client_extra_count)
+                    modal_html.find("#extra_info_div").parent().remove();
+                modal_html.modal("show");
+
+
+                $.msg('unblock');
+            }, "json").fail(function (data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+        if (typeof callback === "function")
+            callback();
+
+    };
+
+    this.destroy = function () {
+        $(config.target).empty();
+        return me;
+    };
+
+    this.refresh = function () {
+        me.destroy().init();
+        return me;
+    };
+
 
     this.getPdf = function () {
         $.post('/AM/ajax/upload_file.php', {
@@ -136,28 +283,19 @@ var ClientBox = function (configs) {
         });
     };
 
-    this.edit_client_info = function () {
-        $(config.target).find("#edit_client_info").click(function (e) {
-            e.preventDefault();
-            me.client_info_editing();
-        });
-    };
-
     this.getProposta = function () {
-        $(config.target).find("#button_proposta_comercial").click(function (e) {
-            e.preventDefault();
-            $.msg();
-            var propostas = "";
-            var final = "<h5>Data de criação da proposta comercial</h5>";
-            $.post('/AM/ajax/users.php', {action: "get_propostas", lead_id: me.client_info.id},
-                function (data) {
-                    if (data.length) {
-                        var menu = "";
-                        $.each(data, function () {
-                            $.each(this.proposta, function () {
-                                propostas += " <tr><td>" + this.modelo + "</td><td>" + this.valor + "</td><td>" + this.quantidade + "</td><td>" + this.entrada + "</td><td>" + this.meses + "</td></tr>"
-                            });
-                            menu = "<div>\n\
+        $.msg();
+        var propostas = "";
+        var final = "<h5>Data de criação da proposta comercial</h5>";
+        $.post('/AM/ajax/users.php', {action: "get_propostas", lead_id: me.client_info.id},
+            function (data) {
+                if (data.length) {
+                    var menu = "";
+                    $.each(data, function () {
+                        $.each(this.proposta, function () {
+                            propostas += " <tr><td>" + this.modelo + "</td><td>" + this.valor + "</td><td>" + this.quantidade + "</td><td>" + this.entrada + "</td><td>" + this.meses + "</td></tr>"
+                        });
+                        menu = "<div>\n\
                                         <div class='formRow'>\n\
                                             <label>" + this.data + "</label><button class='btn icon-alone right btnPropToggle' ><i class='icon-eye-open'></i></button>\n\
                                             <div class='clear'></div>\n\
@@ -178,202 +316,170 @@ var ClientBox = function (configs) {
                                         </div>\n\
                                     </div>\n\
                                     <div class='clear'></div>";
-                            final += menu;
-                            propostas = "";
-                        });
-                        bootbox.alert(final);
-                        $(".btnPropToggle").click(function () {
-                            $(this)
-                                .find("i")
-                                .toggleClass("icon-eye-open")
-                                .toggleClass("icon-eye-close")
-                                .end()
-                                .parent()
-                                .find(".dTableProposta")
-                                .toggle();
-                        });
-                    }
-                    else {
-                        bootbox.alert("Cliente sem propostas comerciais.");
-                    }
-                    $.msg('unblock');
-                }, "json").fail(function (data) {
+                        final += menu;
+                        propostas = "";
+                    });
+                    bootbox.alert(final);
+                    $(".btnPropToggle").click(function () {
+                        $(this)
+                            .find("i")
+                            .toggleClass("icon-eye-open")
+                            .toggleClass("icon-eye-close")
+                            .end()
+                            .parent()
+                            .find(".dTableProposta")
+                            .toggle();
+                    });
+                }
+                else {
+                    bootbox.alert("Cliente sem propostas comerciais.");
+                }
+                $.msg('unblock');
+            }, "json").fail(function (data) {
 
-                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                    $.msg('unblock', 5000);
-                });
-        });
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+
     };
 
     this.notas = function () {
-        $(config.target).find("#notes").click(function (e) {
-            e.preventDefault();
-            var final = $("<div>", {class: "container-fluid"})
-                .append("<div>", {class: "row-fluid"})
-                .append($("<div>", {id: "new_note_area_div", class: "span7"}))
-                .append($("<div>", {id: "note_area_div", class: "span7"}))
-                .append($("<div>", {id: "note_selection_div", class: "span4"}));
-            var note_area_div = final.find("#note_area_div");
-            note_area_div.hide();
-            var new_note_area_div = final.find("#new_note_area_div");
+        var final = $("<div>", {class: "container-fluid"})
+            .append("<div>", {class: "row-fluid"})
+            .append($("<div>", {id: "new_note_area_div", class: "span7"}))
+            .append($("<div>", {id: "note_area_div", class: "span7"}))
+            .append($("<div>", {id: "note_selection_div", class: "span4"}));
+        var note_area_div = final.find("#note_area_div");
+        note_area_div.hide();
+        var new_note_area_div = final.find("#new_note_area_div");
 
-            //Create Table===============================================================
-            final.find("#note_selection_div").append(
-                "<table id='note_table' class='table table-mod-2 table-bordered'></table>");
-            var table = final.find("#note_selection_div #note_table");
-            table.dataTable({
-                "bSortClasses": false,
-                "bProcessing": true,
-                "bDestroy": true,
-                "bLengthChange": false,
-                "iDisplayLength": 5,
-                "sAjaxSource": '/AM/ajax/users.php',
-                "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {"name": "lead_id", "value": me.client_info.id});
-                }, "aoColumns": [
-                    {"sTitle": "ID", bVisible: false},
-                    {"sTitle": "Titulo", "sWidth": "50px"},
-                    {"sTitle": "Nota", bVisible: false},
-                    {"sTitle": "Data criação", "sWidth": "50px"},
-                    {"sTitle": "Data modificação", "sWidth": "50px"}
-                ], "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"},
-                "aoColumnDefs": [
-                    {
-                        "aTargets": [3, 4],
-                        "fnRender": function (data, value, row) {
-                            if (value.length) {
-                                return moment(value).fromNow();
-                            }
-                            else {
-                                return "N/A";
-                            }
+        //Create Table===============================================================
+        final.find("#note_selection_div").append(
+            "<table id='note_table' class='table table-mod-2 table-bordered'></table>");
+        var table = final.find("#note_selection_div #note_table");
+        table.dataTable({
+            "bSortClasses": false,
+            "bProcessing": true,
+            "bDestroy": true,
+            "bLengthChange": false,
+            "iDisplayLength": 5,
+            "sAjaxSource": '/AM/ajax/users.php',
+            "fnServerParams": function (aoData) {
+                aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {"name": "lead_id", "value": me.client_info.id});
+            }, "aoColumns": [
+                {"sTitle": "ID", bVisible: false},
+                {"sTitle": "Titulo", "sWidth": "50px"},
+                {"sTitle": "Nota", bVisible: false},
+                {"sTitle": "Data criação", "sWidth": "50px"},
+                {"sTitle": "Data modificação", "sWidth": "50px"}
+            ], "oLanguage": {"sUrl": "../../jquery/jsdatatable/language/pt-pt.txt"},
+            "aoColumnDefs": [
+                {
+                    "aTargets": [3, 4],
+                    "fnRender": function (data, value, row) {
+                        if (value.length) {
+                            return moment(value).fromNow();
+                        }
+                        else {
+                            return "N/A";
                         }
                     }
-                ]
-            }).on('click', 'tr', function (event) {
-                var data = table.fnGetData(table.fnGetPosition(this));
-                note_area_div.find("#note_title").val(data[1]).data("selected_note", data[0]).end()
-                    .find("#note_textarea").val(data[2]);
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                    $(".edit_buttons_class").addClass("hidden");
-                    clear_note_preview();
-                    note_area_div.hide();
-                    new_note_area_div.show();
                 }
-                else {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                    $(".edit_buttons_class").removeClass("hidden");
-                    note_area_div.show();
-                    new_note_area_div.hide();
-                }
-            });
-            //==========================================================================
-            //preview area
-            note_area_div.append(
-                "<div id='preview_note_div'>\
-                    <div class='page-header'>\
-                        <h3 id='page_header'>Notas de Cliente</h3>\
-                    </div>\
-                        <form id='note_form'>\
-                            <label>Titulo</label>\
-                                <input class='validate[required] input-xlarge' id='note_title' maxlength='45'  type='text' placeholder='Titulo da Nota'> \
-                            <label>Nota</label>\
-                                <textarea class='validate[required]' id='note_textarea' placeholder='Visualização de notas' style='width: 100%;height: 160px'></textarea>\
-                                    <button class='btn btn-success  'id='save_note_edit'>Gravar alterações</button>\
-                                    <button class='btn' id='cancel_note_edit'>Cancelar</button>\
-                                    <button class='btn btn-danger  ' id='delete_note_edit'>Apagar Nota</button>\
-                    </form> \
+            ]
+        }).on('click', 'tr', function (event) {
+            var data = table.fnGetData(table.fnGetPosition(this));
+            note_area_div.find("#note_title").val(data[1]).data("selected_note", data[0]).end()
+                .find("#note_textarea").val(data[2]);
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+                $(".edit_buttons_class").addClass("hidden");
+                clear_note_preview();
+                note_area_div.hide();
+                new_note_area_div.show();
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                $(".edit_buttons_class").removeClass("hidden");
+                note_area_div.show();
+                new_note_area_div.hide();
+            }
+        });
+        //==========================================================================
+        //preview area
+        note_area_div.append(
+            "<div id='preview_note_div'>\
+                <div class='page-header'>\
+                    <h3 id='page_header'>Notas de Cliente</h3>\
+                </div>\
+                    <form id='note_form'>\
+                        <label>Titulo</label>\
+                            <input class='validate[required] input-xlarge' id='note_title' maxlength='45'  type='text' placeholder='Titulo da Nota'> \
+                        <label>Nota</label>\
+                            <textarea class='validate[required]' id='note_textarea' placeholder='Visualização de notas' style='width: 100%;height: 160px'></textarea>\
+                                <button class='btn btn-success  'id='save_note_edit'>Gravar alterações</button>\
+                                <button class='btn' id='cancel_note_edit'>Cancelar</button>\
+                                <button class='btn btn-danger  ' id='delete_note_edit'>Apagar Nota</button>\
+                     </form> \
                     <div>\
-                    </div>\
-                </div>");
+                </div>\
+            </div>");
 
-            //new note area
-            new_note_area_div.append(
-                "<div id='new_note_div'>\
-                    <div class='page-header'>\
-                        <h3 id='page_header'>Criação de notas de cliente</h3>\
-                    </div>\
-                    <form id='new_note_form'>\
-                         <label>Titulo</label>\
-                            <input class='validate[required] input-xlarge' id='new_note_title' maxlength='45' type='text' placeholder='Escreva aqui o titulo da nota'> \
-                         <label>Nota</label>\
-                             <textarea class='validate[required]' id='new_note_textarea' placeholder='Texto da nota' style='width: 100%;height: 160px'></textarea>\
-                                  <button class='btn btn-success  'id='save_note_new'>Criar Nota</button>\
-                                  <button class='btn btn-danger  ' id='cancel_note_new'>Limpar</button>\
-                    </form>\
-                    <div>\
-                    </div>\
-                </div>");
+        //new note area
+        new_note_area_div.append(
+            "<div id='new_note_div'>\
+                <div class='page-header'>\
+                    <h3 id='page_header'>Criação de notas de cliente</h3>\
+                </div>\
+                <form id='new_note_form'>\
+                     <label>Titulo</label>\
+                        <input class='validate[required] input-xlarge' id='new_note_title' maxlength='45' type='text' placeholder='Escreva aqui o titulo da nota'> \
+                     <label>Nota</label>\
+                         <textarea class='validate[required]' id='new_note_textarea' placeholder='Texto da nota' style='width: 100%;height: 160px'></textarea>\
+                              <button class='btn btn-success  'id='save_note_new'>Criar Nota</button>\
+                              <button class='btn btn-danger  ' id='cancel_note_new'>Limpar</button>\
+                </form>\
+                <div>\
+                </div>\
+            </div>");
 
-            //PREVIEW AND EDIT NOTE----------------------------------------------------------------------------------
-            note_area_div.on("click", "#save_note_edit", function (e) {
-                e.preventDefault();
-                if (final.find("#note_form").validationEngine('validate')) {
+        //PREVIEW AND EDIT NOTE----------------------------------------------------------------------------------
+        note_area_div.on("click", "#save_note_edit", function (e) {
+            e.preventDefault();
+            if (final.find("#note_form").validationEngine('validate')) {
+                $.msg();
+                $.post('/AM/ajax/users.php', {
+                        action: "edit_notes",
+                        note_id: note_area_div.find("#note_title").data("selected_note"),
+                        note: note_area_div.find("#note_textarea").val(),
+                        title: note_area_div.find("#note_title").val()
+                    },
+                    function (data) {
+                        $.jGrowl("Nota editada com sucesso", 3000);
+                        table.fnReloadAjax();
+                        clear_note_preview();
+                        $.msg('unblock');
+                    }, "json"
+                ).fail(function (data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
+            }
+        });
+        note_area_div.on("click", "#cancel_note_edit", function (e) {
+            e.preventDefault();
+            clear_note_preview();
+        });
+        note_area_div.on("click", "#delete_note_edit", function (e) {
+            e.preventDefault();
+            bootbox.confirm("Tem a certeza que quer remover esta nota?", function (result) {
+                if (result) {
                     $.msg();
-                    $.post('/AM/ajax/users.php', {
-                            action: "edit_notes",
-                            note_id: note_area_div.find("#note_title").data("selected_note"),
-                            note: note_area_div.find("#note_textarea").val(),
-                            title: note_area_div.find("#note_title").val()
-                        },
+                    $.post('/AM/ajax/users.php', {action: "delete_notes", note_id: note_area_div.find("#note_title").data("selected_note")},
                         function (data) {
-                            $.jGrowl("Nota editada com sucesso", 3000);
+                            $.jGrowl("Nota removida com sucesso", 3000);
                             table.fnReloadAjax();
                             clear_note_preview();
-                            $.msg('unblock');
-                        }, "json"
-                    ).fail(function (data) {
-                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                            $.msg('unblock', 5000);
-                        });
-                }
-            });
-            note_area_div.on("click", "#cancel_note_edit", function (e) {
-                e.preventDefault();
-                clear_note_preview();
-            });
-            note_area_div.on("click", "#delete_note_edit", function (e) {
-                e.preventDefault();
-                bootbox.confirm("Tem a certeza que quer remover esta nota?", function (result) {
-                    if (result) {
-                        $.msg();
-                        $.post('/AM/ajax/users.php', {action: "delete_notes", note_id: note_area_div.find("#note_title").data("selected_note")},
-                            function (data) {
-                                $.jGrowl("Nota removida com sucesso", 3000);
-                                table.fnReloadAjax();
-                                clear_note_preview();
-                                $.msg('unblock');
-                            }, "json").fail(function (data) {
-                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                                $.msg('unblock', 5000);
-                            });
-                    }
-                })
-            });
-            function clear_note_preview() {
-                note_area_div.find("#note_title").val("");
-                note_area_div.find("#note_textarea").val("");
-                toggle_menus();
-                table.$('tr.selected').removeClass('selected');
-            }
-
-            //-----------------------------------------------------------------------------------------------------------
-            //NEW NOTE//////////////////////////////////////////////////////////////////////////////////////////////////////////
-            new_note_area_div.on("click", "#save_note_new", function (e) {
-                e.preventDefault();
-                if (new_note_area_div.find("#new_note_form").validationEngine('validate')) {
-                    $.post('/AM/ajax/users.php', {
-                            action: "insert_notes",
-                            lead_id: me.client_info.id,
-                            note: new_note_area_div.find("#new_note_textarea").val(),
-                            title: new_note_area_div.find("#new_note_title").val()
-                        },
-                        function (data) {
-                            $.jGrowl("Nota criada com sucesso", 3000);
-                            table.fnReloadAjax();
-                            clear_note_new();
                             $.msg('unblock');
                         }, "json").fail(function (data) {
                             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -381,46 +487,64 @@ var ClientBox = function (configs) {
                         });
                 }
             })
-            ;
-            new_note_area_div.on("click", "#cancel_note_new", function (e) {
-                e.preventDefault();
-                clear_note_new();
-            });
-
-            function clear_note_new() {
-                new_note_area_div.find("#new_note_title").val("");
-                new_note_area_div.find("#new_note_textarea").val("");
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////7
-            function toggle_menus() {
-                note_area_div.toggle();
-                new_note_area_div.toggle();
-            }
-
-            bootbox.dialog(final, [
-                {'OK': true, "label": "OK"}
-            ], {customClass: 'container'});
         });
-    };
+        function clear_note_preview() {
+            note_area_div.find("#note_title").val("");
+            note_area_div.find("#note_textarea").val("");
+            toggle_menus();
+            table.$('tr.selected').removeClass('selected');
+        }
 
+        //-----------------------------------------------------------------------------------------------------------
+        //NEW NOTE//////////////////////////////////////////////////////////////////////////////////////////////////////////
+        new_note_area_div.on("click", "#save_note_new", function (e) {
+            e.preventDefault();
+            if (new_note_area_div.find("#new_note_form").validationEngine('validate')) {
+                $.post('/AM/ajax/users.php', {
+                        action: "insert_notes",
+                        lead_id: me.client_info.id,
+                        note: new_note_area_div.find("#new_note_textarea").val(),
+                        title: new_note_area_div.find("#new_note_title").val()
+                    },
+                    function (data) {
+                        $.jGrowl("Nota criada com sucesso", 3000);
+                        table.fnReloadAjax();
+                        clear_note_new();
+                        $.msg('unblock');
+                    }, "json").fail(function (data) {
+                        $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                        $.msg('unblock', 5000);
+                    });
+            }
+        })
+        ;
+        new_note_area_div.on("click", "#cancel_note_new", function (e) {
+            e.preventDefault();
+            clear_note_new();
+        });
 
-    this.destroy = function () {
-        $(config.target).empty();
-        return me;
-    };
+        function clear_note_new() {
+            new_note_area_div.find("#new_note_title").val("");
+            new_note_area_div.find("#new_note_textarea").val("");
+        }
 
-    this.refresh = function () {
-        me.destroy().init();
-        return me;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////7
+        function toggle_menus() {
+            note_area_div.toggle();
+            new_note_area_div.toggle();
+        }
+
+        bootbox.dialog(final, [
+            {'OK': true, "label": "OK"}
+        ], {customClass: 'container'});
+
     };
 
     this.get_info = function () {
         return me.client_info;
     };
 
-
-    this.client_info_editing = function () {
+    this.client_info_editing = function (callback) {
         $.post("ajax/create_client.php", {action: "get_fields"},
             function (data) {
                 $("#inputs_div1,#inputs_div2,#inputs_div3").empty();
@@ -525,8 +649,7 @@ var ClientBox = function (configs) {
                                         $("[name='PROVINCE']").val(that.concelho);
                                         $("[name='STATE']").val(that.distrito);
                                         bootbox.hideAll();
-                                    });
-                                    $("#postal_code_table_check").DataTable();
+                                    }).DataTable();
                                 }, "json");
                             }
                         });
@@ -628,6 +751,8 @@ var ClientBox = function (configs) {
                             input = div.find("#input1");
                             break;
                         case "extra2":
+
+                            custom_class = "validate[custom[spice_ref_cliente]]";
                             input = div.find("#input1");
                             break;
                         case "LAST_NAME":
@@ -675,28 +800,32 @@ var ClientBox = function (configs) {
                     custom_class = "";
                 });
                 $.post("ajax/client.php", {action: "byLeadToInfo", id: me.client_info.id}, function (data) {
-                    bootbox.dialog(div, [
-                        {
-                            "label": "Gravar Alterações",
-                            "class": "btn-success",
-                            "callback": function () {
+                    bootbox.dialog(div, [{
+                        "label": "Gravar Alterações",
+                        "class": "btn-success",
+                        "callback": function () {
 
-                                $.post("ajax/client.php", {
-                                    action: "edit_info", id: me.lead_id, stringas: function () {
-                                        var strings = [];
-                                        $.each($("#master :input"), function () {
-                                            strings.push({key: $(this).prop("name"), value: $(this).val()});
-                                        })
-                                        return JSON.stringify(strings);
-                                    }
-                                }, function () {
-                                    me.refresh();
-                                });
-                            }
-                        },
+                            $.post("ajax/client.php", {
+                                action: "edit_info", id: me.client_info.id, stringas: function () {
+                                    var strings = [];
+                                    $.each($("#master :input"), function () {
+                                        strings.push({key: $(this).prop("name"), value: $(this).val()});
+                                    })
+                                    return JSON.stringify(strings);
+                                }
+                            }, function () {
+                                if (typeof callback === "function")
+                                    callback();
+                            });
+                        }
+                    },
                         {
                             "label": "Cancelar",
-                            "class": "btn"
+                            "class": "btn",
+                            "callback": function () {
+                                if (typeof callback === "function")
+                                    callback();
+                            }
                         }
                     ], {customClass: 'container'});
                     data = JSON.parse(data)
@@ -711,16 +840,16 @@ var ClientBox = function (configs) {
                         div.find("#" + this.name).val(this.value);
                     })
                 });
-                return true;
                 $.msg('unblock');
+                return true;
             },
             "json").fail(function (data) {
                 $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                 $.msg('unblock', 5000);
             });
+
     }
-}
+};
 
 
 
- 

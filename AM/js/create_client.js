@@ -208,6 +208,9 @@ $(function () {
                         input = input1;
                         break;
                     case "extra2":
+                        custom_class = "validate[custom[spice_ref_cliente]]";
+                        input = input1;
+                        break;
                     case "LAST_NAME":
                     case "MIDDLE_INITIAL":
                         input = input1;
