@@ -66,7 +66,8 @@ $stmtSetClient = $db->prepare("INSERT INTO vicidial_list
     :date_of_birth, :alt_phone, :alt_phone2, :email, :address1, :address2, :address3,
     :postal, :local, :concelho, :distrito, :cod_pais, :area_code, :cod_mkt, :compart,
     :pref_marc, :comments, :to_issue)");
-$stmtEditClient = $db->prepare("UPDATE vicidial_list SET
+$stmtEditClient = $db->prepare("UPDATE
+    vicidial_list SET
     PHONE_NUMBER=:phone,
     extra2=:ref_client,
     TITLE= :title,
@@ -89,7 +90,10 @@ $stmtEditClient = $db->prepare("UPDATE vicidial_list SET
     extra1=:cod_mkt,
     extra5=:compart,
     SECURITY_PHRASE=:pref_marc,
-    COMMENTS=:comments");
+    COMMENTS=:comments
+    WHERE
+    lead_id=:id");
+$stmtGetClient = $db->prepare("SELECT lead_id FROM sips_sd_reservations WHERE id_reservation=:id");
 $total = 0;
 $ok = 0;
 $notok = 0;
@@ -108,6 +112,36 @@ while (!feof($file)) {
         if (((int)$buffer[41]) !== 0) {
             $stmtUpdate->execute(array(":navid" => $buffer[42], ":id" => $buffer[41]));
             if ($stmtUpdate->rowCount()) {
+                $stmtGetClient->execute(array($buffer[42]));
+                $client_id_raw = array_pop($stmtGetClient->fetchAll());
+                $client_id = $client_id_raw["lead_id"];
+                $stmtEditClient->execute(
+                    array(
+                        ":phone" => $buffer[15],
+                        ":ref_client" => $buffer[21],
+                        ":title" => $buffer[0],
+                        ":name" => $buffer[2],
+                        ":middle_name" => $buffer[3],
+                        ":last_name" => $buffer[4],
+                        ":date_of_birth" => $buffer[20],
+                        ":alt_phone" => $buffer[16],
+                        ":alt_phone2" => $buffer[17],
+                        ":email" => $buffer[18],
+                        ":address1" => $buffer[5],
+                        ":address2" => $buffer[6],
+                        ":address3" => $buffer[7],
+                        ":postal" => $buffer[9],
+                        ":local" => $buffer[12],
+                        ":concelho" => $buffer[13],
+                        ":distrito" => $buffer[8],
+                        ":cod_pais" => $buffer[14],
+                        ":area_code" => $buffer[10],
+                        ":cod_mkt" => $buffer[1],
+                        ":compart" => $buffer[19],
+                        ":pref_marc" => $buffer[32],
+                        ":comments" => $buffer[34],
+                        ":id" => $client_id
+                    ));
                 $ok++;
             } else {
                 $notok++;
@@ -160,42 +194,15 @@ while (!feof($file)) {
 
             $start = strtotime($buffer[31] . " " . $buffer[30]);
             $resType = getResType($buffer[25], $tRes);
-            if (
-                $stmtSetRes->execute(array(
-                                                    ":start" => date('Y-m-d H:i:s', $start),
-                                                    ":end" => date('Y-m-d H:i:s', strtotime("+" . $resType->max . " minutes", $start)),
-                                                    ":res_type" => $resType->id,
-                                                    ":id_rsc" => $rsc->id,
-                                                    ":user" => $u->username,
-                                                    ":lead_id" => $db->lastInsertId(),
-                                                    ":nav_id" => $buffer[42]
-                                                ))
-                AND
-                $stmtEditClient->execute(array(
-                                                    ":phone" => $buffer[15],
-                                                    ":ref_client" => $buffer[21],
-                                                    ":title" => $buffer[0],
-                                                    ":name" => $buffer[2],
-                                                    ":middle_name" => $buffer[3],
-                                                    ":last_name" => $buffer[4],
-                                                    ":date_of_birth" => $buffer[20],
-                                                    ":alt_phone" => $buffer[16],
-                                                    ":alt_phone2" => $buffer[17],
-                                                    ":email" => $buffer[18],
-                                                    ":address1" => $buffer[5],
-                                                    ":address2" => $buffer[6],
-                                                    ":address3" => $buffer[7],
-                                                    ":postal" => $buffer[9],
-                                                    ":local" => $buffer[12],
-                                                    ":concelho" => $buffer[13],
-                                                    ":distrito" => $buffer[8],
-                                                    ":cod_pais" => $buffer[14],
-                                                    ":area_code" => $buffer[10],
-                                                    ":cod_mkt" => $buffer[1],
-                                                    ":compart" => $buffer[19],
-                                                    ":pref_marc" => $buffer[32],
-                                                    ":comments" => $buffer[34]
-                                                ))
+            if ($stmtSetRes->execute(array(
+                ":start" => date('Y-m-d H:i:s', $start),
+                ":end" => date('Y-m-d H:i:s', strtotime("+" . $resType->max . " minutes", $start)),
+                ":res_type" => $resType->id,
+                ":id_rsc" => $rsc->id,
+                ":user" => $u->username,
+                ":lead_id" => $db->lastInsertId(),
+                ":nav_id" => $buffer[42]
+            ))
             ) {
                 $ok++;
             } else {
