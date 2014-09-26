@@ -93,6 +93,7 @@ if (isset($report_marc_outbound)) {
         'Mobile Phone No.',
         'Work Phone No.',
         'Email',
+        'Insurance Scheme Presc.',
         'Date of Birth',
         'No.',
         'Update contact',
@@ -117,7 +118,7 @@ if (isset($report_marc_outbound)) {
         'Campanha',
         'Data da Chamada',
         'Avisos'), ";");
-
+/* @var $camp_options Array*/
     foreach ($camp_options as $currentCamp) {
         $currentCamp=strtoupper($currentCamp);
         $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha, e.id_reservation
@@ -172,6 +173,7 @@ if (isset($report_marc_outbound)) {
                 $row['alt_phone'],
                 "",
                 $row['email'],
+                $row['extra5'],
                 $row['date_of_birth'],
                 $no,
                 "",
@@ -226,6 +228,7 @@ if (isset($report_feedback_outbound)) {
         'Mobile Phone No.',
         'Work Phone No.',
         'Email',
+        'Insurance Scheme Presc.',
         'Date of Birth',
         'No.',
         'Update contact',
@@ -248,7 +251,9 @@ if (isset($report_feedback_outbound)) {
         'Campanha',
         'Data da Chamada',
         'Avisos'), ";");
-    $fbs = implode("','", $feedbacks);
+    if (isset($feedbacks)) {
+        $fbs = implode("','", $feedbacks);
+    }
 
     $archive = (strtotime("2 month ago") > strtotime($data_final)) ? "_archive" : "";
     foreach ($camp_options as $currentCamp) {
@@ -298,6 +303,7 @@ if (isset($report_feedback_outbound)) {
                 $row['alt_phone'],
                 "",
                 $row['email'],
+                $row['extra5'],
                 $row['date_of_birth'],
                 $no,
                 "",
@@ -583,6 +589,7 @@ if (isset($report_marc_inbound)) {
         'Mobile Phone No.',
         'Work Phone No.',
         'Email',
+        'Insurance Scheme Presc.',
         'Date of Birth',
         'No.',
         'Update contact',
@@ -667,6 +674,7 @@ if (isset($report_marc_inbound)) {
                 $row['alt_phone'],
                 "",
                 $row['email'],
+                $row['extra5'],
                 $row['date_of_birth'],
                 $no,
                 "",
@@ -693,125 +701,7 @@ if (isset($report_marc_inbound)) {
                     ), ";");
         }
     }
-}/*
-  if (isset($report_marc_inbound)) {
-  $curTime = date("Y-m-d H:i:s");
-  $filename = "marc_inbound_" . $curTime;
-  header("Content-Disposition: attachment; filename=" . $filename . ".csv");
-  $output = fopen('php://output', 'w');
-
-  fputcsv($output, array('Title',
-  'Campaign No.',
-  'First Name',
-  'Middle Name',
-  'Surname',
-  'Address 1',
-  'Address 2',
-  'Address 3',
-  'County',
-  'Post Code',
-  'Area Code',
-  'No. Porta',
-  'City',
-  'Concelho',
-  'Country Code',
-  'Phone No.',
-  'Mobile Phone No.',
-  'Work Phone No.',
-  'Date of Birth',
-  'No.',
-  'Update contact',
-  'Service Request',
-  'Territory Code',
-  'Salesperson Code',
-  'On Hold',
-  'Exclude Reason Code',
-  'Pensionner',
-  'Want Info from other companies',
-  'Appointment time',
-  'Appointment date',
-  'Visit Location',
-  'Branch',
-  'Comments',
-  'Salesperson Team',
-  'Tipo Cliente',
-  'Operador',
-  'Feedback',
-  'Campanha',
-  'Data da Chamada',
-  'Avisos'), ";");
-
-  foreach ($camp_options as $currentCamp) {
-  $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.group_name AS campanha FROM vicidial_closer_log a JOIN custom_" . strtoupper($currentCamp) . " b ON a.lead_id = b.lead_id JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_inbound_groups d ON a.campaign_id = d.group_id where a.status IN ('MARC', 'NOVOCL') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00'";
-
-  $query_log = mysql_query($query_log, $link) or die(mysql_error());
-
-  for ($i = 0; $i < mysql_num_rows($query_log); $i++) {
-  $row = mysql_fetch_assoc($query_log);
-
-
-  $cod = "";
-  if ($row['tipoconsulta'] == 'CATOS') {
-  $cod = $row['consultorio'];
-  } else {
-  if ($row['tipoconsulta'] == 'Branch') {
-  $cod = $row['consultoriodois'];
-  }
-  }
-
-  $campid = $row['extra1'];
-  $no = $row['extra2'];
-  $c_message = "Sem Campanha/Inbound/Chamada Manual";
-  if ($row['tipoconsulta'] == null || $row['tipoconsulta'] == "" || $row['tipoconsulta'] == "semconsulta") {
-  $c_message = "Lead Duplicada - Ignorar/Dados Incompletos";
-  }
-  if ((preg_match("/", $row['consultorio']) === 1)) {
-  $c_message = "bom";
-  }
-  fputcsv($output, array(
-  $row['title'],
-  $campid,
-  $row['first_name'],
-  $row['middle_initial'],
-  $row['last_name'],
-  $row['address1'],
-  $row['address2'],
-  $row['address3'],
-  $row['state'],
-  $row['postal_code'],
-  $row['extra3'],
-  $row['extra10'],
-  $row['city'],
-  $row['province'],
-  $row['country_code'],
-  $row['phone_number'],
-  $row['alt_phone'],
-  "",
-  $row['date_of_birth'],
-  $no,
-  "",
-  "",
-  "",
-  $cod,
-  "",
-  "",
-  "",
-  "",
-  $row['marchora'],
-  $row['marcdata'],
-  $row['tipoconsulta'],
-  "",
-  $row['obs'],
-  "",
-  "",
-  $row['utilizador'],
-  $row['resultado'],
-  $row['campanha'],
-  $row['data']
-  ), ";");
-  }
-  }
-  } */
+}
 
 if (isset($report_feedback_inbound)) {
     $curTime = date("Y-m-d H:i:s");
@@ -859,7 +749,9 @@ if (isset($report_feedback_inbound)) {
         'Campanha',
         'Data da Chamada',
         'Avisos'), ";");
-    $fbs = implode("','", $feedbacks);
+    if (isset($feedbacks)) {
+        $fbs = implode("','", $feedbacks);
+    }
     foreach ($camp_options as $currentCamp) {
         $query_log = "SELECT a.lead_id,a.campaign_id AS linhainbound,a.call_date AS data,a.status AS resultado,a.user as utilizador, b.*, c.*, d.campaign_name AS campanha FROM vicidial_closer_log a JOIN vicidial_agent_log b ON a.uniqueid = b.uniqueid JOIN vicidial_list c ON a.lead_id = c.lead_id JOIN vicidial_campaigns d ON b.campaign_id = d.campaign_id where a.status IN ('$fbs') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp' group by a.lead_id";
 
@@ -1454,17 +1346,7 @@ where
             }
 
 
-//for($i=0;$i<mysql_num_rows($qry_status);$i++) {
-//    $row = mysql_fetch_row($qry_status);
-//    $firstval = $row[2] + 0;
-//    $secval = $row[3] + 0;
-//    
-//    $conv_rate = round(($firstval/$secval),4)*100;
-//    
-//    fputcsv($output, array(" ",$row[0], $row[2], $row[3], $conv_rate."%"), ";");
-//    
-//    
-//}
+
         }
     }
 }
@@ -1494,6 +1376,7 @@ if (isset($report_drops_inb)) {
         'Mobile Phone No.',
         'Work Phone No.',
         'Email',
+        'Insurance Scheme Presc.',
         'Date of Birth',
         'No.',
         'Update contact',
@@ -1546,6 +1429,7 @@ if (isset($report_drops_inb)) {
                 $row['alt_phone'],
                 "",
                 $row['email'],
+                $row['extra5'],
                 $row['date_of_birth'],
                 $no,
                 "",
@@ -1596,6 +1480,7 @@ if (isset($report_novas_leads)) {
         'Mobile Phone No.',
         'Work Phone No.',
         'Email',
+        'Insurance Scheme Presc.',
         'Date of Birth',
         'No.',
         'Update contact',
@@ -1669,6 +1554,7 @@ if (isset($report_novas_leads)) {
                 $row['alt_phone'],
                 "",
                 $row['email'],
+                $row['extra5'],
                 $row['date_of_birth'],
                 $no,
                 "",
