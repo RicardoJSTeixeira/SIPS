@@ -8,6 +8,7 @@ require '../lib_php/db.php';
 require '../lib_php/calendar.php';
 require '../lib_php/user.php';
 
+/** @var PDO $db */
 $user = new UserLogin($db);
 $user->confirm_login();
 $u = $user->getUser();
@@ -26,10 +27,10 @@ $cbd = filter_var_array($_POST["cbd"]);
 $toissues = filter_var_array($_POST["ctoissue"]);
 $rcm = filter_var($_POST["recomendado"]);
 
-$query = "INSERT INTO vicidial_list (entry_date, status,user, list_id,extra1, first_name, middle_initial, last_name, address1, city, postal_code, phone_number, address3, email, date_of_birth, extra6, extra7) Values (NOW(), 'NEW', :user, :list_id, :ccm, :name, :mname, :lname, :morada, :local, :postal, :tel, :tlm, :email, :bday, :toissue, :rcm)";
+$query = "INSERT INTO vicidial_list (entry_date, status,user, list_id,extra1, first_name, middle_initial, last_name, address1, city, postal_code, phone_number, address3, email, date_of_birth, extra6, extra7, security_phrase) Values (NOW(), 'NEW', :user, :list_id, :ccm, :name, :mname, :lname, :morada, :local, :postal, :tel, :tlm, :email, :bday, :toissue, :rcm, 'SPICE')";
 $stmt = $db->prepare($query);
 foreach ($names as $key => $name) {
-    $stmt->execute(array(":user" => $u->username, ":list_id" => $u->list_id, ":ccm" => $ccm[$key], ":name" => $name, ":mname" => $mnames[$key], ":lname" => $lnames[$key], ":morada" => $moradas[$key], ":local" => $local[$key], ":postal" => $postal[$key], ":tel" => $tels[$key], ":tlm" => $ctlm[$key], ":email" => $emails[$key], ":bday" => $cbd[$key], ":toissue" => $toissues[$key], ":rcm" => $rcm));
+    $stmt->execute(array(":user" => $u->username, ":list_id" => $u->list_id, ":ccm" => $ccm[$key], ":name" => $name, ":mname" => $mnames[$key], ":lname" => $lnames[$key], ":morada" => $moradas[$key], ":local" => $local[$key], ":postal" => $postal[$key], ":tel" => $tels[$key], ":tlm" => $tlm[$key], ":email" => $emails[$key], ":bday" => $cbd[$key], ":toissue" => $toissues[$key], ":rcm" => $rcm));
 }
 
 echo json_encode(true);
