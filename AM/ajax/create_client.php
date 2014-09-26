@@ -1,5 +1,4 @@
 <?php
-
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 require("../lib_php/db.php");
@@ -11,13 +10,9 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
-
 $user = new UserLogin($db);
-
 $user->confirm_login();
-
 $variables = array();
-
 $js = array();
 switch ($action) {
     case "get_fields":
