@@ -113,8 +113,8 @@ while (!feof($file)) {
             $stmtUpdate->execute(array(":navid" => $buffer[42], ":id" => $buffer[41]));
             if ($stmtUpdate->rowCount()) {
                 $stmtGetClient->execute(array($buffer[42]));
-                $client_id_raw = array_pop($stmtGetClient->fetchAll());
-                $client_id = $client_id_raw["lead_id"];
+                $client_id_raw = array_pop($stmtGetClient->fetchAll(PDO::FETCH_OBJ));
+                $client_id = $client_id_raw->lead_id;
                 $stmtEditClient->execute(
                     array(
                         ":phone" => $buffer[15],
