@@ -34,19 +34,20 @@ switch ($action) {
         $u = $user->getUser();
         $variables[] = $u->username;
         $variables[] = $u->list_id;
-       // $query_log=array();
+        $query_log=array();
         foreach ($info as $value) {
             if ($value["name"] != "compart") {
                 $fields = $fields . " , " . $value["name"];
                 $values = $values . ", ? ";
                 $variables[] = $value["value"];
-             //   $query_log[] =array($value["name"]=> $value["value"]);
+                if($value["value"])
+                $query_log[$value["name"]]= $value["value"];
             }
         }
         $query = "INSERT INTO vicidial_list (entry_date,status,user,list_id $fields) VALUES (?,?,?,? $values) ";
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        $log->set($db->lastInsertId(), Logger::T_INS, Logger::S_CLT, json_encode(array("Lead_id" => $db->lastInsertId() )), 3);
+        $log->set($db->lastInsertId(), Logger::T_INS, Logger::S_CLT, json_encode($query_log), logger::A_APV);
         echo json_encode($db->lastInsertId());
         break;
 }

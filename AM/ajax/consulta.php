@@ -54,7 +54,7 @@ switch ($action) {
             ":right_ear" => $right_ear,
             ":produtos" => json_encode($produtos),
             ":feedback" => $feedback,
-            ":closed" => $closed)), 3);
+            ":closed" => $closed)), logger::A_SENT);
         if ($consulta_razao == "DEST" || $consulta_razao == 'NOSHOW') {
             $calendar->deleteReserva($reserva_id);
         }

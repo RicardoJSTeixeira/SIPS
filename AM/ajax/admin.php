@@ -9,6 +9,7 @@ require "$root/ini/dbconnect.php";
 require "$root/ini/user.php";
 require "$root/AM/lib_php/products.php";
 require "$root/AM/lib_php/requests.php";
+
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -18,14 +19,15 @@ foreach ($_GET as $key => $value) {
 $user = new mysiblings($db);
 $products = new products($db);
 
+
 switch ($action) {
     case "download_excel_csm":
         header('Content-Encoding: UTF-8');
         header('Content-type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename=Report_Sem_marcaçao_' . date("Y-m-d_H:i:s") . '.csv');
         $output = fopen('php://output', 'w');
-        $query = "SELECT lead_id,first_name,address1,entry_date from  vicidial_list 
-                    where user=? and status='NEW' and list_id=99800002  and lead_id not in (select lead_id from sips_sd_reservations)";
+        $query = "SELECT lead_id,first_name,address1,entry_date FROM  vicidial_list
+                    WHERE user=? AND status='NEW' AND list_id=99800002  AND lead_id NOT IN (SELECT lead_id FROM sips_sd_reservations)";
         $variables[] = $user->id;
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
@@ -35,6 +37,7 @@ switch ($action) {
         }
         fclose($output);
         break;
+
     case "listar_produtos_to_datatable":
         $temp = $products->get_products_to_datatable();
         foreach ($temp as &$value) {
@@ -62,22 +65,13 @@ switch ($action) {
     case "listar_produtos":
         echo(json_encode($products->get_products()));
         break;
-    case "apagar_produto":
-        echo(json_encode($products->remove_product($id)));
-        break;
-       case "criar_produto":
-        echo(json_encode($products->add_product($name, $parent, $max_req_m, $max_req_s, $category, $type, $color, $active, $size)));
-        break;
-    case "editar_produto":
-        $product = new product($db, $id);
-        echo($product->edit_product($name, $parent, $max_req_m, $max_req_s, $category, $type,$color,$active,$size));
-        break;
 
     case"get_agentes":
         echo(json_encode($user->get_agentes()));
         break;
+
     case "transferir_marcaçao_caledario":
-        $stmt = $db->prepare("Update sips_sd_reservations set id_user=? where id_user=?");
+        $stmt = $db->prepare("UPDATE sips_sd_reservations SET id_user=? WHERE id_user=?");
         $stmt->execute(array($new_user, $old_user));
         echo(json_encode($stmt->rowCount()));
         break;

@@ -30,7 +30,7 @@ switch ($action) {
     case "getAllDT":
         $allU = $users->getAll();
         while ($Cuser = array_pop($allU)) {
-            $js["aaData"][] = array($Cuser->user, $Cuser->full_name,$Cuser->alias, $users->_ULalias[$Cuser->user_level] . '<div class="view-button"><a href="#" data-user=' . $Cuser->user . ' data-active=' . $Cuser->active . ' class="btn btn-mini activator"><i class="icon-check' . (($Cuser->active == "Y") ? "" : "-empty" ) . '" ></i><span>' . (($Cuser->active == "Y") ? "Activo" : "Inactivo") . '</span></a><a href="#" data-user=' . $Cuser->user . ' class="btn btn-mini editor"><i class="icon-edit" ></i><span>Editar</span></a></div>');
+            $js["aaData"][] = array($Cuser->user, $Cuser->full_name, $Cuser->alias, $users->_ULalias[$Cuser->user_level] . '<div class="view-button"><a href="#" data-user=' . $Cuser->user . ' data-active=' . $Cuser->active . ' class="btn btn-mini activator"><i class="icon-check' . (($Cuser->active == "Y") ? "" : "-empty") . '" ></i><span>' . (($Cuser->active == "Y") ? "Activo" : "Inactivo") . '</span></a><a href="#" data-user=' . $Cuser->user . ' class="btn btn-mini editor"><i class="icon-edit" ></i><span>Editar</span></a></div>');
         }
         echo json_encode($js);
         break;
@@ -45,26 +45,29 @@ switch ($action) {
 
     case "create":
         try {
-            echo json_encode($users->set($username, $pass, $desc,$alias, $ulevel));
+            echo json_encode($users->set($username, $pass, $desc, $alias, $ulevel));
         } catch (PDOException $exc) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             if ($exc->getCode() == 23000) {
                 echo "Operador: $username, já existe.";
             }
         }
-        $log->set($username, Logger::T_INS, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel)),0);
+        $log->set($username, Logger::T_INS, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel)), logger::A_APV);
         break;
 
     case "active":
         echo json_encode($users->editActive($username, $active));
-        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "active" => $active)),1);
+        $status = logger::A_APV;
+        if ($active == "N")
+            $status = logger::A_DECL;
+        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "active" => $active)), $status);
         break;
 
     case "edit":
-        echo json_encode($users->edit($username, $pass, $desc,$alias, $ulevel, $active, $siblings));
-        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)),3);
+        echo json_encode($users->edit($username, $pass, $desc, $alias, $ulevel, $active, $siblings));
+        $log->set($username, Logger::T_UPD, Logger::S_USER, json_encode(array("username" => $username, "pass" => $pass, "desc" => $desc, "ulevel" => $ulevel, "active" => $active, "siblings" => $siblings)), logger::A_NCHANGE);
         break;
-    
+
     case "getTypes":
         echo json_encode($users->getTypes());
         break;
@@ -83,7 +86,7 @@ switch ($action) {
 
     case "get_notes_to_datatable":
         echo json_encode($users->get_notes_to_datatable($lead_id));
-              break;
+        break;
     case "insert_notes":
         echo json_encode($users->insert_notes($lead_id, $note, $title));
         break;

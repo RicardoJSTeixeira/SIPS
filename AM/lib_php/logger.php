@@ -30,6 +30,12 @@ class Logger
     const T_DEL = "Delete";
     const T_RM = "Remove";
 
+
+    const A_APV = 1;
+    const A_DECL = 2;
+    const A_NCHANGE = 3;
+    const A_SENT = 0;
+
     public function __construct(PDO $db, $user)
     {
         $this->_db = $db;

@@ -132,22 +132,19 @@ switch ($action) {
         $query = "UPDATE vicidial_list SET extra1=:codmkt where lead_id=:id";
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":codmkt" => $codmkt, ":id" => $id));
-
         break;
 
     case "edit_info":
         $query_string = "";
         $stringas = json_decode($stringas);
         foreach ($stringas as $string) {
-
             $query_string = $query_string . strtolower($string->key) . " = '" . $string->value . "',";
         }
         $query_string = rtrim($query_string, ",");
         $query = "UPDATE vicidial_list SET $query_string where lead_id=:id";
-
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":id" => $id));
-        $log->set($id, Logger::T_UPD, Logger::S_USER, json_encode(array("alterações" => $query_string )),3);
+        $log->set($id, Logger::T_UPD, Logger::S_USER, json_encode(array("alterações" => $query_string )),Logger::A_NCHANGE);
         break;
 
     default:
