@@ -137,20 +137,23 @@ switch ($action) {
     case "edit_info":
         $query_string = "";
         $stringas = json_decode($stringas);
+        $query_log=array();
         foreach ($stringas as $string) {
             $query_string = $query_string . strtolower($string->key) . " = '" . $string->value . "',";
+            $query_log[$string->key]= $string->value;
         }
         $query_string = rtrim($query_string, ",");
         $query = "UPDATE vicidial_list SET $query_string where lead_id=:id";
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":id" => $id));
-        $log->set($id, Logger::T_UPD, Logger::S_USER, json_encode(array("alterações" => $query_string )),Logger::A_NCHANGE);
+        $log->set($id, Logger::T_UPD, Logger::S_CLT, json_encode( $query_log ),Logger::A_NCHANGE);
         break;
 
     default:
         echo 'Are you a noob hacker? Or just a noob?';
         break;
 }
+
 
 
 echo json_encode($js);

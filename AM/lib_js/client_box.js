@@ -201,7 +201,7 @@ var ClientBox = function (configs) {
                                         .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").append($("<a>", {class:"icon-file"}))))
                                 )
                             ))
-                            .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Cancelar"))
+                            .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Fechar"))
                             .append($("<button>", {class: "btn btn-primary ", id: "button_editar_info_cliente"}).text("Editar Info. Cliente"))
                     )
                 )).on("click", "#button_nova_marcacao", function () {
@@ -813,6 +813,7 @@ var ClientBox = function (configs) {
                                     return JSON.stringify(strings);
                                 }
                             }, function () {
+                                $.jGrowl("Info de cliente editada com sucesso!",3000)
                                 if (typeof callback === "function")
                                     callback();
                             });
