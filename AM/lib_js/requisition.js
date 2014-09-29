@@ -461,8 +461,11 @@ var requisition = function (geral_path, options_ext) {
             table2csv(Table_view_requisition, 'full', '#' + table_path[0].id);
         });
         table_path.on("click", ".ver_cliente", function () {
-            var client = new Cliente_info($(this).data("lead_id"), null);
-            client.init(null);
+
+            var client = new ClientBox();
+
+            client.initModal($(this).data("lead_id"), null);
+
         });
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function () {
