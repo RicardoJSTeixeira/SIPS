@@ -38,9 +38,9 @@ Class products {
             }
             if ($product_editable == "true") {
                 $row[6] = "<span class='btn-group'>"
-                        . "<button class='btn btn_editar_produto btn-primary icon-alone' data-product_id='" . $row[0] . "'><i class='icon-pencil'></i></button>"
-                        . "<button data-active='" . $active . "' data-highlight='" . (bool) $row1[0] . "'   data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>"
-                        . "<button class='btn btn_apagar_produto btn-danger icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button>"
+                        . "<button title='Editar Produto' class='btn btn_editar_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-edit'></i></button>"
+                        . "<button  data-active='" . $active . "' data-highlight='" . (bool) $row1[0] . "'   data-deleted='" . (bool) $row["deleted"] . "' class='btn btn_ver_produto icon-alone hide' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>"
+                        . "<button title='Remover Produto' class='btn btn_apagar_produto btn-danger icon-alone' data-product_id='" . $row[0] . "'><i class='icon-trash'></i></button>"
                         . "</span>";
             } else {
                 $row[6] = "<button data-active='" . $active . "' data-highlight='" . (bool) $row1[0] . "'   data-deleted='" . (bool) $row[8] . "' class='btn btn-info btn_ver_produto  icon-alone' data-product_id='" . $row[0] . "'><i class='icon-eye-open'></i></button>";
