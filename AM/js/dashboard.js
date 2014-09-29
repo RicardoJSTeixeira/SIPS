@@ -57,6 +57,7 @@ $(function () {
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
+            "bDeferRender": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": 'ajax/dashboard.php',
             "fnServerParams": function (aoData) {
@@ -73,6 +74,7 @@ $(function () {
             "bSortClasses": false,
             "bProcessing": true,
             "bDestroy": true,
+            "bDeferRender": true,
             "sPaginationType": "full_numbers",
             "sAjaxSource": 'ajax/dashboard.php',
             "fnServerParams": function (aoData) {
