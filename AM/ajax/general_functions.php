@@ -47,6 +47,6 @@ switch ($action) {
         break;
 
     case "make_alert":
-        echo json_encode($alert->make($is_for, $alert, "", 0,0));
+        echo json_encode($alert->make($is_for, $alert, $section, $record_id,$cancel));
         break;
 }
