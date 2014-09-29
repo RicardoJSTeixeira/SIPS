@@ -31,6 +31,7 @@ $query = "INSERT INTO vicidial_list (entry_date, status,user, list_id,extra1, fi
 $stmt = $db->prepare($query);
 foreach ($names as $key => $name) {
     $stmt->execute(array(":user" => $u->username, ":list_id" => $u->list_id, ":ccm" => $ccm[$key], ":name" => $name, ":mname" => $mnames[$key], ":lname" => $lnames[$key], ":morada" => $moradas[$key], ":local" => $local[$key], ":postal" => $postal[$key], ":tel" => $tels[$key], ":tlm" => $tlm[$key], ":email" => $emails[$key], ":bday" => $cbd[$key], ":toissue" => $toissues[$key], ":rcm" => $rcm));
+    $log->set($db->lastInsertId(), Logger::T_INS, Logger::S_CLT, json_encode(array("User" => $u->username, "LIST_ID" => $u->list_id, "EXTRA1" => $ccm[$key], "FIRST_NAME" => $name, "MIDDLE_INITIAL" => $mnames[$key], "LAST_NAME" => $lnames[$key], "ADDRESS1" => $moradas[$key], "CITY" => $local[$key], "POSTAL_CODE" => $postal[$key], "PHONE_NUMBER" => $tels[$key], "ADDRESS3" => $ctlm[$key], "EMAIL" => $emails[$key], "DATE_OF_BIRTH" => $cbd[$key], "EXTRA6" => $toissues[$key], "EXTRA7" => $rcm, "SECURITY_PHRASE" => "SPICE")), logger::A_APV);
 }
 
 echo json_encode(true);
