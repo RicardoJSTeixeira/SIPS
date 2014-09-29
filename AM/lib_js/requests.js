@@ -179,6 +179,7 @@ var Requests = function (basic_path, options_ext) {
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
+                "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
@@ -400,6 +401,7 @@ var Requests = function (basic_path, options_ext) {
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
+                "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
@@ -569,6 +571,7 @@ var Requests = function (basic_path, options_ext) {
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
+                "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
@@ -877,6 +880,7 @@ var Requests = function (basic_path, options_ext) {
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
+                "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
@@ -1141,6 +1145,7 @@ var Requests = function (basic_path, options_ext) {
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
+                "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
