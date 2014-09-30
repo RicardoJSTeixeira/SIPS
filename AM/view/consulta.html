@@ -53,11 +53,13 @@
                         <th style="width: 30px;">Qtd.</th>
                         <th style="width: 54px;">Entrada</th>
                         <th style="width: 60px;">Nº meses</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>1ª</th>
+                        <th>
+                         1ª</th>
                         <td>
                             <select id='p1modelo' class="span select_modelo_proposta validate[required]" data-placeholder="Escolha um modelo" >
                             </select>
@@ -74,9 +76,10 @@
                                 <span class="add-on">%</span>
                             </div>
                         </td>
-                        <td>
+                        <td >
                             <input type="text" id='p1meses' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
+
                     </tr>
                     <tr id="2_proposta" style="display:none">
                         <th>2ª</th>
@@ -99,6 +102,7 @@
                         <td>
                             <input type="text" id='p2meses' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
+
                     </tr>
                     <tr id="3_proposta" style="display:none">
                         <th>3ª</th>
@@ -121,12 +125,14 @@
                         <td>
                             <input type="text" id='p3meses' class="span text-right onlynumber validate[required]" value="" maxlength="2"/>
                         </td>
+
                     </tr>
                 </tbody>
             </table>
         </form>          
         <div class="modal-footer">
-            <button class="btn left" id="add_proposta_linha"><i class="icon-plus"></i>Adicionar Linha</button>
+            <button class="btn left" id="add_proposta_linha"><i class="icon-plus"></i>Linha</button>
+            <button class="btn left" id="remove_proposta_linha"><i class="icon-minus"></i>Linha</button>
             <!--<button class="btn btn-success" id="print_proposta"><i class="icon-print"></i>Imprimir</button>-->
             <button class="btn btn-success" id="save_proposta"><i class="icon-save"></i>Gravar</button>
             <button class="btn btn-link" data-dismiss="modal" aria-hidden="true">Sair</button>

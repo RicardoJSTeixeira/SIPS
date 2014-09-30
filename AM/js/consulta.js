@@ -425,7 +425,6 @@ $(function () {
     });
     $(".onlynumber").autotab("numeric");
 
-
     $("#button_create_proposta_comercial").click(function (e) {
         e.preventDefault();
         $("#2_proposta").hide();
@@ -434,6 +433,13 @@ $(function () {
         $(".select_modelo_proposta").val("").trigger("chosen:updated");
         $("#proposta_form").get(0).reset();
     });
+
+    $(".delete_proposta_line").click(function(e)
+    {
+        e.preventDefault();
+        $(this).parents("tr").hide();
+        $("#add_proposta_linha").show();
+    })
 
     $("#save_proposta").click(function () {
         if ($("#proposta_form").validationEngine("validate")) {
@@ -477,13 +483,24 @@ $(function () {
         }
     });
 
-    $("#add_proposta_linha").click(function () {
+    $("#add_proposta_linha").click(function (e) {
+        e.preventDefault();
         if (!$("#2_proposta").is(":visible"))
             $("#2_proposta").show();
         else {
             $("#3_proposta").show();
-            $("#add_proposta_linha").hide();
+
         }
     })
+    $("#remove_proposta_linha").click(function (e) {
+        e.preventDefault();
+        if ($("#3_proposta").is(":visible"))
+            $("#3_proposta").hide();
+        else {
+            $("#2_proposta").hide();
+
+        }
+    })
+
 
 })
