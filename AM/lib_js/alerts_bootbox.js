@@ -1,6 +1,5 @@
 var AlertBoxes = function()
 {
-
     var
             alert_lst = [],
             me = this,
@@ -22,18 +21,14 @@ var AlertBoxes = function()
         }
         if (!found)
             alert_lst.push(item);
-
         me.create_alert();
-
     };
 
 
     this.create_alert = function(callback) {
-
         if ($(".modal:visible").length) {
             return false;
         }
-
 
         var alert = "";
         if (alert_lst.length)

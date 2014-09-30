@@ -195,10 +195,10 @@ var ClientBox = function (configs) {
                                 .append($("<button>", {class: "btn btn-success left dropdown-toggle"}).attr("data-toggle", "dropdown").text("Opções Extra").append($("<span>", {class: "caret"})))
                                 .append($("<div>", {class: " dropdown-menu"})
                                     .append($("<ul>")
-                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").append($("<a>", {class:"icon-calendar"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").append($("<a>", {class:"icon-money"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").append($("<a>", {class:"icon-user"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").append($("<a>", {class:"icon-file"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").append($("<a>", {class: "icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").append($("<a>", {class: "icon-money"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").append($("<a>", {class: "icon-user"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").append($("<a>", {class: "icon-file"}))))
                                 )
                             ))
                             .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Fechar"))
@@ -210,14 +210,15 @@ var ClientBox = function (configs) {
                         modal_html.modal("hide");
                     })
                     .on("click", "#button_editar_info_cliente", function () {
-                        me.client_info_editing(function()                        {
+                        me.client_info_editing(function () {
                             me.destroy().initModal(lead_id);
-                            $(".datables_updatable").each(function(){$(this).dataTable().fnReloadAjax();})
+                            $(".datables_updatable").each(function () {
+                                $(this).dataTable().fnReloadAjax();
+                            })
                         });
                         modal_html.modal("hide");
                     })
-                    .
-                    on("click", "#button_propostas_comerciais", function () {
+                    .on("click", "#button_propostas_comerciais", function () {
                         me.getProposta();
                     })
                     .
@@ -256,25 +257,19 @@ var ClientBox = function (configs) {
 
 
     this.getPdf = function () {
+        $.msg();
         $.post('/AM/ajax/upload_file.php', {
             action: "get_pdfs",
             navid: me.client_info.navId || "",
             ref_cliente: me.client_info.refClient
         }, function (data) {
-
             if (data) {
-
-
-                    var c = encodeURIComponent(data);
-                    document.location = '/AM/ajax/downloader.php?file=' + c;
-
+                var c = encodeURIComponent(data);
+                document.location = '/AM/ajax/downloader.php?file=' + c;
             }
             else {
-
-                    $.jGrowl("Cliente sem ficheiro associado", 3000);
-                y
+                $.jGrowl("Cliente sem ficheiro associado", 3000);
             }
-
             $.msg('unblock');
         }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -348,9 +343,9 @@ var ClientBox = function (configs) {
             .append($("<div>", {id: "new_note_area_div", class: "span7"}))
             .append($("<div>", {id: "note_area_div", class: "span7"}))
             .append($("<div>", {id: "note_selection_div", class: "span4"}));
-        var note_area_div = final.find("#note_area_div");
+        var note_area_div = final.find("#note_area_div"),
+            new_note_area_div = final.find("#new_note_area_div");
         note_area_div.hide();
-        var new_note_area_div = final.find("#new_note_area_div");
 
         //Create Table===============================================================
         final.find("#note_selection_div").append(
@@ -487,6 +482,7 @@ var ClientBox = function (configs) {
                 }
             })
         });
+
         function clear_note_preview() {
             note_area_div.find("#note_title").val("");
             note_area_div.find("#note_textarea").val("");
@@ -499,6 +495,7 @@ var ClientBox = function (configs) {
         new_note_area_div.on("click", "#save_note_new", function (e) {
             e.preventDefault();
             if (new_note_area_div.find("#new_note_form").validationEngine('validate')) {
+                $.msg();
                 $.post('/AM/ajax/users.php', {
                         action: "insert_notes",
                         lead_id: me.client_info.id,
@@ -515,19 +512,19 @@ var ClientBox = function (configs) {
                         $.msg('unblock', 5000);
                     });
             }
-        })
-        ;
+        });
+
         new_note_area_div.on("click", "#cancel_note_new", function (e) {
             e.preventDefault();
             clear_note_new();
         });
 
         function clear_note_new() {
-            new_note_area_div.find("#new_note_title").val("");
-            new_note_area_div.find("#new_note_textarea").val("");
+            new_note_area_div.find("#new_note_title").val("").end()
+                .find("#new_note_textarea").val("");
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////7
+
         function toggle_menus() {
             note_area_div.toggle();
             new_note_area_div.toggle();
@@ -750,7 +747,6 @@ var ClientBox = function (configs) {
                             input = div.find("#input1");
                             break;
                         case "extra2":
-
                             custom_class = "validate[custom[spice_ref_cliente]]";
                             input = div.find("#input1");
                             break;
@@ -762,8 +758,12 @@ var ClientBox = function (configs) {
                         case "ADDRESS1":
                         case "CITY":
                             custom_class = "validate[required] span";
+                            input = div.find("#input2");
+                            break;
                         case "POSTAL_CODE":
                             custom_class = "validate[required]";
+                            input = div.find("#input2");
+                            break;
                         case "ADDRESS2":
                         case "PROVINCE":
                         case "STATE":
@@ -803,7 +803,6 @@ var ClientBox = function (configs) {
                         "label": "Gravar Alterações",
                         "class": "btn-success",
                         "callback": function () {
-
                             $.post("ajax/client.php", {
                                 action: "edit_info", id: me.client_info.id, stringas: function () {
                                     var strings = [];
@@ -813,7 +812,7 @@ var ClientBox = function (configs) {
                                     return JSON.stringify(strings);
                                 }
                             }, function () {
-                                $.jGrowl("Info de cliente editada com sucesso!",3000)
+                                $.jGrowl("Info de cliente editada com sucesso!", 3000)
                                 if (typeof callback === "function")
                                     callback();
                             });

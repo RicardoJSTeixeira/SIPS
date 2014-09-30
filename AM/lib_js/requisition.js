@@ -217,11 +217,11 @@ var requisition = function (geral_path, options_ext) {
                 .find("tbody");
             $.each(produtos_single, function () {
                 produtos_in_text.append($("<tr>", {class: "product_line"})
-                    .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
-                    .append($("<td>", {class: "td_category"}).text(this.category))
-                    .append($("<td>", {class: "td_quantity"}).text(this.quantity))
-                    .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
-                    .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
+                        .append($("<td>", {class: "td_name", id_product: this.id}).text(this.name))
+                        .append($("<td>", {class: "td_category"}).text(this.category))
+                        .append($("<td>", {class: "td_quantity"}).text(this.quantity))
+                        .append($("<td>", {class: "td_size"}).text(this.size === 0 ? "" : this.size))
+                        .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
                 );
             });
             new_requisition_zone.find("#produtos_encomendados").append(new_product);
@@ -252,6 +252,7 @@ var requisition = function (geral_path, options_ext) {
                             id: $(this).find(".td_name").attr("id_product"),
                             quantity: ~~$(this).find(".td_quantity").text(),
                             color: $(this).find(".td_color").attr("color"),
+                            color_name: $(this).find(".td_color").text(),
                             size: ~~$(this).find(".td_size").text()
                         });
                     }
@@ -436,7 +437,7 @@ var requisition = function (geral_path, options_ext) {
                                     action: "editar_encomenda",
                                     "clientID": that.data().clientid,
                                     "cod_cliente": that.val()
-                                },function () {
+                                }, function () {
                                     that.closest("tr")
                                         .removeClass("error")
                                         .end()
@@ -474,7 +475,8 @@ var requisition = function (geral_path, options_ext) {
             $.post('ajax/requisition.php', {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
-            },function (data) {
+            }, function (products) {
+
                 var
                     modal_tbody = modal.find("#show_requisition_products_tbody").empty();
                 EData = {
@@ -486,38 +488,48 @@ var requisition = function (geral_path, options_ext) {
                 $.post('ajax/requisition.php', {
                     action: "get_encomenda",
                     id_req: EData.id_req
-                }, function (data1) {
-                    if (data1) {
+                }, function (encomenda) {
+                    if (encomenda) {
                         EData.bInfo.push({
-                            'ID encomenda': data1[0].id + "",
-                            'User': data1[0].user + "",
-                            'Tipo': data1[0].type + "",
-                            'Id Client': data1[0].lead_id + "",
-                            'Date': data1[0].date + "",
-                            'Order Number': data1[0].contract_number + "",
-                            'Client Ref.': data1[0].extra2 + "",
-                            'Status': data1[0].status + ""
+                            'ID encomenda': encomenda[0].id + "",
+                            'User': encomenda[0].user + "",
+                            'Tipo': encomenda[0].type + "",
+                            'Id Client': encomenda[0].lead_id + "",
+                            'Date': encomenda[0].date + "",
+                            'Order Number': encomenda[0].contract_number + "",
+                            'Client Ref.': encomenda[0].extra2 + "",
+                            'Status': encomenda[0].status + ""
                         });
                     }
                     else
                         EData.bInfo.push({});
-                    $.each(data.product, function () {
-                        this.color_name = (!this.color_name) ? "Padrão" : this.color_name;
-                        EData.products.push({
-                            Name: this.name,
-                            Category: this.category,
-                            Color: this.color_name,
-                            Qt: this.quantity,
-                            Size: this.size
-                        });
-                        if (this.category !== "Acessório")
-                            this.size = "";
-                        modal_tbody.append("<tr><td>" + this.name + "</td><td>" + this.category + "</td><td>" + this.color_name + "</td><td>" + this.quantity + "</td><td>" + this.size + "</td></tr>");
+
+                    $.each(products, function () {
+                        if (typeof this == "object") {
+                            for (i = 0; i < this.qcs.length; i++) {
+
+                                console.log(this.qcs[i].quantity);
+                                this.qcs[i].color_name = (!this.qcs[i].color_name) ? "Padrão" : this.qcs[i].color_name;
+                                EData.products.push({
+                                    Name: this.product_info.name,
+                                    Category: this.product_info.category,
+                                    Color: this.qcs[i].color_name,
+                                    Qt: this.qcs[i].quantity,
+                                    Size: this.qcs[i].size
+                                });
+                                if (this.product_info.category !== "Acessório")
+                                    this.qcs.size = "";
+                                modal_tbody.append("<tr><td>" + this.product_info.name + "</td><td>" + this.product_info.category + "</td><td>" + this.qcs[i].color_name + "</td><td>" + this.qcs[i].quantity + "</td><td>" + this.qcs[i].size + "</td></tr>");
+                            }
+                        }
+                        else {
+                            if (this.length)
+                                modal_tbody.append("<tr ><td colspan='5'>" + data.comments + "</td> </tr>");
+                            else
+                                modal_tbody.append("<tr ><td colspan='5'>Sem comentários</td> </tr>");
+                        }
                     });
-                    if (data.comments.length)
-                        modal_tbody.append("<tr ><td colspan='5'>" + data.comments + "</td> </tr>");
-                    else
-                        modal_tbody.append("<tr ><td colspan='5'>Sem comentários</td> </tr>");
+
                     modal.modal("show");
                     $.msg('unblock');
                 }, "json");
@@ -533,7 +545,7 @@ var requisition = function (geral_path, options_ext) {
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_anexos",
                 folder: this_folder
-            },function (data) {
+            }, function (data) {
                 var options = "";
                 $.each(data, function () {
                     options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
@@ -552,7 +564,7 @@ var requisition = function (geral_path, options_ext) {
             $.post('ajax/requisition.php', {
                 action: "listar_comments_por_encomenda",
                 id: EData.id_req
-            },function (data) {
+            }, function (data) {
                 var doc = new jsPDF('l', 'pt', 'a4', true);
                 doc.table(30, 30, EData.bInfo, [
                     {name: 'ID encomenda', width: 100},
@@ -581,7 +593,7 @@ var requisition = function (geral_path, options_ext) {
                 $.post('ajax/audiograma.php', {
                     action: "populate",
                     lead_id: lead_id
-                },function (oAudiograma) {
+                }, function (oAudiograma) {
                     if (oAudiograma.length) {
                         if (data.length) {
                             lines = doc.setFont('Times', 'Roman')
@@ -668,7 +680,7 @@ var requisition = function (geral_path, options_ext) {
                         action: "accept_requisition",
                         id: this_button.val(),
                         message: result
-                    },function () {
+                    }, function () {
                         Table_view_requisition.fnReloadAjax();
                         $.msg('unblock');
                     }).fail(function (data) {
@@ -687,7 +699,7 @@ var requisition = function (geral_path, options_ext) {
                         action: "decline_requisition",
                         id: this_button.val(),
                         message: result
-                    },function () {
+                    }, function () {
                         Table_view_requisition.fnReloadAjax();
                         $.msg('unblock');
                     }).fail(function (data) {

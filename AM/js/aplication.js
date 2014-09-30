@@ -12,7 +12,8 @@ $(function () {
             "6": "sbo",
             "7": "abo",
             "8": "mkt",
-            "9": "admin"};
+            "9": "admin"
+        };
 
         $("#user-name").text(user.name);
         $("#sidebar li.role-" + types[user.user_level])
@@ -32,16 +33,17 @@ $(function () {
 });
 
 function init() {
+
     function setFavicon() {
         var link = $('link[type="image/vnd\.microsoft\.icon"]').remove().attr("href");
         $('<link href="' + link + '" rel="shortcut icon" type="image/vnd.microsoft.icon" />').appendTo('head');
     }
 
-    $.ajaxSetup({
-        cache: false
-    });
+    $.ajaxSetup({cache: false});
     moment.lang('pt');
-    $.history.on('load change pushed',function (event, url, type) {
+
+
+    $.history.on('load change pushed', function (event, url, type) {
         if (event.type === "load" && url !== "view/dashboard.html") {
             consultasMais();
         }
@@ -93,36 +95,36 @@ function init() {
 
     $(".ichat")
         .on("click", ".dismiss_msg", function () {
-        $.msg();
-        $.post("ajax/general_functions.php", {
-            action: "edit_message_status",
-            id_msg: $(this).data().msg_id
-        },function () {
-            get_messages();
-            $.msg('unblock');
-        }, "json").fail(function (data) {
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
+            $.msg();
+            $.post("ajax/general_functions.php", {
+                action: "edit_message_status",
+                id_msg: $(this).data().msg_id
+            }, function () {
+                get_messages();
+                $.msg('unblock');
+            }, "json").fail(function (data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
+        }).on("click", ".ok_alert", function () {
+            $.msg();
+            $.post("ajax/general_functions.php", {
+                action: "set_readed",
+                id_msg: $(this).data().id
+            }, function () {
+                get_alerts();
+                $.msg('unblock');
+            }, "json").fail(function (data) {
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
         });
-    }).on("click", ".ok_alert", function () {
-        $.msg();
-        $.post("ajax/general_functions.php", {
-            action: "set_readed",
-            id_msg: $(this).data().id
-        },function () {
-            get_alerts();
-            $.msg('unblock');
-        }, "json").fail(function (data) {
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
-        });
-    });
 
     $("#mark_all_read").click(function () {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "edit_message_status_by_user"
-        },function () {
+        }, function () {
             get_messages();
             $.msg('unblock');
         }, "json").fail(function (data) {
@@ -135,7 +137,7 @@ function init() {
         $.msg();
         $.post("ajax/general_functions.php", {
             action: "set_all_readed"
-        },function () {
+        }, function () {
             get_alerts();
             $.msg('unblock');
         }, "json").fail(function (data) {
@@ -211,7 +213,7 @@ function get_messages() {
     //GET NEW MESSAGES
     $.post("ajax/general_functions.php", {
         action: "get_unread_messages"
-    },function (data) {
+    }, function (data) {
         var msg = "";
         $.each(data, function () {
             msg = "<div class='imessage'>\n\
@@ -236,16 +238,18 @@ function get_alerts(callback) {
 
     $.post("ajax/general_functions.php", {
         action: "get_alerts"
-    },function (data) {
+    }, function (data) {
         $("#alert_time").data("update", moment());
         var msg = "";
         var dismiss_icon = "";
         $.each(data, function () {
             if (SpiceU.user_level < 5) {
                 if (this.alert.search(/Apoio Mkt./i) !== -1) {
-                    alerts.add({id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function () {
-                        $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
-                    }});
+                    alerts.add({
+                        id: this.id, message: "Á " + moment(this.entry_date).fromNow() + " - " + this.alert, callback: function () {
+                            $.post("ajax/general_functions.php", {action: "set_readed", id_msg: this.id});
+                        }
+                    });
                     return true;
                 }
             }
@@ -289,16 +293,17 @@ String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-var guid = (function() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-               .toString(16)
-               .substring(1);
-  }
-  return function() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-           s4() + '-' + s4() + s4() + s4();
-  };
+var guid = (function () {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+
+    return function () {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    };
 })();
 
 function consultasMais() {
@@ -310,16 +315,23 @@ function consultasMais() {
     }
 
     if (~~localStorage.v6 > 1) {
-        alerts.add({id: 0, message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.", callback: function () {
-            $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
-            $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
-            if ($(".menu-sidebar").find('.active').parent().index() > 1)
-                $.history.push("view/dashboard.html");
-        }});
+        alerts.add({
+            id: 0,
+            message: "Devido a ter <i class='label label-important'>" + localStorage.v6 + "</i> consultas com mais de 6 dias de atraso, só poderá usar o <i>Spice</i> para consultar e fechar consultas.",
+            callback: function () {
+                $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").addClass("disabled");
+                $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", true);
+                if ($(".menu-sidebar").find('.active').parent().index() > 1)
+                    $.history.push("view/dashboard.html");
+            }
+        });
         return false;
     }
     if (~~localStorage.v3 > 3) {
-        alerts.add({id: 0, message: "Cuidado que já tem <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso."});
+        alerts.add({
+            id: 0,
+            message: "Cuidado, já têm <i class='label label-important'>" + localStorage.v3 + "</i> consultas com mais de 3 dias de atraso."
+        });
         return false;
     }
     $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").removeClass("disabled");

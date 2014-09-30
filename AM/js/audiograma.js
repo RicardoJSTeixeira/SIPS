@@ -6,9 +6,9 @@ var Audiograma = function (lead_id) {
         me = this,
         tooltip_to_validate = 1;
     this.adg = $("#main_audiograma_div");
-    me.adg.find("#right_ear").text("Sem dados");
-    me.adg.find("#left_ear").text("Sem dados");
-    me.adg.find("#audiograma_form").submit(function (e) {
+    me.adg.find("#right_ear").text("Sem dados").end()
+        .find("#left_ear").text("Sem dados").end()
+        .find("#audiograma_form").submit(function (e) {
         e.preventDefault();
     });
 

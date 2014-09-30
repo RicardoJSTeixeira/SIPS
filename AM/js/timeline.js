@@ -1,25 +1,14 @@
-//limites de tempo, quando se tira uma data tem q actualizar o outro datepicker
-//admin abo, que so ve produtos e stuff minor
-//quando n tem mostrar mensagem
-
-
 $(function() {
-
     $("#select_section").chosen({
         no_results_text: "Sem resultados"
     });
-
-
-
     $("#date_start").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
         $("#date_end").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
     });
     $("#date_end").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function(ev) {
         $("#date_start").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
     });
-
 });
-
 
 
 $("#button_apply_filters").click(function(e) {
@@ -27,7 +16,6 @@ $("#button_apply_filters").click(function(e) {
     if ($("#filter_form").validationEngine("validate")) {
         search();
     }
-
 });
 
 
@@ -49,11 +37,11 @@ function search()
 function create_timeline(data)
 {
     $("#timeline_main").empty();
-    var log = "";
-    var inverted = 0;
-    var class_badge = "timeline-badge";
-    var class_badge_icon = "icon-asterisk";
-    var info = [];
+    var log = "",
+        inverted = 0,
+        class_badge = "timeline-badge",
+        class_badge_icon = "icon-asterisk",
+        info = [];
     $.each(data, function() {
         class_badge = "timeline-badge";
         class_badge_icon = "icon-asterisk";
@@ -61,26 +49,18 @@ function create_timeline(data)
             case "Update":
                 class_badge += "  info";
                 class_badge_icon = "icon-edit";
-
                 break;
             case "Remove":
                 class_badge += "  danger";
                 class_badge_icon = "icon-remove";
-
                 break;
             case "Insert":
                 class_badge += "  success";
                 class_badge_icon = "icon-plus";
-
                 break;
-            default:
+           }
+        inverted=!inverted;
 
-                break;
-        }
-        if (inverted)
-            inverted = 0;
-        else
-            inverted = 1;
 
         info = [];
         try {
@@ -88,10 +68,10 @@ function create_timeline(data)
             createList(a);
         }
         catch (e) {
-            info.push('<ul>');
-            info.push('<li>' + this.note);
-            info.push('</li>');
-            info.push('</ul>');
+            info.push('<ul>')
+                .push('<li>' + this.note)
+                .push('</li>')
+                .push('</ul>');
         }
 
         function createList(arr) {
@@ -103,7 +83,6 @@ function create_timeline(data)
                     else
                         info.push('<li>' + i.toString().toUpperCase() + " &#x27a1; " + val);
                 }
-
                 if (typeof val === 'object') {
                     createList(val);
                 }

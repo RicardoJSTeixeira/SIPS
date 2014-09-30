@@ -1,17 +1,20 @@
 <?php
 
-Class requisitions {
+Class requisitions
+{
 
-    public function __construct($db, $user_level, $user_id, $siblings) {
+    public function __construct($db, $user_level, $user_id, $siblings)
+    {
         $this->_user_level = $user_level;
         $this->_user_id = $user_id;
         $this->_user_siblings = $siblings;
         $this->_db = $db;
     }
 
-    public function get_requisitions_to_datatable() {
+    public function get_requisitions_to_datatable()
+    {
         $result['aaData'] = array();
-        $filter = ($this->_user_level == 6 ) ? ' where sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' where sr.user like "' . $this->_user_id . '" ' : '');
+        $filter = ($this->_user_level == 6) ? ' where sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' where sr.user like "' . $this->_user_id . '" ' : '');
         $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter  ";
 
         $stmt = $this->_db->prepare($query);
@@ -37,8 +40,7 @@ Class requisitions {
                         $row[6] = "$row[6]";
                     else
                         $row[6] = "<input placeholder='Insira código de cliente' class='cod_cliente_input span validate[custom[onlyNumberSp]]' data-clientID='$row[13]' type='text'/>";
-                }
-                else {
+                } else {
                     if (!$row[6])
                         $row[6] = "<i class='icon-ban-circle'></i>";
                 }
@@ -63,20 +65,21 @@ Class requisitions {
             else
                 $row[7] = "Sem Anexo";
             $row[8] = "<div><button class='btn ver_requisition_products icon-alone' value='" . $row[0] . "'><i class='icon-eye-open'></i></button></div>";
-            $row[12] =implode(",", $row);
+            $row[12] = implode(",", $row);
 
             $result['aaData'][] = $row;
         }
         return $result;
     }
 
-    public function get_requisitions_by_id($id_req) {
-        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,sr.products,sr.status, sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where sr.id=:id_req  ";
+    public function get_requisitions_by_id($id_req)
+    {
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,sr.products,sr.status, sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  FROM spice_requisition sr LEFT JOIN vicidial_list vl ON vl.lead_id=sr.lead_id WHERE sr.id=:id_req  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id_req" => $id_req));
         $result = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                
+
             switch ($row["status"]) {
                 case "0":
                     $row["status"] = "Pedido enviado";
@@ -93,13 +96,15 @@ Class requisitions {
         return $result;
     }
 
-    public function edit_requisition($id, $cod_cliente) {
-        $query = "Update vicidial_list set extra2=:cod_cliente where lead_id=:id";
+    public function edit_requisition($id, $cod_cliente)
+    {
+        $query = "UPDATE vicidial_list SET extra2=:cod_cliente WHERE lead_id=:id";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":cod_cliente" => $cod_cliente, ":id" => $id));
     }
 
-    public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments) {
+    public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments)
+    {
         $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`comments`,`status`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products,:comments, :status)";
         $stmt = $this->_db->prepare($query);
         $data = date('Y-m-d H:i:s');
@@ -108,57 +113,64 @@ Class requisitions {
         return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div><button class='btn ver_requisition_products' value='" . $last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
     }
 
-    public function get_products_by_requisiton($id) {
-        $query = "SELECT products,comments from spice_requisition where id=:id";
+    public function get_products_by_requisiton($id)
+    {
+        $query = "SELECT products,comments FROM spice_requisition WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array("id" => $id));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $productalia["comments"] = $row["comments"];
         $productalia = array();
         foreach (json_decode($row["products"]) as $value) {
-            $productalia["product"][$value->id] = array("quantity" => $value->quantity, "color" => $value->color, "color_name" => $value->color_name, "size" => $value->size);
+            $productalia[$value->id]["qcs"][] = array("quantity" => $value->quantity, "color" => $value->color, "color_name" => $value->color_name, "size" => $value->size);
         }
-        $productalia["comments"] = $row["comments"];
-        $query = "SELECT id,name,category from spice_product where id in ('" . join("','", array_keys($productalia["product"])) . "') order by category asc";
+        $query = "SELECT id,name,category FROM spice_product WHERE id IN ('" . join("','", array_keys($productalia)) . "') ORDER BY category ASC";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row1 = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $productalia["product"][$row1["id"]] = array("name" => $row1["name"], "quantity" => $productalia["product"][$row1["id"]]["quantity"], "color" => $productalia["product"][$row1["id"]]["color"], "color_name" => $productalia["product"][$row1["id"]]["color_name"], "category" => $row1["category"], "size" => $productalia["product"][$row1["id"]]["size"]);
+            $productalia[$row1["id"]]["product_info"] = array("name" => $row1["name"], "category" => $row1["category"]);
         }
+
         return $productalia;
     }
 
-    public function get_comments_by_requisiton($id) {
-        $query = "Select comments FROM spice_requisition where id=:id";
+    public function get_comments_by_requisiton($id)
+    {
+        $query = "SELECT comments FROM spice_requisition WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $comments = $stmt->fetch(PDO::FETCH_ASSOC);
         return $comments["comments"];
     }
 
-    public function accept_requisition($id) {
-        $query = "Update  spice_requisition set status=1 where id=:id";
+    public function accept_requisition($id)
+    {
+        $query = "UPDATE  spice_requisition SET status=1 WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array("id" => $id));
         return $this->getUser($id);
     }
 
-    public function decline_requisition($id) {
-        $query = "Update  spice_requisition set status=2 where id=:id";
+    public function decline_requisition($id)
+    {
+        $query = "UPDATE  spice_requisition SET status=2 WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array("id" => $id));
         return $this->getUser($id);
     }
 
-    public function check_month_requisitions() {
-        $query = "select count(id) count from  spice_requisition  where user=:user and date between :date_first and :date_last and type='month' and status != '2' ";
+    public function check_month_requisitions()
+    {
+        $query = "SELECT count(id) count FROM  spice_requisition  WHERE user=:user AND date BETWEEN :date_first AND :date_last AND type='month' AND status != '2' ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user" => $this->_user_id, ":date_first" => date("Y-m-01") . " 00:00:00", ":date_last" => date("Y-m-t") . " 23:59:59"));
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row["count"];
     }
 
-    private function getUser($id) {
-        $query = "Select user FROM spice_requisition where id=:id";
+    private function getUser($id)
+    {
+        $query = "SELECT user FROM spice_requisition WHERE id=:id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);

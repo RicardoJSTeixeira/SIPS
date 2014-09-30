@@ -37,13 +37,13 @@ var Products = function(geral_path, options_ext) {
             product_id = $(this).data("product_id");
             populate_modal(edit_product_modal, function() {
                 get_promocao(edit_product_modal, function() {
-                    edit_product_modal.find("#edit_product_button").hide();
-                    edit_product_modal.find(".modal-body").find("#edit_product_new_promotion_div").hide();
-                    edit_product_modal.find(".modal-body").find("#edit_product_add_promotion_toggle").hide();
-                    edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").hide();
-                    edit_product_modal.find(".modal-body").find(":input").prop("disabled", true);
-                    edit_product_modal.find(".modal-body").find("select").prop("disabled", true).trigger("chosen:updated");
-                    edit_product_modal.find(".modal-body").find(".color_picker_select").parent().find("a").hide();
+                    edit_product_modal.find("#edit_product_button").hide().end()
+                        .find(".modal-body").find("#edit_product_new_promotion_div").hide().end()
+                        .find(".modal-body").find("#edit_product_add_promotion_toggle").hide().end()
+                        .find(".modal-body").find("#edit_product_button_color_add_line").hide().end()
+                        .find(".modal-body").find(":input").prop("disabled", true).end()
+                        .find(".modal-body").find("select").prop("disabled", true).trigger("chosen:updated").end()
+                        .find(".modal-body").find(".color_picker_select").parent().find("a").hide();
                     $.msg("unblock");
                 });
             });
@@ -53,12 +53,12 @@ var Products = function(geral_path, options_ext) {
             product_id = $(this).data("product_id");
             populate_modal(edit_product_modal, function() {
                 get_promocao(edit_product_modal, function() {
-                    edit_product_modal.find("#edit_product_button").show();
-                    edit_product_modal.find(".modal-body").find("#edit_product_new_promotion_div").hide();
-                    edit_product_modal.find(".modal-body").find("#edit_product_add_promotion_toggle").show();
-                    edit_product_modal.find(".modal-body").find("#edit_product_button_color_add_line").show();
-                    edit_product_modal.find(".modal-body").find(":input").prop("disabled", false);
-                    edit_product_modal.find(".modal-body").find("select").prop("disabled", false).trigger("chosen:updated");
+                    edit_product_modal.find("#edit_product_button").show().end()
+                        .find(".modal-body").find("#edit_product_new_promotion_div").hide().end()
+                        .find(".modal-body").find("#edit_product_add_promotion_toggle").show().end()
+                        .find(".modal-body").find("#edit_product_button_color_add_line").show().end()
+                        .find(".modal-body").find(":input").prop("disabled", false).end()
+                        .find(".modal-body").find("select").prop("disabled", false).trigger("chosen:updated");
                     $.msg("unblock");
                 });
             });
@@ -84,6 +84,7 @@ var Products = function(geral_path, options_ext) {
 
                 if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
                     if (types.length) {
+                        $.msg();
                         $.post('/AM/ajax/products.php', {action: "edit_product",
                             id: product_id,
                             name: edit_product_modal.find("#edit_product_name").val(),
@@ -99,9 +100,9 @@ var Products = function(geral_path, options_ext) {
                             edit_product_modal.modal("hide");
                             update_products_datatable(datatable_path);
                             edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
+                            $.msg("unblock");
                         }, "json").fail(function(data) {
-                            $.msg();
-                            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                             $.msg('unblock', 5000);
                         });
                     }
@@ -112,9 +113,9 @@ var Products = function(geral_path, options_ext) {
             });
         });
         datatable_path.on("click", ".btn_apagar_produto", function() {
-            geral_path.find("#remove_product_modal").modal("show");
-            geral_path.find("#remove_product_button").data("button", $(this));
-            geral_path.find("#remove_product_button").data("product_id", $(this).data("product_id"));
+            geral_path.find("#remove_product_modal").modal("show").end()
+                .find("#remove_product_button").data("button", $(this)).data("product_id", $(this).data("product_id"));
+
         });
         geral_path.off("click", "#remove_product_button");
         geral_path.on("click", "#remove_product_button", function() {

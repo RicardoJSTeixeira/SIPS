@@ -292,7 +292,7 @@ Calendar = (function () {
                             test: function () {
                                 return event.min && (moment.duration(moment(event.end).diff(moment(event.start))).asMinutes() < me.config.slotMinutes);
                             },
-                            msg: "A duração minima deste tipo de maracação é: " + me.config.slotMinutes + "m."
+                            msg: "A duração mínima deste tipo de maracação é: " + me.config.slotMinutes + "m."
                         },
                         {
                             test: function () {

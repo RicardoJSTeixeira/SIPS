@@ -1,13 +1,13 @@
 function table2csv(oTable, exportmode, tableElm) {
-    var csv = '';
-    var headers = [];
-    var rows = [];
+    var csv = '',
+        headers = [],
+        rows = [];
 
     // Get header names
     $(tableElm + ' thead').find('th').each(function() {
-        var $th = $(this);
-        var text = $th.text();
-        var header = '"' + text + '"';
+        var $th = $(this),
+            text = $th.text(),
+            header = '"' + text + '"';
         // headers.push(header); // original code
         if (text !== "")
             headers.push(header); // actually datatables seems to copy my original headers so there ist an amount of TH cells which are empty
@@ -32,7 +32,6 @@ function table2csv(oTable, exportmode, tableElm) {
             rows.push(row);
         });
     }
-
     csv += rows.join("\n");
 
 
