@@ -256,7 +256,7 @@ $(function () {
                                 script.submit_manual();
                                 consult_audiogra.save(lead_id, reserva_id, false);
 
-                                if (ha_perda) {// HA PERDA 
+                                if ( consult_audiogra.calculate()) {// HA PERDA
                                     if (!$("[name=vp_a]:checked").length) {
                                         $.jGrowl('Indique se há venda.', {life: 3000});
                                         return false;
