@@ -74,6 +74,7 @@ var Audiograma = function (lead_id) {
         if (typeof callback === "function") {
             callback();
         }
+
         return all_ear.value;
     };
 
