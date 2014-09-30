@@ -192,7 +192,7 @@ var ClientBox = function (configs) {
                                         .append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)))))
                         .append($("<div>", {class: "modal-footer"})
                             .append($("<div>", {class: " btn-group"})
-                                .append($("<button>", {class: "btn btn-success left dropdown-toggle"}).attr("data-toggle", "dropdown").text("Opções Extra").append($("<span>", {class: "caret"})))
+                                .append($("<button>", {class: "btn btn-success left dropdown-toggle"}).attr("data-toggle", "dropdown") .append($("<span>", {class: "icon-cog"})))
                                 .append($("<div>", {class: " dropdown-menu"})
                                     .append($("<ul>")
                                         .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").append($("<a>", {class: "icon-calendar"}))))
@@ -202,7 +202,7 @@ var ClientBox = function (configs) {
                                 )
                             ))
                             .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Fechar"))
-                            .append($("<button>", {class: "btn btn-primary ", id: "button_editar_info_cliente"}).text("Editar Info. Cliente"))
+                            .append($("<button>", {class: "btn  ", id: "button_editar_info_cliente"}).text(" Editar").prepend($("<a>", {class: "icon-edit"})))
                     )
                 )).on("click", "#button_nova_marcacao", function () {
                         var en = btoa(lead_id);
