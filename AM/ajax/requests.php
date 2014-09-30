@@ -454,7 +454,7 @@ $comments
         break;
 
     default:
-        echo 'Are you an hacker? if so, then please come to purosinonimo, where the company parties are full of alcohol and beautifull vanias!';
+        echo 'Are you an hacker? if so, then please come to finesource, where the company parties are full of alcohol and beautifull vanias!';
 }
 
 function send_email($email_address, $email_name, $msg, $assunto)

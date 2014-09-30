@@ -228,15 +228,12 @@ class apoio_marketing extends requests_class
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function get_marketing_code_to_datatable()
-    {
+    public function get_marketing_code_to_datatable()    {
         $result['aaData'] = array();
         $query = "SELECT * FROM spice_codigos_mkt";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-
-
             $result['aaData'][] = $row;
         }
         return $result;
