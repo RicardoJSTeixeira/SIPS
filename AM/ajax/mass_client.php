@@ -7,11 +7,13 @@ set_time_limit(1);
 require '../lib_php/db.php';
 require '../lib_php/calendar.php';
 require '../lib_php/user.php';
+require '../lib_php/logger.php';
 
 /** @var PDO $db */
 $user = new UserLogin($db);
 $user->confirm_login();
 $u = $user->getUser();
+$log = new Logger($db, $u);
 
 $ccm = filter_var_array($_POST["ccm"]);
 $names = filter_var_array($_POST["cname"]);
@@ -27,11 +29,11 @@ $cbd = filter_var_array($_POST["cbd"]);
 $toissues = filter_var_array($_POST["ctoissue"]);
 $rcm = filter_var($_POST["recomendado"]);
 
-$query = "INSERT INTO vicidial_list (entry_date, status,user, list_id,extra1, first_name, middle_initial, last_name, address1, city, postal_code, phone_number, address3, email, date_of_birth, extra6, extra7, security_phrase) Values (NOW(), 'NEW', :user, :list_id, :ccm, :name, :mname, :lname, :morada, :local, :postal, :tel, :tlm, :email, :bday, :toissue, :rcm, 'SPICE')";
+$query = "INSERT INTO vicidial_list (entry_date, status,user, list_id,extra1, first_name, middle_initial, last_name, address1, city, postal_code, phone_number, address3, email, date_of_birth, extra6, extra7, security_phrase) VALUES (NOW(), 'NEW', :user, :list_id, :ccm, :name, :mname, :lname, :morada, :local, :postal, :tel, :tlm, :email, :bday, :toissue, :rcm, 'SPICE')";
 $stmt = $db->prepare($query);
 foreach ($names as $key => $name) {
     $stmt->execute(array(":user" => $u->username, ":list_id" => $u->list_id, ":ccm" => $ccm[$key], ":name" => $name, ":mname" => $mnames[$key], ":lname" => $lnames[$key], ":morada" => $moradas[$key], ":local" => $local[$key], ":postal" => $postal[$key], ":tel" => $tels[$key], ":tlm" => $tlm[$key], ":email" => $emails[$key], ":bday" => $cbd[$key], ":toissue" => $toissues[$key], ":rcm" => $rcm));
-    $log->set($db->lastInsertId(), Logger::T_INS, Logger::S_CLT, json_encode(array("User" => $u->username, "LIST_ID" => $u->list_id, "EXTRA1" => $ccm[$key], "FIRST_NAME" => $name, "MIDDLE_INITIAL" => $mnames[$key], "LAST_NAME" => $lnames[$key], "ADDRESS1" => $moradas[$key], "CITY" => $local[$key], "POSTAL_CODE" => $postal[$key], "PHONE_NUMBER" => $tels[$key], "ADDRESS3" => $ctlm[$key], "EMAIL" => $emails[$key], "DATE_OF_BIRTH" => $cbd[$key], "EXTRA6" => $toissues[$key], "EXTRA7" => $rcm, "SECURITY_PHRASE" => "SPICE")), logger::A_APV);
+    $log->set($db->lastInsertId(), Logger::T_INS, Logger::S_CLT, json_encode(array("User" => $u->username, "LIST_ID" => $u->list_id, "EXTRA1" => $ccm[$key], "FIRST_NAME" => $name, "MIDDLE_INITIAL" => $mnames[$key], "LAST_NAME" => $lnames[$key], "ADDRESS1" => $moradas[$key], "CITY" => $local[$key], "POSTAL_CODE" => $postal[$key], "PHONE_NUMBER" => $tels[$key], "ADDRESS3" => $tlm[$key], "EMAIL" => $emails[$key], "DATE_OF_BIRTH" => $cbd[$key], "EXTRA6" => $toissues[$key], "EXTRA7" => $rcm, "SECURITY_PHRASE" => "SPICE")), logger::A_APV);
 }
 
 echo json_encode(true);
