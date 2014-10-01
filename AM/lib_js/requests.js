@@ -965,7 +965,7 @@ var Requests = function (basic_path, options_ext) {
                         admin: 1
                     };
                     prod_array.push(temp);
-                    $.each($("#ver_anexo_stock_modal #tbody_ver_produto_mensal_stock").find("tr"), function () {
+                    $.each($("#ver_anexo_mensal_stock_modal #tbody_ver_produto_mensal_stock").find("tr"), function () {
                         prod_array.push({
                             quantidade: $(this).find(".td_helper_quantidade").text(),
                             descricao: $(this).find(".td_helper_descricao").text(),
