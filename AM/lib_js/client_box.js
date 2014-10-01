@@ -192,17 +192,20 @@ var ClientBox = function (configs) {
                                         .append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)))))
                         .append($("<div>", {class: "modal-footer"})
                             .append($("<div>", {class: " btn-group"})
-                                .append($("<button>", {class: "btn btn-success left dropdown-toggle"}).attr("data-toggle", "dropdown") .append($("<span>", {class: "icon-cog"})))
+                                .append($("<button>", {class: "btn icon-alone left dropdown-toggle"}).attr("data-toggle", "dropdown") .append($("<i>", {class: "icon-cog"})))
                                 .append($("<div>", {class: " dropdown-menu"})
-                                    .append($("<ul>")
-                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").append($("<a>", {class: "icon-calendar"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").append($("<a>", {class: "icon-money"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").append($("<a>", {class: "icon-user"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").append($("<a>", {class: "icon-file"}))))
+                                    .append($("<ul>",{style:"text-align:left"})
+                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").prepend($("<i>", {class: "icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").prepend($("<i>", {class: "icon-money"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").prepend($("<i>", {class: "icon-user"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").prepend($("<i>", {class: "icon-file"}))))
                                 )
                             ))
                             .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Fechar"))
-                            .append($("<button>", {class: "btn  ", id: "button_editar_info_cliente"}).text(" Editar").prepend($("<a>", {class: "icon-edit"})))
+                            .append($("<button>", {
+                                class: "btn  ",
+                                id: "button_editar_info_cliente"
+                            }).text(" Editar").prepend($("<i>", {class: "icon-edit"})))
                     )
                 )).on("click", "#button_nova_marcacao", function () {
                         var en = btoa(lead_id);
@@ -232,7 +235,10 @@ var ClientBox = function (configs) {
 
                 if (!client_extra_count)
                     modal_html.find("#extra_info_div").parent().remove();
+
+
                 modal_html.modal("show");
+scrollTop();
 
 
                 $.msg('unblock');
@@ -651,9 +657,16 @@ var ClientBox = function (configs) {
                         });
                     } else if (this.name === "COMMENTS") {
                         elmt = $("<textarea>", {id: this.name, name: this.name});
+                    } else if (this.name === "extra1") {
+                        elmt = $("<input>", {type: "text", id: this.name, name: this.name});
+                        var a = new AutoCompleteCodMkt(elmt);
+                        a.init();
+
                     } else {
                         elmt = $("<input>", {type: "text", id: this.name, name: this.name});
                     }
+
+
                     if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "extra8") {
                         elmt.change(function () {
                             if (this.value.length < 9 && (this.name === "PHONE_NUMBER" || this.name === "extra8"))
@@ -713,6 +726,8 @@ var ClientBox = function (configs) {
                                     var client = new Cliente_info($(this).data().lead_id, null);
                                     client.init(null);
                                 });
+
+
                             }, "json");
                         });
                     }
@@ -827,6 +842,11 @@ var ClientBox = function (configs) {
                             }
                         }
                     ], {customClass: 'container'});
+
+                        var a = new AutoCompleteCodMkt($("#extra1"),true);
+                        a.init();
+
+
                     data = JSON.parse(data)
                     $("#PHONE_NUMBER").autotab('numeric');
                     $(".form_datetime").datetimepicker({

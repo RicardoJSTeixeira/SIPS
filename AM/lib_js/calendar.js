@@ -957,6 +957,9 @@ Calendar = (function () {
                 });
             }
         });
+
+         var a =new AutoCompleteCodMkt($(".bootbox input"),true);
+        a.init();
     };
 
     return Calendar;

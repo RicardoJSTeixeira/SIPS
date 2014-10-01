@@ -15,6 +15,7 @@
                     <div class="controls">
                         <input type="text" id="input_new_code" class="validate[required ]">
                     </div>
+
                 </div>
                 <div class="control-group">
                     <label class="control-label">Descrição</label>
@@ -23,7 +24,8 @@
                         <input type="text" id="input_new_description" class="validate[required] span">
                     </div>
                 </div>
-                <button class="btn btn-primary" id="new_code_button">Criar novo Código</button>
+                <button class="btn btn-primary right" id="new_code_button">Criar</button>
+                <div class="clear"></div>
             </form>
         </div>
     </div>
@@ -71,6 +73,7 @@
 var table = $("#mkt_codes_management");
 var uploader;
 $(function () {
+
     //UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------UPLOADER------
     uploader = new plupload.Uploader({
         browse_button: 'browse',
@@ -199,7 +202,7 @@ $(function () {
             <form id='edit_code_form'>\
             <div class='control-group'>\
             <label class='control-label'>Código</label>\
-            <div class='controls'>\
+                      <div class='controls'>\
             <input type='text' id='input_edit_code' class='validate[required]'>\
             </div>\
             </div>\
@@ -213,7 +216,7 @@ $(function () {
             </form>\
             </div>", [
                 {
-                    "label": "Gravar Alterações",
+                    "label": "Gravar",
                     "class": "btn-success",
                     "callback": function () {
                         if ($("#edit_code_form").validationEngine('validate')) {
@@ -255,15 +258,9 @@ $(function () {
                         }
                     }
                 },
+
                 {
-                    "label": "Cancelar",
-                    "class": "btn",
-                    "callback": function () {
-                        table.find("tr").removeClass("selected");
-                    }
-                },
-                {
-                    "label": "Remover Código",
+                    "label": "Remover",
                     "class": "btn-danger",
                     "callback": function () {
                         $.msg();
@@ -277,8 +274,17 @@ $(function () {
                                     $.msg('unblock', 5000);
                                 });
                     }
+                }  ,{
+                    "label": "Cancelar",
+                    "class": "btn",
+                    "callback": function () {
+                        table.find("tr").removeClass("selected");
+                    }
                 }
-            ], {customClass: 'container'});
+            ]);
+            var a=new AutoCompleteCodMkt($("#input_edit_code"),true);
+            a.init();
+
             $("#input_edit_code").val(data[1]).data("selected_code", data[0]);
             $("#input_edit_description").val(data[2]);
         }

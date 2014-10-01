@@ -72,7 +72,8 @@ $(function() {
                             })
                     );
         }).click();
-
+        var a=new AutoCompleteCodMkt($("[name='ccm[]']"),false);
+        a.init();
         zone.validationEngine();
 
         zone.submit(function(e) {
