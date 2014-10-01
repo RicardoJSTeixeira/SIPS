@@ -221,13 +221,13 @@ var Requests = function (basic_path, options_ext) {
                     if (~~horario.tipo === 2)
                         basic_path.find("#ver_horario_modal #horario_manha").show();
                     if (~~horario.tipo === 3)
-                        basic_path.find("#ver_horario_modal #horario_tarde").show();
-                    basic_path.find("#ver_horario_modal #manha_inicio").text(horario.inicio1);
-                    basic_path.find("#ver_horario_modal #manha_fim").text(horario.inicio2);
-                    basic_path.find("#ver_horario_modal #tarde_inicio").text(horario.fim1);
-                    basic_path.find("#ver_horario_modal #tarde_fim").text(horario.fim2);
-                    basic_path.find(".myModalLabel").text("Horários #"+id);
-                    basic_path.find("#ver_horario_modal").modal("show");
+                        basic_path.find("#ver_horario_modal #horario_tarde").show().end()
+                            .find("#ver_horario_modal #manha_inicio").text(horario.inicio1).end()
+                        .find("#ver_horario_modal #manha_fim").text(horario.inicio2).end()
+                        .find("#ver_horario_modal #tarde_inicio").text(horario.fim1).end()
+                        .find("#ver_horario_modal #tarde_fim").text(horario.fim2).end()
+                        .find(".myModalLabel").text("Horários #"+id).end()
+                        .find("#ver_horario_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -245,8 +245,8 @@ var Requests = function (basic_path, options_ext) {
                     $.each(data, function () {
                         basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                     });
-                    basic_path.find(".myModalLabel").text("Locais de Publicidade #"+id);
-                    basic_path.find("#ver_local_publicidade_modal").modal("show");
+                    basic_path.find(".myModalLabel").text("Locais de Publicidade #"+id).end()
+                        .find("#ver_local_publicidade_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -436,8 +436,8 @@ var Requests = function (basic_path, options_ext) {
                     $.each(data, function () {
                         tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
                     });
-                    basic_path.find(".myModalLabel").text("Ocorrências de frota #"+ id);
-                    basic_path.find("#ver_occorrencia_frota_modal").modal("show");
+                    basic_path.find(".myModalLabel").text("Ocorrências de frota #"+ id).end()
+                        .find("#ver_occorrencia_frota_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -494,8 +494,8 @@ var Requests = function (basic_path, options_ext) {
             $.get("/AM/view/requests/relatorio_correio_modal.html", function (data) {
                 basic_path.append(data);
                 if (SpiceU.user_level <= 5) {
-                    basic_path.find("#correio_modal_div .anexo_add_button").hide();
-                    basic_path.find("#anexo_save_button").off().text("Sair").data("dismiss", "modal");
+                    basic_path.find("#correio_modal_div .anexo_add_button").hide().end()
+                        .find("#anexo_save_button").off().text("Sair").data("dismiss", "modal");
                 }
             }, 'html');
         },
@@ -719,9 +719,9 @@ var Requests = function (basic_path, options_ext) {
                             tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_anexo + "' class='checkbox_confirm_anexo ' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo_correio_" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo_correio_" + anexo_number + "'><span></span></label></td><td class='input_anexo'>" + this.anexo + "</td><td class='input_n_doc'>" + this.n_doc + "</td><td class='input_lead_id'>" + this.lead_id + "</td></tr>");
                             anexo_number++;
                         });
-                        basic_path.find("#correio_modal_div #anexo_save_button").data("id_correio", id_anexo);
-                        basic_path.find(".myModalLabel").text("Anexo Correio #"+ id_anexo);
-                        basic_path.find("#ver_anexo_correio_modal").modal("show");
+                        basic_path.find("#correio_modal_div #anexo_save_button").data("id_correio", id_anexo).end()
+                            .find(".myModalLabel").text("Anexo Correio #"+ id_anexo).end()
+                            .find("#ver_anexo_correio_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -1057,9 +1057,9 @@ var Requests = function (basic_path, options_ext) {
                             tbody.append("<tr " + alert_class + " ><td class='chex-table'><input " + ((status || (SpiceU.user_level < 5)) ? "disabled" : "") + " type='checkbox' value='" + id_stock + "' class='checkbox_confirm_anexo' " + ((~~this.confirmed) ? "checked" : "") + " id='anexo_stock_" + anexo_number + "' name='cci'><label class='checkbox inline' for='anexo_stock_" + anexo_number + "'><span></span> </label></td><td class='td_helper_quantidade'>" + this.quantidade + "</td><td class='td_helper_descricao'>" + this.descricao + "</td><td class='td_helper_serie'>" + this.serie + "</td><td class='td_helper_obs'>" + this.obs + "</td></tr>");
                             anexo_number++;
                         });
-                        basic_path.find("#stock_save_button").data("id_stock", id_stock);
-                        basic_path.find(".myModalLabel").text("Relatório stock #"+ id_stock);
-                        basic_path.find("#ver_anexo_mensal_stock_modal").modal("show");
+                        basic_path.find("#stock_save_button").data("id_stock", id_stock).end()
+                            .find(".myModalLabel").text("Relatório stock #"+ id_stock).end()
+                            .find("#ver_anexo_mensal_stock_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -1334,9 +1334,9 @@ var Requests = function (basic_path, options_ext) {
                             </tr>");
                             anexo_number++;
                         });
-                        basic_path.find("#mov_save_button").data("id_movimentacao", id_movimentacao);
-                        basic_path.find(".myModalLabel").text("Movimentação de Stock #"+  id_movimentacao);
-                        basic_path.find("#ver_anexo_mov_stock_modal").modal("show");
+                        basic_path.find("#mov_save_button").data("id_movimentacao", id_movimentacao).end()
+                            .find(".myModalLabel").text("Movimentação de Stock #"+  id_movimentacao).end()
+                            .find("#ver_anexo_mov_stock_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));

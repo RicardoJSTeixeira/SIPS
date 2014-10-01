@@ -138,8 +138,8 @@ var requisition = function (geral_path, options_ext) {
         new_requisition_zone.find('.fileupload').fileupload().end()
             .find("#form_encomenda_especial").validationEngine().end()
             .find("#form_encomenda_especial").show().end()
-            .find(".tipo_div").hide();
-        new_requisition_zone.find("#save_single_product").prop("disabled", true);
+            .find(".tipo_div").hide().end()
+            .find("#save_single_product").prop("disabled", true);
         $(new_requisition_zone).on("change", "#product_selector", function () {
             if (product_tree)
                 product_tree.destroy();
@@ -224,8 +224,8 @@ var requisition = function (geral_path, options_ext) {
                         .append($("<td>", {class: "td_color", color: this.color_id}).text(this.color_name))
                 );
             });
-            new_requisition_zone.find("#produtos_encomendados").append(new_product);
-            new_requisition_zone.find("#product_selector").val(0).trigger("chosen:updated");
+            new_requisition_zone.find("#produtos_encomendados").append(new_product).end()
+                .find("#product_selector").val(0).trigger("chosen:updated");
         });
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------- SUBMITAR A ENCOMENDA------------------------------
@@ -462,11 +462,8 @@ var requisition = function (geral_path, options_ext) {
             table2csv(Table_view_requisition, 'full', '#' + table_path[0].id);
         });
         table_path.on("click", ".ver_cliente", function () {
-
             var client = new ClientBox();
-
-            client.initModal($(this).data("lead_id"), null);
-
+           client.initModal($(this).data("lead_id"), null);
         });
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function () {
@@ -476,7 +473,6 @@ var requisition = function (geral_path, options_ext) {
                 action: "listar_produtos_por_encomenda",
                 id: $(this).val()
             }, function (products) {
-
                 var
                     modal_tbody = modal.find("#show_requisition_products_tbody").empty();
                 EData = {
@@ -544,7 +540,6 @@ var requisition = function (geral_path, options_ext) {
             modal_anexo.modal("show");
             var this_folder = $(this).val() + "_encomenda";
             var this_id=$(this).parents("tr").find("td").first().text();
-
             $.msg();
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_anexos",
@@ -555,7 +550,6 @@ var requisition = function (geral_path, options_ext) {
                     options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
                 });
                 modal_anexo.find(".myModalLabel").text("Anexo #"+this_id);
-
                 modal_anexo.find("#show_requisition_anexos_tbody").html(options);
                 $.msg('unblock');
             }, "json").fail(function (data) {
@@ -585,7 +579,6 @@ var requisition = function (geral_path, options_ext) {
                     autoSize: false,
                     printHeaders: true
                 });
-
                 var
                     size = 16,
                     lines,
@@ -594,7 +587,6 @@ var requisition = function (geral_path, options_ext) {
                 lines = doc.setFont('Times', 'Roman')
                     .setFontSize(size)
                     .splitTextToSize(text, 350);
-
 
                 $.post('ajax/audiograma.php', {
                     action: "populate",
@@ -660,15 +652,11 @@ var requisition = function (geral_path, options_ext) {
                             doc.text(45, doc.lastCellPos.y + 75, lines);
                         }
                     }
-
-
                     doc.save(moment().format());
                 }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                     $.msg('unblock', 5000);
                 });
-
-
                 $.msg('unblock');
             }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
