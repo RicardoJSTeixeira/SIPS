@@ -62,7 +62,7 @@ switch (filter_var($_POST["action"])) {
     case "remove":
         $calendar = new Calendars($db);
         $return = $calendar->removeReserva($id);
-        $log->set($id, Logger::T_RM, Logger::S_CAL,logger::A_DECL);
+        $log->set($id, Logger::T_RM, Logger::S_CAL,"",logger::A_DECL);
         echo json_encode($return);
         break;
     case "change":
