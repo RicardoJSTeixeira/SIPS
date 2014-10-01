@@ -484,7 +484,9 @@ var requisition = function (geral_path, options_ext) {
                     products: [],
                     id_req: 0
                 };
+
                 EData.id_req = ~~$(that).parents("tr").find("td").first().text();
+                modal.find(".myModalLabel").text("Encomenda #"+  EData.id_req );
                 $.post('ajax/requisition.php', {
                     action: "get_encomenda",
                     id_req: EData.id_req
@@ -541,6 +543,8 @@ var requisition = function (geral_path, options_ext) {
         table_path.on("click", ".ver_requisition_anexo", function () {
             modal_anexo.modal("show");
             var this_folder = $(this).val() + "_encomenda";
+            var this_id=$(this).parents("tr").find("td").first().text();
+
             $.msg();
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_anexos",
@@ -550,6 +554,8 @@ var requisition = function (geral_path, options_ext) {
                 $.each(data, function () {
                     options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
                 });
+                modal_anexo.find(".myModalLabel").text("Anexo #"+this_id);
+
                 modal_anexo.find("#show_requisition_anexos_tbody").html(options);
                 $.msg('unblock');
             }, "json").fail(function (data) {

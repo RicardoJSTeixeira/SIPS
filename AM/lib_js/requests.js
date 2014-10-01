@@ -226,6 +226,7 @@ var Requests = function (basic_path, options_ext) {
                     basic_path.find("#ver_horario_modal #manha_fim").text(horario.inicio2);
                     basic_path.find("#ver_horario_modal #tarde_inicio").text(horario.fim1);
                     basic_path.find("#ver_horario_modal #tarde_fim").text(horario.fim2);
+                    basic_path.find(".myModalLabel").text("Horários #"+id);
                     basic_path.find("#ver_horario_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
@@ -244,6 +245,7 @@ var Requests = function (basic_path, options_ext) {
                     $.each(data, function () {
                         basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                     });
+                    basic_path.find(".myModalLabel").text("Locais de Publicidade #"+id);
                     basic_path.find("#ver_local_publicidade_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
@@ -434,6 +436,7 @@ var Requests = function (basic_path, options_ext) {
                     $.each(data, function () {
                         tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
                     });
+                    basic_path.find(".myModalLabel").text("Ocorrências de frota #"+ id);
                     basic_path.find("#ver_occorrencia_frota_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
@@ -717,6 +720,7 @@ var Requests = function (basic_path, options_ext) {
                             anexo_number++;
                         });
                         basic_path.find("#correio_modal_div #anexo_save_button").data("id_correio", id_anexo);
+                        basic_path.find(".myModalLabel").text("Anexo Correio #"+ id_anexo);
                         basic_path.find("#ver_anexo_correio_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
@@ -1054,6 +1058,7 @@ var Requests = function (basic_path, options_ext) {
                             anexo_number++;
                         });
                         basic_path.find("#stock_save_button").data("id_stock", id_stock);
+                        basic_path.find(".myModalLabel").text("Relatório stock #"+ id_stock);
                         basic_path.find("#ver_anexo_mensal_stock_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
@@ -1330,6 +1335,7 @@ var Requests = function (basic_path, options_ext) {
                             anexo_number++;
                         });
                         basic_path.find("#mov_save_button").data("id_movimentacao", id_movimentacao);
+                        basic_path.find(".myModalLabel").text("Movimentação de Stock #"+  id_movimentacao);
                         basic_path.find("#ver_anexo_mov_stock_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
