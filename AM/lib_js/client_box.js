@@ -192,9 +192,9 @@ var ClientBox = function (configs) {
                                         .append($("<h4>", {class: "icon-star"}).text(" Info Extra")).append(client_extra)))))
                         .append($("<div>", {class: "modal-footer"})
                             .append($("<div>", {class: " btn-group"})
-                                .append($("<button>", {class: "btn icon-alone left dropdown-toggle"}).attr("data-toggle", "dropdown") .append($("<i>", {class: "icon-cog"})))
+                                .append($("<button>", {class: "btn icon-alone left dropdown-toggle"}).attr("data-toggle", "dropdown").append($("<i>", {class: "icon-cog"})))
                                 .append($("<div>", {class: " dropdown-menu"})
-                                    .append($("<ul>",{style:"text-align:left"})
+                                    .append($("<ul>", {style: "text-align:left"})
                                         .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").prepend($("<i>", {class: "icon-calendar"}))))
                                         .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").prepend($("<i>", {class: "icon-money"}))))
                                         .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").prepend($("<i>", {class: "icon-user"}))))
@@ -223,12 +223,10 @@ var ClientBox = function (configs) {
                     })
                     .on("click", "#button_propostas_comerciais", function () {
                         me.getProposta();
-                    })
-                    .
+                    }).
                     on("click", "#button_abrir_pdf", function () {
                         me.getPdf();
-                    })
-                    .
+                    }).
                     on("click", "#button_notas", function () {
                         me.notas();
                     });
@@ -236,10 +234,8 @@ var ClientBox = function (configs) {
                 if (!client_extra_count)
                     modal_html.find("#extra_info_div").parent().remove();
 
-
                 modal_html.modal("show");
-scrollTop();
-
+                scrollTop();
 
                 $.msg('unblock');
             }, "json").fail(function (data) {
@@ -248,7 +244,6 @@ scrollTop();
             });
         if (typeof callback === "function")
             callback();
-
     };
 
     this.destroy = function () {
@@ -490,8 +485,8 @@ scrollTop();
         });
 
         function clear_note_preview() {
-            note_area_div.find("#note_title").val("");
-            note_area_div.find("#note_textarea").val("");
+            note_area_div.find("#note_title").val("").end()
+                .find("#note_textarea").val("");
             toggle_menus();
             table.$('tr.selected').removeClass('selected');
         }
@@ -530,7 +525,6 @@ scrollTop();
                 .find("#new_note_textarea").val("");
         }
 
-
         function toggle_menus() {
             note_area_div.toggle();
             new_note_area_div.toggle();
@@ -539,7 +533,6 @@ scrollTop();
         bootbox.dialog(final, [
             {'OK': true, "label": "OK"}
         ], {customClass: 'container'});
-
     };
 
     this.get_info = function () {
@@ -661,11 +654,9 @@ scrollTop();
                         elmt = $("<input>", {type: "text", id: this.name, name: this.name});
                         var a = new AutoCompleteCodMkt(elmt);
                         a.init();
-
                     } else {
                         elmt = $("<input>", {type: "text", id: this.name, name: this.name});
                     }
-
 
                     if (this.name === "PHONE_NUMBER" || this.name === "extra2" || this.name === "extra8") {
                         elmt.change(function () {
@@ -843,9 +834,8 @@ scrollTop();
                         }
                     ], {customClass: 'container'});
 
-                        var a = new AutoCompleteCodMkt($("#extra1"),true);
-                        a.init();
-
+                    var a = new AutoCompleteCodMkt($("#extra1"), true);
+                    a.init();
 
                     data = JSON.parse(data)
                     $("#PHONE_NUMBER").autotab('numeric');
@@ -866,7 +856,6 @@ scrollTop();
                 $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                 $.msg('unblock', 5000);
             });
-
     }
 };
 
