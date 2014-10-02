@@ -10,7 +10,7 @@
         <div class="grid-content">
             <form id="new_code_form">
                 <div class="control-group">
-                    <label class="control-label">Código</label>
+                    <label class="control-label" for="input_new_code">Código</label>
 
                     <div class="controls">
                         <input type="text" id="input_new_code" class="validate[required ]">
@@ -18,7 +18,7 @@
 
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Descrição</label>
+                    <label class="control-label" for="input_new_description">Descrição</label>
 
                     <div class="controls">
                         <input type="text" id="input_new_description" class="validate[required] span">
@@ -102,7 +102,7 @@ $(function () {
                                                 <td>' + file.name + '</td>\n\
                                                 <td>\n\
                                                     <div class="progress progress-warning active progress-striped">\n\
-                                                    <div class="bar" style="width: 0%"></div>\n\
+                                                    <div class="bar" style="width: 0"></div>\n\
                                                     </div>\n\
                                                 </td>\n\
                                                 <td>' + plupload.formatSize(file.size) + '\n\
@@ -134,7 +134,7 @@ $(function () {
 
             $.msg();
             $.post('/AM/ajax/requests.php', {action: "create_multiple_marketing_code", codes: response.data},
-                    function (data) {
+                    function () {
                         $.jGrowl("Códigos importados com sucesso", 3000);
                         table.fnReloadAjax();
                         $.msg('unblock');
@@ -175,7 +175,7 @@ $(function () {
         "aoColumnDefs": [
             {
                 "aTargets": [3, 4],
-                "fnRender": function (data, value, row) {
+                "fnRender": function (data, value) {
                     if (value.length) {
                         return moment(value).fromNow();
                     }
@@ -185,7 +185,7 @@ $(function () {
                 }
             }
         ]
-    }).on('click', 'tr', function (event) {
+    }).on('click', 'tr', function () {
         var data = table.fnGetData(table.fnGetPosition(this));
 
         if ($(this).hasClass('selected')) {
@@ -221,10 +221,11 @@ $(function () {
                     "callback": function () {
                         if ($("#edit_code_form").validationEngine('validate')) {
                             $.msg();
+                            var input_edit_code=$("#input_edit_code");
                             $.post('/AM/ajax/requests.php', {
                                         action: "edit_marketing_code",
-                                        id_codmkt: $("#input_edit_code").data("selected_code"),
-                                        new_codmkt: $("#input_edit_code").val(),
+                                        id_codmkt: input_edit_code.data("selected_code"),
+                                        new_codmkt: input_edit_code.val(),
                                         description: $("#input_edit_description").val()
                                     },
                                     function (data) {
@@ -241,8 +242,12 @@ $(function () {
                                                 bootbox.hideAll();
                                                 table.fnReloadAjax();
                                                 break;
+                                            default:
+                                                $.msg('replace', 'Ocorreu um erro, por favor tente novamente.');
+                                                $.msg('unblock', 5000);
+                                                return false;
                                         }
-                                        table.find("tr").removeClass("selected");
+                                        table.find("tr.selected").removeClass("selected");
                                         $.jGrowl(jgrowl_string, 3000);
                                         $.msg('unblock');
                                     }, "json"
@@ -265,7 +270,7 @@ $(function () {
                     "callback": function () {
                         $.msg();
                         $.post('/AM/ajax/requests.php', {action: "delete_marketing_code", id: $("#input_edit_code").data("selected_code")},
-                                function (data) {
+                                function () {
                                     table.fnReloadAjax();
                                     $.msg('unblock');
                                 }, "json"
@@ -282,16 +287,17 @@ $(function () {
                     }
                 }
             ]);
-            var a=new AutoCompleteCodMkt($("#input_edit_code"),true);
+            var input_edit_code=$("#input_edit_code");
+            var a=new AutoCompleteCodMkt(input_edit_code,true);
             a.init();
 
-            $("#input_edit_code").val(data[1]).data("selected_code", data[0]);
+            input_edit_code.val(data[1]).data("selected_code", data[0]);
             $("#input_edit_description").val(data[2]);
         }
     });
 //TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------TABLE--------
 
-})
+});
 $("#filelist").on("click", ".delete_anexo_line", function () {
     var file_name = uploader.getFile($(this).data().id).id_final;
 
@@ -306,17 +312,14 @@ $("#filelist").on("click", ".delete_anexo_line", function () {
 $("#file_upload").change(function () {
     //  var re_ext = new RegExp("(xlsx|xlsm|xls|csv|pdf)", "i");
     var file = this.files[0];
-    var name = file.name;
+    //var name = file.name;
     var size = (Math.round((file.size / 1024 / 1024) * 100) / 100);
-    var type = file.type;
+    //var type = file.type;
     if (size > 10) {
         $("#label_upload_info").text("O tamanho do ficheiro ultrapassa os 10mb permitidos.");
         $(this).fileupload('clear');
     }
-    /*  if (!re_ext.test(type)) {
-     $("#label_ipl_info").text("A extensão do ficheiro seleccionado não é valida.");
-     $(this).fileupload('clear');
-     }*/
+
 
 });
 
