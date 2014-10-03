@@ -17,9 +17,10 @@ fputcsv($output, array(
     'Terceira pessoa',
     '% Terceira pessoa',), ";");
 
-$query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, c.user, c.user_level, c.full_name, a.left_ear, a.right_ear, c.closer_campaigns "
-        . "FROM spice_consulta a INNER JOIN vicidial_users c ON c.user=a.user WHERE a.data BETWEEN :data_inicial AND :data_final;";
+$query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, c.user, c.user_level, c.full_name, a.left_ear, a.right_ear, c.closer_campaigns
+        FROM spice_consulta a INNER JOIN vicidial_users c ON c.user=a.user WHERE a.data BETWEEN :data_inicial AND :data_final;";
 
+/** @var PDO $db */
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
