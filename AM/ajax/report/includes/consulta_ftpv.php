@@ -1,5 +1,6 @@
 <?php
 
+/** @var PDO $db */
 $users = new UserControler($db, $u);
 
 $curTime = date("Y-m-d_H:i:s");
@@ -247,4 +248,3 @@ fputcsv($output, array(
     divide($total['terceira_pessoa'], $total["consulta"])), ";");
 
 fclose($output);
-
