@@ -13,6 +13,7 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
+/** @var PDO $db */
 $user = new UserLogin($db);
 $user->confirm_login();
 
@@ -92,8 +93,8 @@ switch ($action) {
             $output['aaData'][] = array_merge(array(
                     $row->codCliente,
                     $row->itLogID,
-                    $row->id_reservation,
                     $row->lead_id,
+                    $row->id_reservation,
                     $row->entry_date,
                     $row->user),
                 $ar,
