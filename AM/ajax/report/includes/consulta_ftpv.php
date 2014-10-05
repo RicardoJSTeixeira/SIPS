@@ -91,7 +91,7 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             if ((int)$row->exame) {
                 $info[$oUsers[$row->user]->alias]["exame"]++;
 
-                if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
+                if ((int)$row->left_ear > 25 || (int)$row->right_ear > 25) {
                     $info[$oUsers[$row->user]->alias]["perda"]++;
 
                     if ((int)$row->venda) {
