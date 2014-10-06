@@ -199,6 +199,7 @@ class apoio_marketing extends requests_class
         $stmt = $this->_db->prepare($query);
         foreach ($codes as $lines) {
                      $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
+
         }
         return json_encode(true);
     }
