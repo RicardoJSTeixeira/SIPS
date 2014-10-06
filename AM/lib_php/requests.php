@@ -197,10 +197,10 @@ class apoio_marketing extends requests_class
 
     public function create_multiple_marketing_code($codes)
     {
+        $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description) ON DUPLICATE KEY UPDATE codmkt=:codmkt1, description=:description1";
+        $stmt = $this->_db->prepare($query);
         foreach ($codes as $lines) {
-            $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description) ON DUPLICATE KEY UPDATE codmkt=:codmkt1, description=:description1";
-            $stmt = $this->_db->prepare($query);
-            $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
+                     $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
         }
         return json_encode(true);
     }
