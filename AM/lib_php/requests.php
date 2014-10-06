@@ -182,7 +182,6 @@ class apoio_marketing extends requests_class
 //CODIGOS DE MARKETING - CREATE,DELETE,EDIT e GET------------------------------------------------------
     public function create_marketing_code($codmkt, $description)
     {
-
         $duplicates = $this->get_marketing_code($codmkt);
         if (gettype($duplicates) == "object") {
             return false;
@@ -192,7 +191,6 @@ class apoio_marketing extends requests_class
 
             return $stmt->execute(array(":codmkt" => $codmkt, ":description" => $description));
         }
-
     }
 
     public function create_multiple_marketing_code($codes)
@@ -211,7 +209,6 @@ class apoio_marketing extends requests_class
         $temp = $this->get_marketing_code($new_codmkt);
         if (gettype($temp) == "object") {
             if ($temp->id != $id_codmkt)
-
                 return "duplicate";
         }
 
@@ -331,7 +328,7 @@ class correio extends requests_class
         $query = "SELECT anexo FROM spice_report_correio WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
-
+        $anexos=array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $_anexos = json_decode($row["anexo"]);
             foreach ($_anexos as $value) {
@@ -659,7 +656,7 @@ class movimentacao_stock extends requests_class
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("destinatario" => $value->destinatario, "quantidade" => $value->quantidade, "destinatario" => $value->destinatario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin" => $value->admin);
+                $produtos[] = array("destinatario" => $value->destinatario, "quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin" => $value->admin);
             }
         }
 
