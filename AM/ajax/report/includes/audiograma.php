@@ -7,13 +7,13 @@ $output = fopen('php://output', 'w');
 
 $u = $user->getUser();
 
-$query = "SELECT extra2 'codCliente', a.extra_id as 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code as 'salespersonCode', f.produtos, f.venda, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
+$query = "SELECT extra2 'codCliente', a.extra_id AS 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code AS 'salespersonCode', f.produtos, f.venda, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
                 FROM sips_sd_reservations a
                 INNER JOIN sips_sd_resources b ON a.id_resource = b.id_resource
                 INNER JOIN vicidial_list d ON a.lead_id = d.lead_id
                 INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
                 INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid
-                WHERE f.closed=1 and a.start_date BETWEEN :data_inicial AND :data_final group by g.uniqueid limit 20000";
+                WHERE f.closed=1 AND f.data BETWEEN :data_inicial AND :data_final GROUP BY g.uniqueid LIMIT 20000";
 
 $stmt = $db->prepare($query);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
@@ -144,12 +144,12 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
     $audioResult = audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
     fputcsv($output, array_merge(
         array(
-        $row->codCliente,
-        $row->itLogID,
-        $row->id_reservation,
-        $row->lead_id,
-        $row->entry_date,
-        $row->user),
+            $row->codCliente,
+            $row->itLogID,
+            $row->lead_id,
+            $row->id_reservation,
+            $row->entry_date,
+            $row->user),
         $ar,
         $al,
         $bcr,

@@ -1,5 +1,6 @@
 <?php
 
+/** @var PDO $db */
 $users = new UserControler($db, $u);
 
 $curTime = date("Y-m-d_H:i:s");
@@ -45,9 +46,9 @@ fputcsv($output, array(
     'Terceira pessoa',
     '% Terceira pessoa',), ";");
 
-$query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, a.user, a.left_ear, a.right_ear
+$query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, a.user, a.left_ear, a.right_ear, a.feedback
                 FROM spice_consulta a
-                WHERE a.data BETWEEN :data_inicial AND :data_final;";
+                WHERE a.data BETWEEN :data_inicial AND :data_final AND closed;";
 
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
@@ -90,7 +91,7 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             if ((int)$row->exame) {
                 $info[$oUsers[$row->user]->alias]["exame"]++;
 
-                if ((int)$row->left_ear > 35 || (int)$row->right_ear > 35) {
+                if ($row->feedback !== "SPERD") {
                     $info[$oUsers[$row->user]->alias]["perda"]++;
 
                     if ((int)$row->venda) {
@@ -247,4 +248,3 @@ fputcsv($output, array(
     divide($total['terceira_pessoa'], $total["consulta"])), ";");
 
 fclose($output);
-

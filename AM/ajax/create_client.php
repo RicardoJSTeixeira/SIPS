@@ -10,6 +10,7 @@ foreach ($_POST as $key => $value) {
 foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
+/** @var PDO $db */
 $user = new UserLogin($db);
 $user->confirm_login();
 $log = new Logger($db, $user->getUser());
@@ -47,8 +48,9 @@ switch ($action) {
         $query = "INSERT INTO vicidial_list (entry_date,status,user,list_id $fields) VALUES (?,?,?,? $values) ";
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
-        $log->set($db->lastInsertId(), Logger::T_INS, Logger::S_CLT, json_encode($query_log), logger::A_APV);
-        echo json_encode($db->lastInsertId());
+        $client_id=$db->lastInsertId();
+        $log->set($client_id, Logger::T_INS, Logger::S_CLT, json_encode($query_log), logger::A_APV);
+        echo json_encode($client_id);
         break;
 }
 
