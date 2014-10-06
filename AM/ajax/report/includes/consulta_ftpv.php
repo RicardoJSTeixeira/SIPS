@@ -46,7 +46,7 @@ fputcsv($output, array(
     'Terceira pessoa',
     '% Terceira pessoa',), ";");
 
-$query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, a.user, a.left_ear, a.right_ear
+$query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, a.user, a.left_ear, a.right_ear, a.feedback
                 FROM spice_consulta a
                 WHERE a.data BETWEEN :data_inicial AND :data_final;";
 
@@ -91,7 +91,7 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             if ((int)$row->exame) {
                 $info[$oUsers[$row->user]->alias]["exame"]++;
 
-                if ((int)$row->left_ear > 25 || (int)$row->right_ear > 25) {
+                if ($row->feedback !== "SPERD") {
                     $info[$oUsers[$row->user]->alias]["perda"]++;
 
                     if ((int)$row->venda) {
