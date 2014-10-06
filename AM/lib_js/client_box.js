@@ -124,7 +124,7 @@ var ClientBox = function (configs) {
         });
     };
 
-    this.initModal = function (lead_id, callback) {
+    this.initModal = function (lead_id, config) {
         var client_info = $("<div>"), client_address = $("<div>"), client_extra = $("<div>");
         var client_extra_count = 0;
         var temp = "";
@@ -242,8 +242,7 @@ var ClientBox = function (configs) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
-        if (typeof callback === "function")
-            callback();
+
     };
 
     this.destroy = function () {

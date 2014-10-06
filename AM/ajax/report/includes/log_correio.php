@@ -15,10 +15,10 @@ fputcsv($output, array(
     'Observaçoes',
     'Mensagem',
     'Data do evento',
-    'Status final'), ";");
+    'Status'), ";");
 
-
-$query_log = "SELECT a.user,a.entry_time,a.carta_porte,a.data_envio,a.anexo,a.comments,a.status,b.event_date,b.record_id,b.type,b.note FROM spice_report_correio a inner join spice_log b on a.id=b.record_id where b.section='Correio' and a.entry_time  BETWEEN :data_inicial AND :data_final;";
+$status=array(0=>"Pedido Enviado",1=>"Aceite",2=>"Pendente");
+$query_log = "SELECT a.user,a.entry_time,a.carta_porte,a.data_envio,a.anexo,a.comments,a.status,b.event_date,b.record_id,b.type,b.note FROM spice_report_correio a inner join (select max(id),record_id, type,note,event_date,section from  spice_log  where  section='Correio' group by record_id ) b on a.id=b.record_id where    a.entry_time  BETWEEN :data_inicial AND :data_final;";
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
@@ -33,7 +33,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $note->obs,
         $note->msg,
         $row['event_date'],
-        $row['status'] == 1 ? 'Aceite' : 'Pendente'), ";");
+        $status[(int)$row["status"]]), ";");
 }
 
 fclose($output);

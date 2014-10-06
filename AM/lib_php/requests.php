@@ -199,7 +199,6 @@ class apoio_marketing extends requests_class
         $stmt = $this->_db->prepare($query);
         foreach ($codes as $lines) {
                      $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
-
         }
         return json_encode(true);
     }
@@ -257,7 +256,7 @@ class correio extends requests_class
     {
         $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
+        return $stmt->execute(array($this->_db->lastInsertId(),":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
     }
 
     public function get_to_datatable()
@@ -377,7 +376,7 @@ class frota extends requests_class
     {
         $query = "INSERT INTO `spice_report_frota` (`user`, `data`, `matricula`, `km`, `viatura`, `comments`, `ocorrencia`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
+        return $stmt->execute(array($this->_db->lastInsertId(),$this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
     }
 
     public function get_to_datatable()
@@ -480,7 +479,7 @@ class mensal_stock extends requests_class
     {
         $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+        return $stmt->execute(array($this->_db->lastInsertId(),$this->user_id, $data, json_encode($produtos)));
     }
 
     public function get_to_datatable()
@@ -591,7 +590,7 @@ class movimentacao_stock extends requests_class
     {
         $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+        return $stmt->execute(array($this->_db->lastInsertId(),$this->user_id, $data, json_encode($produtos)));
     }
 
     public function get_to_datatable()
