@@ -671,7 +671,7 @@ class movimentacao_stock extends requests_class
     private function getUser($id)
     {
         $query = "SELECT user FROM spice_report_movimentacao WHERE id = :id";
-        $stmt = $this->_db->prepare($query);
+        $stmt = $this->_db->prepare($query);-
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
