@@ -256,7 +256,9 @@ class correio extends requests_class
     {
         $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->_db->lastInsertId(),":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
+        $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
+        return array(    $this->_db->lastInsertId(), $this->user_id, $carta_porte,  $data,  json_encode($input_doc_obj_assoc),  $comments)
+;
     }
 
     public function get_to_datatable()
