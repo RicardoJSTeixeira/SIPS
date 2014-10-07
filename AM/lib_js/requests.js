@@ -188,7 +188,7 @@ var Requests = function (basic_path, options_ext) {
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
                     {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)},
                     {"sTitle": "Data pedido"},
-                    {"sTitle": "Data inicial/Data final", "sWidth": "65px"},
+                    {"sTitle": "Data inicial", "sWidth": "65px"},
                     {"sTitle": "Data final", "sWidth": "65px"},
                     {"sTitle": "Horario", "sWidth": "46px"},
                     {"sTitle": "Localidade"},
@@ -221,13 +221,14 @@ var Requests = function (basic_path, options_ext) {
                     if (~~horario.tipo === 2)
                         basic_path.find("#ver_horario_modal #horario_manha").show();
                     if (~~horario.tipo === 3)
-                        basic_path.find("#ver_horario_modal #horario_tarde").show().end()
-                            .find("#ver_horario_modal #manha_inicio").text(horario.inicio1).end()
+                        basic_path.find("#ver_horario_modal #horario_tarde").show();
+
+                    basic_path.find("#ver_horario_modal #manha_inicio").text(horario.inicio1).end()
                         .find("#ver_horario_modal #manha_fim").text(horario.inicio2).end()
                         .find("#ver_horario_modal #tarde_inicio").text(horario.fim1).end()
                         .find("#ver_horario_modal #tarde_fim").text(horario.fim2).end()
-                        .find(".myModalLabel").text("Horários #"+id).end()
-                        .find("#ver_horario_modal").modal("show");
+                        .find(".myModalLabel").text("Horários #" + id).end();
+                    basic_path.find("#ver_horario_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
@@ -245,7 +246,7 @@ var Requests = function (basic_path, options_ext) {
                     $.each(data, function () {
                         basic_path.find("#ver_local_publicidade_modal #tbody_ver_local_publicidade").append("<tr><td>" + this.cp + "</td><td>" + this.freguesia + "</td></tr>");
                     });
-                    basic_path.find(".myModalLabel").text("Locais de Publicidade #"+id).end()
+                    basic_path.find(".myModalLabel").text("Locais de Publicidade #" + id).end()
                         .find("#ver_local_publicidade_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
@@ -436,7 +437,7 @@ var Requests = function (basic_path, options_ext) {
                     $.each(data, function () {
                         tbody.append("<tr><td>" + this.data + "</td><td>" + this.km + "</td><td>" + this.ocorrencia + "</td></tr>");
                     });
-                    basic_path.find(".myModalLabel").text("Ocorrências de frota #"+ id).end()
+                    basic_path.find(".myModalLabel").text("Ocorrências de frota #" + id).end()
                         .find("#ver_occorrencia_frota_modal").modal("show");
                     $.msg('unblock');
                 }, "json").fail(function (data) {
@@ -720,7 +721,7 @@ var Requests = function (basic_path, options_ext) {
                             anexo_number++;
                         });
                         basic_path.find("#correio_modal_div #anexo_save_button").data("id_correio", id_anexo).end()
-                            .find(".myModalLabel").text("Anexo Correio #"+ id_anexo).end()
+                            .find(".myModalLabel").text("Anexo Correio #" + id_anexo).end()
                             .find("#ver_anexo_correio_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
@@ -1039,7 +1040,7 @@ var Requests = function (basic_path, options_ext) {
                     id_stock = ~~$(this).data().stock_id,
                     anexo_number = 1,
                     status = ~~$(this).data().approved;
-                $("#stock_add_button").toggle(SpiceU.user_level > 5 );
+                $("#stock_add_button").toggle(SpiceU.user_level > 5);
                 $.msg();
                 $.post("ajax/requests.php", {action: "get_itens_stock", id: id_stock},
                     function (data1) {
@@ -1058,7 +1059,7 @@ var Requests = function (basic_path, options_ext) {
                             anexo_number++;
                         });
                         basic_path.find("#stock_save_button").data("id_stock", id_stock).end()
-                            .find(".myModalLabel").text("Relatório stock #"+ id_stock).end()
+                            .find(".myModalLabel").text("Relatório stock #" + id_stock).end()
                             .find("#ver_anexo_mensal_stock_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {
@@ -1308,7 +1309,7 @@ var Requests = function (basic_path, options_ext) {
                     anexo_number = 1,
                     status = ~~$(this).data().approved;
 
-                $("#mov_add_button").toggle(SpiceU.user_level > 5 );
+                $("#mov_add_button").toggle(SpiceU.user_level > 5);
                 $.msg();
                 $.post("ajax/requests.php", {action: "get_itens_movimentacao", id: id_movimentacao},
                     function (data1) {
@@ -1335,7 +1336,7 @@ var Requests = function (basic_path, options_ext) {
                             anexo_number++;
                         });
                         basic_path.find("#mov_save_button").data("id_movimentacao", id_movimentacao).end()
-                            .find(".myModalLabel").text("Movimentação de Stock #"+  id_movimentacao).end()
+                            .find(".myModalLabel").text("Movimentação de Stock #" + id_movimentacao).end()
                             .find("#ver_anexo_mov_stock_modal").modal("show");
                         $.msg('unblock');
                     }, "json").fail(function (data) {

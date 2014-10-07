@@ -109,7 +109,6 @@ var ClientBox = function (configs) {
                     me.client_info_editing(function () {
                         me.refresh();
                     });
-
                 }).on("click", "#button_notes", function (e) {
                     e.preventDefault();
                     me.notas();
@@ -184,7 +183,7 @@ var ClientBox = function (configs) {
                             .append($("<div>", {class: "modal-body"})
                                 .append($("<div>", {class: "row-fluid"})
                                     .append($("<div>", {class: "span6"})
-                                        .append($("<h4>", {class: "icon-user"}).text(" Info de cliente")).append(client_info))
+                                        .append($("<h4>", {class: "icon-user"}).text(" Cliente")).append(client_info))
                                     .append($("<div>", {class: "span6  "})
                                         .append($("<h4>", {class: "icon-home"}).text(" Morada")).append(client_address)))
                                 .append($("<div>", {class: "row-fluid"})
@@ -195,8 +194,8 @@ var ClientBox = function (configs) {
                                 .append($("<button>", {class: "btn icon-alone left dropdown-toggle"}).attr("data-toggle", "dropdown").append($("<i>", {class: "icon-cog"})))
                                 .append($("<div>", {class: " dropdown-menu"})
                                     .append($("<ul>", {style: "text-align:left"})
-                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").css("display",isBlocked()?"none":"inline").prepend($("<i>", {class: "icon-calendar"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_nova_encomenda"}).text("Nova Encomenda").css("display",isBlocked()?"none":"inline").prepend($("<i>", {class: "icon-shopping-cart"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").css("display",isBlocked()?"none":"block").prepend($("<i>", {class: "icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_nova_encomenda"}).text("Nova Encomenda").css("display",isBlocked()?"none":"block").prepend($("<i>", {class: "icon-shopping-cart"}))))
                                         .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").prepend($("<i>", {class: "icon-money"}))))
                                         .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").prepend($("<i>", {class: "icon-user"}))))
                                         .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").prepend($("<i>", {class: "icon-file"}))))
@@ -233,7 +232,7 @@ var ClientBox = function (configs) {
                     })
                     .on ("click","#button_nova_encomenda",function()
                 {
-                                        var en = btoa(lead_id);
+                    var en = btoa(lead_id);
                     modal_html.modal("hide");
                     $.history.push("view/new_requisition.html?id=" + en);
                 });

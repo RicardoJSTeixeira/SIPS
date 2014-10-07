@@ -186,7 +186,7 @@ var Products = function(geral_path, options_ext) {
         });
         edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e) {
             e.preventDefault();
-            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
+            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select  class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
                 ico: '/jquery/colourPicker/colourPicker.gif',
                 title: false

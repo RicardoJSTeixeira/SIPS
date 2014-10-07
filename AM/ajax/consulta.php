@@ -50,11 +50,11 @@ switch ($action) {
             ":terceira_pessoa" => ($terceira_pessoa) ? json_encode($terceira_pessoa) : json_encode(array()),
             ":closed" => $closed));
         $log->set($reserva_id, Logger::T_INS, Logger::S_CNSLT, json_encode(array("Lead_id" => $lead_id,
-            ":left_ear" => $left_ear,
-            ":right_ear" => $right_ear,
-            ":produtos" => json_encode($produtos),
-            ":feedback" => $feedback,
-            ":closed" => $closed)), logger::A_SENT);
+            "Left_ear" => $left_ear,
+            "Right_ear" => $right_ear,
+            "Produtos" => json_encode($produtos),
+            "Feedback" => $feedback,
+            "Closed" => $closed)), logger::A_SENT);
         if ($consulta_razao == "DEST" || $consulta_razao == 'NOSHOW') {
             $calendar->deleteReserva($reserva_id);
         }
