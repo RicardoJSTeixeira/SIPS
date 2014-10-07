@@ -47,7 +47,7 @@ switch ($action) {
 
     case "criar_relatorio_correio":
         $rel_correio=$relatorio_correio->create($carta_porte, $data, $input_doc_obj_assoc, $comments);
-        $log->set($rel_correio[0], Logger::T_INS, Logger::S_MAIL, "",logger::A_SENT);
+         $log->set($rel_correio[0], Logger::T_INS, Logger::S_MAIL, "",logger::A_SENT);
         echo json_encode($rel_correio);
 
         break;
