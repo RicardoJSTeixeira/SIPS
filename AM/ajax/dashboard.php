@@ -98,9 +98,7 @@ switch ($action) {
             
             $row[15] = $row[16] . "<div class='view-button'>"
                     . "<button class='btn btn-mini icon-alone ver_cliente' data-lead_id='$row[0]' title='Ver Cliente'><i class='icon-edit'></i></button>"
-                    . "<button class='btn btn-mini icon-alone criar_encomenda" . (($u->user_level === 1) ? " hide" : "") . "' data-lead_id='$row[0]' title='Nova Encomenda'><i class='icon-shopping-cart'></i></button>"
-                    . "<button class='btn btn-mini icon-alone criar_marcacao' data-lead_id='$row[0]' title='Marcar Consulta'><i class='icon-calendar'></i></button>"
-                    . "<button class='btn btn-mini icon-alone ver_consulta' data-lead_id='$row[0]' data-reserva_id='$row[17]' title='Ver Consulta'><i class='icon-user-md'></i></button>"
+                                       . "<button class='btn btn-mini icon-alone ver_consulta' data-lead_id='$row[0]' data-reserva_id='$row[17]' title='Ver Consulta'><i class='icon-user-md'></i></button>"
 //. "<button class='btn btn-mini icon-alone recomendacoes' data-lead_id='$row[0]' title='Recomendados'><i class='icon-plus-sign'></i></button>"
                     . "</div>";
 
