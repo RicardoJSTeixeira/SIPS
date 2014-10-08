@@ -199,10 +199,7 @@ $(function () {
     }, "json");
 
     $("#div_master")
-        .on("click", ".criar_marcacao", function () {
-            var en = btoa($(this).data().lead_id);
-            $.history.push("view/calendar.html?id=" + en);
-        }).on("click", ".recomendacoes", function () {
+         .on("click", ".recomendacoes", function () {
             var en = btoa($(this).data().lead_id);
             $.history.push("view/mass_client.html?id=" + en);
         }).on("click", ".ver_consulta", function () {
@@ -220,12 +217,7 @@ $(function () {
             client.initModal($(this).data("lead_id"), null);
 
         })
-        .on("click", ".criar_encomenda", function () {
-            var
-                data = $(this).data(),
-                en = btoa(data.lead_id);
-            $.history.push("view/new_requisition.html?id=" + en);
-        });
+
 
     $("#table_tbody_mp").on('click', '.initC', function () {
         var

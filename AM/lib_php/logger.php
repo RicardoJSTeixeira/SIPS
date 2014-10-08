@@ -68,11 +68,11 @@ class Logger
 
             if ($date_start) {
                 $where = $where . " and event_date>?";
-                $parameters[] = $date_start;
+                $parameters[] = $date_start . " 00:00:00";
             }
             if ($date_end) {
                 $where = $where . " and event_date<?";
-                $parameters[] = $date_end;
+                $parameters[] = $date_end . " 23:59:59";
             }
         } else {
             return array();

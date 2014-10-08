@@ -124,7 +124,7 @@ var ClientBox = function (configs) {
         });
     };
 
-    this.initModal = function (lead_id, callback) {
+    this.initModal = function (lead_id, config) {
         var client_info = $("<div>"), client_address = $("<div>"), client_extra = $("<div>");
         var client_extra_count = 0;
         var temp = "";
@@ -195,7 +195,8 @@ var ClientBox = function (configs) {
                                 .append($("<button>", {class: "btn icon-alone left dropdown-toggle"}).attr("data-toggle", "dropdown").append($("<i>", {class: "icon-cog"})))
                                 .append($("<div>", {class: " dropdown-menu"})
                                     .append($("<ul>", {style: "text-align:left"})
-                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").prepend($("<i>", {class: "icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").css("display",isBlocked()?"none":"inline").prepend($("<i>", {class: "icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {id: "button_nova_encomenda"}).text("Nova Encomenda").css("display",isBlocked()?"none":"inline").prepend($("<i>", {class: "icon-shopping-cart"}))))
                                         .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").prepend($("<i>", {class: "icon-money"}))))
                                         .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").prepend($("<i>", {class: "icon-user"}))))
                                         .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").prepend($("<i>", {class: "icon-file"}))))
@@ -229,7 +230,13 @@ var ClientBox = function (configs) {
                     }).
                     on("click", "#button_notas", function () {
                         me.notas();
-                    });
+                    })
+                    .on ("click","#button_nova_encomenda",function()
+                {
+                                        var en = btoa(lead_id);
+                    modal_html.modal("hide");
+                    $.history.push("view/new_requisition.html?id=" + en);
+                });
 
                 if (!client_extra_count)
                     modal_html.find("#extra_info_div").parent().remove();
@@ -242,8 +249,7 @@ var ClientBox = function (configs) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
-        if (typeof callback === "function")
-            callback();
+
     };
 
     this.destroy = function () {

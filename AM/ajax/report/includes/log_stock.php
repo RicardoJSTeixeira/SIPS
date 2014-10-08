@@ -8,32 +8,31 @@ $output = fopen('php://output', 'w');
 
 fputcsv($output, array(
     'ID evento',
-    'Data de criação',
+    'Data Criação',
     'Agente',
-    'Tipo',
-    'Observaçoes',
+    'Observações',
     'Mensagem',
-    'Data do evento',
-    'Status final'), ";");
+    'Comentários',
+    'Pedido',
+    'Pendente',
+    'Aprovado'), ";");
 
 
-$query_log = "SELECT a.user,a.entry_date,a.data,a.status,b.event_date,b.record_id,b.type,b.note FROM spice_report_stock a inner join spice_log b on a.id=b.record_id where b.section='Stock' and a.entry_date  BETWEEN :data_inicial AND :data_final;";
+$query_log = "SELECT a.id,a.user,a.entry_date,a.data,a.status,max(IF(b.status=2 OR b.status=1 ,b.note,'')) note,MAX(IF(b.status=0,b.event_date,'')) pedido,MAX(IF(b.status=2,b.event_date,'') ) pendente,MAX(IF(b.status=1,b.event_date,'') ) aprovado  FROM spice_report_stock a inner join  spice_log   b on a.id=b.record_id where b.section='Stock' and a.entry_date BETWEEN :data_inicial AND :data_final group by record_id;";
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $note = json_decode($row["note"]);
-
-
        fputcsv($output, array(
-           $row['record_id'],
+           $row['id'],
            $row['entry_date'],
            $row['user'],
-           $row['type'],
            $note->obs,
            $note->msg,
-           $row['event_date'],
-           $row['status'] == 1 ? 'Aceite' : 'Pendente'), ";");
+           $row['comments'],
+           $row['pedido'],
+           $row['pendente'],
+           $row['aprovado']), ";");
 }
-
 fclose($output);

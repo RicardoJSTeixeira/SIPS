@@ -182,7 +182,6 @@ class apoio_marketing extends requests_class
 //CODIGOS DE MARKETING - CREATE,DELETE,EDIT e GET------------------------------------------------------
     public function create_marketing_code($codmkt, $description)
     {
-
         $duplicates = $this->get_marketing_code($codmkt);
         if (gettype($duplicates) == "object") {
             return false;
@@ -192,15 +191,14 @@ class apoio_marketing extends requests_class
 
             return $stmt->execute(array(":codmkt" => $codmkt, ":description" => $description));
         }
-
     }
 
     public function create_multiple_marketing_code($codes)
     {
+        $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description) ON DUPLICATE KEY UPDATE codmkt=:codmkt1, description=:description1";
+        $stmt = $this->_db->prepare($query);
         foreach ($codes as $lines) {
-            $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description) ON DUPLICATE KEY UPDATE codmkt=:codmkt1, description=:description1";
-            $stmt = $this->_db->prepare($query);
-            $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
+                     $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
         }
         return json_encode(true);
     }
@@ -211,7 +209,6 @@ class apoio_marketing extends requests_class
         $temp = $this->get_marketing_code($new_codmkt);
         if (gettype($temp) == "object") {
             if ($temp->id != $id_codmkt)
-
                 return "duplicate";
         }
 
@@ -259,7 +256,9 @@ class correio extends requests_class
     {
         $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
+        $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
+        return array(    $this->_db->lastInsertId(), $this->user_id, $carta_porte,  $data,  json_encode($input_doc_obj_assoc),  $comments)
+;
     }
 
     public function get_to_datatable()
@@ -331,7 +330,7 @@ class correio extends requests_class
         $query = "SELECT anexo FROM spice_report_correio WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
-
+        $anexos=array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $_anexos = json_decode($row["anexo"]);
             foreach ($_anexos as $value) {
@@ -379,7 +378,8 @@ class frota extends requests_class
     {
         $query = "INSERT INTO `spice_report_frota` (`user`, `data`, `matricula`, `km`, `viatura`, `comments`, `ocorrencia`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
+        $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
+        return array($this->_db->lastInsertId(),$this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias));
     }
 
     public function get_to_datatable()
@@ -482,7 +482,8 @@ class mensal_stock extends requests_class
     {
         $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+        $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+        return array($this->_db->lastInsertId(),$this->user_id, $data, json_encode($produtos));
     }
 
     public function get_to_datatable()
@@ -593,7 +594,8 @@ class movimentacao_stock extends requests_class
     {
         $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
-        return $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+        $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
+        return array($this->_db->lastInsertId(),$this->user_id, $data, json_encode($produtos));
     }
 
     public function get_to_datatable()
@@ -659,7 +661,7 @@ class movimentacao_stock extends requests_class
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             $_produtos = json_decode($row->produtos);
             foreach ($_produtos as $value) {
-                $produtos[] = array("destinatario" => $value->destinatario, "quantidade" => $value->quantidade, "destinatario" => $value->destinatario, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin" => $value->admin);
+                $produtos[] = array("destinatario" => $value->destinatario, "quantidade" => $value->quantidade, "descricao" => $value->descricao, "serie" => $value->serie, "obs" => $value->obs, "confirmed" => $value->confirmed, "admin" => $value->admin);
             }
         }
 
@@ -669,7 +671,7 @@ class movimentacao_stock extends requests_class
     private function getUser($id)
     {
         $query = "SELECT user FROM spice_report_movimentacao WHERE id = :id";
-        $stmt = $this->_db->prepare($query);
+        $stmt = $this->_db->prepare($query);-
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }

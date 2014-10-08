@@ -39,11 +39,17 @@ switch ($action) {
     case "criar_relatorio_frota":
         if (!is_array($ocorrencias))
             $ocorrencias = Array();
-        echo json_encode($relatorio_frota->create($data, $matricula, $km, $viatura, $ocorrencias, $comments));
+        $rel_frota=$relatorio_frota->create($data, $matricula, $km, $viatura, $ocorrencias, $comments);
+        $log->set($rel_frota[0], Logger::T_INS, Logger::S_FROTA, "",logger::A_SENT);
+        echo json_encode($rel_frota);
+
         break;
 
     case "criar_relatorio_correio":
-        echo json_encode($relatorio_correio->create($carta_porte, $data, $input_doc_obj_assoc, $comments));
+        $rel_correio=$relatorio_correio->create($carta_porte, $data, $input_doc_obj_assoc, $comments);
+         $log->set($rel_correio[0], Logger::T_INS, Logger::S_MAIL, "",logger::A_SENT);
+        echo json_encode($rel_correio);
+
         break;
 
     case "criar_apoio_marketing":
@@ -69,7 +75,7 @@ switch ($action) {
         }
 
         $apoioID = $apoio_marketing->create($data_inicial, $data_final, $horario, $localidade, $local, $morada, $comments, $local_publicidade);
-
+        $log->set($apoioID, Logger::T_INS, Logger::S_APMKT, "",logger::A_SENT);
         while ($ref = array_pop($refs)) {
             $id[] = $calendar->newReserva($userID->username, "", strtotime($data_inicial . " " . $start), strtotime($data_final . " " . $end), $system_types["Rastreio c/ MKT"], $ref->id, '', $apoioID);
         }
@@ -132,11 +138,15 @@ $comments
         break;
 
     case "criar_relatorio_mensal_stock":
-        echo json_encode($relatorio_mensal_stock->create($data, $produtos));
+        $rel_ms=($relatorio_mensal_stock->create($data, $produtos));
+        $log->set($rel_ms[0], Logger::T_INS, Logger::S_STOCK, "",logger::A_SENT);
+        echo json_encode($rel_ms);
         break;
 
     case "criar_relatorio_movimentacao_stock":
-        echo json_encode($relatorio_movimentacao_stock->create($data, $produtos));
+        $rel_mov_s=$relatorio_movimentacao_stock->create($data, $produtos);
+        $log->set($rel_mov_s[0], Logger::T_INS, Logger::S_MOVSTOCK, "",logger::A_SENT);
+        echo json_encode($rel_mov_s);
         break;
 
 
