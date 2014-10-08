@@ -84,7 +84,7 @@ switch ($action) {
         //save to DB
         $query = "INSERT INTO `reclamacao`(`lead_id`, `nome`, `campanha`, `comentario`, `email`, `data`, `tipo`,tipo_reclamacao,tipificacao_reclamacao,concessionario) VALUES ($lead_id,'$nome','$campanha','$comentario','" . mysql_real_escape_string(json_encode($email)) . "','" . $date . "',$tipo,'$tipo_reclamacao','$tipificacao_reclamacao','$concessionario')";
         $query = mysql_query($query, $link) or die(mysql_error());
-
+        $id_reclamacao=mysql_insert_id();
         if ($tipo) {
             $transport = Swift_SmtpTransport::newInstance('mail.viragem.com', 465, 'ssl')
                     ->setUsername('viragem@viragem.com')
@@ -101,7 +101,7 @@ switch ($action) {
 
             $message
                     ->setFrom(array('viragem@viragem.com' => 'Viragem'))
-                    ->setSubject($tipo_reclamacao)
+                    ->setSubject("#$id_reclamacao $tipo_reclamacao")
                     ->setBody(
                             '
 <div align="center">
