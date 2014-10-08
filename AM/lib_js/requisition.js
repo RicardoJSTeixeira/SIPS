@@ -359,6 +359,8 @@ var requisition = function (geral_path, options_ext) {
                 aoData.push({
                     "name": "action",
                     "value": "listar_requisition_to_datatable"
+                },{
+                    "name": "show_aproved", "value": table_path.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
                 });
             },
             "fnDrawCallback": function () {

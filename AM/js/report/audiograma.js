@@ -10,6 +10,7 @@ $(function() {
         "bProcessing": true,
         "bDestroy": true,
         "bAutoWidth": false,
+
         "sPaginationType": "full_numbers",
         "sAjaxSource": '/AM/ajax/report/audiograma.php',
         "fnServerParams": function(aoData) {

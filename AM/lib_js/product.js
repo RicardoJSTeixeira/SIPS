@@ -1,7 +1,7 @@
-var Products = function(geral_path, options_ext) {
+var Products = function (geral_path, options_ext) {
     var me = this,
-            product_id = 0,
-            datatable_path = "";
+        product_id = 0,
+        datatable_path = "";
 
     this.file_uploaded = false;
     this.config = {};
@@ -9,34 +9,34 @@ var Products = function(geral_path, options_ext) {
     this.Table_view_product;
 
     $.extend(true, this.config, options_ext);
-    this.init = function(callback) {
-        $.get("/AM/view/products/product.html", function(data) {
+    this.init = function (callback) {
+        $.get("/AM/view/products/product.html", function (data) {
             geral_path.empty().off().append(data);
             geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
             $("#edit_product_data_promoçao1").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
-                    .on('changeDate', function() {
-                        $("#edit_product_data_promoçao2").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
-                    });
+                .on('changeDate', function () {
+                    $("#edit_product_data_promoçao2").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
+                });
             $("#edit_product_data_promoçao2").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
-                    .on('changeDate', function() {
-                        $("#edit_product_data_promoçao1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
-                    });
+                .on('changeDate', function () {
+                    $("#edit_product_data_promoçao1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
+                });
 
             if (typeof callback === "function")
                 callback();
         });
     };
 
-    this.init_to_datatable = function(datatable_path1) {
+    this.init_to_datatable = function (datatable_path1) {
         datatable_path = datatable_path1;
         datatable_path.off();
         var edit_product_modal = geral_path.find("#edit_product_modal");
         update_products_datatable(datatable_path);
-        datatable_path.on("click", ".btn_ver_produto", function() {
+        datatable_path.on("click", ".btn_ver_produto", function () {
             $.msg();
             product_id = $(this).data("product_id");
-            populate_modal(edit_product_modal, function() {
-                get_promocao(edit_product_modal, function() {
+            populate_modal(edit_product_modal, function () {
+                get_promocao(edit_product_modal, function () {
                     edit_product_modal.find("#edit_product_button").hide().end()
                         .find(".modal-body").find("#edit_product_new_promotion_div").hide().end()
                         .find(".modal-body").find("#edit_product_add_promotion_toggle").hide().end()
@@ -48,11 +48,11 @@ var Products = function(geral_path, options_ext) {
                 });
             });
         });
-        datatable_path.on("click", ".btn_editar_produto", function() {
+        datatable_path.on("click", ".btn_editar_produto", function () {
             $.msg();
             product_id = $(this).data("product_id");
-            populate_modal(edit_product_modal, function() {
-                get_promocao(edit_product_modal, function() {
+            populate_modal(edit_product_modal, function () {
+                get_promocao(edit_product_modal, function () {
                     edit_product_modal.find("#edit_product_button").show().end()
                         .find(".modal-body").find("#edit_product_new_promotion_div").hide().end()
                         .find(".modal-body").find("#edit_product_add_promotion_toggle").show().end()
@@ -62,49 +62,52 @@ var Products = function(geral_path, options_ext) {
                     $.msg("unblock");
                 });
             });
-            edit_product_modal.on("click", "#edit_product_button", function(e) {
+            edit_product_modal.on("click", "#edit_product_button", function (e) {
                 e.preventDefault();
                 var types = [];
-                $.each(edit_product_modal.find(":input[name='edit_product_tipo_user']:checked"), function() {
+                $.each(edit_product_modal.find(":input[name='edit_product_tipo_user']:checked"), function () {
                     types.push($(this).val());
                 });
                 var parents = [];
-                $.each(edit_product_modal.find("#edit_product_parent option:selected"), function() {
+                $.each(edit_product_modal.find("#edit_product_parent option:selected"), function () {
                     parents.push($(this).val());
                 });
                 var color = [];
-                $.each(edit_product_modal.find("#edit_product_table_tbody_color tr"), function() {
+                $.each(edit_product_modal.find("#edit_product_table_tbody_color tr"), function () {
                     color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
                 });
 
                 var size = [];
-                $.each(edit_product_modal.find("#edit_product_size_subdiv .edit_product_size"), function() {
+                $.each(edit_product_modal.find("#edit_product_size_subdiv .edit_product_size"), function () {
                     size.push($(this).val());
                 });
 
                 if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
                     if (types.length) {
                         $.msg();
-                        $.post('/AM/ajax/products.php', {action: "edit_product",
-                            id: product_id,
-                            name: edit_product_modal.find("#edit_product_name").val(),
-                            max_req_m: edit_product_modal.find("#edit_product_mrm").val(),
-                            max_req_s: edit_product_modal.find("#edit_product_mrw").val(),
-                            category: edit_product_modal.find("#edit_product_category").val(),
-                            parent: parents,
-                            type: types,
-                            color: color,
-                            active: edit_product_modal.find("#edit_product_active").is(":checked"),
-                            size: size},
-                        function(data) {
-                            edit_product_modal.modal("hide");
-                            update_products_datatable(datatable_path);
-                            edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
-                            $.msg("unblock");
-                        }, "json").fail(function(data) {
-                                                    $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-                            $.msg('unblock', 5000);
-                        });
+                        $.post('/AM/ajax/products.php', {
+                                action: "edit_product",
+                                id: product_id,
+                                name: edit_product_modal.find("#edit_product_name").val(),
+                                max_req_m: edit_product_modal.find("#edit_product_mrm").val(),
+                                max_req_s: edit_product_modal.find("#edit_product_mrw").val(),
+                                category: edit_product_modal.find("#edit_product_category").val(),
+                                parent: parents,
+                                type: types,
+                                color: color,
+                                active: edit_product_modal.find("#edit_product_active").is(":checked"),
+                                size: size
+                            },
+                            function (data) {
+                                edit_product_modal.modal("hide");
+
+                                update_products_datatable(datatable_path);
+                                edit_product_modal.find("#edit_product_table_tbody_color tr").remove();
+                                $.msg("unblock");
+                            }, "json").fail(function (data) {
+                                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                                $.msg('unblock', 5000);
+                            });
                     }
                     else {
                         $.jGrowl("Escolha um tipo, Branch ou Dispenser", {life: 3500});
@@ -112,29 +115,29 @@ var Products = function(geral_path, options_ext) {
                 }
             });
         });
-        datatable_path.on("click", ".btn_apagar_produto", function() {
+        datatable_path.on("click", ".btn_apagar_produto", function () {
             geral_path.find("#remove_product_modal").modal("show").end()
                 .find("#remove_product_button").data("button", $(this)).data("product_id", $(this).data("product_id"));
 
         });
         geral_path.off("click", "#remove_product_button");
-        geral_path.on("click", "#remove_product_button", function() {
+        geral_path.on("click", "#remove_product_button", function () {
             var this_button = $(this).data("button");
             var product_id = $(this).data("product_id");
             $.msg();
-            $.post('/AM/ajax/products.php', {action: "apagar_produto_by_id", "id": product_id}, function(data) {
+            $.post('/AM/ajax/products.php', {action: "apagar_produto_by_id", "id": product_id}, function (data) {
                 $.jGrowl("Produto apagado com sucesso", {life: 3500});
                 if ($("#new_product_parent").length)//actualizar a lista de parents do novo produto
                     populate_parent($("#new_product_parent"), null, null, null);
                 datatable_path.dataTable().fnDeleteRow(this_button.closest('tr')[0]);
                 geral_path.find("#remove_product_modal").modal("hide");
                 $.msg('unblock');
-            }, "json").fail(function(data) {
+            }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
         });
-        edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function(e) {
+        edit_product_modal.on("click", "#edit_product_add_promotion_toggle", function (e) {
             e.preventDefault();
             $(this).hide();
             edit_product_modal.find("#edit_product_new_promotion_div").show();
@@ -143,33 +146,34 @@ var Products = function(geral_path, options_ext) {
             edit_product_modal.find("#edit_product_data_promoçao1").val("");
             edit_product_modal.find("#edit_product_data_promoçao2").val("");
         });
-        edit_product_modal.on("click", "#edit_product_add_promotion_button", function(e) {
+        edit_product_modal.on("click", "#edit_product_add_promotion_button", function (e) {
             e.preventDefault();
             if (edit_product_modal.find("#edit_product_form").validationEngine("validate")) {
                 $.msg();
-                $.post('/AM/ajax/products.php', {action: "add_promotion", "id": product_id,
+                $.post('/AM/ajax/products.php', {
+                    action: "add_promotion", "id": product_id,
                     active: edit_product_modal.find("#edit_product_promotion_active").is(":checked"),
                     highlight: edit_product_modal.find("#edit_product_promotion_highlight").is(":checked"),
                     data_inicio: edit_product_modal.find("#edit_product_data_promoçao1").val(),
                     data_fim: edit_product_modal.find("#edit_product_data_promoçao2").val()
-                }, function(data) {
+                }, function (data) {
                     get_promocao(edit_product_modal);
                     edit_product_modal.find("#edit_product_add_promotion_toggle").show();
                     edit_product_modal.find("#edit_product_new_promotion_div").hide();
                     $.msg('unblock');
-                }, "json").fail(function(data) {
+                }, "json").fail(function (data) {
                     $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                     $.msg('unblock', 5000);
                 });
             }
         });
 
-        edit_product_modal.on("click", "#edit_product_cancel_promotion_button", function(e) {
+        edit_product_modal.on("click", "#edit_product_cancel_promotion_button", function (e) {
             e.preventDefault();
             $("#edit_product_new_promotion_div").hide();
             $("#edit_product_add_promotion_toggle").show();
         });
-        edit_product_modal.on("change", "#edit_product_category", function() {
+        edit_product_modal.on("change", "#edit_product_category", function () {
             edit_product_modal.find("#edit_product_size_div").hide();
 
             edit_product_modal.find("#edit_product_size_subdiv").find(".edit_product_size").remove();
@@ -184,38 +188,40 @@ var Products = function(geral_path, options_ext) {
                 edit_product_modal.find("#edit_product_color_div").hide();
             }
         });
-        edit_product_modal.on("click", "#edit_product_button_color_add_line", function(e) {
+        edit_product_modal.on("click", "#edit_product_button_color_add_line", function (e) {
             e.preventDefault();
-            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
+            edit_product_modal.find("#edit_product_table_tbody_color").append("<tr><td><select  class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
                 ico: '/jquery/colourPicker/colourPicker.gif',
                 title: false
             });
         });
-        edit_product_modal.on("click", ".remove_color", function(e) {
+        edit_product_modal.on("click", ".remove_color", function (e) {
             e.preventDefault();
             $(this).parent().parent().remove();
         });
-        edit_product_modal.on("click", ".remove_promotion_button", function(e) {
+        edit_product_modal.on("click", ".remove_promotion_button", function (e) {
             e.preventDefault();
             var this_button = $(this);
-            e.preventDefault();
             $.msg();
-            $.post('/AM/ajax/products.php', {action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
-            }, function() {
+            $.post('/AM/ajax/products.php', {
+                action: "remove_promotion", "id": product_id, "id_promotion": this_button.data("id_promotion")
+            }, function () {
                 this_button.parent().parent().remove();
+                update_products_datatable(datatable_path);
+                $.jGrowl("Promoção removida com sucesso!", 1500);
                 $.msg('unblock');
-            }, "json").fail(function(data) {
+            }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                 $.msg('unblock', 5000);
             });
         });
 
-        edit_product_modal.on("click", "#edit_product_size_plus", function(e) {
+        edit_product_modal.on("click", "#edit_product_size_plus", function (e) {
             e.preventDefault();
             edit_product_modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='0'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
         });
-        edit_product_modal.on("click", "#edit_product_size_minus", function(e) {
+        edit_product_modal.on("click", "#edit_product_size_minus", function (e) {
             e.preventDefault();
             if (edit_product_modal.find("#edit_product_size_subdiv").find(".edit_product_size").length > 1)
                 edit_product_modal.find("#edit_product_size_subdiv").find(".edit_product_size").last().remove();
@@ -224,39 +230,40 @@ var Products = function(geral_path, options_ext) {
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------NEW PRODUCT---------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    this.init_new_product = function(new_product_path1, callback) {
+    this.init_new_product = function (new_product_path1, callback) {
         new_product_path1.append(geral_path.find("#new_product_form"));
         var new_product_path = new_product_path1;
         clear_new_product_area(new_product_path);
 
-        populate_parent(new_product_path.find("#new_product_parent"), null, null, function() {
+        populate_parent(new_product_path.find("#new_product_parent"), null, null, function () {
             new_product_path.find("#new_product_category").trigger("change");
         });
 
-        new_product_path.find("#create_new_product_button").click(function(e) {
+        new_product_path.find("#create_new_product_button").click(function (e) {
             e.preventDefault();
             var types = [];
-            $.each(new_product_path.find("input[name='new_product_tipo_user']:checked"), function() {
+            $.each(new_product_path.find("input[name='new_product_tipo_user']:checked"), function () {
                 types.push($(this).val());
             });
             var parents = [];
-            $.each(new_product_path.find("#new_product_parent option:selected"), function() {
+            $.each(new_product_path.find("#new_product_parent option:selected"), function () {
                 parents.push($(this).val());
             });
             var color = [];
-            $.each(new_product_path.find("#new_product_table_tbody_color tr"), function() {
+            $.each(new_product_path.find("#new_product_table_tbody_color tr"), function () {
                 color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
             });
 
             var size = [];
-            $.each(new_product_path.find("#new_product_size_subdiv .new_product_size"), function() {
+            $.each(new_product_path.find("#new_product_size_subdiv .new_product_size"), function () {
                 size.push($(this).val());
             });
 
             if (new_product_path.find("#new_product_form").validationEngine("validate"))
                 if (types.length) {
                     $.msg();
-                    $.post('/AM/ajax/products.php', {action: "criar_produto",
+                    $.post('/AM/ajax/products.php', {
+                        action: "criar_produto",
                         name: new_product_path.find("#new_product_name").val(),
                         max_req_m: new_product_path.find("#new_product_mrm").val(),
                         max_req_s: new_product_path.find("#new_product_mrw").val(),
@@ -266,16 +273,15 @@ var Products = function(geral_path, options_ext) {
                         color: color,
                         active: 1,
                         size: size
-                    }, function(data) {
+                    }, function (data) {
                         new_product_path.modal("hide");
-                        if (datatable_path)
-                        {
+                        if (datatable_path) {
                             datatable_path.dataTable().fnAddData(data);
                             $.jGrowl("Produto criado com sucesso", {life: 3500});
                             clear_new_product_area(new_product_path);
                         }
                         $.msg('unblock');
-                    }, "json").fail(function(data) {
+                    }, "json").fail(function (data) {
                         $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
                         $.msg('unblock', 5000);
                     });
@@ -285,7 +291,7 @@ var Products = function(geral_path, options_ext) {
                 }
         });
         new_product_path.off("change", "#new_product_category");
-        new_product_path.on("change", "#new_product_category", function() {
+        new_product_path.on("change", "#new_product_category", function () {
             new_product_path.find("#new_product_table_tbody_color").empty();
             new_product_path.find("#new_product_size_div").hide();
             new_product_path.find("#new_product_color_div").hide();
@@ -294,7 +300,6 @@ var Products = function(geral_path, options_ext) {
                 case "BTE":
                 case "RITE":
                 case "INTRA":
-
                     new_product_path.find("#new_product_color_div").show();
                     new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='Beje'></td><td><button class='btn btn-danger remove_color icon-alone'><i class='icon icon-trash'></i></button></td></tr>");
                     $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
@@ -312,7 +317,7 @@ var Products = function(geral_path, options_ext) {
             }
         });
         new_product_path.off("click", "#new_product_button_color_add_line");
-        new_product_path.on("click", "#new_product_button_color_add_line", function(e) {
+        new_product_path.on("click", "#new_product_button_color_add_line", function (e) {
             e.preventDefault();
             new_product_path.find("#new_product_table_tbody_color").append("<tr><td><select class=' input-small color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]'></td><td><button class='btn remove_color icon-alone btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
             $("#new_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).colourPicker({
@@ -321,16 +326,16 @@ var Products = function(geral_path, options_ext) {
             });
         });
         new_product_path.off("click", ".remove_color");
-        new_product_path.on("click", ".remove_color", function(e) {
+        new_product_path.on("click", ".remove_color", function (e) {
             e.preventDefault();
             $(this).parent().parent().remove();
         });
 
-        new_product_path.on("click", "#new_product_size_plus", function(e) {
+        new_product_path.on("click", "#new_product_size_plus", function (e) {
             e.preventDefault();
             new_product_path.find("#new_product_size_subdiv").append("<input type='number' min='0'  value='0'  class='new_product_size input-mini validate[required,min[0]]'> ");
         });
-        new_product_path.on("click", "#new_product_size_minus", function(e) {
+        new_product_path.on("click", "#new_product_size_minus", function (e) {
             e.preventDefault();
             if (new_product_path.find("#new_product_size_subdiv").find(".new_product_size").length > 1)
                 new_product_path.find("#new_product_size_subdiv").find(".new_product_size").last().remove();
@@ -363,18 +368,15 @@ var Products = function(geral_path, options_ext) {
                 "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/products.php',
-                "fnServerParams": function(aoData) {
+                "fnServerParams": function (aoData) {
                     aoData.push({"name": "action", "value": "listar_produtos_to_datatable"}, {"name": "product_editable", "value": me.config.product_editable});
                 },
-                "fnDrawCallback": function() {
-                    $.each(me.Table_view_product.find(".btn_ver_produto"), function()
-                    {
-                        if ($(this).data().deleted)
-                        {
+                "fnDrawCallback": function () {
+                    $.each(me.Table_view_product.find(".btn_ver_produto"), function () {
+                        if ($(this).data().deleted) {
                             $(this).closest("tr").addClass("error");
                         }
-                        else if (!$(this).data().active)
-                        {
+                        else if (!$(this).data().active) {
                             $(this).closest("tr").addClass("warning");
                         }
                         else if ($(this).data().highlight) {
@@ -382,7 +384,10 @@ var Products = function(geral_path, options_ext) {
                         }
                     });
                 },
-                "aoColumns": [{"sTitle": "Id", "sWidth": "25px"}, {"sTitle": "Nome"}, {"sTitle": "M.Mensal", "sWidth": "50px"}, {"sTitle": "M.Especial", "sWidth": "50px"}, {"sTitle": "Categoria", "sWidth": "70px"}, {"sTitle": "Tipo", "sWidth": "110px"}, {"sTitle": "Opções", "sWidth": "50px"}],
+                "aoColumns": [{"sTitle": "Id", "sWidth": "25px"}, {"sTitle": "Nome"}, {"sTitle": "M.Mensal", "sWidth": "50px"}, {
+                    "sTitle": "M.Especial",
+                    "sWidth": "50px"
+                }, {"sTitle": "Categoria", "sWidth": "70px"}, {"sTitle": "Tipo", "sWidth": "110px"}, {"sTitle": "Opções", "sWidth": "50px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         } else {
@@ -390,26 +395,24 @@ var Products = function(geral_path, options_ext) {
         }
     }
 
-    function  populate_modal(modal, callback) {
+    function populate_modal(modal, callback) {
 
-        $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function(data) {
-            populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function() {
+        $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function (data) {
+            populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function () {
                 modal.find("#edit_product_name").val(data.name);
                 modal.find("#edit_product_category").val(data.category);
                 modal.find("#edit_product_parent option[value='" + product_id + "']").prop("disabled", true);
                 modal.find("#edit_product_parent").val(data.parents_id).trigger("chosen:updated");
                 modal.find("#edit_product_active").prop("checked", ~~data.active);
-
                 modal.find("#edit_product_size_subdiv").find(".edit_product_size").remove();
 
                 if (data.size) {
-                    $.each(data.size, function() {
+                    $.each(data.size, function () {
                         modal.find("#edit_product_size_subdiv").append("  <input type='number' min='0'    value='" + this + "'  class='edit_product_size input-mini validate[required,min[0] ]'> ");
                     });
                 }
 
-
-                $.each(data.type, function() {
+                $.each(data.type, function () {
                     modal.find(":checkbox[name='edit_product_tipo_user'][value='" + this + "']").prop("checked", true);
                 });
                 modal.find("#edit_product_mrm").val(data.max_req_m);
@@ -418,7 +421,7 @@ var Products = function(geral_path, options_ext) {
 
                 if (data.children.length) {
                     modal.find("#edit_product_children_div").show();
-                    $.each(data.children, function() {
+                    $.each(data.children, function () {
                         modal.find("#edit_product_child_datatable").find("tbody").append("<tr><td>" + this.name + "</td><td>" + this.category + "</td></tr>");
                     });
                 }
@@ -435,7 +438,7 @@ var Products = function(geral_path, options_ext) {
                         modal.find("#edit_product_color_div").show();
                         if (data.color) {
                             modal.find("#edit_product_table_tbody_color").empty();
-                            $.each(data.color, function() {
+                            $.each(data.color, function () {
                                 modal.find("#edit_product_table_tbody_color").append("<tr><td><select class='color_picker_select'></select></td><td><input type='text' class='color_name input-small validate[required]' value='" + this.name + "'></td><td><button class='btn icon-alone remove_color  btn-danger'><i class='icon icon-trash'></i></button></td></tr>");
                                 $("#edit_product_table_tbody_color").find("select:last").append(geral_path.find("#colour_picker").find("option").clone()).val(this.color).colourPicker({
                                     ico: '/jquery/colourPicker/colourPicker.gif',
@@ -457,7 +460,7 @@ var Products = function(geral_path, options_ext) {
                     callback();
             });
 
-        }, "json").fail(function(data) {
+        }, "json").fail(function (data) {
             $.msg();
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
@@ -466,11 +469,11 @@ var Products = function(geral_path, options_ext) {
 
     function get_promocao(modal, callback) {
 
-        $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function(data) {
+        $.post('/AM/ajax/products.php', {action: "get_promotion", "id": product_id}, function (data) {
             var tbody = modal.find("#edit_product_promotion_table_tbody");
             tbody.empty();
             if (data.length) {
-                $.each(data, function() {
+                $.each(data, function () {
                     if (this.active)
                         this.active = "sim";
                     else
@@ -488,7 +491,7 @@ var Products = function(geral_path, options_ext) {
             if (typeof callback === "function")
                 callback();
 
-        }, "json").fail(function(data) {
+        }, "json").fail(function (data) {
             $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
             $.msg('unblock', 5000);
         });
@@ -498,11 +501,11 @@ var Products = function(geral_path, options_ext) {
         var out_level = level_out;
         var level = 0;
         $.post('/AM/ajax/products.php', {action: "get_produtos"},
-        function(data) {
+            function (data) {
 
-            var option = "";
-            select.empty();
-            var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
+                var option = "";
+                select.empty();
+                var temp = "<optgroup value='1' label='BTE'></optgroup>\n\
                         <optgroup value='2' label='RITE'></optgroup>\n\
                         <optgroup value='3' label='INTRA'></optgroup>\n\
                         <optgroup value='4' label='Pilhas'></optgroup>\n\
@@ -523,52 +526,52 @@ var Products = function(geral_path, options_ext) {
                     consumiveis = [],
                     especificidades = [];
 
-            select.append(temp);
-            $.each(data, function() {
-                if (out_level) {
-                    level = level + out_level - 1;
-                }
-                option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
-                if (this.parent_level >= 4)
-                    option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
-                if (children) {
-                    if (children.indexOf(this.id) !== -1)
-                        option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
-                }
-                switch (this.category) {
-                    case "BTE":
-                        BTE.push(option);
-                        break;
-                    case "RITE":
-                        RITE.push(option);
-                        break;
-                    case "INTRA":
-                        INTRA.push(option);
-                        break;
-                    case "Pilha":
-                        pilha.push(option);
-                        break;
-                    case "Acessório":
-                        acessorio.push(option);
-                        break;
-                    case "Molde":
-                        molde.push(option);
-                        break;
-                    case "Economato":
-                        economato.push(option);
-                        break;
-                    case "Gama":
-                        gama.push(option);
-                        break;
-                    case "Consumiveis":
-                        consumiveis.push(option);
-                        break;
-                    case "Especificidades":
-                        especificidades.push(option);
-                        break;
-                }
-            });
-            select.find("optgroup[value='1']").append(BTE).end()
+                select.append(temp);
+                $.each(data, function () {
+                    if (out_level) {
+                        level = level + out_level - 1;
+                    }
+                    option = "<option  id=" + this.id + "  value='" + this.id + "'>" + this.name + "</option>";
+                    if (this.parent_level >= 4)
+                        option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Max.Lvl. " + this.name + "</option>";
+                    if (children) {
+                        if (children.indexOf(this.id) !== -1)
+                            option = "<option disabled id=" + this.id + "  value='" + this.id + "'>Assoc. " + this.name + "</option>";
+                    }
+                    switch (this.category) {
+                        case "BTE":
+                            BTE.push(option);
+                            break;
+                        case "RITE":
+                            RITE.push(option);
+                            break;
+                        case "INTRA":
+                            INTRA.push(option);
+                            break;
+                        case "Pilha":
+                            pilha.push(option);
+                            break;
+                        case "Acessório":
+                            acessorio.push(option);
+                            break;
+                        case "Molde":
+                            molde.push(option);
+                            break;
+                        case "Economato":
+                            economato.push(option);
+                            break;
+                        case "Gama":
+                            gama.push(option);
+                            break;
+                        case "Consumiveis":
+                            consumiveis.push(option);
+                            break;
+                        case "Especificidades":
+                            especificidades.push(option);
+                            break;
+                    }
+                });
+                select.find("optgroup[value='1']").append(BTE).end()
                     .find("optgroup[value='2']").append(RITE).end()
                     .find("optgroup[value='3']").append(INTRA).end()
                     .find("optgroup[value='4']").append(pilha).end()
@@ -578,19 +581,19 @@ var Products = function(geral_path, options_ext) {
                     .find("optgroup[value='8']").append(gama).end()
                     .find("optgroup[value='9']").append(consumiveis).end()
                     .find("optgroup[value='10']").append(especificidades).end().trigger("chosen:updated");
-            if (typeof callback === "function")
-                callback();
-        }, "json").fail(function(data) {
-            $.msg();
-            $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
-            $.msg('unblock', 5000);
-        });
+                if (typeof callback === "function")
+                    callback();
+            }, "json").fail(function (data) {
+                $.msg();
+                $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
+                $.msg('unblock', 5000);
+            });
     }
 
     function get_children(element) {
         var children = [];
         if (element.children) {
-            $.each(element.children, function() {
+            $.each(element.children, function () {
                 children.push(this.id);
                 get_children_extra(this, children);
             });
@@ -600,7 +603,7 @@ var Products = function(geral_path, options_ext) {
 
     function get_children_extra(element, children) {
         if (element.children) {
-            $.each(element.children, function() {
+            $.each(element.children, function () {
                 children.push(this.id);
                 get_children_extra(this, children);
             });

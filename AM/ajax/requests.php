@@ -152,23 +152,24 @@ $comments
 
     //Gets to Datatables
     case "get_apoio_marketing_to_datatable":
-        echo json_encode($apoio_marketing->get_to_datatable());
+        echo json_encode($apoio_marketing->get_to_datatable($show_aproved));
         break;
 
     case "get_relatorio_correio_to_datatable":
-        echo json_encode($relatorio_correio->get_to_datatable());
+
+        echo json_encode($relatorio_correio->get_to_datatable($show_aproved));
         break;
 
     case "get_relatorio_frota_to_datatable":
-        echo json_encode($relatorio_frota->get_to_datatable());
+        echo json_encode($relatorio_frota->get_to_datatable($show_aproved));
         break;
 
     case "get_relatorio_stock_to_datatable":
-        echo json_encode($relatorio_mensal_stock->get_to_datatable());
+        echo json_encode($relatorio_mensal_stock->get_to_datatable($show_aproved));
         break;
 
     case "get_relatorio_movimentacao_to_datatable":
-        echo json_encode($relatorio_movimentacao_stock->get_to_datatable());
+        echo json_encode($relatorio_movimentacao_stock->get_to_datatable($show_aproved));
         break;
 
 

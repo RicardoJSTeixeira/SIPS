@@ -32,7 +32,7 @@ switch ($action) {
         break;
 
     case "listar_requisition_to_datatable":
-        echo json_encode($requisitions->get_requisitions_to_datatable());
+        echo json_encode($requisitions->get_requisitions_to_datatable($show_aproved));
         break;
 
     case "listar_produtos":
