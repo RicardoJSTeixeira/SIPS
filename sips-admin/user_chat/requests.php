@@ -102,8 +102,8 @@ if ($action == "submit_msg") {
         $query = mysql_query($query) or die(mysql_error());
 
         while ($row = mysql_fetch_row($query)) {
-            $query = "INSERT INTO sips_msg (`from`, `to`, `msg`, `type`, `event_date`) VALUES ('$sent_from', '$row[0]', '$sent_msg', '$sent_msg_type', '$today')";
-            mysql_query($query) or die(mysql_error());
+            $insert = "INSERT INTO sips_msg (`from`, `to`, `msg`, `type`, `event_date`) VALUES ('$sent_from', '$row[0]', '$sent_msg', '$sent_msg_type', '$today')";
+            mysql_query($insert) or die(mysql_error());
         }
 
     }
