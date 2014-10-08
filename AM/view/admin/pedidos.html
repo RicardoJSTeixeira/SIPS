@@ -15,66 +15,72 @@
 </ul>
 <div class="tab-content tabs-main-content">
 
-    <div class="tab-pane active" id="mail">
+    <div class="tab-pane active master_pedido_div" id="mail">
         <div class="grid-title">
             <div class="pull-left">Correio</div>
             <div class="pull-right">
+                <button class="btn btn-danger toggle_aproved" data-type="correio" ><i class='icon-eye-close'></i>Aprovados</button>
                 <button class="btn btn-lg btn-info" id="export_C"><i class='icon-download'></i>Transferir</button>
+
             </div>
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_correio_master_div" >
-            <table class="table table-bordered table-mod" id="pedidos_correio_datatable"></table>
+            <table class="table table-bordered table-mod datables_updatable" id="pedidos_correio_datatable"></table>
             <div class="clear"></div>
         </div>
     </div>
-    <div class="tab-pane" id="frt">
+    <div class="tab-pane master_pedido_div" id="frt">
         <div class="grid-title">
             <div class="pull-left">Relatório de Frota</div>
             <div class="pull-right">
+                <button class="btn btn-danger toggle_aproved" data-type="frota"><i class='icon-eye-close'></i>Aprovados</button>
                 <button class="btn btn-lg btn-info" id="export_F"><i class='icon-download'></i>Transferir</button>
             </div>
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_frota_master_div"  >
-            <table class="table table-bordered table-mod" id="pedidos_frota_datatable"></table>
+            <table class="table table-bordered table-mod datables_updatable" id="pedidos_frota_datatable"></table>
             <div class="clear"></div>
         </div>
     </div>
-    <div class="tab-pane" id="stk">
+    <div class="tab-pane master_pedido_div" id="stk">
         <div class="grid-title">
-            <div class="pull-left">Relatório de Stock</div>   
+            <div class="pull-left">Relatório de Stock</div>
             <div class='pull-right'>
+                <button class="btn btn-danger toggle_aproved" data-type="stock"><i class='icon-eye-close'></i>Aprovados</button>
                 <button class="btn btn-lg btn-info" id="export_S"><i class='icon-download'></i>Transferir</button>
-            </div>   
+            </div>
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_stock_master_div"  >
-            <table class="table table-bordered table-mod" id="pedidos_stock_datatable"></table>
+            <table class="table table-bordered table-mod datables_updatable" id="pedidos_stock_datatable"></table>
             <div class="clear"></div>
         </div>
     </div>
-    <div class="tab-pane" id="mstk">
+    <div class="tab-pane master_pedido_div" id="mstk">
         <div class="grid-title">
             <div class="pull-left">Movimentações de Stock</div>
             <div class="pull-right">
+                <button class="btn btn-danger toggle_aproved" data-type="mov_stock"><i class='icon-eye-close'></i>Aprovados</button>
                 <button class="btn btn-lg btn-info" id="export_MS"><i class='icon-download'></i>Transferir</button>
             </div>
         </div>
         <div class="grid-content div_admin_edit" id="pedidos_movimentacao_master_div"  >
-            <table class="table table-bordered table-mod" id="pedidos_movimentacao_datatable"></table>
+            <table class="table table-bordered table-mod datables_updatable" id="pedidos_movimentacao_datatable"></table>
             <div class="clear"></div>
         </div>
     </div>
-    <div class="tab-pane" id="enc">
+    <div class="tab-pane master_pedido_div" id="enc">
         <div class="grid-title">
             <div class="pull-left">
                 Gestão de Encomendas
             </div>
             <div class="pull-right">
+                <button class="btn btn-danger toggle_aproved" data-type="encomenda"><i class='icon-eye-close'></i>Aprovados</button>
                 <button class="btn btn-lg btn-info" id="export_ENC"><i class='icon-download'></i>Transferir</button>
 
             </div>
         </div>
         <div class="grid-content div_admin_edit" id="requisition_master_div"  >
-            <table class="table table-bordered table-mod" id="view_requisition_datatable"></table>
+            <table class="table table-bordered table-mod datables_updatable" id="view_requisition_datatable"></table>
             <div class="clear"></div>
         </div>
     </div>
@@ -125,6 +131,14 @@
             $('.tabs-main a:last').tab('show');
         }
 
+    });
+
+    $(".toggle_aproved").click(function(e)
+    {
+        e.preventDefault();
+        $(this).find("i").toggleClass("icon-eye-open").toggleClass("icon-eye-close");
+        $(this).toggleClass("btn-success").toggleClass("btn-danger");
+       $(this).parents(".master_pedido_div").find(".datables_updatable").dataTable().fnReloadAjax();
     });
 
 </script>

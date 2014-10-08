@@ -1,14 +1,15 @@
 <div id="admin_extra_zone"></div>
 
-<div class="grid">
+<div class="grid master_pedido_div">
     <div class="grid-title">
         <div class="pull-left">Apoio Marketing</div>
         <div class="pull-right">
+            <button class="btn btn-danger toggle_aproved" data-type="apoio_mkt"><i class='icon-eye-close'></i>Aprovados</button>
             <button class="btn btn-lg btn-info" id="export_AM"><i class='icon-download'></i>Transferir</button>
         </div>
     </div>
     <div class="grid-content div_admin_edit" id="pedidos_apoio_marketing_master_div"  >
-        <table class="table table-bordered table-mod" id="pedidos_apoio_marketing_datatable"></table>
+        <table class="table table-bordered table-mod datables_updatable" id="pedidos_apoio_marketing_datatable"></table>
         <div class="clear"></div>
     </div>
 </div>
@@ -32,5 +33,11 @@
     });
 
 
-
+    $(".toggle_aproved").click(function(e)
+    {
+        e.preventDefault();
+        $(this).find("i").toggleClass("icon-eye-open").toggleClass("icon-eye-close");
+        $(this).toggleClass("btn-success").toggleClass("btn-danger");
+        $(this).parents(".master_pedido_div").find(".datables_updatable").dataTable().fnReloadAjax();
+    });
 </script>

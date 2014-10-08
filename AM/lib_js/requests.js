@@ -183,7 +183,9 @@ var Requests = function (basic_path, options_ext) {
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"});
+                    aoData.push({"name": "action", "value": "get_apoio_marketing_to_datatable"}, {
+                        "name": "show_aproved", "value": am_zone.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
+                    });
                 },
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
                     {"sTitle": "User", "bVisible": (SpiceU.user_level > 5)},
@@ -408,7 +410,9 @@ var Requests = function (basic_path, options_ext) {
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"});
+                    aoData.push({"name": "action", "value": "get_relatorio_frota_to_datatable"}, {
+                        "name": "show_aproved", "value": rf_zone.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
+                    });
                 },
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
                     {"sTitle": "User", "sWidth": "80px", "bVisible": (SpiceU.user_level > 5)},
@@ -579,7 +583,11 @@ var Requests = function (basic_path, options_ext) {
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "get_relatorio_correio_to_datatable"}
+                    aoData.push({
+                            "name": "action", "value": "get_relatorio_correio_to_datatable"
+                        }, {
+                            "name": "show_aproved", "value": rc_zone.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
+                        }
                     );
                 },
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
@@ -592,6 +600,9 @@ var Requests = function (basic_path, options_ext) {
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
                     {"sTitle": "sort", "bVisible": false},
                     {"sTitle": "object", "bVisible": false}],
+                "fnInitComplete": function (oSettings, json) {
+
+                },
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_C').click(function (event) {
@@ -889,7 +900,9 @@ var Requests = function (basic_path, options_ext) {
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}
+                    aoData.push({"name": "action", "value": "get_relatorio_stock_to_datatable"}, {
+                            "name": "show_aproved", "value": rms_zone.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
+                        }
                     );
                 },
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},
@@ -1155,7 +1168,9 @@ var Requests = function (basic_path, options_ext) {
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}
+                    aoData.push({"name": "action", "value": "get_relatorio_movimentacao_to_datatable"}, {
+                            "name": "show_aproved", "value": rmovs.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
+                        }
                     );
                 },
                 "aoColumns": [{"sTitle": "ID", "sWidth": "35px"},

@@ -11,11 +11,15 @@ Class requisitions
         $this->_db = $db;
     }
 
-    public function get_requisitions_to_datatable()
+    public function get_requisitions_to_datatable($show_aproved)
     {
+        $approved_toggle = "";
+        if ($show_aproved!="true")
+            $approved_toggle = " and sr.status<>1";
+
         $result['aaData'] = array();
-        $filter = ($this->_user_level == 6) ? ' where sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' where sr.user like "' . $this->_user_id . '" ' : '');
-        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id $filter  ";
+        $filter = ($this->_user_level == 6) ? ' and sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' and sr.user like "' . $this->_user_id . '" ' : '');
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where 1 $filter $approved_toggle  ";
 
         $stmt = $this->_db->prepare($query);
         $stmt->execute();

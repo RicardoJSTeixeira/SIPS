@@ -47,11 +47,15 @@ class apoio_marketing extends requests_class
         return $this->_db->lastInsertId();
     }
 
-    public function get_to_datatable()
+    public function get_to_datatable($show_aproved)
     {
+        $approved_toggle = "";
+        if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";
+
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing $filter limit 20000";
+$filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
+        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing where 1 $filter $approved_toggle limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -198,7 +202,7 @@ class apoio_marketing extends requests_class
         $query = "INSERT INTO `spice_codigos_mkt`(`codmkt`, `description`) VALUES (:codmkt,:description) ON DUPLICATE KEY UPDATE codmkt=:codmkt1, description=:description1";
         $stmt = $this->_db->prepare($query);
         foreach ($codes as $lines) {
-                     $stmt->execute(array(":codmkt" => $lines[0], ":description"=>$lines[1],":codmkt1" => $lines[0], ":description1"=>$lines[1]));
+            $stmt->execute(array(":codmkt" => $lines[0], ":description" => $lines[1], ":codmkt1" => $lines[0], ":description1" => $lines[1]));
         }
         return json_encode(true);
     }
@@ -225,7 +229,8 @@ class apoio_marketing extends requests_class
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function get_marketing_code_to_datatable()    {
+    public function get_marketing_code_to_datatable()
+    {
         $result['aaData'] = array();
         $query = "SELECT * FROM spice_codigos_mkt";
         $stmt = $this->_db->prepare($query);
@@ -257,15 +262,19 @@ class correio extends requests_class
         $query = "INSERT INTO `spice_report_correio`(`user`, `carta_porte`, `data_envio`,  `anexo`, `comments`) VALUES (:user,:carta_porte,:data_envio,:anexo,:comments)";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user" => $this->user_id, ":carta_porte" => $carta_porte, ":data_envio" => $data, ":anexo" => json_encode($input_doc_obj_assoc), ":comments" => $comments));
-        return array(    $this->_db->lastInsertId(), $this->user_id, $carta_porte,  $data,  json_encode($input_doc_obj_assoc),  $comments)
-;
+        return array($this->_db->lastInsertId(), $this->user_id, $carta_porte, $data, json_encode($input_doc_obj_assoc), $comments);
     }
 
-    public function get_to_datatable()
+    public function get_to_datatable($show_aproved)
     {
+        $approved_toggle = "";
+        if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";
+
+
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio $filter limit 20000";
+        $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
+        $query = "SELECT id,user,carta_porte,data_envio,anexo,comments,status from spice_report_correio where 1  $filter $approved_toggle limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -330,7 +339,7 @@ class correio extends requests_class
         $query = "SELECT anexo FROM spice_report_correio WHERE id = :id";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
-        $anexos=array();
+        $anexos = array();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $_anexos = json_decode($row["anexo"]);
             foreach ($_anexos as $value) {
@@ -379,14 +388,21 @@ class frota extends requests_class
         $query = "INSERT INTO `spice_report_frota` (`user`, `data`, `matricula`, `km`, `viatura`, `comments`, `ocorrencia`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias)));
-        return array($this->_db->lastInsertId(),$this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias));
+        return array($this->_db->lastInsertId(), $this->user_id, $data, $matricula, $km, $viatura, $comments, json_encode($ocorrencias));
     }
 
-    public function get_to_datatable()
+    public function get_to_datatable($show_aproved)
     {
+
+        $approved_toggle = "";
+        if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";
+
+
+
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota $filter limit 20000";
+        $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
+        $query = "SELECT id, user, data, matricula, km, viatura, comments, ocorrencia, status from spice_report_frota where 1 $filter $approved_toggle limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -483,14 +499,18 @@ class mensal_stock extends requests_class
         $query = "INSERT INTO `spice_report_stock` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
-        return array($this->_db->lastInsertId(),$this->user_id, $data, json_encode($produtos));
+        return array($this->_db->lastInsertId(), $this->user_id, $data, json_encode($produtos));
     }
 
-    public function get_to_datatable()
+    public function get_to_datatable($show_aproved)
     {
+        $approved_toggle = "";
+        if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";
+
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data, produtos, status from spice_report_stock $filter limit 20000";
+        $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
+        $query = "SELECT id, user, data, produtos, status from spice_report_stock where 1 $filter $approved_toggle limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -595,14 +615,19 @@ class movimentacao_stock extends requests_class
         $query = "INSERT INTO `spice_report_movimentacao` (`user`, `data`, `produtos`) VALUES (?, ?, ?)";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array($this->user_id, $data, json_encode($produtos)));
-        return array($this->_db->lastInsertId(),$this->user_id, $data, json_encode($produtos));
+        return array($this->_db->lastInsertId(), $this->user_id, $data, json_encode($produtos));
     }
 
-    public function get_to_datatable()
+    public function get_to_datatable($show_aproved)
     {
+
+        $approved_toggle = "";
+        if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";
+
         $result['aaData'] = array();
-        $filter = ($this->user_level == 6) ? ' where user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' where user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao $filter limit 20000";
+        $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
+        $query = "SELECT id, user, entry_date, produtos, status from spice_report_movimentacao where 1 $filter $approved_toggle limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -671,7 +696,8 @@ class movimentacao_stock extends requests_class
     private function getUser($id)
     {
         $query = "SELECT user FROM spice_report_movimentacao WHERE id = :id";
-        $stmt = $this->_db->prepare($query);-
+        $stmt = $this->_db->prepare($query);
+        -
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }

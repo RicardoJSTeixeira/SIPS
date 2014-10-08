@@ -47,9 +47,11 @@ if (file_exists("/etc/astguiclient.conf")) {
     }
 }
 
+$VARDB_server="sipsam.dyndns.org";
 $host = "mysql:host=" . $VARDB_server . ";dbname=" . $VARDB_database . ";";
 $varDbUser = "sipsadmin";
 $varDbPass = "sipsps2012";
+
 try {
 
 
