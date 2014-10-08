@@ -8,7 +8,7 @@ abstract class requests_class
     public $user_id = "no_user";
     public $user;
 
-    public function __construct($db, $user_level, $user_id, $user)
+    public function __construct(PDO $db, $user_level, $user_id, $user)
     {
         $this->user_level = $user_level;
         $this->user_id = $user_id;
@@ -622,8 +622,8 @@ class movimentacao_stock extends requests_class
     {
 
         $approved_toggle = "";
-        if ($show_aproved!="true")
-            $approved_toggle = " and status<>1";
+        /*if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";*/
 
         $result['aaData'] = array();
         $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
@@ -697,7 +697,6 @@ class movimentacao_stock extends requests_class
     {
         $query = "SELECT user FROM spice_report_movimentacao WHERE id = :id";
         $stmt = $this->_db->prepare($query);
-        -
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch(PDO::FETCH_OBJ);
     }

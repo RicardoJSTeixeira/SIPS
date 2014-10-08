@@ -4,7 +4,7 @@
     <div class="grid-title">
         <div class="pull-left">Apoio Marketing</div>
         <div class="pull-right">
-            <button class="btn btn-danger toggle_aproved" data-type="apoio_mkt"><i class='icon-eye-close'></i>Aprovados</button>
+            <button class="btn btn-danger toggle_aproved hide" data-type="apoio_mkt"><i class='icon-eye-close'></i>Aprovados</button>
             <button class="btn btn-lg btn-info" id="export_AM"><i class='icon-download'></i>Transferir</button>
         </div>
     </div>
@@ -32,12 +32,12 @@
 
     });
 
-
+/*
     $(".toggle_aproved").click(function(e)
     {
         e.preventDefault();
         $(this).find("i").toggleClass("icon-eye-open").toggleClass("icon-eye-close");
         $(this).toggleClass("btn-success").toggleClass("btn-danger");
         $(this).parents(".master_pedido_div").find(".datables_updatable").dataTable().fnReloadAjax();
-    });
+    });*/
 </script>
