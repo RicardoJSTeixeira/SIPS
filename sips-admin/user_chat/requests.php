@@ -97,7 +97,7 @@ if ($action == "submit_msg") {
             $query = mysql_query($query) or die(mysql_error());
         }
     } else {
-        $sent_groups = implode("','", mysql_real_escape_string($sent_groups));
+        $sent_groups = implode("','", $sent_groups);
         $query = "SELECT user FROM vicidial_users WHERE user_group IN ('$sent_groups')";
         $query = mysql_query($query) or die(mysql_error());
 
