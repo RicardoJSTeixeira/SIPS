@@ -87,7 +87,8 @@ switch ($action) {
         $id_reclamacao=mysql_insert_id();
 
 
-        $consecionarios=file_get_contents("emails.json");
+        $consecionarios_raw=file_get_contents("emails.json");
+        $consecionarios=json_decode($consecionarios_raw);
         if ($tipo) {
             $transport = Swift_SmtpTransport::newInstance('mail.viragem.com', 465, 'ssl')
                     ->setUsername('viragem@viragem.com')
@@ -104,7 +105,7 @@ switch ($action) {
 
             $message
                     ->setFrom(array('viragem@viragem.com' => 'Viragem'))
-                    ->setSubject("#$id_reclamacao $row[matricula] $consecionarios->concessionarios[$concessionario]->nome $tipo_reclamacao")
+                    ->setSubject("#$id_reclamacao $row[matricula] ".$consecionarios->concessionarios[$concessionario]->nome." $tipo_reclamacao")
                     ->setBody(
                             '
 <div align="center">
