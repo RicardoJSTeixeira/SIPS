@@ -57,40 +57,40 @@ $stmtUpdate = $db->prepare("UPDATE sips_sd_reservations SET extra_id=:navid WHER
 $stmtSetRes = $db->prepare("INSERT INTO `sips_sd_reservations` (`start_date`, `end_date`,`id_reservation_type`, `id_resource`, `id_user`, `lead_id`, `extra_id`) VALUES (:start, :end, :res_type, :id_rsc, :user, :lead_id, :nav_id)");
 $stmtSetClient = $db->prepare("INSERT INTO vicidial_list 
     (entry_date, status, user, list_id, 
-    PHONE_NUMBER, extra2, TITLE, FIRST_NAME, MIDDLE_INITIAL, LAST_NAME,
-    DATE_OF_BIRTH, ALT_PHONE, ADDRESS3, EMAIL, ADDRESS1, ADDRESS2, extra4,
-    POSTAL_CODE, CITY, PROVINCE, STATE, COUNTRY_CODE, extra3, extra1, extra5,
-    SECURITY_PHRASE, COMMENTS, extra6) VALUES
+    phone_number, extra2, title, first_name, middle_initial, last_name,
+    date_of_birth, alt_phone, address3, email, address1, address2, extra4,
+    postal_code, city, province, state, country_code, extra3, extra1, extra5,
+    security_phrase, comments, extra6) VALUES
     (NOW(), 'NEW', :user, :list_id,
     :phone, :ref_client, :title, :name, :middle_name, :last_name,
     :date_of_birth, :alt_phone, :alt_phone2, :email, :address1, :address2, :address3,
     :postal, :local, :concelho, :distrito, :cod_pais, :area_code, :cod_mkt, :compart,
     :pref_marc, :comments, :to_issue)");
 $stmtEditClient = $db->prepare("UPDATE
-    vicidial_list SET
-    PHONE_NUMBER=:phone,
+    vicidial_list ET
+    phone_number=:phone,
     extra2=:ref_client,
-    TITLE= :title,
-    FIRST_NAME=:name,
-    MIDDLE_INITIAL =:middle_name,
-    LAST_NAME=:last_name,
-    DATE_OF_BIRTH=:date_of_birth,
-    ALT_PHONE=:alt_phone,
-    ADDRESS3=:alt_phone2,
-    EMAIL=:email,
-    ADDRESS1=:address1,
-    ADDRESS2=:address2,
+    title= :title,
+    first_name=:name,
+    middle_initial =:middle_name,
+    last_name=:last_name,
+    date_of_birth=:date_of_birth,
+    alt_phone=:alt_phone,
+    address3=:alt_phone2,
+    email=:email,
+    address1=:address1,
+    address2=:address2,
     extra4=:address3,
-    POSTAL_CODE=:postal,
-    CITY=:local,
-    PROVINCE=:concelho,
-    STATE=:distrito,
-    COUNTRY_CODE=:cod_pais,
+    postal_code=:postal,
+    city=:local,
+    province=:concelho,
+    state=:distrito,
+    country_code=:cod_pais,
     extra3=:area_code,
     extra1=:cod_mkt,
     extra5=:compart,
-    SECURITY_PHRASE=:pref_marc,
-    COMMENTS=:comments
+    security_phrase=:pref_marc,
+    comments=:comments
     WHERE
     lead_id=:id");
 $stmtGetClient = $db->prepare("SELECT lead_id FROM sips_sd_reservations WHERE id_reservation=:id");
