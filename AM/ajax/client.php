@@ -20,14 +20,14 @@ $js = array();
 $log = new Logger($db, $user->getUser());
 switch ($action) {
     case 'byName':
-        $query = "SELECT  first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id limit 1";
+        $query = "SELECT first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id LIMIT 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
             array("name" => "Cod. Mkt.", "value" => (String)$row->codmkt),
             array("name" => "Ref. Cliente", "value" => (String)$row->refClient),
-            array("name" => "Nome", "value" => (String)$row->first_name . " " . $row->last_name),
+            array("name" => "Nome", "value" => (String)$row->first_name . " " . $row->middle_initial . " " . $row->last_name),
             array("name" => "Localidade", "value" => (String)$row->local),
             array("name" => "Telefone", "value" => (String)$row->phone_number),
             array("name" => "Codigo Postal", "value" => (String)$row->postal_code),
@@ -35,13 +35,13 @@ switch ($action) {
         );
         break;
     case 'default':
-        $query = "SELECT lead_id, first_name, last_name, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', comments FROM vicidial_list WHERE lead_id=:id limit 1";
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, address1, address2, extra4 'address4', city 'local', postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', comments FROM vicidial_list WHERE lead_id=:id LIMIT 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         $js = array(
             "id" => (int)$row->lead_id,
-            "name" => (String)$row->first_name . " " . $row->last_name,
+            "name" => (String)$row->first_name . " " . $row->middle_initial . " " . $row->last_name,
             "address" => (String)$row->address1 . " " . $row->address2 . " " . $row->address4,
             "postalCode" => (String)$row->postal_code,
             "bDay" => (String)$row->date_of_birth,
@@ -61,7 +61,7 @@ switch ($action) {
             "phone" => (int)$row->phone_number,
             "phone1" => (int)$row->alt_phone,
             "phone2" => (int)$row->address3,
-            "name" => (String)$row->first_name . " " . $row->last_name,
+            "name" => (String)$row->first_name . " " . $row->middle_initial . " " . $row->last_name,
             "address" => (String)$row->address1 . " " . $row->address2 . " " . $row->address4,
             "local" => (String)$row->local,
             "postalCode" => (String)$row->postal_code,
@@ -76,7 +76,7 @@ switch ($action) {
         break;
     case 'byLeadToInfo':
         $js = array();
-        $query = "SELECT Name, Display_name FROM vicidial_list_ref WHERE campaign_id=:campaign_id AND active=1 Order by field_order ASC";
+        $query = "SELECT Name, Display_name FROM vicidial_list_ref WHERE campaign_id=:campaign_id AND active=1 ORDER BY field_order ASC";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":campaign_id" => $user->getUser()->campaign));
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -95,7 +95,7 @@ switch ($action) {
         if (strlen($value) == 0)
             break;
 
-        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list where $what=:value limit 100";
+        $query = "SELECT lead_id, first_name, middle_initial, last_name, phone_number, date_of_birth, extra2 'refClient', address1, postal_code, city, extra8 'nif' FROM vicidial_list WHERE $what=:value LIMIT 100";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":value" => $value));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -113,7 +113,7 @@ switch ($action) {
         break;
 
     case 'check_postal_code':
-        $query = "SELECT  rua,cod_postal,localidade,zona,freguesia,distrito,concelho FROM cp7 where cod_postal like :postal_code  limit 300";
+        $query = "SELECT rua, cod_postal, localidade, zona, freguesia, distrito, concelho FROM cp7 WHERE cod_postal LIKE :postal_code  LIMIT 300";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":postal_code" => "%" . $postal_code . "%"));
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -129,7 +129,7 @@ switch ($action) {
         break;
 
     case 'update_cod_mkt':
-        $query = "UPDATE vicidial_list SET extra1=:codmkt where lead_id=:id";
+        $query = "UPDATE vicidial_list SET extra1=:codmkt WHERE lead_id=:id";
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":codmkt" => $codmkt, ":id" => $id));
         break;
