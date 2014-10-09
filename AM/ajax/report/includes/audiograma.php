@@ -13,7 +13,7 @@ $query = "SELECT extra2 'codCliente', a.extra_id AS 'itLogID', a.lead_id , id_re
                 INNER JOIN vicidial_list d ON a.lead_id = d.lead_id
                 INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
                 INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid
-                WHERE f.closed=1 AND f.data BETWEEN :data_inicial AND :data_final GROUP BY g.uniqueid LIMIT 20000";
+                WHERE f.closed=1 AND f.exame=1 AND f.data BETWEEN :data_inicial AND :data_final GROUP BY g.uniqueid LIMIT 20000";
 
 $stmt = $db->prepare($query);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));

@@ -29,7 +29,7 @@ switch ($action) {
                 INNER JOIN vicidial_list d ON a.lead_id = d.lead_id
                 INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
                 INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid
-                WHERE f.closed=1 group by g.uniqueid limit 20000";
+                WHERE f.closed=1 AND f.exame=1 group by g.uniqueid limit 20000";
 
         $stmt = $db->prepare($query);
         $stmt->execute();
