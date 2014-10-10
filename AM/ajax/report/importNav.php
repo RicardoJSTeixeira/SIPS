@@ -67,7 +67,7 @@ $stmtSetClient = $db->prepare("INSERT INTO vicidial_list
     :postal, :local, :concelho, :distrito, :cod_pais, :area_code, :cod_mkt, :compart,
     :pref_marc, :comments, :to_issue)");
 $stmtEditClient = $db->prepare("UPDATE
-    vicidial_list ET
+    vicidial_list SET
     phone_number=:phone,
     extra2=:ref_client,
     title= :title,
