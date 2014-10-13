@@ -3,20 +3,32 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 class="myModalLabel"></h3>
     </div>
+
+
+
     <table class="table table-mod table-striped">
         <thead>
-            <tr>
-                <th>Produto</th>
-                <th style="width: 62px">Categoria</th>
-                <th>Cor</th>
-                <th title="Quantidade" style="width: 20px">Quant.</th>
-                <th title="Tamanho" style="width: 20px">Tamanho.</th>
-            </tr>
+        <tr>
+            <th>Produto</th>
+            <th style="width: 62px">Categoria</th>
+            <th>Cor</th>
+            <th title="Quantidade" style="width: 20px">Quant.</th>
+            <th title="Tamanho" style="width: 20px">Tamanho.</th>
+        </tr>
         </thead>
         <tbody id="show_requisition_products_tbody">
 
         </tbody>
     </table>
+
+    <div class="formRow" id="show_requisition_modal_comments">
+        <span>Commentários:</span>
+        <div class="formRight">
+            <p id="show_requisition_obs"></p>
+        </div>
+    </div>
+    <div class="clear"></div>
+
     <div class="modal-footer">
         <button class="btn" id="print_requisition"><i class="icon-print"></i>Imprimir</button>
         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Sair</button>
@@ -31,9 +43,9 @@
     </div>
     <table class="table table-mod table-striped">
         <thead>
-            <tr>
-                <th>Nome</th>
-            </tr>
+        <tr>
+            <th>Nome</th>
+        </tr>
         </thead>
         <tbody id="show_requisition_anexos_tbody">
 

@@ -78,7 +78,7 @@ Class requisitions
 
     public function get_requisitions_by_id($id_req)
     {
-        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,sr.products,sr.status, sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  FROM spice_requisition sr LEFT JOIN vicidial_list vl ON vl.lead_id=sr.lead_id WHERE sr.id=:id_req  ";
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,sr.products,sr.status, sr.lead_id,sr.comments,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  FROM spice_requisition sr LEFT JOIN vicidial_list vl ON vl.lead_id=sr.lead_id WHERE sr.id=:id_req  ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id_req" => $id_req));
         $result = array();
