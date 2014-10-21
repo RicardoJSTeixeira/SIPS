@@ -359,7 +359,7 @@ var requisition = function (geral_path, options_ext) {
                 aoData.push({
                     "name": "action",
                     "value": "listar_requisition_to_datatable"
-                },{
+                }, {
                     "name": "show_aproved", "value": table_path.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
                 });
             },
@@ -465,7 +465,7 @@ var requisition = function (geral_path, options_ext) {
         });
         table_path.on("click", ".ver_cliente", function () {
             var client = new ClientBox();
-           client.initModal($(this).data("lead_id"), null);
+            client.initModal($(this).data("lead_id"), null);
         });
         //VER PRODUTOS DE ENCOMENDAS FEITAS
         table_path.on("click", ".ver_requisition_products", function () {
@@ -484,7 +484,7 @@ var requisition = function (geral_path, options_ext) {
                 };
 
                 EData.id_req = ~~$(that).parents("tr").find("td").first().text();
-                modal.find(".myModalLabel").text("Encomenda #"+  EData.id_req );
+                modal.find(".myModalLabel").text("Encomenda #" + EData.id_req);
                 $.post('ajax/requisition.php', {
                     action: "get_encomenda",
                     id_req: EData.id_req
@@ -504,11 +504,16 @@ var requisition = function (geral_path, options_ext) {
                     else
                         EData.bInfo.push({});
 
+                    if (encomenda[0].comments.length)
+                    modal.find("#show_requisition_modal_comments").show().end()
+                        .find("#show_requisition_obs").text(encomenda[0].comments);
+                    else
+                    modal.find("#show_requisition_modal_comments") .hide();
                     $.each(products, function () {
                         if (typeof this == "object") {
                             for (i = 0; i < this.qcs.length; i++) {
 
-                                console.log(this.qcs[i].quantity);
+
                                 this.qcs[i].color_name = (!this.qcs[i].color_name) ? "Padrão" : this.qcs[i].color_name;
                                 EData.products.push({
                                     Name: this.product_info.name,
@@ -541,18 +546,20 @@ var requisition = function (geral_path, options_ext) {
         table_path.on("click", ".ver_requisition_anexo", function () {
             modal_anexo.modal("show");
             var this_folder = $(this).val() + "_encomenda";
-            var this_id=$(this).parents("tr").find("td").first().text();
+            var this_id = $(this).parents("tr").find("td").first().text();
             $.msg();
             $.post('/AM/ajax/upload_file.php', {
                 action: "get_anexos",
                 folder: this_folder
             }, function (data) {
-                var options = "";
-                $.each(data, function () {
-                    options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
-                });
-                modal_anexo.find(".myModalLabel").text("Anexo #"+this_id);
-                modal_anexo.find("#show_requisition_anexos_tbody").html(options);
+                if (data) {
+                    var options = "";
+                    $.each(data, function () {
+                        options += "<tr><td>" + this + "<div class='view-button'><a class='btn btn-mini' href='/AM/ajax/files/" + this_folder + "/" + this + "' download='" + this + "'><i class='icon-download'></i>Download</a></div></td></tr>";
+                    });
+                    modal_anexo.find(".myModalLabel").text("Anexo #" + this_id);
+                    modal_anexo.find("#show_requisition_anexos_tbody").html(options);
+                }
                 $.msg('unblock');
             }, "json").fail(function (data) {
                 $.msg('replace', ((data.responseText.length) ? data.responseText : 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.'));
