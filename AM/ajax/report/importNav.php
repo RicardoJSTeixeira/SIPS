@@ -188,9 +188,9 @@ while (!feof($file)) {
             ":comments" => $buffer[34],
             ":to_issue" => "YES"
         );
-        /*$nc = array_map(function ($a) {
-            return utf8_encode($a);
-        }, $nc);*/
+        $nc = array_map(function ($a) {
+            return mb_convert_encoding($a, "ISO-8859-9", "UTF-8");
+        }, $nc);
         if ($stmtSetClient->execute($nc)) {
 
             $start = strtotime($buffer[31] . " " . $buffer[30]);
