@@ -189,7 +189,7 @@ while (!feof($file)) {
             ":to_issue" => "YES"
         );
         $nc = array_map(function ($a) {
-            return mb_convert_encoding($a, "ISO-8859-9", "UTF-8");
+            return mb_convert_encoding($a, "UTF-8", "ISO-8859-9");
         }, $nc);
         if ($stmtSetClient->execute($nc)) {
 
