@@ -111,38 +111,41 @@ while (!feof($file)) {
         $total++;
         if (((int)$buffer[41]) !== 0) {
             $stmtUpdate->execute(array(":navid" => $buffer[42], ":id" => $buffer[41]));
-            if ($stmtUpdate->rowCount()>0) {
-                $stmtGetClient->execute(array($buffer[41]));
+            if ($stmtUpdate->rowCount() > 0) {
+                $stmtGetClient->execute(array(":id"=>$buffer[41]));
                 $client_id_raw = $stmtGetClient->fetchAll(PDO::FETCH_OBJ);
                 $client_id_raw = array_pop($client_id_raw);
                 $client_id = $client_id_raw->lead_id;
-                $stmtEditClient->execute(
-                    array(
-                        ":phone" => $buffer[15],
-                        ":ref_client" => $buffer[21],
-                        ":title" => $buffer[0],
-                        ":name" => $buffer[2],
-                        ":middle_name" => $buffer[3],
-                        ":last_name" => $buffer[4],
-                        ":date_of_birth" => $buffer[20],
-                        ":alt_phone" => $buffer[16],
-                        ":alt_phone2" => $buffer[17],
-                        ":email" => $buffer[18],
-                        ":address1" => $buffer[5],
-                        ":address2" => $buffer[6],
-                        ":address3" => $buffer[7],
-                        ":postal" => $buffer[9],
-                        ":local" => $buffer[12],
-                        ":concelho" => $buffer[13],
-                        ":distrito" => $buffer[8],
-                        ":cod_pais" => $buffer[14],
-                        ":area_code" => $buffer[10],
-                        ":cod_mkt" => $buffer[1],
-                        ":compart" => $buffer[19],
-                        ":pref_marc" => $buffer[32],
-                        ":comments" => $buffer[34],
-                        ":id" => $client_id
-                    ));
+                $nc = array(
+                    ":phone" => $buffer[15],
+                    ":ref_client" => $buffer[21],
+                    ":title" => $buffer[0],
+                    ":name" => $buffer[2],
+                    ":middle_name" => $buffer[3],
+                    ":last_name" => $buffer[4],
+                    ":date_of_birth" => $buffer[20],
+                    ":alt_phone" => $buffer[16],
+                    ":alt_phone2" => $buffer[17],
+                    ":email" => $buffer[18],
+                    ":address1" => $buffer[5],
+                    ":address2" => $buffer[6],
+                    ":address3" => $buffer[7],
+                    ":postal" => $buffer[9],
+                    ":local" => $buffer[12],
+                    ":concelho" => $buffer[13],
+                    ":distrito" => $buffer[8],
+                    ":cod_pais" => $buffer[14],
+                    ":area_code" => $buffer[10],
+                    ":cod_mkt" => $buffer[1],
+                    ":compart" => $buffer[19],
+                    ":pref_marc" => $buffer[32],
+                    ":comments" => $buffer[34],
+                    ":id" => $client_id
+                );
+                $nc = array_map(function ($a) {
+                    return mb_convert_encoding($a, "UTF-8", "ISO-8859-9");
+                }, $nc);
+                $stmtEditClient->execute($nc);
                 $ok++;
             } else {
                 $notok++;
