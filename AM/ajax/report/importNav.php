@@ -111,7 +111,7 @@ while (!feof($file)) {
         $total++;
         if (((int)$buffer[41]) !== 0) {
             $stmtUpdate->execute(array(":navid" => $buffer[42], ":id" => $buffer[41]));
-            if ($stmtUpdate->rowCount()) {
+            if ($stmtUpdate->rowCount()>0) {
                 $stmtGetClient->execute(array($buffer[41]));
                 $client_id_raw = $stmtGetClient->fetchAll(PDO::FETCH_OBJ);
                 $client_id_raw = array_pop($client_id_raw);
