@@ -89,9 +89,7 @@ function init() {
                 $this.focus();
             });
     });
-    $('#alerts-content,#imessage_placeholder').slimScroll({
-        railDraggable: !1
-    });
+    $('#alerts-content,#imessage_placeholder').slimScroll({});
 
     $(".ichat")
         .on("click", ".dismiss_msg", function () {
