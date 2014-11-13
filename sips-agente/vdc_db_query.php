@@ -7759,16 +7759,16 @@ if ($ACTION == 'updateDISPO') {
     // SMS $dispo_choice $campaign
 
     if (mysql_num_rows(mysql_query("SHOW TABLES LIKE 'sips_status_action'"))) {
-        $query = "Select `type` , `action` from sips_status_action Where status like '$dispo_choice' AND campaign_id like '$campaign';";
+        $query = "Select `type` , `action` from sips_status_action Where status like '$dispo_choice' AND campaign_id like '$campaign' or campaign_id = 'ALL';";
         $rslt = mysql_query($query, $link);
         $rslt = mysql_fetch_assoc($rslt);
 
 
-        if ($rslt[type] == "FILE") {
+        if ($rslt['type'] == "FILE") {
             include "$rslt[action]";
-        } elseif ($rslt[type] == "SMS") {
+        } elseif ($rslt['type'] == "SMS") {
             //do something
-        } elseif ($rslt[type] == "EMAIL") {
+        } elseif ($rslt['type'] == "EMAIL") {
             //do something
         }
     }
