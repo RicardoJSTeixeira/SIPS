@@ -140,11 +140,11 @@ switch ($action) {
         $stringas = json_decode($stringas);
         $query_log=array();
         foreach ($stringas as $string) {
-            $query_string = $query_string . strtolower($string->key) . " = '" . $string->value . "',";
+            $query_string .=  strtolower($string->key) . " = '" . mysql_real_escape_string($string->value) . "',";
             $query_log[$string->key]= $string->value;
         }
-        $query_string = rtrim($query_string, ",");
-        $query = "UPDATE vicidial_list SET $query_string where lead_id=:id";
+        #$query_string = rtrim($query_string, ",");
+        $query = "UPDATE vicidial_list SET $query_string validation=1 where lead_id=:id";
         $stmt = $db->prepare($query);
         $js = $stmt->execute(array(":id" => $id));
         $log->set($id, Logger::T_UPD, Logger::S_CLT, json_encode( $query_log ),Logger::A_NCHANGE);
