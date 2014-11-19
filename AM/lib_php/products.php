@@ -15,7 +15,7 @@ Class products {
     protected $_size;
 
 
-    public function __construct($db) {
+    public function __construct(PDO $db) {
         $this->_db = $db;
     }
 
@@ -221,7 +221,7 @@ class product extends products {
         $this->_category = $category;
         $this->_type = $type;
         $this->_size = $size;
-        $this->_color = $color ? $color : [];
+        $this->_color = $color ? $color : array();
         $this->_active = $active == "true" ? 1 : 0;
         $stmt = $this->_db->prepare("delete from spice_product_assoc where child=:child");
         $stmt->execute(array(":child" => $this->_id));

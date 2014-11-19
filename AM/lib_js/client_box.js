@@ -194,11 +194,26 @@ var ClientBox = function (configs) {
                                 .append($("<button>", {class: "btn icon-alone left dropdown-toggle"}).attr("data-toggle", "dropdown").append($("<i>", {class: "icon-cog"})))
                                 .append($("<div>", {class: " dropdown-menu"})
                                     .append($("<ul>", {style: "text-align:left"})
-                                        .append($("<li>").append($("<a>", {id: "button_nova_marcacao"}).text("Nova Marcação").css("display",isBlocked()?"none":"block").prepend($("<i>", {class: "icon-calendar"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_nova_encomenda"}).text("Nova Encomenda").css("display",isBlocked()?"none":"block").prepend($("<i>", {class: "icon-shopping-cart"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_propostas_comerciais"}).text("Propostas comerciais").prepend($("<i>", {class: "icon-money"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_abrir_pdf"}).text("Abrir Pdf").prepend($("<i>", {class: "icon-user"}))))
-                                        .append($("<li>").append($("<a>", {id: "button_notas"}).text("Notas").prepend($("<i>", {class: "icon-file"}))))
+                                        .append($("<li>").append($("<a>", {
+                                            href: "#",
+                                            id: "button_nova_marcacao"
+                                        }).text("Nova Marcação").css("display", isBlocked() ? "none" : "block").prepend($("<i>", {class: "icon-calendar"}))))
+                                        .append($("<li>").append($("<a>", {
+                                            href: "#",
+                                            id: "button_nova_encomenda"
+                                        }).text("Nova Encomenda").css("display", isBlocked() ? "none" : "block").prepend($("<i>", {class: "icon-shopping-cart"}))))
+                                        .append($("<li>").append($("<a>", {
+                                            href: "#",
+                                            id: "button_propostas_comerciais"
+                                        }).text("Propostas comerciais").prepend($("<i>", {class: "icon-money"}))))
+                                        .append($("<li>").append($("<a>", {
+                                            href: "#",
+                                            id: "button_abrir_pdf"
+                                        }).text("Abrir Pdf").prepend($("<i>", {class: "icon-user"}))))
+                                        .append($("<li>").append($("<a>", {
+                                            href: "#",
+                                            id: "button_notas"
+                                        }).text("Notas").prepend($("<i>", {class: "icon-file"}))))
                                 )
                             ))
                             .append($("<button>", {class: "btn "}).attr("data-dismiss", "modal").text("Fechar"))
@@ -207,12 +222,16 @@ var ClientBox = function (configs) {
                                 id: "button_editar_info_cliente"
                             }).text(" Editar").prepend($("<i>", {class: "icon-edit"})))
                     )
-                )).on("click", "#button_nova_marcacao", function () {
+                )).on("click", "#button_nova_marcacao", function (e) {
+                        e.preventDefault();
+
                         var en = btoa(lead_id);
                         $.history.push("view/calendar.html?id=" + en);
                         modal_html.modal("hide");
                     })
-                    .on("click", "#button_editar_info_cliente", function () {
+                    .on("click", "#button_editar_info_cliente", function (e) {
+                        e.preventDefault();
+
                         me.client_info_editing(function () {
                             me.destroy().initModal(lead_id);
                             $(".datables_updatable").each(function () {
@@ -221,17 +240,24 @@ var ClientBox = function (configs) {
                         });
                         modal_html.modal("hide");
                     })
-                    .on("click", "#button_propostas_comerciais", function () {
+                    .on("click", "#button_propostas_comerciais", function (e) {
+                        e.preventDefault();
+
                         me.getProposta();
                     }).
-                    on("click", "#button_abrir_pdf", function () {
+                    on("click", "#button_abrir_pdf", function (e) {
+                        e.preventDefault();
+
                         me.getPdf();
                     }).
-                    on("click", "#button_notas", function () {
+                    on("click", "#button_notas", function (e) {
+                        e.preventDefault();
+
                         me.notas();
                     })
-                    .on ("click","#button_nova_encomenda",function()
-                {
+                    .on("click", "#button_nova_encomenda", function (e) {
+                    e.preventDefault();
+
                     var en = btoa(lead_id);
                     modal_html.modal("hide");
                     $.history.push("view/new_requisition.html?id=" + en);
@@ -365,7 +391,10 @@ var ClientBox = function (configs) {
             "iDisplayLength": 5,
             "sAjaxSource": '/AM/ajax/users.php',
             "fnServerParams": function (aoData) {
-                aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {"name": "lead_id", "value": me.client_info.id});
+                aoData.push({"name": "action", "value": "get_notes_to_datatable"}, {
+                    "name": "lead_id",
+                    "value": me.client_info.id
+                });
             }, "aoColumns": [
                 {"sTitle": "ID", bVisible: false},
                 {"sTitle": "Titulo", "sWidth": "50px"},
@@ -475,7 +504,10 @@ var ClientBox = function (configs) {
             bootbox.confirm("Tem a certeza que quer remover esta nota?", function (result) {
                 if (result) {
                     $.msg();
-                    $.post('/AM/ajax/users.php', {action: "delete_notes", note_id: note_area_div.find("#note_title").data("selected_note")},
+                    $.post('/AM/ajax/users.php', {
+                            action: "delete_notes",
+                            note_id: note_area_div.find("#note_title").data("selected_note")
+                        },
                         function (data) {
                             $.jGrowl("Nota removida com sucesso", 3000);
                             table.fnReloadAjax();
@@ -604,13 +636,28 @@ var ClientBox = function (configs) {
                             class: "input-mini"
                         }).attr('data-prompt-position', 'topRight:120').append([new Option("", ""), new Option("Sr.", "Sr."), new Option("Sra. D.", "Sra. D.")]);
                     } else if (this.name === "extra6") {
-                        elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "NO"});
+                        elmt = $("<input>", {
+                            type: "text",
+                            readonly: true,
+                            id: this.name,
+                            name: this.name,
+                            value: "NO"
+                        });
                     } else if (this.name === "SECURITY_PHRASE") {
-                        elmt = $("<input>", {type: "text", readonly: true, id: this.name, name: this.name, value: "SPICE"});
+                        elmt = $("<input>", {
+                            type: "text",
+                            readonly: true,
+                            id: this.name,
+                            name: this.name,
+                            value: "SPICE"
+                        });
                     } else if (this.name === "POSTAL_CODE") {
                         elmt = $("<input>", {type: "text", id: this.name, name: this.name}).change(function () {
                             if ((this.value.length)) {
-                                $.post("ajax/client.php", {action: "check_postal_code", postal_code: this.value}, function (data1) {
+                                $.post("ajax/client.php", {
+                                    action: "check_postal_code",
+                                    postal_code: this.value
+                                }, function (data1) {
                                     var postal_codes = "";
                                     $.each(data1, function () {
                                         postal_codes += "<tr>\n\
@@ -667,7 +714,11 @@ var ClientBox = function (configs) {
                         elmt.change(function () {
                             if (this.value.length < 9 && (this.name === "PHONE_NUMBER" || this.name === "extra8"))
                                 return false;
-                            $.post("ajax/client.php", {action: "byWhat", what: this.name, value: this.value}, function (clients) {
+                            $.post("ajax/client.php", {
+                                action: "byWhat",
+                                what: this.name,
+                                value: this.value
+                            }, function (clients) {
                                 if (!clients.length)
                                     return false;
                                 var trs = "";
@@ -819,11 +870,11 @@ var ClientBox = function (configs) {
                                     var strings = [];
                                     $.each($("#master :input"), function () {
                                         strings.push({key: $(this).prop("name"), value: $(this).val()});
-                                    })
+                                    });
                                     return JSON.stringify(strings);
                                 }
                             }, function () {
-                                $.jGrowl("Info de cliente editada com sucesso!", 3000)
+                                $.jGrowl("Info de cliente editada com sucesso!", 3000);
                                 if (typeof callback === "function")
                                     callback();
                             });
@@ -842,7 +893,7 @@ var ClientBox = function (configs) {
                     var a = new AutoCompleteCodMkt($("#extra1"), true);
                     a.init();
 
-                    data = JSON.parse(data)
+                    data = JSON.parse(data);
                     $("#PHONE_NUMBER").autotab('numeric');
                     $(".form_datetime").datetimepicker({
                         format: 'dd-mm-yyyy',

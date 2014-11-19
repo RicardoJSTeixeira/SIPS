@@ -40,8 +40,8 @@ switch ($action) {
         break;
 
     case "criar_encomenda":
-        $encomenda=$requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments);
-        $log->set($encomenda[0], Logger::T_INS, Logger::S_ENC, "",logger::A_SENT);
+        $encomenda = $requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments);
+        $log->set($encomenda[0], Logger::T_INS, Logger::S_ENC, "", logger::A_SENT);
         echo json_encode($encomenda);
 
         break;
@@ -53,7 +53,7 @@ switch ($action) {
 
     case "editar_encomenda":
         echo json_encode($requisitions->edit_requisition($clientID, $cod_cliente));
-        $log->set("various", Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Codigo de Cliente editado", "lead_id" => "$clientID")),logger::A_NCHANGE);
+        $log->set("various", Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Codigo de Cliente editado", "lead_id" => "$clientID")), logger::A_NCHANGE);
         break;
 
     case "listar_produtos_por_encomenda":
@@ -72,7 +72,7 @@ switch ($action) {
                 $alert->make($result->user, "Encomenda Aprovada Obs. $message ID:$id", "S_ENC", $id, 1);
             }
         }
-        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Encomenda Aceite", "msg" => "$message")),logger::A_APV);
+        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Encomenda Aceite", "msg" => "$message")), logger::A_APV);
         echo json_encode($result);
         break;
 
@@ -81,12 +81,20 @@ switch ($action) {
         if ($result) {
             $alert->make($result->user, "Encomenda Rejeitada  Motivo: $message ID:$id", "S_ENC", $id, 0);
         }
-        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Encomenda Rejeitada", "msg" => "$message")),logger::A_DECL);
+        $log->set($id, Logger::T_UPD, Logger::S_ENC, json_encode(array("obs" => "Encomenda Rejeitada", "msg" => "$message")), logger::A_DECL);
         echo json_encode($result);
         break;
 
     case "check_month_requisitions":
         echo json_encode($requisitions->check_month_requisitions());
+        break;
+    case "validate_audiograma":
+        $stmt = $db->prepare("SELECT count(*) FROM `spice_audiograma` WHERE lead_id=:id AND date > date_sub(now(),INTERVAL 6 MONTH);");
+        $stmt->execute(array(":id" => $lead_id));
+        $row=$stmt->fetch(PDO::FETCH_NUM);
+
+        echo json_encode($row[0]!="0");
+
         break;
 }
 
