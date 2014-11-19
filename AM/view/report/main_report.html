@@ -6,22 +6,25 @@
         <div class='grid-content'>
             <form id='report_form'>
                 <div class="formRow">
-                    <span>Data inicio</span>
+                    <label for="input_data_inicio" >Data inicio</label>
+
                     <div class="formRight">
-                        <input size="16" type="text" name="date" class="form_datetime validate[required] input-small" data-prompt-position="topRight:120" readonly id="input_data_inicio"  placeholder="Data Inicio">
+                        <input size="16" type="text" name="date" class="form_datetime validate[required] input-small" data-prompt-position="topRight:120" readonly id="input_data_inicio" placeholder="Data Inicio">
                     </div>
-                    <div class="formRow">
-                        <span>Data fim</span>
-                        <div class="formRight">
-                            <input size="16" type="text" name="date" class="form_datetime validate[required] input-small" data-prompt-position="topRight:120" readonly id="input_data_fim"  placeholder="Data Fim">
-                        </div>
+                </div>
+                <div class="formRow">
+                    <label for="input_data_fim" >Data fim</label>
+
+                    <div class="formRight">
+                        <input size="16" type="text" name="date" class="form_datetime validate[required] input-small" data-prompt-position="topRight:120" readonly id="input_data_fim" placeholder="Data Fim">
                     </div>
                 </div>
 
                 <div class="formRow">
-                    <span>Relatório</span>
+                    <label for="report_selector" >Relatório</label>
+
                     <div class="formRight">
-                        <select id='report_selector' class="chosen-select"   data-placeholder="Selecione um relatório" >
+                        <select id='report_selector' class="chosen-select" data-placeholder="Selecione um relatório">
                             <option data-admin="false" value='novasMarc'>Novas Marcações</option>
                             <option data-admin="false" value='lead_id_follow_up_cc'>Novas Leads Call Center</option>
                             <option data-admin="false" value='lead_id_follow_up_dispenser'>Novas Leads Dispenser</option>
@@ -29,6 +32,7 @@
                             <option data-admin="false" value="consulta_result_fecho">Total consultas fechadas, abertas, novas e remarcadas</option>
                             <option data-admin="false" value="consultas">Consultas</option>
                             <option data-admin="false" value="audiograma">Audiograma</option>
+                            <option data-admin="false" value="contacts_changed">Contactos Alterados</option>
                             <option data-admin="true" value="log_requisition">Log de encomendas</option>
                             <option data-admin="true" value="log_frota">Log de frota</option>
                             <option data-admin="true" value="log_correio">Log de correio</option>
@@ -39,34 +43,37 @@
                 </div>
             </form>
             <div class="formRow">
-                <button class="btn btn-success right" id='download_report'><i class='icon-download-alt'></i>Download</button>   
+                <button class="btn btn-success right" id='download_report'><i class='icon-download-alt'></i>Download
+                </button>
             </div>
             <div class="clear"></div>
         </div>
-    </div> 
+    </div>
 
-    <div class="grid span6" >
+    <div class="grid span6">
         <div class="grid-title">
             <div class="pull-left">Importar Relatórios</div>
             <div class="pull-right">
                 <button id="browse" class="btn"><i class="icon-search"></i>Procurar...</button>
-                <button style="display:none" id="start-upload" class="btn btn-info"><i class='icon-upload'></i>Começar Upload</button>
+                <button style="display:none" id="start-upload" class="btn btn-info">
+                    <i class='icon-upload'></i>Começar Upload
+                </button>
             </div>
         </div>
         <table class="table table-mod table-striped">
             <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Progresso</th>
-                    <th>Tamanho</th>
-                </tr>
+            <tr>
+                <th>Nome</th>
+                <th>Progresso</th>
+                <th>Tamanho</th>
+            </tr>
             </thead>
             <tbody id="filelist"></tbody>
         </table>
         <div class="clear"></div>
-    </div> 
+    </div>
 </div>
 
 <script src="/bootstrap/js/plupload.full.min.js"></script>
 <script type="text/javascript" src="/bootstrap/js/plupload_language/pt_BR.js"></script>
-<script type="text/javascript" src="/AM/js/report/main_report.js" ></script>
+<script type="text/javascript" src="/AM/js/report/main_report.js"></script>
