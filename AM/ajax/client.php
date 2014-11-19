@@ -20,7 +20,7 @@ $js = array();
 $log = new Logger($db, $user->getUser());
 switch ($action) {
     case 'byName':
-        $query = "SELECT first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient' FROM vicidial_list WHERE lead_id=:id LIMIT 1";
+        $query = "SELECT first_name, middle_initial, last_name, address1, address2, city 'local', phone_number, postal_code, date_of_birth, extra1 'codmkt', extra2 'refClient', comments FROM vicidial_list WHERE lead_id=:id LIMIT 1";
         $stmt = $db->prepare($query);
         $stmt->execute(array(":id" => $id));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
@@ -31,7 +31,8 @@ switch ($action) {
             array("name" => "Localidade", "value" => (String)$row->local),
             array("name" => "Telefone", "value" => (String)$row->phone_number),
             array("name" => "Codigo Postal", "value" => (String)$row->postal_code),
-            array("name" => "Morada", "value" => (String)$row->address1 . " " . $row->address2)
+            array("name" => "Morada", "value" => (String)$row->address1 . " " . $row->address2),
+            array("name" => "Comentários", "value" => (String)$row->comments)
         );
         break;
     case 'default':
