@@ -4673,7 +4673,7 @@ $h++;
                                                 return false;" class="btn btn-primary">Marcar</a>
                                     </span>
                                     <input type="hidden" name="MDLeadID" id="MDLeadID" value="" />
-                                    <input type="hidden" name="MDType" id="MDLeadID" value="" />
+                                    <input type="hidden" name="MDType" id="MDType" value="" />
                                 </span>
                             </td>
                         </tr>
