@@ -256,12 +256,12 @@ var ClientBox = function (configs) {
                         me.notas();
                     })
                     .on("click", "#button_nova_encomenda", function (e) {
-                    e.preventDefault();
+                        e.preventDefault();
 
-                    var en = btoa(lead_id);
-                    modal_html.modal("hide");
-                    $.history.push("view/new_requisition.html?id=" + en);
-                });
+                        var en = btoa(lead_id);
+                        modal_html.modal("hide");
+                        $.history.push("view/new_requisition.html?id=" + en);
+                    });
 
                 if (!client_extra_count)
                     modal_html.find("#extra_info_div").parent().remove();
@@ -703,9 +703,9 @@ var ClientBox = function (configs) {
                     } else if (this.name === "COMMENTS") {
                         elmt = $("<textarea>", {id: this.name, name: this.name});
                     } else if (this.name === "extra1") {
-                        elmt = $("<input>", {type: "text", id: this.name, name: this.name});
-                        var a = new AutoCompleteCodMkt(elmt);
-                        a.init();
+                        elmt = $("<input>", {type: "text", id: this.name, name: this.name, readonly: true});
+                        /*var a = new AutoCompleteCodMkt(elmt);
+                         a.init();*/
                     } else {
                         elmt = $("<input>", {type: "text", id: this.name, name: this.name});
                     }
