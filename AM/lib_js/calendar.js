@@ -23,6 +23,7 @@ Calendar = (function () {
 
         this.modal_special = modals.special;
         this.calendar = undefined;
+
         this.config = {
             header: {
                 center: 'agendaDay agendaWeek month'
@@ -155,8 +156,11 @@ Calendar = (function () {
                             me.calendar.fullCalendar('renderEvent', cEO, true);
                             $("#external-events").remove();
                             $.msg('unblock');
+
                             if (cEO.sale && (typeof me.client.nc === "undefined")) {
                                 me.newCodMkt(cEO);
+                            } else if (cEO.transformer) {
+                                fnUpdateCodMKT(me, cEO, fnMakeServiceCodMKT());
                             }
                         },
                         "json").fail(function () {
@@ -408,7 +412,8 @@ Calendar = (function () {
                     min: this.min,
                     max: this.max,
                     sale: this.sale,
-                    useful: this.useful
+                    useful: this.useful,
+                    transformer: this.transformer
                 };
                 temp_elements = temp_elements + "<div class=\"external-event\" style=\"background-color: " + this.color + "\" data-eventobject=" + JSON.stringify(n) + " >" + this.text + "</div>";
             }
@@ -476,6 +481,28 @@ Calendar = (function () {
                     });
             });
     };
+    function fnDeleteEvent(id, me) {
+        bootbox.confirm("Tem a certeza que pretende eliminar a marcaçao?", function (result) {
+            if (!result)
+                return;
+
+            $.post("/AM/ajax/calendar.php", {
+                    id: id,
+                    action: "remove"
+                },
+                function (ok) {
+                    if (ok) {
+                        me.calendar.fullCalendar('removeEvents', id);
+                        dropOneConsult();
+                    }
+                    $.msg('unblock');
+                }, "json").fail(function () {
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
+        })
+    }
+
     Calendar.prototype.initModal = function (Refs) {
         var me = this;
         me.modal_ext
@@ -598,20 +625,8 @@ Calendar = (function () {
                 $.msg();
                 me.modal_ext.modal("hide");
                 var data = me.modal_ext.data().calEvent;
-                $.post("/AM/ajax/calendar.php", {
-                        id: data.id,
-                        action: "remove"
-                    },
-                    function (ok) {
-                        if (ok) {
-                            me.calendar.fullCalendar('removeEvents', data.id);
-                            dropOneConsult();
-                        }
-                        $.msg('unblock');
-                    }, "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
+
+                fnDeleteEvent(data.id, me);
             })
             .end()
             .css({
@@ -956,12 +971,7 @@ Calendar = (function () {
                     autoUnblock: true
                 });
             } else {
-                $.post("ajax/client.php", {action: 'update_cod_mkt', codmkt: result, id: cEO.lead_id}, function () {
-                    cEO.codCamp = result;
-                    me.calendar.fullCalendar('updateEvent', cEO);
-                    if (me.client.box)
-                        me.client.box.refresh();
-                });
+                fnUpdateCodMKT(me, cEO, result);
             }
         });
 
@@ -973,8 +983,9 @@ Calendar = (function () {
     Calendar.prototype.fnSaveEventType = function (EventTypes) {
         aEventTypes = EventTypes;
     };
+
     Calendar.prototype.fnOpenModalService = function (calEvent) {
-        var me=this,
+        var me = this,
             shModal = '\
         <table class="table table-striped table-bordered table-mod archives">\
             <thead>\
@@ -983,62 +994,68 @@ Calendar = (function () {
             </tr>\
             </thead>\
             <tbody>' +
-            (function () {
-                var htmlTR = "";
+                (function () {
+                    var htmlTR = "";
 
-                aEventTypes.forEach(function (oType) {
-                    if (!oType.active || !(oType.sale || oType.useful))
-                        return true;
+                    aEventTypes.forEach(function (oType) {
+                        if (!oType.active || !(oType.sale || oType.useful))
+                            return true;
 
-                    htmlTR += '\
+                        htmlTR += '\
                     <tr>\
                         <td class="chex-table"><input type="radio" name="service-new-type" value="' + oType.id + '" id="service-new-type' + oType.id + '" data-text="' + oType.text + '" data-sale="' + oType.sale + '" data-useful="' + oType.useful + '"><label for="service-new-type' + oType.id + '"><span></span></label></td>\
                         <td><label for="service-new-type' + oType.id + '" class="btn-link">' + oType.text + '</label></td>\
                     </tr>';
 
-                });
+                    });
 
-                return htmlTR;
-            })()
-            + '\
+                    return htmlTR;
+                })()
+                + '\
             </tbody>\
         </table>';
 
-        bootbox.dialog(shModal, [{
-            "label": "Gravar Alterações",
-            "class": "btn-success",
-            "callback": function () {
+        bootbox.dialog(shModal, [
+            {
+                "label": "<i class='icon-trash'></i>",
+                "class": "btn btn-danger left",
+                "callback": fnDeleteEvent.bind(me, calEvent.id, me)
+            },
+            {
+                "label": "Gravar Alterações",
+                "class": "btn-success",
+                "callback": function () {
 
-                var jqT = $("[name='service-new-type']:checked");
+                    var jqT = $("[name='service-new-type']:checked");
 
-                if (!jqT.val()){
-                    $.jGrowl("Seleccione um tipo de evento.");
-                    return false;
+                    if (!jqT.val()) {
+                        $.jGrowl("Seleccione um tipo de evento.");
+                        return false;
+                    }
+
+                    $.msg();
+                    $.post("/AM/ajax/calendar.php", {
+                        action: "changeReservationType",
+                        id: calEvent.id,
+                        rtype: jqT.val()
+                    }, function () {
+                        var oData = jqT.data();
+
+                        calEvent.title = calEvent.rsc_name + " " + oData.text;
+                        calEvent.useful = oData.useful;
+                        calEvent.sale = oData.sale;
+                        calEvent.transformer = false;
+                        calEvent.className = "t" + jqT.val();
+
+                        me.calendar.fullCalendar('updateEvent', calEvent);
+
+                        $.msg('unblock');
+                    }, "json").fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
                 }
-
-                $.msg();
-                $.post("/AM/ajax/calendar.php", {
-                    action: "changeReservationType",
-                    id: calEvent.id,
-                    rtype: jqT.val()
-                }, function () {
-                    var oData=jqT.data();
-
-                    calEvent.title = calEvent.rsc_name + " " + oData.text;
-                    calEvent.useful = oData.useful;
-                    calEvent.sale = oData.sale;
-                    calEvent.transformer = false;
-                    calEvent.className = "t" + jqT.val();
-
-                    me.calendar.fullCalendar('updateEvent', calEvent);
-
-                    $.msg('unblock');
-                },"json").fail(function () {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                });
-            }
-        },
+            },
             {
                 "label": "Cancelar",
                 "class": "btn"
@@ -1046,6 +1063,19 @@ Calendar = (function () {
         ]);
 
     };
+
+    function fnMakeServiceCodMKT() {
+        return "SERVICE" + moment().format("MMYY");
+    }
+
+    function fnUpdateCodMKT(me, cEO, sCodMKT) {
+        $.post("ajax/client.php", {action: 'update_cod_mkt', codmkt: sCodMKT, id: cEO.lead_id}, function () {
+            cEO.codCamp = sCodMKT;
+            me.calendar.fullCalendar('updateEvent', cEO);
+            if (me.client.box)
+                me.client.box.refresh();
+        });
+    }
 
     return Calendar;
 })();
