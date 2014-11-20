@@ -11,7 +11,7 @@
 
 var Calendar;
 Calendar = (function () {
-    function Calendar(selector, data, modals, ext, client, user){
+    function Calendar(selector, data, modals, ext, client, user) {
         var me = this;
         this.user = user;
         this.selector = selector;
@@ -59,7 +59,7 @@ Calendar = (function () {
             monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
             firstDay: 1,
             firstHour: (function () {
-                return~~new Date().getUTCHours() - 2;
+                return ~~new Date().getUTCHours() - 2;
             })(),
             buttonText: {
                 today: 'hoje',
@@ -70,8 +70,15 @@ Calendar = (function () {
             eventClick: function (calEvent) {
                 var problem = false;
                 if (isBlocked() && calEvent.start > new Date().getTime()) {
-                    $.msg({content:"Devido às consultas em atraso por fechar, esta funcionalidade não lhe permite qualquer tipo de acção com marcações posteriores a hoje.",autoUnblock:true,timeOut:"5000"});
+                    $.msg({
+                        content: "Devido às consultas em atraso por fechar, esta funcionalidade não lhe permite qualquer tipo de acção com marcações posteriores a hoje.",
+                        autoUnblock: true,
+                        timeOut: "5000"
+                    });
                     problem = false;
+                } else if (calEvent.transformer) {
+                    me.fnOpenModalService(calEvent);
+                    problem = true;
                 } else if (calEvent.useful) {
                     me.openACF(calEvent);
                     problem = true;
@@ -655,7 +662,7 @@ Calendar = (function () {
                     rastreios_perda: $(this).find('#rastreios_perda').val(),
                     vendas: $(this).find('#vendas').val(),
                     valor: $(this).find('#valor').val()
-                },function () {
+                }, function () {
                     me.modals.mkt.modal("hide");
                     $("#save_mkt").prop('disabled', false);
                     $.jGrowl("Relatório enviado com sucesso!");
@@ -685,7 +692,7 @@ Calendar = (function () {
                     action: 'set_reservation_obs',
                     obs: me.modals.acf.find("#obs_acf").val(),
                     id_reservation: ~~me.modals.acf.data("calEvent").id
-                },function () {
+                }, function () {
                     me.modals.acf.find("#obs_acf").val("");
                     me.modals.acf.modal("hide");
                     me.modals.acf.data().calEvent.closed = true;
@@ -726,7 +733,7 @@ Calendar = (function () {
         $.post("/AM/ajax/client.php", {
             id: calEvent.lead_id,
             action: 'byName'
-        },function (data) {
+        }, function (data) {
             $.msg('unblock');
             var tmp = "";
             $.each(data, function () {
@@ -804,7 +811,7 @@ Calendar = (function () {
         $.post("ajax/requests.php", {
             action: 'get_one_mkt',
             id: calEvent.extra_id
-        },function (data) {
+        }, function (data) {
             var postal = (function () {
                 var pt = "";
                 $.each(data.local_publicidade, function () {
@@ -897,7 +904,7 @@ Calendar = (function () {
         if (event.start instanceof Date) {
             start = event.start;
             end = event.end;
-        }else{
+        } else {
             start = moment.unix(event.start);
             end = moment.unix(event.end);
         }
@@ -937,7 +944,7 @@ Calendar = (function () {
         $("#external-events").find(".grid-content").find(" > div").empty();
         $("#reserve_types").empty();
     };
-    Calendar.prototype.newCodMkt=function(cEO) {
+    Calendar.prototype.newCodMkt = function (cEO) {
         var me = this;
         bootbox.prompt("Qual o Codigo de Marketing?", function (result) {
             if (result === null || result.length < 4) {
@@ -958,8 +965,86 @@ Calendar = (function () {
             }
         });
 
-         var a =new AutoCompleteCodMkt($(".bootbox input"),true);
+        var a = new AutoCompleteCodMkt($(".bootbox input"), true);
         a.init();
+    };
+
+    var aEventTypes = [];
+    Calendar.prototype.fnSaveEventType = function (EventTypes) {
+        aEventTypes = EventTypes;
+    };
+    Calendar.prototype.fnOpenModalService = function (calEvent) {
+        var me=this,
+            shModal = '\
+        <table class="table table-striped table-bordered table-mod archives">\
+            <thead>\
+            <tr>\
+            <th colspan="2">Escolha o novo tipo</th>\
+            </tr>\
+            </thead>\
+            <tbody>' +
+            (function () {
+                var htmlTR = "";
+
+                aEventTypes.forEach(function (oType) {
+                    if (!oType.active || !(oType.sale || oType.useful))
+                        return true;
+
+                    htmlTR += '\
+                    <tr>\
+                        <td class="chex-table"><input type="radio" name="service-new-type" value="' + oType.id + '" id="service-new-type' + oType.id + '" data-text="' + oType.text + '" data-sale="' + oType.sale + '" data-useful="' + oType.useful + '"><label for="service-new-type' + oType.id + '"><span></span></label></td>\
+                        <td><label for="service-new-type' + oType.id + '" class="btn-link">' + oType.text + '</label></td>\
+                    </tr>';
+
+                });
+
+                return htmlTR;
+            })()
+            + '\
+            </tbody>\
+        </table>';
+
+        bootbox.dialog(shModal, [{
+            "label": "Gravar Alterações",
+            "class": "btn-success",
+            "callback": function () {
+
+                var jqT = $("[name='service-new-type']:checked");
+
+                if (!jqT.val()){
+                    $.jGrowl("Seleccione um tipo de evento.");
+                    return false;
+                }
+
+                $.msg();
+                $.post("/AM/ajax/calendar.php", {
+                    action: "changeReservationType",
+                    id: calEvent.id,
+                    rtype: jqT.val()
+                }, function () {
+                    var oData=jqT.data();
+
+                    calEvent.title = calEvent.rsc_name + " " + oData.text;
+                    calEvent.useful = oData.useful;
+                    calEvent.sale = oData.sale;
+                    calEvent.transformer = false;
+                    calEvent.className = "t" + jqT.val();
+
+                    me.calendar.fullCalendar('updateEvent', calEvent);
+
+                    $.msg('unblock');
+                },"json").fail(function () {
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
+            }
+        },
+            {
+                "label": "Cancelar",
+                "class": "btn"
+            }
+        ]);
+
     };
 
     return Calendar;

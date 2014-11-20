@@ -64,7 +64,7 @@ Class Calendars
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false)
     {
         if ($is_scheduler) {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, d.extra1 codCamp, changed, f.closed, obs, extra_id, has_accessories, sale, useful, transformer
                 FROM sips_sd_reservations a
                 LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
                 LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource
@@ -72,7 +72,7 @@ Class Calendars
                 LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id
                 WHERE b.id_scheduler=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         } else {
-            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful, transformer
                 FROM sips_sd_reservations a
                 LEFT JOIN vicidial_list c ON a.lead_id = c.lead_id
                 LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource
@@ -90,6 +90,7 @@ Class Calendars
                 'title' => (string)$row->rsc_name . " " . $row->display_text . (((bool)$row->closed) ? " - Fechado" : ""),
                 'type_text' => (string)$row->display_text,
                 'client_name' => (string)$row->client_name,
+                'rsc_name' => (string)$row->rsc_name,
                 'lead_id' => (int)$row->lead_id,
                 'codCamp' => (string)$row->codCamp,
                 'postal' => (string)$row->postal_code,
@@ -108,8 +109,9 @@ Class Calendars
                 'min' => (int)$row->min_time,
                 'del' => (bool)$row->del,
                 'obs' => (string)$row->obs,
-                "sale" => (bool)$row->sale,
-                "useful" => (bool)$row->useful
+                'sale' => (bool)$row->sale,
+                'useful' => (bool)$row->useful,
+                'transformer' => (bool)$row->transformer
             );
         }
         return $reservars;
@@ -210,16 +212,23 @@ Class Calendars
         return $stmt->execute(array(":id" => $id, ":rsc_id" => $rsc_id));
     }
 
+    public function changeReservaType($id, $res_id)
+    {
+        $query = "UPDATE sips_sd_reservations SET id_reservation_type=:res_id WHERE id_reservation=:id";
+        $stmt = $this->_db->prepare($query);
+        return $stmt->execute(array(":id" => $id, ":res_id" => $res_id));
+    }
+
     public function set_obs($obs, $id_reservation)
     {
-        $query = "Update sips_sd_reservations SET obs = :obs, has_accessories=1 WHERE id_reservation = :id_reservation";
+        $query = "UPDATE sips_sd_reservations SET obs = :obs, has_accessories=1 WHERE id_reservation = :id_reservation";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":obs" => json_encode(array("date" => \date('Y-m-d H:i:s'), "obs" => $obs)), ":id_reservation" => $id_reservation));
     }
 
     public function get_obs($id_reservation)
     {
-        $query = "Select obs from sips_sd_reservations  WHERE id_reservation = :id_reservation";
+        $query = "SELECT obs FROM sips_sd_reservations  WHERE id_reservation = :id_reservation";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id_reservation" => $id_reservation));
         $result = $stmt->fetch(PDO::FETCH_OBJ);
@@ -242,9 +251,9 @@ Class Calendars
     protected function _getSeries($id, $is_scheduler)
     {
         if ($is_scheduler) {
-            $query = "Select a.id_resource,a.start_time,a.end_time,a.day_of_week_start,a.day_of_week_end From sips_sd_series a LEFT JOIN sips_sd_resources b ON a.id_resource = b.id_resource WHERE b.id_scheduler=:id";
+            $query = "SELECT a.id_resource,a.start_time,a.end_time,a.day_of_week_start,a.day_of_week_end FROM sips_sd_series a LEFT JOIN sips_sd_resources b ON a.id_resource = b.id_resource WHERE b.id_scheduler=:id";
         } else {
-            $query = "Select id_resource,start_time,end_time,day_of_week_start,day_of_week_end From sips_sd_series Where id_resource=:id";
+            $query = "SELECT id_resource,start_time,end_time,day_of_week_start,day_of_week_end FROM sips_sd_series WHERE id_resource=:id";
         }
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
@@ -352,10 +361,10 @@ class Calendar extends Calendars
         return (object)array(
             "defaultEventMinutes" => (int)$this->_resources[0]->blocks,
             "events" => (object)array(
-                    "data" => (object)array(
-                            "resource" => $this->_id_ref
-                        )
-                ),
+                "data" => (object)array(
+                    "resource" => $this->_id_ref
+                )
+            ),
             #"slotMinutes" => (int) $this->_resources[0]->blocks,
             "slotMinutes" => 15,
             "minTime" => $this->_resources[0]->begin_time / 60,

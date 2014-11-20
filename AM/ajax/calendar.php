@@ -90,6 +90,12 @@ switch (filter_var($_POST["action"])) {
         $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("resource_id" => $resource, "obs" => "Alterado o resource")),logger::A_NCHANGE);
         echo json_encode($ok);
         break;
+    case "changeReservationType":
+        $calendar = new Calendars($db);
+        $ok = $calendar->changeReservaType($id, $rtype);
+        $log->set($id, Logger::T_UPD, Logger::S_CAL, json_encode(array("reservation_id" => $type, "obs" => "Alterado o resource")),logger::A_NCHANGE);
+        echo json_encode($ok);
+        break;
     case "special-event":
         $calendar = new Calendars($db);
         $system_types = $calendar->getSystemTypes();

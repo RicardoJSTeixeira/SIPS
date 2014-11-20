@@ -875,8 +875,6 @@ var ClientBox = function (configs) {
                                 }
                             }, function () {
                                 $.jGrowl("Info de cliente editada com sucesso!", 3000);
-                                if (typeof callback === "function")
-                                    callback();
                             });
                         }
                     },
@@ -884,8 +882,6 @@ var ClientBox = function (configs) {
                             "label": "Cancelar",
                             "class": "btn",
                             "callback": function () {
-                                if (typeof callback === "function")
-                                    callback();
                             }
                         }
                     ], {customClass: 'container'});
