@@ -758,9 +758,9 @@ Calendar = (function () {
             action: 'byName'
         }, function (data) {
             $.msg('unblock');
-            var tmp = "";
+            var sDT = "";
             $.each(data, function () {
-                tmp = tmp + "<dt>" + this.name + "</dt><dd>- " + this.value + "</dd>";
+                sDT += "<dt>" + this.name + "</dt><dd>- " + this.value + "</dd>";
             });
             if (calEvent.closed) {
                 me.modal_ext
@@ -795,7 +795,7 @@ Calendar = (function () {
             }
             me.modal_ext
                 .find("#client_info")
-                .html(tmp);
+                .html(sDT);
             me.modal_ext
                 .data({
                     calEvent: calEvent
@@ -989,8 +989,7 @@ Calendar = (function () {
             }
         });
 
-        var a = new AutoCompleteCodMkt($(".bootbox input"), true);
-        a.init();
+        new AutoCompleteCodMkt($(".bootbox input"), true).init();
     };
 
     var aEventTypes = [];

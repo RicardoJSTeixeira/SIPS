@@ -116,8 +116,7 @@ $(function () {
                     elmt = $("<textarea>", { id: this.name, name: this.name});
                 } else if (this.name === "extra1") {
                     elmt = $("<input>", {type: "text", id: this.name, name: this.name});
-                    var a=new AutoCompleteCodMkt(elmt,false);
-                    a.init();
+                    new AutoCompleteCodMkt(elmt,false).init();
                 } else {
                     elmt = $("<input>", {type: "text", id: this.name, name: this.name});
                 }
