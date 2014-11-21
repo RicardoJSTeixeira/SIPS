@@ -140,7 +140,7 @@ switch ($action) {
         $stringas = json_decode($stringas);
         $query_log=array();
         foreach ($stringas as $string) {
-            $query_string .=  strtolower($string->key) . " = '" . $db->quote($string->value) . "',";
+            $query_string .=  strtolower($string->key) . " = " . $db->quote($string->value) . ",";
             $query_log[$string->key]= $string->value;
         }
         #$query_string = rtrim($query_string, ",");

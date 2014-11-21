@@ -875,6 +875,8 @@ var ClientBox = function (configs) {
                                 }
                             }, function () {
                                 $.jGrowl("Info de cliente editada com sucesso!", 3000);
+                            },"json").fail(function(){
+                                $.jGrowl("Erro: Info de cliente não gravada!", 3000);
                             });
                         }
                     },
