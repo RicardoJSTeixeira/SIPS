@@ -143,9 +143,9 @@ Class Calendars
                 $prepare_hack .= "?,";
             }
             $prepare_hack = rtrim($prepare_hack, ",");
-            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group, sale, useful, transformer FROM sips_sd_reservations_types WHERE user_group IN ($prepare_hack);");
+            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group, sale, useful, transformer, hide FROM sips_sd_reservations_types WHERE user_group IN ($prepare_hack);");
         } else {
-            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group, sale, useful, transformer FROM sips_sd_reservations_types");
+            $stmt = $this->_db->prepare("SELECT id_reservations_types, display_text, color, min_time, max_time, active, user_group, sale, useful, transformer, hide FROM sips_sd_reservations_types");
         }
         $stmt->execute($user_groups);
 
@@ -162,7 +162,9 @@ Class Calendars
                 "color" => $row->color,
                 "sale" => (bool)$row->sale,
                 "useful" => (bool)$row->useful,
-                "transformer" => (bool)$row->transformer);
+                "transformer" => (bool)$row->transformer,
+                "hide" => (bool)$row->hide
+            );
         }
         return $tipo_reservas;
     }

@@ -407,7 +407,7 @@ Calendar = (function () {
             sElements = "",
             sClasses = "";
         $.each(tipo, function () {
-            if (this.active) {
+            if (this.active && !this.hide) {
                 n = {
                     className: "t" + this.id,
                     rtype: this.id,
