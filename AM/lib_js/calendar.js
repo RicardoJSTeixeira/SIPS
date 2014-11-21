@@ -104,7 +104,7 @@ Calendar = (function () {
             drop: function (date) {
                 $.msg();
                 var
-                    cEO = $.extend({}, $(this).data('eventobject'));
+                    cEO = $.extend({rsc_name: $("[name='single-refs']:checked").data().text}, $(this).data('eventobject'));
 
                 cEO.start = moment(date).unix();
 
@@ -118,7 +118,8 @@ Calendar = (function () {
                     {
                         test: function () {
                             return !me.calendar.fullCalendar('getView').name.match("agenda");
-                        }, msg: "Não é permitido marcar consultas em modo de visualização mensal."
+                        },
+                        msg: "Não é permitido marcar consultas em modo de visualização mensal."
                     },
                     {
                         test: function () {
@@ -136,39 +137,39 @@ Calendar = (function () {
 
                 result = assert(testes);
 
-                if (result !== true) {
+                if (!result) {
                     $.msg('replace', result.msg);
                     $.msg('unblock', 3000);
                     $(".popover").remove();
                     return false;
-                } else {
-
-                    $.post("/AM/ajax/calendar.php", {
-                            action: "newReservation",
-                            resource: me.resource,
-                            rtype: cEO.rtype,
-                            lead_id: cEO.lead_id,
-                            start: cEO.start,
-                            end: cEO.end
-                        },
-                        function (id) {
-                            cEO.id = id;
-                            me.calendar.fullCalendar('renderEvent', cEO, true);
-                            $("#external-events").remove();
-                            $.msg('unblock');
-
-                            if (cEO.sale && (typeof me.client.nc === "undefined")) {
-                                me.newCodMkt(cEO);
-                            } else if (cEO.transformer) {
-                                fnUpdateCodMKT(me, cEO, fnMakeServiceCodMKT());
-                            }
-                        },
-                        "json").fail(function () {
-                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                            $.msg('unblock', 5000);
-                        });
-                    return true;
                 }
+
+                $.post("/AM/ajax/calendar.php", {
+                        action: "newReservation",
+                        resource: me.resource,
+                        rtype: cEO.rtype,
+                        lead_id: cEO.lead_id,
+                        start: cEO.start,
+                        end: cEO.end
+                    },
+                    function (id) {
+                        cEO.id = id;
+                        me.calendar.fullCalendar('renderEvent', cEO, true);
+                        $("#external-events").remove();
+                        $.msg('unblock');
+
+                        if (cEO.sale && (typeof me.client.nc === "undefined")) {
+                            me.newCodMkt(cEO);
+                        } else if (cEO.transformer) {
+                            fnUpdateCodMKT(me, cEO, fnMakeServiceCodMKT());
+                        }
+                    },
+                    "json").fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                return true;
+
             },
             eventRender: function (event, element) {
                 var d = {
@@ -399,15 +400,16 @@ Calendar = (function () {
         })
 
     };
+
     Calendar.prototype.reserveConstruct = function (tipo) {
         var me = this,
             n,
-            temp_elements = "",
-            temp_classes = "";
+            sElements = "",
+            sClasses = "";
         $.each(tipo, function () {
             if (this.active) {
                 n = {
-                    color: this.color,
+                    className: "t" + this.id,
                     rtype: this.id,
                     min: this.min,
                     max: this.max,
@@ -415,15 +417,17 @@ Calendar = (function () {
                     useful: this.useful,
                     transformer: this.transformer
                 };
-                temp_elements = temp_elements + "<div class=\"external-event\" style=\"background-color: " + this.color + "\" data-eventobject=" + JSON.stringify(n) + " >" + this.text + "</div>";
+                sElements += "<div class=\"external-event t" + this.id + "\" data-eventobject=" + JSON.stringify(n) + " >" + this.text + "</div>";
             }
-            temp_classes = temp_classes + this.css;
+            sClasses += this.css;
         });
-        $("#external-events").find(" .grid-content").html(temp_elements);
-        $("#reserve_types").html(temp_classes);
+
+        $("#external-events").find(" .grid-content").html(sElements);
+        $("#reserve_types").html(sClasses);
 
         var
             eventobject;
+
         me.ext
             .find('div.external-event')
             .each(function () {
@@ -448,21 +452,23 @@ Calendar = (function () {
                 });
 
             });
+
         if (typeof me.client.id !== "undefined" && me.resource !== "all") {
             me.ext.show();
         } else {
             me.ext.hide();
         }
     };
+
     Calendar.prototype.makeRefController = function (Refs) {
         var me = this;
-        var temp = "<tr><td class=\"chex-table\"><input type=\"radio\" checked name=\"single-refs\" value=\"all\" id=\"all\" ><label for=\"all\"><span></span></label></td><td><label for=\"all\" class=\"btn-link\">Todos</label></td></tr>";
+        var sTR = "<tr><td class=\"chex-table\"><input type=\"radio\" checked name=\"single-refs\" value=\"all\" id=\"all\" ><label for=\"all\"><span></span></label></td><td><label for=\"all\" class=\"btn-link\">Todos</label></td></tr>";
         $.each(Refs, function () {
-            temp = temp + "<tr><td class=\"chex-table\"><input type=\"radio\" name=\"single-refs\" value=\"" + this.id + "\" id=\"" + this.id + "\" ><label for=\"" + this.id + "\"><span></span></label></td><td><label for=\"" + this.id + "\" class=\"btn-link\">" + this.name + "</label></td></tr>";
+            sTR += "<tr><td class=\"chex-table\"><input type=\"radio\" name=\"single-refs\" value=\"" + this.id + "\" id=\"" + this.id + "\" data-text=\"" + this.name + "\" ><label for=\"" + this.id + "\"><span></span></label></td><td><label for=\"" + this.id + "\" class=\"btn-link\">" + this.name + "</label></td></tr>";
         });
         $("#refs")
             .find("tbody")
-            .html(temp)
+            .html(sTR)
             .find("[name=single-refs]")
             .change(function () {
                 $.msg();
@@ -481,6 +487,7 @@ Calendar = (function () {
                     });
             });
     };
+
     function fnDeleteEvent(id, me) {
         bootbox.confirm("Tem a certeza que pretende eliminar a marcaçao?", function (result) {
             if (!result)
@@ -742,6 +749,7 @@ Calendar = (function () {
             });
 
     };
+
     Calendar.prototype.openClient = function (calEvent) {
         var me = this;
         $.msg();
@@ -798,6 +806,7 @@ Calendar = (function () {
             $.msg('unblock', 5000);
         });
     };
+
     Calendar.prototype.openSpecialEvent = function (calEvent) {
         var me = this;
 
@@ -820,6 +829,7 @@ Calendar = (function () {
             })
             .modal();
     };
+
     Calendar.prototype.openMkt = function (calEvent) {
         var me = this;
         $.msg();
@@ -869,6 +879,7 @@ Calendar = (function () {
             $.msg('unblock', 5000);
         });
     };
+
     Calendar.prototype.openACF = function (calEvent) {
         var me = this;
         me.modals.acf
@@ -912,6 +923,7 @@ Calendar = (function () {
 
         me.modals.acf.modal("show");
     };
+
     Calendar.prototype.concorrency = function (event) {
         var me = this;
         var start, end;
@@ -954,11 +966,13 @@ Calendar = (function () {
             return false;
         }
     };
+
     Calendar.prototype.destroy = function () {
         this.calendar.fullCalendar('destroy');
         $("#external-events").find(".grid-content").find(" > div").empty();
         $("#reserve_types").empty();
     };
+
     Calendar.prototype.newCodMkt = function (cEO) {
         var me = this;
         bootbox.prompt("Qual o Codigo de Marketing?", function (result) {
