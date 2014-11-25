@@ -52,7 +52,7 @@ switch ($action) {
    INNER JOIN vicidial_list b ON a.lead_id=b.lead_id
    INNER JOIN vicidial_users c ON b.user=c.user
    LEFT JOIN spice_consulta d ON d.reserva_id=a.id_reservation
-   WHERE c.user_group=:user_group AND DATE(a.start_date)>'2014-07-28' AND a.id_reservation_type IN ($rs) AND a.gone=0 limit 20000";
+   WHERE c.user_group=:user_group AND DATE(a.start_date) > DATE(NOW() - INTERVAL 3 MONTH) AND a.id_reservation_type IN ($rs) AND a.gone=0 limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $calendar = new Calendars($db);
@@ -85,7 +85,7 @@ switch ($action) {
    INNER JOIN sips_sd_resources e ON a.id_resource=e.id_resource
    INNER JOIN vicidial_list b on a.lead_id=b.lead_id 
    LEFT JOIN spice_consulta c on c.reserva_id=a.id_reservation
-   WHERE a.id_resource in ('$refs') AND DATE(a.start_date)>'2014-07-28' AND a.id_reservation_type in ($rs) AND a.gone=0 limit 20000";
+   WHERE a.id_resource in ('$refs') AND DATE(a.start_date)>DATE(NOW() - INTERVAL 3 MONTH) AND a.id_reservation_type in ($rs) AND a.gone=0 limit 20000";
         }
         $stmt = $db->prepare($query);
         $stmt->execute($variables);
@@ -186,7 +186,7 @@ switch ($action) {
     INNER JOIN vicidial_list b on a.extra7=b.lead_id 
     INNER JOIN vicidial_users c on a.user=c.user
     LEFT JOIN sips_sd_reservations d on a.lead_id=d.lead_id
-    WHERE c.user_group=:user_group AND a.list_id=:list AND (d.lead_id IS NULL or d.gone=0) AND a.extra6='NO' AND DATE(d.start_date)>'2014-07-28' limit 20000";
+    WHERE c.user_group=:user_group AND a.list_id=:list AND (d.lead_id IS NULL or d.gone=0) AND a.extra6='NO' AND DATE(d.start_date) > DATE(NOW() - INTERVAL 3 MONTH) limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $siblings=implode("','", $u->siblings);
@@ -207,7 +207,7 @@ switch ($action) {
     FROM vicidial_list a 
     INNER JOIN vicidial_list b on a.extra7=b.lead_id 
     LEFT JOIN sips_sd_reservations c on a.lead_id=c.lead_id
-    WHERE c.id_user in ('$siblings') AND a.list_id=:list AND (c.lead_id IS NULL or c.gone=0) AND a.extra6='NO' AND DATE(c.start_date)>'2014-07-28' limit 20000";
+    WHERE c.id_user in ('$siblings') AND a.list_id=:list AND (c.lead_id IS NULL or c.gone=0) AND a.extra6='NO' AND DATE(c.start_date) > DATE(NOW() - INTERVAL 3 MONTH) limit 20000";
         }
 
         $stmt = $db->prepare($query);
@@ -239,14 +239,14 @@ switch ($action) {
                        INNER JOIN sips_sd_resources e on a.id_resource=e.id_resource
                        INNER JOIN vicidial_list b on a.lead_id=b.lead_id
                        LEFT JOIN spice_consulta c on c.reserva_id=a.id_reservation
-                       WHERE a.id_resource IN ($refs) AND a.id_reservation_type in ($rs) AND a.end_date<:date AND c.id IS NULL AND DATE(a.start_date)>'2014-07-28' AND a.gone=0
+                       WHERE a.id_resource IN ($refs) AND a.id_reservation_type in ($rs) AND a.end_date<:date AND c.id IS NULL AND DATE(a.start_date) > DATE(NOW() - INTERVAL 3 MONTH) AND a.gone=0
                        UNION ALL
                        SELECT first_name, middle_initial, last_name, a.start_date, a.lead_id, a.id_reservation,a.end_date,'...por fechar' closed, e.alias_code
                        FROM sips_sd_reservations a
                        INNER JOIN sips_sd_resources e on a.id_resource=e.id_resource
                        INNER JOIN vicidial_list b on a.lead_id=b.lead_id
                        LEFT JOIN spice_consulta c on c.reserva_id=a.id_reservation
-                       WHERE a.id_resource IN ($refs) AND a.id_reservation_type in ($rs) AND a.end_date<:date1 AND c.closed=0 AND DATE(a.start_date)>'2014-07-28' AND a.gone=0 ) a ORDER BY a.end_date ASC";
+                       WHERE a.id_resource IN ($refs) AND a.id_reservation_type in ($rs) AND a.end_date<:date1 AND c.closed=0 AND DATE(a.start_date) > DATE(NOW() - INTERVAL 3 MONTH) AND a.gone=0 ) a ORDER BY a.end_date ASC";
         $variables[":date"] = date("Y-m-d");
         $variables[":date1"] = date("Y-m-d");
         $stmt = $db->prepare($query);
