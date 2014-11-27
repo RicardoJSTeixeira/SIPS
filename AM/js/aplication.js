@@ -1,22 +1,22 @@
 var SpiceU = {};
+var SpiceTypes = {
+    "1": "branch",
+    "2": "dispenser",
+    "3": "umra",
+    "5": "asm",
+    "6": "sbo",
+    "7": "abo",
+    "8": "mkt",
+    "9": "admin"
+};
 
 var alerts = new AlertBoxes();
 $(function () {
     $.post("ajax/user_info.php", function (user) {
         SpiceU = user;
-        types = {
-            "1": "branch",
-            "2": "dispenser",
-            "3": "umra",
-            "5": "asm",
-            "6": "sbo",
-            "7": "abo",
-            "8": "mkt",
-            "9": "admin"
-        };
 
         $("#user-name").text(user.name);
-        $("#sidebar li.role-" + types[user.user_level])
+        $("#sidebar li.role-" + SpiceTypes[user.user_level])
             .find("a")
             .attr("is_visible", "set")
             .end()

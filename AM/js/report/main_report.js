@@ -11,7 +11,13 @@ $(function () {
         .on('changeDate', function () {
             $("#input_data_fim").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
         });
-    $("#input_data_fim").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, endDate: moment().format("YYYY-MM-DD")})
+    $("#input_data_fim").datetimepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "pt",
+        minView: 2,
+        endDate: moment().format("YYYY-MM-DD")
+    })
         .on('changeDate', function () {
             $("#input_data_inicio").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
         });
@@ -25,23 +31,19 @@ $(function () {
         }
     });
 
-    if (SpiceU.user_level === 7) {
-        $("#report_selector").find("[data-admin='false']")
-            .remove()
-            .end()
-            .trigger("chosen:updated");
+    if (SpiceU.user_level !== 9) {
         $(".span6")
             .last()
-            .remove()
+            .hide()
             .end()
             .removeClass("span6")
             .addClass("span12");
     }
-    else
-        $("#report_selector").find('[data-admin="true"]')
-            .remove()
-            .end()
-            .trigger("chosen:updated");
+
+    $("#report_selector").find("option:not(.role-" + SpiceTypes[SpiceU.user_level]+")")
+        .remove()
+        .end()
+        .trigger("chosen:updated");
 });
 
 $("#download_report").click(function () {
