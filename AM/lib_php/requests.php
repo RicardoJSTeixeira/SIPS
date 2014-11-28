@@ -223,7 +223,7 @@ $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->u
 
     public function get_marketing_code($codmkt)
     {
-        $query = "SELECT * FROM spice_codigos_mkt WHERE codmkt=:codmkt";
+        $query = "SELECT id, codmkt, description, entry_date, modify_date FROM spice_codigos_mkt WHERE codmkt=:codmkt";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":codmkt" => $codmkt));
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -232,12 +232,13 @@ $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->u
     public function get_marketing_code_to_datatable()
     {
         $result['aaData'] = array();
-        $query = "SELECT * FROM spice_codigos_mkt";
+
+        $query = "SELECT id, codmkt, description, entry_date, modify_date FROM spice_codigos_mkt";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $result['aaData'][] = $row;
-        }
+
+        $result['aaData']=$stmt->fetchAll(PDO::FETCH_NUM);
+
         return $result;
     }
 
