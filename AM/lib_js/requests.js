@@ -205,8 +205,7 @@ var Requests = function (basic_path, options_ext) {
                     {"sTitle": "Valor", "sWidth": "1px"},
                     {"sTitle": "Estado", "sWidth": "60px"},
                     {"sTitle": "Opções", "sWidth": "50px", "bVisible": (SpiceU.user_level > 5)},
-                    {"sTitle": "sort", "bVisible": false},
-                    {"sTitle": "object", "bVisible": false}],
+                    {"sTitle": "sort", "bVisible": false}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
             $('#export_AM').click(function (event) {

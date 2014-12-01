@@ -4,7 +4,7 @@ function table2csv(oTable, exportmode, tableElm) {
         rows = [];
 
     // Get header names
-    $(tableElm + ' thead').find('th').each(function() {
+    $(tableElm + ' thead').find('th').each(function () {
         var $th = $(this),
             text = $th.text(),
             header = '"' + text + '"';
@@ -25,7 +25,7 @@ function table2csv(oTable, exportmode, tableElm) {
             rows.push(row);
         }
     } else { // visible rows only
-        $(tableElm + ' tbody tr:visible').each(function(index) {
+        $(tableElm + ' tbody tr:visible').each(function (index) {
             var row = oTable.fnGetData(this);
             match_headers(row, headers);
             row = strip_tags(row).replace(/,/g, '\t');
@@ -38,15 +38,15 @@ function table2csv(oTable, exportmode, tableElm) {
     // if a csv div is already open, delete it
     if ($('.csv-data').length)
         $('.csv-data').remove();
-    // open a div with a download link 
+    // open a div with a download link
     window.location.href = 'data:application/vnd.ms-excel;charset=UTF-8,'
-            + encodeURIComponent(csv);
+    + encodeURIComponent(csv);
 }
 
 function strip_tags(html) {
     var tmp = document.createElement("div");
-    var array = $.map(html, function(value, index) {
-        return [value];
+    var array = $.map(html, function (value, index) {
+        return [value.replace(/,/g, ".").replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ")];
     });
     tmp.innerHTML = array;
     return tmp.textContent || tmp.innerText;

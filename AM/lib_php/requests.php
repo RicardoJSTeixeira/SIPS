@@ -54,8 +54,10 @@ class apoio_marketing extends requests_class
             $approved_toggle = " and status<>1";*/
 
         $result['aaData'] = array();
-$filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
-        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed from spice_apoio_marketing where 1 $filter $approved_toggle limit 20000";
+        $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
+        $query = "SELECT id, user, data_criacao, data_inicial, data_final, 'horario', localidade, local, morada, comments, local_publicidade, cod, total_rastreios, rastreios_perda, vendas, valor, status, closed
+                  from spice_apoio_marketing
+                  where 1 $filter $approved_toggle limit 20000";
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -67,7 +69,6 @@ $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->u
                 //User
                 $row[18] = ($row[16] == 0 ? 1 : ($row[16] == 1 ? 2 : 0));
             }
-            $row[19] = implode(",", $row);
             $row[9] = preg_replace('/(\v|\s)+/', ' ', $row[9]);
             $row[9] = str_replace(',', ';', $row[9]);
             $row[5] = "<div> <button class='btn icon-alone ver_horario' data-apoio_marketing_id='$row[0]'><i class='icon-time'></i></button></div>";
@@ -237,7 +238,7 @@ $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->u
         $stmt = $this->_db->prepare($query);
         $stmt->execute();
 
-        $result['aaData']=$stmt->fetchAll(PDO::FETCH_NUM);
+        $result['aaData'] = $stmt->fetchAll(PDO::FETCH_NUM);
 
         return $result;
     }
@@ -269,7 +270,7 @@ class correio extends requests_class
     public function get_to_datatable($show_aproved)
     {
         $approved_toggle = "";
-        if ($show_aproved!="true")
+        if ($show_aproved != "true")
             $approved_toggle = " and status<>1";
 
 
@@ -396,9 +397,8 @@ class frota extends requests_class
     {
 
         $approved_toggle = "";
-        if ($show_aproved!="true")
+        if ($show_aproved != "true")
             $approved_toggle = " and status<>1";
-
 
 
         $result['aaData'] = array();
@@ -506,7 +506,7 @@ class mensal_stock extends requests_class
     public function get_to_datatable($show_aproved)
     {
         $approved_toggle = "";
-        if ($show_aproved!="true")
+        if ($show_aproved != "true")
             $approved_toggle = " and status<>1";
 
         $result['aaData'] = array();
