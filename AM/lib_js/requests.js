@@ -175,11 +175,9 @@ var Requests = function (basic_path, options_ext) {
         get_to_datatable: function (am_zone) {
             var apoio_markting_table = am_zone.dataTable({
                 "aaSorting": [[18, "asc"]],
-                "bSortClasses": false,
                 "bProcessing": true,
                 "bDestroy": true,
                 "bAutoWidth": false,
-                "bDeferRender": true,
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/requests.php',
                 "fnServerParams": function (aoData) {
