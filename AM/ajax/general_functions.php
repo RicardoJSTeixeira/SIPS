@@ -61,13 +61,13 @@ function fnSendEmailAlert(PDO $db, $user, $tres, $seis){
     if (fnWasSended($db, $user->username))
         return true;
 
-    $msg = "<h3>ALERTA, USER $user->username PREGUIÇOSO</h3>
+    $msg = "<h3>ALERTA, USER $user->username</h3>
 
-<strong>Consultas com mais de 3dias:</strong>$tres
+<strong>Consultas com mais de 3dias:</strong> $tres
 <br>
 <br>
 
-<strong>Consultas com mais de 3dias:</strong>$seis
+<strong>Consultas com mais de 6dias:</strong> $seis
 <br>
 <br>
 
