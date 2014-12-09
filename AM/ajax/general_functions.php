@@ -73,7 +73,7 @@ function fnSendEmailAlert(PDO $db, $user, $tres, $seis){
 
 <strong>Submetido por:</strong> $user->username - $user->name";
 
-    if (send_email("rteixeira@finesource.pt", "PIDE Acústica Médica", $msg, "ALERTA, USER $user->username PREGUIÇOSO"))
+    if (send_email("rge@acusticamedica.pt", "SPICE ALERTA Acústica Médica", $msg, "ALERTA, USER $user->username PREGUIÇOSO"))
         return fnLogSendMail($db, $user->username);
     else
         return false;
