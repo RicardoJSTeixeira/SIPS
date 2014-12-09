@@ -7,6 +7,7 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/AM/lib_php/db.php";
 require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/msg_alerts.php";
+
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -49,4 +50,45 @@ switch ($action) {
     case "make_alert":
         echo json_encode($alert->make($is_for, $alert, $section, $record_id,$cancel));
         break;
+
+    case "send_email":
+        include("../lib_php/sendmail.php");
+        echo json_encode(fnSendEmailAlert($db, $user->getUser(), $tres, $seis));
+        break;
+}
+
+function fnSendEmailAlert(PDO $db, $user, $tres, $seis){
+    if (fnWasSended($db, $user->username))
+        return true;
+
+    $msg = "<h3>ALERTA, USER $user->username PREGUIÇOSO</h3>
+
+<strong>Consultas com mais de 3dias:</strong>$tres
+<br>
+<br>
+
+<strong>Consultas com mais de 3dias:</strong>$seis
+<br>
+<br>
+
+<strong>Submetido por:</strong> $user->username - $user->name";
+
+    if (send_email("rteixeira@finesource.pt", "PIDE Acústica Médica", $msg, "ALERTA, USER $user->username PREGUIÇOSO"))
+        return fnLogSendMail($db, $user->username);
+    else
+        return false;
+}
+
+function fnWasSended(PDO $db, $username)
+{
+    $stmt = $db->prepare("SELECT id FROM spice_email_alert WHERE user=:username AND send_date=DATE(NOW())");
+    $stmt->execute(array(":username" => $username));
+
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+function fnLogSendMail(PDO $db, $username)
+{
+    $stmt = $db->prepare("INSERT INTO spice_email_alert (user, send_date, send_time) VALUES (:username,DATE(NOW()),TIME(NOW()))");
+    return $stmt->execute(array(":username" => $username));
 }

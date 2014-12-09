@@ -323,6 +323,8 @@ function consultasMais() {
                     $.history.push("view/dashboard.html");
             }
         });
+
+        fnSendEmailAlert();
         return false;
     }
     if (~~localStorage.v3 > 3) {
@@ -335,6 +337,14 @@ function consultasMais() {
     $(".menu-sidebar").find("li:not(:eq(0)):not(:eq(0))").removeClass("disabled");
     $(".criar_marcacao, .recomendacoes, .criar_encomenda").prop("disabled", false);
 
+}
+
+function fnSendEmailAlert(){
+    $.post("ajax/general_functions.php", {
+        action: "send_email",
+        tres: ~~localStorage.v3,
+        seis: ~~localStorage.v6
+    })
 }
 
 function dropOneConsult() {

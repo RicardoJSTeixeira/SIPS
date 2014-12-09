@@ -1,6 +1,5 @@
 $(function () {
-    var me = this,
-        init = function (data, user) {
+    var init = function (data, user) {
         var
             sch,
             modals = {};
@@ -101,11 +100,6 @@ $(function () {
 
     };
 
-    var refresh=function()
-    {
-        me.init();
-    }
-
     $.post("/AM/ajax/calendar.php",
         {action: "dashboardInit"},
         function (data) {
@@ -199,7 +193,7 @@ $(function () {
     }, "json");
 
     $("#div_master")
-         .on("click", ".recomendacoes", function () {
+        .on("click", ".recomendacoes", function () {
             var en = btoa($(this).data().lead_id);
             $.history.push("view/mass_client.html?id=" + en);
         }).on("click", ".ver_consulta", function () {
@@ -208,7 +202,6 @@ $(function () {
                 lead_id = btoa(data.lead_id),
                 reserva_id = btoa(data.reserva_id);
 
-
             $.history.push("view/consulta.html?id=" + encodeURIComponent(lead_id) + "&rs=" + encodeURIComponent(reserva_id));
         })
         .on("click", ".ver_cliente", function () {
@@ -216,8 +209,7 @@ $(function () {
 
             client.initModal($(this).data("lead_id"), null);
 
-        })
-
+        });
 
     $("#table_tbody_mp").on('click', '.initC', function () {
         var

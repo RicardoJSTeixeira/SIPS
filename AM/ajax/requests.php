@@ -12,8 +12,8 @@ require "$root/AM/lib_php/db.php";
 require "$root/AM/lib_php/calendar.php";
 require "$root/AM/lib_php/user.php";
 require "$root/AM/lib_php/msg_alerts.php";
-require "$root/swiftemail/lib/swift_required.php";
 require "$root/AM/lib_php/logger.php";
+require "$root/AM/lib_php/sendmail.php";
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -466,21 +466,6 @@ $comments
 
     default:
         echo 'Are you an hacker? if so, then please come to finesource, where the company parties are full of alcohol and beautifull vanias!';
-}
-
-function send_email($email_address, $email_name, $msg, $assunto)
-{
-    $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
-        ->setUsername('ccamemail@gmail.com')
-        ->setPassword('ccamemail1234');
-
-    $mailer = Swift_Mailer::newInstance($transport);
-    $message = Swift_Message::newInstance($assunto)
-        ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
-        ->setTo(array($email_address => $email_name));
-    $message->setBody($msg, 'text/html');
-    $result = $mailer->send($message);
-    return ($result >= 1);
 }
 
 function postal2tr($postal)
