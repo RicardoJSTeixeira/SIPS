@@ -10118,7 +10118,54 @@ if ($ACTION == 'SEARCHRESULTSview') {
 
         if ($search_result_count) {
             //$stmt = "select first_name,last_name,phone_code,phone_number,status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list where $searchSQL $searchownerSQL $searchmethodSQL order by last_local_call_time desc limit 1000;";
-            $stmt = "select first_name,last_name,phone_code,phone_number,status_name as status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list a inner join vicidial_lists b on a.list_id=b.list_id inner join (select status,status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses $allowed_camps2 group by status) c on a.status=c.status where " . mysql_real_escape_string($search_field) . " like '%" . mysql_real_escape_string($search_query) . "%' $allowed_camp order by last_local_call_time desc limit 50;";
+            $stmt = "select
+                        first_name,
+                        last_name,
+                        phone_number,
+                        status_name,
+                        last_local_call_time,
+                        lead_id,
+                        city,
+                        state,
+                        postal_code,
+                        phone_number,
+                        title,
+                        first_name,
+                        middle_initial,
+                        last_name,
+                        address1,
+                        address2,
+                        address3,
+                        city,
+                        state,
+                        province,
+                        postal_code,
+                        country_code,
+                        gender,
+                        date_of_birth,
+                        alt_phone,
+                        email,
+                        security_phrase,
+                        comments,
+                        extra1,
+                        extra2,
+                        extra3,
+                        extra4,
+                        extra5,
+                        extra6,
+                        extra7,
+                        extra8,
+                        extra9,
+                        extra10,
+                        extra11,
+                        extra12,
+                        extra13,
+                        extra14,
+                        extra15
+  from vicidial_list a
+  inner join vicidial_lists b on a.list_id=b.list_id
+  inner join (select status,status_name from vicidial_statuses union all select status,status_name from vicidial_campaign_statuses $allowed_camps2 group by status) c on a.status=c.status where " . mysql_real_escape_string($search_field) . " like '%" . mysql_real_escape_string($search_query) . "%' $allowed_camp order by last_local_call_time desc limit 50;";
+
             $js["query"][] = $stmt;
             $rslt = mysql_query($stmt, $link);
             if ($mel > 0) {
@@ -10129,8 +10176,47 @@ if ($ACTION == 'SEARCHRESULTSview') {
                 echo "|$out_logs_to_print|$stmt|";
             }
 
-            while ($row = mysql_fetch_row($rslt)) {
-                $js["leads"][] = array("name" => "$row[0] $row[1]", "phone_number" => $row[3], "status" => $row[4], "call_date" => $row[5], "lead_id" => $row[6], "city" => $row[7], "state" => $row[8], "postal_code" => $row[9]);
+            while ($row = mysql_fetch_assoc($rslt)) {
+                $js["leads"][] = array(
+                    "name" => "$row[first_name] $row[last_name]",
+                    "status" => $row["status_name"],
+                    "call_date" => $row["last_local_call_time"],
+                    "lead_id"=>$row["lead_id"],
+                    "first_name"=>$row["first_name"],
+                    "middle_initial"=>$row["middle_initial"],
+                    "last_name"=>$row["last_name"],
+                    "phone_number"=>$row["phone_number"],
+                    "alt_phone"=>$row["alt_phone"],
+                    "address3"=>$row["address3"],
+                    "city"=>$row["city"],
+                    "state"=>$row["state"],
+                    "postal_code"=>$row["postal_code"],
+                    "title"=>$row["title"],
+                    "address1"=>$row["address1"],
+                    "address2"=>$row["address2"],
+                    "province"=>$row["province"],
+                    "country_code"=>$row["country_code"],
+                    "gender"=>$row["gender"],
+                    "date_of_birth"=>$row["date_of_birth"],
+                    "email"=>$row["email"],
+                    "security_phrase"=>$row["security_phrase"],
+                    "comments"=>$row["comments"],
+                    "extra1"=>$row["extra1"],
+                    "extra2"=>$row["extra2"],
+                    "extra3"=>$row["extra3"],
+                    "extra4"=>$row["extra4"],
+                    "extra5"=>$row["extra5"],
+                    "extra6"=>$row["extra6"],
+                    "extra7"=>$row["extra7"],
+                    "extra8"=>$row["extra8"],
+                    "extra9"=>$row["extra9"],
+                    "extra10"=>$row["extra10"],
+                    "extra11"=>$row["extra11"],
+                    "extra12"=>$row["extra12"],
+                    "extra13"=>$row["extra13"],
+                    "extra14"=>$row["extra14"],
+                    "extra15"=>$row["extra15"]
+                );
             }
 
             if (!mysql_num_rows($rslt)) {

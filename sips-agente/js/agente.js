@@ -51,7 +51,6 @@ function nc_log() {
         lead_id: nc_live_id,
         lead_id_o: lead_id_hack
     }, function (data) {
-        console.log(data);
     });
 }
 // ################################################################################
@@ -1081,7 +1080,9 @@ function CalLBacKsCounTCheck() {
 }
 // ################################################################################
 // Request list of USERONLY callbacks for this agent
+
 function CalLBacKsLisTCheck() {
+
     hideDiv("CallBackSelectBox");
     var move_on = 1;
     if (/*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
@@ -1125,9 +1126,9 @@ function CalLBacKsLisTCheck() {
                                 <td>" + this.status + "</td>\n\
                                 <td>" + this.campaign_id + "</td>\n\
                                 <td><time datetime=\"" + this.callback_time + "\" title=\"" + moment(this.entry_time).format("dddd, MMMM Do YYYY, hh:mm:ss") + "\" >" + moment(this.entry_time).fromNow() + "</time>\n\
-                                <div class=\"view-button\"><button onclick=\"ApagaCallback('" + this.callback_id + "');\" class=\"btn btn-mini activator \"><i class=\"icon-trash\"></i>Eliminar</button></div>\n\
+                                <div class=\"view-button\"><button type=\"button\" onclick=\"ApagaCallback('" + this.callback_id + "');\" class=\"btn btn-mini activator \"><i class=\"icon-trash\"></i>Eliminar</button></div>\n\
                                 <div class=\"view-button\"><a href='#' class=\"btn btn-mini activator\" onclick=\"VieWLeaDInfO('" + this.lead_id + "','" + this.callback_id + "');return false;\"><i class=\"icon-folder-open\"></i>Info</a></div>\n\
-                                <div class=\"view-button\"><button  onclick=\"new_callback_call('" + this.callback_id + "','" + this.lead_id + "','MAIN');\" class=\"btn btn-mini activator \"><i class=\"icon-phone\"></i>Chamar</button></div> </td>";
+                                <div class=\"view-button\"><button type=\"button\"  onclick=\"new_callback_call('" + this.callback_id + "','" + this.lead_id + "','MAIN');\" class=\"btn btn-mini activator \"><i class=\"icon-phone\"></i>Chamar</button></div> </td>";
                     if (this.status === "Inativo") {
                         inactivos += "<tr style='opacity:0.5;' >" + tbl_row + "</tr>";
                     } else {
@@ -3328,7 +3329,6 @@ function dialedcall_send_hangup(dispowindow, hotkeysused, altdispo, nodeletevdac
 // Send Hangup command for 3rd party call connected to the conference now to Manager
 function xfercall_send_hangup() {
     var xferchannel = document.vicidial_form.xferchannel.value;
-    console.log("xferchannel = " + xferchannel + "valor?");
     var xfer_channel = lastxferchannel;
 
 
@@ -3339,7 +3339,6 @@ function xfercall_send_hangup() {
         DialTimeHangup('XFER');
     }
     if (xferchannel.length > 3) {
-        console.log("entrou 2");
         var xmlhttp = false;
         /*@cc_on @*/
         /*@if (@_jscript_version >= 5)
@@ -3362,7 +3361,6 @@ function xfercall_send_hangup() {
             var queryCID = "HXvdcW" + epoch_sec + user_abb;
             var hangupvalue = xfer_channel;
             custhangup_query = "server_ip=" + server_ip + "&session_name=" + session_name + "&ACTION=Hangup&format=text&user=" + user + "&pass=" + pass + "&channel=" + hangupvalue + "&queryCID=" + queryCID + "&log_campaign=" + campaign;
-            console.log(custhangup_query);
             xmlhttp.open('POST', 'manager_send.php');
             xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xmlhttp.send(custhangup_query);
@@ -3664,9 +3662,9 @@ function OpeNSearcHForMDisplaYBox() {
         return;
     }
 
-
+/*
     if (AgentDispoing > 0) {
-        alert_box('Termine Wrap-up da chamada.')
+        alert_box('Termine Wrap-up da chamada.');
         return;
     }
     if (AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
@@ -3674,7 +3672,7 @@ function OpeNSearcHForMDisplaYBox() {
         return;
     }
     var move_on = 1;
-    if (/*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
+    if (/*(AutoDialWaiting == 1) ||*//* (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
         if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1)) {
             AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
         }
@@ -3683,12 +3681,12 @@ function OpeNSearcHForMDisplaYBox() {
             alert_box("Tem que estar em pause para procurar um contacto");
         }
     }
-    if (move_on == 1) {
+    if (move_on == 1) {*/
 
         HidEGenDerPulldown();
         showDiv('SearcHForMDisplaYBox');
         WaitingForNextStep = 1;
-    }
+    //}
 }
 // ################################################################################
 // Submit chosen Preset
@@ -3873,7 +3871,6 @@ function DispoSelect_submit_allowed() {
                                 length_in_sec: AgainCalLSecondS
                             }, function (data) {
                                 unique_id_hack = "";
-                                console.log(data);
                             });
                             DispoSubmitFinalStep();
                             $('#vcFormIFrame', parent.window.document)[0].src = "";
@@ -3895,7 +3892,6 @@ function DispoSelect_submit_allowed() {
                         length_in_sec: AgainCalLSecondS
                     }, function (data) {
                         unique_id_hack = "";
-                        console.log(data);
                     });
                     DispoSubmitFinalStep();
                     $('#vcFormIFrame', parent.window.document)[0].src = "";
@@ -3957,7 +3953,6 @@ function DispoSelect_submit_allowed() {
                     length_in_sec: AgainCalLSecondS
                 }, function (data) {
                     unique_id_hack = "";
-                    console.log(data);
                 });
             }
             DispoSubmitFinalStep();
@@ -5863,10 +5858,10 @@ function aplica_morada(that) {
 // ################################################################################
 // Gather and display lead search data
 function LeadSearchSubmit() {
-    if (/*(AutoDialWaiting == 1) ||*/ (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
+   /* if (/*(AutoDialWaiting == 1) ||*/ /*(VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
         alert_box("Tem que estar em pausa para pequisar um contacto");
     }
-    else {
+    else {*/
         showDiv('SearcHResultSDisplaYBox');
 
         document.getElementById('SearcHResultSSpan').innerHTML = "<tr><td colspan=9 ><img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...</td></tr> ";
@@ -5892,7 +5887,7 @@ function LeadSearchSubmit() {
                 if (data.error.length) {
                     $.each(data.error, function () {
                             container.append("<tr>\n\
-                                                <td colspan=9 >" + this + "</td>\n\
+                                                <td colspan='10' >" + this + "</td>\n\
                                                 </tr>");
                         }
                     );
@@ -5910,12 +5905,13 @@ function LeadSearchSubmit() {
                                                 <td>" + this.postal_code + "</td>\n\
                                                 <td><button class=\"btn icon-alone btn-mini\" onclick=\"VieWLeaDInfO(" + this.lead_id + ");\" ><i class=\"icon-info-sign\"></i></button></td>\n\
                                                 <td><button class=\"btn icon-alone btn-mini leadSearchCall\" data-phone='" + this.phone_number + "' data-lead_id='" + this.lead_id + "' \"><i class=\"icon-phone\"></i></button></td>\n\
+                                                <td><button class=\"btn icon-alone btn-mini leadSearchImport\" data-data='" + JSON.stringify(this) + "' \"><i class=\"icon-plus\"></i></button></td>\n\
                                         </tr>");
                 });
             }, "json");
 
 
-    }
+    //}
 }
 
 $(document).on("click", ".leadSearchCall", function () {
@@ -5924,6 +5920,14 @@ $(document).on("click", ".leadSearchCall", function () {
     document.vicidial_form.MDPhonENumbeR.value = $(this).data().phone;
     document.vicidial_form.MDLeadID.value = $(this).data().lead_id;
     NeWManuaLDiaLCalLSubmiT('PREVIEW');
+});
+
+$(document).on("click", ".leadSearchImport", function () {
+    $("#SearcHForMDisplaYBox, #SearcHResultSDisplaYBox").hide();
+    var oData=$(this).data().data;
+    $.each(oData,function(i, val){
+        $("#"+i).val(val);
+    })
 });
 
 
@@ -5974,7 +5978,7 @@ function VieWNotesLoG(logframe) {
                 //	alert(xmlhttp.responseText);
                 document.getElementById('CallNotesSpan').innerHTML = xmlhttp.responseText + "\n";
             }
-        }
+        };
         delete xmlhttp;
     }
 }
@@ -6011,7 +6015,7 @@ function customer_3way_hangup_process(temp_hungup_time, temp_xfer_call_seconds) 
                 //	alert(xmlhttp.responseText);
                 document.getElementById("debugbottomspan").innerHTML = "CUSTOMER 3WAY HANGUP " + xmlhttp.responseText;
             }
-        }
+        };
         delete xmlhttp;
     }
 }
@@ -8158,7 +8162,6 @@ function getPi() {
     $('#ordensPi tbody').empty();
 
     $.post("../client_files/necomplus/soap_api.php", {phone: apiPhone}, function (data) {
-        console.log(data.codresultado);
         if (data.codresultado == '0') {
             $("#nomePi").html(data.nombre_comercio);
             $("#codigoPi").html(data.codigo_comercio);
@@ -8170,7 +8173,6 @@ function getPi() {
             }
             var b = 1;
             for (i = 1; i < 6; i++) {
-                console.log('in' + data.datos_num_orden['num_orden_' + i]);
                 if (data.datos_num_orden['num_orden_' + i] !== undefined) {
                     $('#ordensPi tbody').append('<tr><td>' + data.datos_num_orden['fechor_' + i] + '</td><td>' + data.datos_num_orden['estado_' + i] + '</td><td>' + data.datos_num_orden['num_orden_' + i] + '</td><td>' + data.datos_num_orden['tipo_orden_' + i] + '</td></tr>');
                 }
@@ -8663,6 +8665,7 @@ $(function () {
 
 
     $("#MDPhonENumbeR").keypress(function (e) {
+        e.stopPropagation();
         if (e.which == 13) {
             NeWManuaLDiaLCalLSubmiT('PREVIEW');
             $("#MDPhonENumbeR")[0].blur();
@@ -8815,7 +8818,3 @@ function alert_box_max_callbacks() {
 $(document).on("click", "#alertbox_eliminar_callbacks", function () {
     CalLBacKsLisTCheck();
 });
-
-
-
-

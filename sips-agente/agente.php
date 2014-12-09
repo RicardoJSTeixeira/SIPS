@@ -582,7 +582,7 @@ header("Pragma: no-cache");                          // HTTP/1.0
                         </div>
                         <div class="control-group">
                             <div class="controls">
-                                <button class="btn btn-primary"><i class="icon-signin"></i> Log-In </button>
+                                <button  type="submit" class="btn btn-primary"><i class="icon-signin"></i> Log-In </button>
                             </div>
                         </div>
                         <div class="clear"></div>
@@ -647,7 +647,7 @@ $phone_pass = $result_phone_pass[0];
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary"><i class="icon-signin"></i> Log-In</button>
+                            <button type="submit" class="btn btn-primary"><i class="icon-signin"></i> Log-In</button>
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -1647,7 +1647,7 @@ $phone_pass = $result_phone_pass[0];
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary"><i class="icon-signin"></i> Log-In</button>
+                            <button type="submit" class="btn btn-primary"><i class="icon-signin"></i> Log-In</button>
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -1821,7 +1821,7 @@ if (!$authphone) {
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary"><i class="icon-signin"></i> Log-In</button>
+                            <button type="submit" class="btn btn-primary"><i class="icon-signin"></i> Log-In</button>
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -3856,7 +3856,7 @@ $h++;
             </tr>
             
             <tr class='spacer16'></tr>
-            <tr><td colspan='2' style='text-align:left'><button id='send-email'>Enviar Email</button></td></tr>
+            <tr><td colspan='2' style='text-align:left'><button type='button' id='send-email'>Enviar Email</button></td></tr>
             <tr class='spacer16'></tr>
             <tr><td id='email-log'></td></tr>
             </table>    
@@ -3948,10 +3948,10 @@ $h++;
 
             <div id="CallHistoryDialog" style="display:none">
                 <div class="text-center">
-                    <button id="change-lostcalls" class="btn btn-small">Chamadas Perdidas</button>
-                    <button id="change-inbound" class="btn btn-small">Chamadas de Inbound</button>
-                    <button id="change-manual" class="btn btn-small">Chamadas Manuais</button>
-                    <button id="change-outbound" class="btn btn-small">Chamadas de Outbound</button>
+                    <button type="button" id="change-lostcalls" class="btn btn-small">Chamadas Perdidas</button>
+                    <button type="button" id="change-inbound" class="btn btn-small">Chamadas de Inbound</button>
+                    <button type="button" id="change-manual" class="btn btn-small">Chamadas Manuais</button>
+                    <button type="button" id="change-outbound" class="btn btn-small">Chamadas de Outbound</button>
                 </div>
                 <div> 
                     <table id='table-CallHistory' class="table table-mod-2 table-condensed">
@@ -4593,8 +4593,8 @@ $h++;
                         </div>
                     </div>
                     <div class="row-fluid">
-                        <button onClick=" CalLBacKsLisTCheck();" class="btn btn-info"><i class="icon-external-link"></i>Ver Lista Callbacks</button>
-                        <button onClick="CallBackDatE_submit();" class="btn btn-success right"><i class="icon-save"></i>Gravar</button>
+                        <button type="button" onClick="CalLBacKsLisTCheck();" class="btn btn-info"><i class="icon-external-link"></i>Ver Lista Callbacks</button>
+                        <button type="button" onClick="CallBackDatE_submit();" class="btn btn-success right"><i class="icon-save"></i>Gravar</button>
                     </div>
                 </div>
             </div>
@@ -4609,7 +4609,7 @@ $h++;
                         <input type="text" class="input-small" maxlength="4" id="cb_date_1" placeholder="Data Inicio">
                         <i class="icon-minus"></i>
                         <input type="text" class="input-small" maxlength="3" id="cb_date_2" placeholder="Data Fim">
-                        <button class="btn" onClick="CalLBacKsLisTCheck();" style="cursor: pointer;"><i class="icon-refresh"></i>Atualizar</button>
+                        <button class="btn"  type="button" onClick="CalLBacKsLisTCheck();" style="cursor: pointer;"><i class="icon-refresh"></i>Atualizar</button>
                     </div>
                     <span class="help-block">Se não preencher as datas com o calendario, apenas aparecerá os callbacks de hoje.</span>
                     <div class="formRow" style="max-height: 330px;overflow-y: auto;">
@@ -4813,7 +4813,7 @@ $h++;
                         </div>                          
                         <div class="control-group">
                             <div class="controls">
-                                <button class="btn" onClick="LeadSearchSubmit();" style="cursor: pointer;"><i class="icon-search"></i>Procurar</button>
+                                <button class="btn" type="button" onClick="LeadSearchSubmit();" style="cursor: pointer;"><i class="icon-search"></i>Procurar</button>
                             </div>
                         </div>
 
@@ -4831,7 +4831,7 @@ $h++;
                         <input type="text" class="input-small" id="cp_4" maxlength="4" placeholder="CP4">
                         <i class="icon-minus"></i>
                         <input type="text" class="input-small" id="cp_3" maxlength="3" placeholder="CP3" >
-                        <button onClick="pesquisa_morada();" class="btn" >Pesquisar</button>
+                        <button onClick="pesquisa_morada();" type="button" class="btn" >Pesquisar</button>
                     </div>
                     <div class="formRow" style="height: 140px;overflow-y: auto;">
                         <table class="table table-striped table-bordered table-condensed table-mod" id="result_moradas">
@@ -4870,6 +4870,7 @@ $h++;
                                 <TH> Cod. Postal </TH>
                                 <TH> Info </TH>
                                 <TH> Chamar </TH>
+                                <TH> Importar </TH>
                             </TR>
                         </thead>
                         <tbody id="SearcHResultSSpan">
@@ -5055,8 +5056,8 @@ $h++;
                 <p></p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success" id="bitch-answer-answer"><i class="icon-phone"></i>Atender</button>
-                <button class="btn btn-link">Cancelar</button>
+                <button class="btn btn-success"  type="button" id="bitch-answer-answer"><i class="icon-phone"></i>Atender</button>
+                <button class="btn btn-link"  type="button">Cancelar</button>
             </div>
         </div>
     </div>
@@ -5066,7 +5067,7 @@ $h++;
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button  class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Validar chamada</h4>
                 </div>
 
