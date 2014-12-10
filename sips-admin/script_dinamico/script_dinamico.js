@@ -173,10 +173,10 @@ $(function() {
             $("#script_linha_inbound_selector").trigger("chosen:updated");
         }, "json");
 
-        $.post("requests.php", {action: "iscloud"},
+        /*$.post("requests.php", {action: "iscloud"},
         function(data2) {
             $(".linha_inbound_div").toggle(data2);
-        }, "json");
+        }, "json");*/
         
         $.post("requests.php", {
             action: "get_schedule"
