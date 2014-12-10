@@ -102,7 +102,7 @@ if($action=="send_email")
     require_once 'lib/swift_required.php';
     $transport = Swift_SmtpTransport::newInstance('mail.exemplyrigor.com', 25)
       ->setUsername('info@exemplyrigor.com')      
-      ->setPassword('eenergy1234');
+      ->setPassword('eenergy');
 
     $mailer = Swift_Mailer::newInstance($transport);
 
