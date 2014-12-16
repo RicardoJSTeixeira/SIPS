@@ -48,20 +48,67 @@ switch ($action) {
         break;
 
     case "make_alert":
-        echo json_encode($alert->make($is_for, $alert, $section, $record_id,$cancel));
+        echo json_encode($alert->make($is_for, $alert, $section, $record_id, $cancel));
         break;
 
     case "send_email":
         include("../lib_php/sendmail.php");
-        echo json_encode(fnSendEmailAlert($db, $user->getUser(), $tres, $seis));
+        $UserC = new UserControler($db, $user);
+        echo json_encode(SendEmail::fnSendEmailAlert($db, $UserC, $user, $tres, $seis));
         break;
 }
 
-function fnSendEmailAlert(PDO $db, $user, $tres, $seis){
-    if (fnWasSended($db, $user->username))
+class SendEmail
+{
+
+    static function fnSendEmailAlert(PDO $db, UserControler $UserC, $user, $tres, $seis)
+    {
+        $BossUser = (object) array("user" => "RGE", "full_name" => "rge@acusticamedica.pt");
+        $aoParents = $UserC->getAll(false, $user->username);
+
+        if ($seis)
+            $aoParents[] = $BossUser;
+
+        foreach ($aoParents AS $oParent) {
+
+            $email = $oParent->full_name;
+
+            if (!SendEmail::fnIsEmail($email))
+                continue;
+
+            if (SendEmail::fnWasSended($db, $user->username, $oParent->user))
+                continue;
+
+            $msg = SendEmail::fnMakeMsg($user, $tres, $seis);
+
+            if (send_email($email, "SPICE ALERTA Acústica Médica", $msg, "ALERTA, USER $user->username PREGUIÇOSO"))
+                SendEmail::fnLogSendMail($db, $user->username, $oParent->user);
+            else
+                break;
+
+        }
+
         return true;
 
-    $msg = "<h3>ALERTA, USER $user->username</h3>
+    }
+
+    static function fnWasSended(PDO $db, $username, $parent)
+    {
+        $stmt = $db->prepare("SELECT id FROM spice_email_alert WHERE user=:username AND parent=:parent AND send_date=DATE(NOW())");
+        $stmt->execute(array(":username" => $username,":parent" => $parent));
+
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    static function fnLogSendMail(PDO $db, $username, $parent)
+    {
+        $stmt = $db->prepare("INSERT INTO spice_email_alert (user, send_date, send_time, parent) VALUES (:username, DATE(NOW()), TIME(NOW()), :parent)");
+        return $stmt->execute(array(":username" => $username,":parent" => $parent));
+    }
+
+    static function fnMakeMsg($user, $tres, $seis)
+    {
+        return "<h3>ALERTA, USER $user->username</h3>
 
 <strong>Consultas com mais de 3dias:</strong> $tres
 <br>
@@ -72,23 +119,10 @@ function fnSendEmailAlert(PDO $db, $user, $tres, $seis){
 <br>
 
 <strong>Submetido por:</strong> $user->username - $user->name";
+    }
 
-    if (send_email("rge@acusticamedica.pt", "SPICE ALERTA Acústica Médica", $msg, "ALERTA, USER $user->username PREGUIÇOSO"))
-        return fnLogSendMail($db, $user->username);
-    else
-        return false;
-}
-
-function fnWasSended(PDO $db, $username)
-{
-    $stmt = $db->prepare("SELECT id FROM spice_email_alert WHERE user=:username AND send_date=DATE(NOW())");
-    $stmt->execute(array(":username" => $username));
-
-    return $stmt->fetch(PDO::FETCH_OBJ);
-}
-
-function fnLogSendMail(PDO $db, $username)
-{
-    $stmt = $db->prepare("INSERT INTO spice_email_alert (user, send_date, send_time) VALUES (:username,DATE(NOW()),TIME(NOW()))");
-    return $stmt->execute(array(":username" => $username));
+    static function fnIsEmail($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
 }

@@ -134,16 +134,16 @@ class UserControler
 
     public function get($username)
     {
-        $query = "SELECT user, pass, full_name, user_level, active, siblings,alias FROM vicidial_users WHERE user_group=:user_group and user=:username;";
+        $query = "SELECT user, pass, full_name, user_level, active, siblings, alias FROM vicidial_users WHERE user_group=:user_group and user=:username;";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup, ":username" => $username));
         $row = $stmt->fetch(PDO::FETCH_OBJ);
         return (object)array("user" => $row->user, "pass" => $row->pass, "full_name" => $row->full_name, "user_level" => $row->user_level, "active" => $row->active, "siblings" => json_decode($row->siblings), "alias" => $row->alias);
     }
 
-    public function getAll($userlevel = false)
+    public function getAll($userlevel = false, $sibling=false)
     {
-        $query = "SELECT user, full_name, user_level, active, siblings,alias FROM vicidial_users WHERE user_group=:user_group " . (($userlevel) ? " AND user_level=$userlevel" : "") . ";";
+        $query = "SELECT user, full_name, user_level, active, siblings, alias FROM vicidial_users WHERE user_group=:user_group " . (($userlevel) ? " AND user_level=$userlevel" : "") . (($sibling) ? " AND siblings REGEXP '\"$sibling\"'" : "") . ";";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":user_group" => $this->_ugroup));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -210,26 +210,27 @@ class UserControler
         return $js;
     }
 
-
     public function get_notes($lead_id)
     {
-        $query = "Select * from spice_usernotes where lead_id=:lead_id and deleted=0 order by modify_date desc";
+        $query = "SELECT id, entry_date, modify_date, note, title, lead_id, deleted FROM spice_usernotes WHERE lead_id=:lead_id AND deleted=0 ORDER BY modify_date DESC";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
     public function get_notes_to_datatable($lead_id)
     {
-        $query = "Select id,title,note,entry_date,modify_date from spice_usernotes where lead_id=:lead_id and deleted=0 ";
+        $query = "SELECT id, title, note, entry_date, modify_date FROM spice_usernotes WHERE lead_id=:lead_id AND deleted=0 ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":lead_id" => $lead_id));
         $output['aaData']=$stmt->fetchAll(PDO::FETCH_NUM);
         return $output;
     }
+
     public function get_note($note_id)
     {
-        $query = "Select * from spice_usernotes where id=:note_id ";
+        $query = "SELECT id, entry_date, modify_date, note, title, lead_id, deleted FROM spice_usernotes WHERE id=:note_id ";
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":note_id" => $note_id));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -237,7 +238,7 @@ class UserControler
 
     public function insert_notes($lead_id, $note, $title)
     {
-        $query = "INSERT INTO spice_usernotes (entry_date,modify_date, note, title,lead_id,deleted) VALUES (:entry_date,:modify_date,:note,:title,:lead_id,:deleted );";
+        $query = "INSERT INTO spice_usernotes ( entry_date, modify_date, note, title, lead_id, deleted ) VALUES ( :entry_date, :modify_date, :note, :title, :lead_id, :deleted );";
         $stmt = $this->_db->prepare($query);
          $stmt->execute(array(":entry_date" => date('Y-m-d H:i:s'), ":modify_date" =>null, ":note" => $note, ":title" => $title, ":lead_id" => $lead_id, ":deleted" => 0));
     return array("id"=>$this->_db->lastInsertId(),"entry_date" => date('Y-m-d H:i:s'), "modify_date" =>null, "note" => $note, "title" => $title, "lead_id" => $lead_id, "deleted" => 0);
@@ -245,7 +246,7 @@ class UserControler
 
     public function edit_notes($note_id, $note, $title)
     {
-        $query = "Update spice_usernotes set note=:note,title=:title,modify_date=:modify_date where id=:note_id;";
+        $query = "UPDATE spice_usernotes SET note=:note,title=:title,modify_date=:modify_date WHERE id=:note_id;";
         $stmt = $this->_db->prepare($query);
          $stmt->execute(array(":note" => $note, ":title" => $title, ":modify_date" => date('Y-m-d H:i:s'), ":note_id" => $note_id));
            return $this->get_note($note_id);
@@ -253,10 +254,9 @@ class UserControler
 
     public function delete_notes($note_id)
     {
-        $query = "Update spice_usernotes set deleted=:deleted where id=:note_id;";
+        $query = "UPDATE spice_usernotes SET deleted=:deleted WHERE id=:note_id;";
         $stmt = $this->_db->prepare($query);
         return $stmt->execute(array(":deleted" => 1,":note_id"=>$note_id));
     }
-
 
 }
