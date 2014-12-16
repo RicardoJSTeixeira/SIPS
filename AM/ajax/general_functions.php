@@ -53,8 +53,8 @@ switch ($action) {
 
     case "send_email":
         include("../lib_php/sendmail.php");
-        $UserC = new UserControler($db, $user);
-        echo json_encode(SendEmail::fnSendEmailAlert($db, $UserC, $user, $tres, $seis));
+        $UserC = new UserControler($db, $u);
+        echo json_encode(SendEmail::fnSendEmailAlert($db, $UserC, $u, $tres, $seis));
         break;
 }
 
@@ -94,6 +94,7 @@ class SendEmail
 
     static function fnWasSended(PDO $db, $username, $parent)
     {
+
         $stmt = $db->prepare("SELECT id FROM spice_email_alert WHERE user=:username AND parent=:parent AND send_date=DATE(NOW())");
         $stmt->execute(array(":username" => $username,":parent" => $parent));
 
