@@ -30,6 +30,8 @@ switch ($action) {
             array("name" => "Nome", "value" => (String)$row->first_name . " " . $row->middle_initial . " " . $row->last_name),
             array("name" => "Localidade", "value" => (String)$row->local),
             array("name" => "Telefone", "value" => (String)$row->phone_number),
+            array("name" => "Telefone1", "value" => (String)$row->alt_phone),
+            array("name" => "Telefone2", "value" => (String)$row->address3),
             array("name" => "Codigo Postal", "value" => (String)$row->postal_code),
             array("name" => "Morada", "value" => (String)$row->address1 . " " . $row->address2),
             array("name" => "Comentários", "value" => (String)$row->comments)
