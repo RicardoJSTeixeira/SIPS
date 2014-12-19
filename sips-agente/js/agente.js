@@ -3662,30 +3662,31 @@ function OpeNSearcHForMDisplaYBox() {
         return;
     }
 
-/*
-    if (AgentDispoing > 0) {
-        alert_box('Termine Wrap-up da chamada.');
-        return;
-    }
-    if (AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
-        alert_box('Seleccione o motivo de pausa por favor.');
-        return;
-    }
-    var move_on = 1;
-    if (/*(AutoDialWaiting == 1) ||*//* (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
-        if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1)) {
-            AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
-        }
-        else {
-            move_on = 0;
-            alert_box("Tem que estar em pause para procurar um contacto");
-        }
-    }
-    if (move_on == 1) {*/
+    /*
+     if (AgentDispoing > 0) {
+     alert_box('Termine Wrap-up da chamada.');
+     return;
+     }
+     if (AutoDialReady == 0 && auto_dial_level > 0 && pause_code_counter == 0) {
+     alert_box('Seleccione o motivo de pausa por favor.');
+     return;
+     }
+     var move_on = 1;
+     if (/*(AutoDialWaiting == 1) ||*/
+    /* (VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
+     if ((auto_pause_precall == 'Y') && ((agent_pause_codes_active == 'Y') || (agent_pause_codes_active == 'FORCE')) && (AutoDialWaiting == 1) && (VD_live_customer_call != 1) && (alt_dial_active != 1) && (MD_channel_look != 1) && (in_lead_preview_state != 1)) {
+     AutoDial_ReSume_PauSe("VDADpause", '', '', '', '', '1', auto_pause_precall_code);
+     }
+     else {
+     move_on = 0;
+     alert_box("Tem que estar em pause para procurar um contacto");
+     }
+     }
+     if (move_on == 1) {*/
 
-        HidEGenDerPulldown();
-        showDiv('SearcHForMDisplaYBox');
-        WaitingForNextStep = 1;
+    HidEGenDerPulldown();
+    showDiv('SearcHForMDisplaYBox');
+    WaitingForNextStep = 1;
     //}
 }
 // ################################################################################
@@ -5858,48 +5859,49 @@ function aplica_morada(that) {
 // ################################################################################
 // Gather and display lead search data
 function LeadSearchSubmit() {
-   /* if (/*(AutoDialWaiting == 1) ||*/ /*(VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
-        alert_box("Tem que estar em pausa para pequisar um contacto");
-    }
-    else {*/
-        showDiv('SearcHResultSDisplaYBox');
+    /* if (/*(AutoDialWaiting == 1) ||*/
+    /*(VD_live_customer_call == 1) || (alt_dial_active == 1) || (MD_channel_look == 1) || (in_lead_preview_state == 1)) {
+     alert_box("Tem que estar em pausa para pequisar um contacto");
+     }
+     else {*/
+    showDiv('SearcHResultSDisplaYBox');
 
-        document.getElementById('SearcHResultSSpan').innerHTML = "<tr><td colspan=9 ><img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...</td></tr> ";
+    document.getElementById('SearcHResultSSpan').innerHTML = "<tr><td colspan='10' ><img src=/images/icons/ajax-loader.gif id=loader style='display: inline;vertical-align:middle;'> A Procurar...</td></tr> ";
 
-        LSview_query = {
-            server_ip: server_ip,
-            session_name: session_name,
-            ACTION: "SEARCHRESULTSview",
-            format: "text",
-            user: user,
-            pass: pass,
-            conf_exten: session_id,
-            extension: extension,
-            protocol: protocol,
-            search_field: document.vicidial_form.search_field.value,
-            search_query: document.vicidial_form.search_query.value,
-            campaign: campaign
-        };
-        $.post("vdc_db_query.php",
-            LSview_query,
-            function (data) {
-                var container = $('#SearcHResultSSpan').empty();
-                if (data.error.length) {
-                    $.each(data.error, function () {
-                            container.append("<tr>\n\
+    LSview_query = {
+        server_ip: server_ip,
+        session_name: session_name,
+        ACTION: "SEARCHRESULTSview",
+        format: "text",
+        user: user,
+        pass: pass,
+        conf_exten: session_id,
+        extension: extension,
+        protocol: protocol,
+        search_field: document.vicidial_form.search_field.value,
+        search_query: document.vicidial_form.search_query.value,
+        campaign: campaign
+    };
+    $.post("vdc_db_query.php",
+        LSview_query,
+        function (data) {
+            var container = $('#SearcHResultSSpan').empty();
+            if (data.error.length) {
+                $.each(data.error, function () {
+                        container.append("<tr>\n\
                                                 <td colspan='10' >" + this + "</td>\n\
                                                 </tr>");
-                        }
-                    );
+                    }
+                );
 
-                    return false;
-                }
-                $.each(data.leads, function () {
-                    container.append("<tr>\n\
+                return false;
+            }
+            $.each(data.leads, function () {
+                container.append("<tr>\n\
                                                 <td>" + this.name + "</td>\n\
                                                 <td>" + this.phone_number + "</td>\n\
                                                 <td>" + this.status + "</td>\n\
-                                                <td>" + moment(this.call_date).fromNow() + "</td>\n\
+                                                <td>" + ((this.call_date) ? moment(this.call_date).fromNow() : "") + "</td>\n\
                                                 <td>" + this.city + "</td>\n\
                                                 <td>" + this.state + "</td>\n\
                                                 <td>" + this.postal_code + "</td>\n\
@@ -5907,8 +5909,8 @@ function LeadSearchSubmit() {
                                                 <td><button class=\"btn icon-alone btn-mini leadSearchCall\" data-phone='" + this.phone_number + "' data-lead_id='" + this.lead_id + "' \"><i class=\"icon-phone\"></i></button></td>\n\
                                                 <td><button class=\"btn icon-alone btn-mini leadSearchImport\" data-data='" + JSON.stringify(this) + "' \"><i class=\"icon-plus\"></i></button></td>\n\
                                         </tr>");
-                });
-            }, "json");
+            });
+        }, "json");
 
 
     //}
@@ -5924,10 +5926,18 @@ $(document).on("click", ".leadSearchCall", function () {
 
 $(document).on("click", ".leadSearchImport", function () {
     $("#SearcHForMDisplaYBox, #SearcHResultSDisplaYBox").hide();
-    var oData=$(this).data().data;
-    $.each(oData,function(i, val){
-        $("#"+i).val(val);
-    })
+    var oData = $(this).data().data;
+
+    delete oData.lead_id;
+    $.each(oData, function (i, val) {
+        $("#" + i).val(val);
+    });
+
+    $.post("ajax/contact_update.php", {id: $("#lead_id").val(), ovalues: JSON.stringify(oData)}, function () {
+        $('#vcFormIFrame').attr('src', function (i, val) {
+            return val;
+        });
+    }, "json")
 });
 
 

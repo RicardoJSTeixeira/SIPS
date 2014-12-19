@@ -10117,7 +10117,6 @@ if ($ACTION == 'SEARCHRESULTSview') {
 
 
         if ($search_result_count) {
-            //$stmt = "select first_name,last_name,phone_code,phone_number,status,last_local_call_time,lead_id,city,state,postal_code from vicidial_list where $searchSQL $searchownerSQL $searchmethodSQL order by last_local_call_time desc limit 1000;";
             $stmt = "select
                         first_name,
                         last_name,
