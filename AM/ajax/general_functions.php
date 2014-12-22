@@ -64,7 +64,7 @@ class SendEmail
     static function fnSendEmailAlert(PDO $db, UserControler $UserC, $user, $tres, $seis)
     {
         $BossUser = (object) array("user" => "RGE", "full_name" => "rge@acusticamedica.pt");
-        $aoParents = $UserC->getAll($UserC::ASM, $user->username);
+        $aoParents = $UserC->getAll($UserC::ASM, $user->alias);
 
         if ($seis)
             $aoParents[] = $BossUser;
@@ -76,13 +76,13 @@ class SendEmail
             if (!SendEmail::fnIsEmail($email))
                 continue;
 
-            if (SendEmail::fnWasSended($db, $user->username, $oParent->user))
+            if (SendEmail::fnWasSended($db, $user->alias, $oParent->user))
                 continue;
 
             $msg = SendEmail::fnMakeMsg($user, $tres, $seis);
 
-            if (send_email($email, "SPICE ALERTA Acústica Médica", $msg, "ALERTA, USER $user->username PREGUIÇOSO"))
-                SendEmail::fnLogSendMail($db, $user->username, $oParent->user);
+            if (send_email($email, "SPICE ALERTA Acústica Médica", $msg, "ALERTA, USER $user->alias PREGUIÇOSO"))
+                SendEmail::fnLogSendMail($db, $user->alias, $oParent->user);
             else
                 break;
 
@@ -109,7 +109,7 @@ class SendEmail
 
     static function fnMakeMsg($user, $tres, $seis)
     {
-        return "<h3>ALERTA, USER $user->username</h3>
+        return "<h3>ALERTA, USER $user->alias</h3>
 
 <strong>Consultas com mais de 3dias:</strong> $tres
 <br>
