@@ -171,7 +171,7 @@
                                 <tr>
                                     <?php
                                     //if ($mes = "") {$mes = date('m');}
-                                    $ano = date('o');
+                                    $ano = date('Y');
                                     $semidata = $ano . "-" . $mes . "-";
                                     $faltas = 0;
 
