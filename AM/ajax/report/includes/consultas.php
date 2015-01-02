@@ -19,6 +19,10 @@ $tipoFamHack = array(
     "amigo" => "Amigo(a)"
 );
 
+$where = "";
+if ($u->user_level < UserControler::ADM)
+    $where = " AND f.user in ('" . join($u->siblings, "','") . "')";
+
 fputcsv($output, array(
     "Contact No.",
     "Interaction Log Entry No.",
@@ -42,7 +46,7 @@ $query = "SELECT extra2 'cod cliente', a.extra_id as 'interaction log', a.lead_i
             INNER JOIN sips_sd_resources g ON a.id_resource = g.id_resource
             LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
             INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
-            WHERE f.closed=1 AND f.data BETWEEN :data_inicial AND :data_final;";
+            WHERE f.closed=1 AND f.data BETWEEN :data_inicial AND :data_final $where;";
 
 $stmt = $db->prepare($query);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));

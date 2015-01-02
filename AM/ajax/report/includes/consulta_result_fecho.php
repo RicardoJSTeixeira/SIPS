@@ -17,6 +17,10 @@ $rs = implode(",", $rs);
 $oASMTMP = $users->getAll(UserControler::ASM);
 $oASM = Array();
 foreach ($oASMTMP as &$user) {
+
+    if ($u->user_level < UserControler::ADM AND $u->username !== $user->user)
+        continue;
+
     $siblings = json_decode($user->siblings);
     $user->siblings = (is_array($siblings)) ? $siblings : Array();
     $oASM[$user->user] = $user;
@@ -69,7 +73,7 @@ while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 
 $final = array();
 foreach ($oASM as $user) {
-        $final[$user->user] = ($info[$oUsers[$user->user]->alias]) ? $info[$user->user] : $default;
+    $final[$user->user] = ($info[$oUsers[$user->user]->alias]) ? $info[$user->user] : $default;
 }
 
 foreach ($final as $username => &$dadData) {
@@ -110,9 +114,9 @@ foreach ($final as $admName => &$dadData) {
             $userData['novas'],
             $userData['remarcadas'],
             $userData['abertas'],
-            divide($userData['abertas'] ,$userData['total']),
+            divide($userData['abertas'], $userData['total']),
             $userData['fechadas'],
-            divide($userData['fechadas'] , $userData['total'])), ";");
+            divide($userData['fechadas'], $userData['total'])), ";");
     }
 }
 
@@ -123,8 +127,8 @@ fputcsv($output, array(
     $total['novas'],
     $total['remarcadas'],
     $total['abertas'],
-    divide($total['abertas'] , $total['total']),
+    divide($total['abertas'], $total['total']),
     $total['fechadas'],
-    divide($total['fechadas'] , $total['total'])), ";");
+    divide($total['fechadas'], $total['total'])), ";");
 
 fclose($output);

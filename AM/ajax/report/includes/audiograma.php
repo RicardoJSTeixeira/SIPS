@@ -5,7 +5,9 @@ $filename = "audiograma_" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
-$u = $user->getUser();
+$where = "";
+if ($u->user_level < UserControler::ADM)
+    $where = " AND f.user in ('" . join($u->siblings, "','") . "')";
 
 $query = "SELECT extra2 'codCliente', a.extra_id AS 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code AS 'salespersonCode', f.produtos, f.venda, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
                 FROM sips_sd_reservations a
@@ -13,13 +15,22 @@ $query = "SELECT extra2 'codCliente', a.extra_id AS 'itLogID', a.lead_id , id_re
                 INNER JOIN vicidial_list d ON a.lead_id = d.lead_id
                 INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
                 INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid
-                WHERE f.closed=1 AND f.exame=1 AND f.data BETWEEN :data_inicial AND :data_final GROUP BY g.uniqueid LIMIT 20000";
+                WHERE f.closed=1 AND f.exame=1 AND f.data BETWEEN :data_inicial AND :data_final $where GROUP BY g.uniqueid LIMIT 20000";
+
 
 $stmt = $db->prepare($query);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 $extractor = function ($a) {
     return $a->value;
 };
+
+function array_map_if_arr($method, $arr)
+{
+    if (is_array($arr))
+        return array_map($method, $arr);
+    else
+        return array();
+}
 
 $defaultProdutos = array(
     "direito" => array(
@@ -128,12 +139,12 @@ fputcsv($output, array(
     "Tipo de Venda"), ";");
 
 while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
-    $ar = array_map($extractor, json_decode($row->AR));
-    $al = array_map($extractor, json_decode($row->AL));
-    $bcr = array_map($extractor, json_decode($row->BCR));
-    $bcl = array_map($extractor, json_decode($row->BCL));
-    $ullr = array_map($extractor, json_decode($row->ULLR));
-    $ulll = array_map($extractor, json_decode($row->ULLL));
+    $ar = array_map_if_arr($extractor, json_decode($row->AR));
+    $al = array_map_if_arr($extractor, json_decode($row->AL));
+    $bcr = array_map_if_arr($extractor, json_decode($row->BCR));
+    $bcl = array_map_if_arr($extractor, json_decode($row->BCL));
+    $ullr = array_map_if_arr($extractor, json_decode($row->ULLR));
+    $ulll = array_map_if_arr($extractor, json_decode($row->ULLL));
     if ((bool)$row->venda) {
         $produtos = json_decode($row->produtos, true);
         $produtos = (is_array($produtos)) ? array_replace_recursive($defaultProdutos, $produtos) : $defaultProdutos;
