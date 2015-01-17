@@ -33,7 +33,8 @@ if (isset($_POST['LIM'])) {
 if (isset($_POST['msg_comments'])) {
     $msg_comments = $_POST['msg_comments'];
 }
-
+if ($VARDB_server!=="192.168.1.252")
+    die("deprecated ".$VARDB_server);
 
 $PHP_AUTH_USER = $_SERVER[PHP_AUTH_USER];
 $IP = $_SERVER[REMOTE_ADDR];
