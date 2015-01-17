@@ -3,25 +3,43 @@
 error_reporting();
 ini_set('display_errors', '1');
 
-require ("../dbconnect.php");
-require ('../../swiftemail/lib/swift_required.php');
+require("../dbconnect.php");
+require('../../swiftemail/lib/swift_required.php');
 
-if (isset($_POST["NR"])){$nr = $_POST["NR"];}
-if (isset($_POST["MSG"])){$msg = $_POST["MSG"];}
-if (isset($_POST["gateway"])){$gateid = $_POST["gateway"];}
-if (isset($_POST["lista"])){$lista = $_POST["lista"];}
-if (isset($_POST["operador"])){$operador = $_POST["operador"];}
-if (isset($_POST["modo"])){$modo = $_POST["modo"];}
-if (isset($_POST['id_camp'])){$id_camp = $_POST['id_camp'];}
-if (isset($_POST['LIM'])){$LIM = $_POST['LIM'];}
-if (isset($_POST['msg_comments'])){$msg_comments = $_POST['msg_comments'];}
-
+if (isset($_POST["NR"])) {
+    $nr = $_POST["NR"];
+}
+if (isset($_POST["MSG"])) {
+    $msg = $_POST["MSG"];
+}
+if (isset($_POST["gateway"])) {
+    $gateid = $_POST["gateway"];
+}
+if (isset($_POST["lista"])) {
+    $lista = $_POST["lista"];
+}
+if (isset($_POST["operador"])) {
+    $operador = $_POST["operador"];
+}
+if (isset($_POST["modo"])) {
+    $modo = $_POST["modo"];
+}
+if (isset($_POST['id_camp'])) {
+    $id_camp = $_POST['id_camp'];
+}
+if (isset($_POST['LIM'])) {
+    $LIM = $_POST['LIM'];
+}
+if (isset($_POST['msg_comments'])) {
+    $msg_comments = $_POST['msg_comments'];
+}
 
 
 $PHP_AUTH_USER = $_SERVER[PHP_AUTH_USER];
 $IP = $_SERVER[REMOTE_ADDR];
 
-function removeAcentos($string) {
+function removeAcentos($string)
+{
     $string = strtr($string, array(
         'Á' => 'A', 'À' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Å' => 'A', 'Ä' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
         'É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Í' => 'I', 'Ì' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ð' => 'Eth',
@@ -35,7 +53,8 @@ function removeAcentos($string) {
     return $string;
 }
 
-function log_admin($topic, $event, $id, $query, $comments = "") {
+function log_admin($topic, $event, $id, $query, $comments = "")
+{
     global $link, $PHP_AUTH_USER;
     $stmt = "INSERT INTO vicidial_admin_log set event_date=NOW(), user='$PHP_AUTH_USER', ip_address='$IP', event_section='$topic', event_type='ADD', record_id='$id', event_code='$event', event_sql='" . mysql_real_escape_string($query) . "', event_notes='$comments';";
     $rslt = mysql_query($stmt, $link);
@@ -44,16 +63,51 @@ function log_admin($topic, $event, $id, $query, $comments = "") {
     }
 }
 
-function send_email($email_address, $email_name, $msg, $nr, $port) {
+function send_sms_api($nr, $msg)
+{
+
+//set POST variables
+    $url = 'https://message-router.appspot.com/api/v0/sms';
+    $fields = array(
+        "account_id" => urlencode("5634472569470976"),
+        "private_key" => urlencode("26ddf75c-9bc6-44e4-a099-1c5f3b7d2995"),
+        "sender" => urlencode("ACUSTICA ME"),
+        "msisdn" => urlencode($nr),
+        "msg" => urlencode($msg)
+    );
+    $fields_string = "";
+//url-ify the data for the POST
+    foreach ($fields as $key => $value) {
+        $fields_string .= $key . '=' . $value . '&';
+    }
+    rtrim($fields_string, '&');
+
+//open connection
+    $ch = curl_init();
+
+//set the url, number of POST vars, POST data
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, count($fields));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+
+//execute post
+    $result = curl_exec($ch);
+
+//close connection
+    curl_close($ch);
+}
+
+function send_email($email_address, $email_name, $msg, $nr, $port)
+{
     $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
-            ->setUsername('ccamemail@gmail.com')
-            ->setPassword('ccamemail1234');
+        ->setUsername('ccamemail@gmail.com')
+        ->setPassword('ccamemail1234');
 
     $mailer = Swift_Mailer::newInstance($transport);
 
     $message = Swift_Message::newInstance("port:$port-$nr")
-            ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
-            ->setTo(array($email_address => $email_name));
+        ->setFrom(array('ccamemail@gmail.com' => 'Acústica Médica'))
+        ->setTo(array($email_address => $email_name));
 
     $message->setBody($msg);
 
@@ -66,7 +120,8 @@ function send_email($email_address, $email_name, $msg, $nr, $port) {
     }
 }
 
-function send_gateway($msg, $phone_number, $gateways_ports, $count = 0) {
+function send_gateway($msg, $phone_number, $gateways_ports, $count = 0)
+{
     global $link;
 
     $url = "http://$gateways_ports[IP]/cgi/WebCGI?11401=";
@@ -100,11 +155,12 @@ function send_gateway($msg, $phone_number, $gateways_ports, $count = 0) {
     return false;
 }
 
-function send_sms($msg, $gateways_ports, $listas, $camp_id, $comments = false) {
+function send_sms($msg, $gateways_ports, $listas, $camp_id, $comments = false)
+{
     global $link;
-    if (!$comments) {
-        $msg = removeAcentos($msg);
-    }
+    /* if (!$comments) {
+         $msg = removeAcentos($msg);
+     }*/
     $count = count($listas);
 
     log_admin("SMS", "SEND " . $count . "sms Start", $camp_id, "");
@@ -126,9 +182,11 @@ function send_sms($msg, $gateways_ports, $listas, $camp_id, $comments = false) {
             $msg_per = removeAcentos($msg_per);
         } else {
             $msg_per = removeAcentos($listas[$i][comments]);
-            $msg_G=$msg_per;
+            $msg_G = $msg_per;
         }
 
+        send_sms_api($listas[$i][phone_number], $msg_per);
+/*
         if ($gateways_ports[type] == "GATEWAY") {
             if (!send_gateway($msg_per, $listas[$i][phone_number], $gateways_ports, $count)) {
                 return false;
@@ -137,7 +195,9 @@ function send_sms($msg, $gateways_ports, $listas, $camp_id, $comments = false) {
             if (!send_email("ccamemail@gmail.com", "Acustica MyPBX", $msg_per, $listas[$i][phone_number], $gateways_ports[port])) {
                 return false;
             }
-        }
+        }*/
+
+
         mysql_query("INSERT INTO sms_list VALUES (NULL , $camp_id, NOW(), '" . $listas[$i][lead_id] . "', '" . $listas[$i][phone_number] . "','" . mysql_real_escape_string($msg_G) . "','$gateways_ports[descricao]')", $link) or die(mysql_error());
     }
 
@@ -151,8 +211,8 @@ $gateways_brute = mysql_query("Select IP,user,pass,port,descricao,ext,type from 
 $gateways_ports = mysql_fetch_assoc($gateways_brute);
 
 
-$nr = eregi_replace("[^0-9]", "", $nr);
-$LIM = eregi_replace("[^0-9]", "", $LIM);
+$nr = preg_replace("/[^0-9]/", "", $nr);
+$LIM = preg_replace("/[^0-9]/", "", $LIM);
 
 //Manda sms por campanha form edit
 if ($modo == "camp" and isset($_POST['id_camp']) AND $msg_comments != 1) {
@@ -205,12 +265,11 @@ if ($modo == "camp" and isset($_POST['id_camp']) AND $msg_comments != 1) {
     }
 
     if (send_sms($msg, $gateways_ports, $listas, $id)) {
-        echo json_encode(array('Enviadas com sucesso.')) ;
+        echo json_encode(array('Enviadas com sucesso.'));
     } else {
         header('HTTP/1.1 500 The gateways could be unaccessible');
         die('ERROR');
     }
-
 
 
     //Manda sms por unidade form normal
@@ -218,7 +277,7 @@ if ($modo == "camp" and isset($_POST['id_camp']) AND $msg_comments != 1) {
     $list = array(array(phone_number => $nr, lead_id => "N", first_name => ""));
 
     if (send_sms($msg, $gateways_ports, $list, "998")) {
-        echo json_encode(array('Enviada com sucesso.')) ;
+        echo json_encode(array('Enviada com sucesso.'));
     } else {
         header('HTTP/1.1 500 The gateways could be unaccessible');
         die('ERROR');
@@ -242,8 +301,8 @@ if ($modo == "camp" and isset($_POST['id_camp']) AND $msg_comments != 1) {
         $i++;
     }
 
-    if (send_sms($msg, $gateways_ports, $listas, $id_camp,true)) {
-        echo json_encode(array('Enviadas com sucesso.')) ;
+    if (send_sms($msg, $gateways_ports, $listas, $id_camp, true)) {
+        echo json_encode(array('Enviadas com sucesso.'));
     } else {
         header('HTTP/1.1 500 The gateways could be unaccessible');
         die('ERROR');
@@ -270,8 +329,8 @@ if ($modo == "camp" and isset($_POST['id_camp']) AND $msg_comments != 1) {
         $i++;
     }
 
-    if (send_sms($msg, $gateways_ports, $listas, $id,true)) {
-        echo json_encode(array('Enviadas com sucesso.')) ;
+    if (send_sms($msg, $gateways_ports, $listas, $id, true)) {
+        echo json_encode(array('Enviadas com sucesso.'));
     } else {
         header('HTTP/1.1 500 The gateways could be unaccessible');
         die('ERROR');
