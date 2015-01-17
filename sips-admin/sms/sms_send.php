@@ -69,32 +69,32 @@ function send_sms_api($nr, $msg)
 //set POST variables
     $url = 'https://message-router.appspot.com/api/v0/sms';
     $fields = array(
-        "account_id" => urlencode("5634472569470976"),
-        "private_key" => urlencode("26ddf75c-9bc6-44e4-a099-1c5f3b7d2995"),
-        "sender" => urlencode("ACUSTICA ME"),
-        "msisdn" => urlencode($nr),
-        "msg" => urlencode($msg)
+        "account_id" => "5634472569470976",
+        "private_key" => "26ddf75c-9bc6-44e4-a099-1c5f3b7d2995",
+        "sender" => "ACUSTICA ME",
+        "msisdn" => $nr,
+        "msg" => $msg
     );
-    $fields_string = "";
-//url-ify the data for the POST
-    foreach ($fields as $key => $value) {
-        $fields_string .= $key . '=' . $value . '&';
-    }
-    rtrim($fields_string, '&');
+    $fields_string = json_encode($fields);
 
 //open connection
-    $ch = curl_init();
-
+    $ch = curl_init($url);
 //set the url, number of POST vars, POST data
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, count($fields));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($fields_string))
+    );
 //execute post
     $result = curl_exec($ch);
 
 //close connection
     curl_close($ch);
+
+    return $result;
 }
 
 function send_email($email_address, $email_name, $msg, $nr, $port)
@@ -168,34 +168,34 @@ function send_sms($msg, $gateways_ports, $listas, $camp_id, $comments = false)
     for ($i = 0; $i < $count; $i++) {
 
         if (!$comments) {
-            $msg_per = str_replace("--A--first_name--B--", $listas[$i][first_name], $msg);
+            $msg_per = str_replace("--A--first_name--B--", $listas[$i]["first_name"], $msg);
 
-            $msg_per = str_replace("--A--f--B--", $listas[$i][middle_initial], $msg_per);
-            $msg_per = str_replace("--A--m--B--", $listas[$i][vendor_lead_code], $msg_per);
+            $msg_per = str_replace("--A--f--B--", $listas[$i]["middle_initial"], $msg_per);
+            $msg_per = str_replace("--A--m--B--", $listas[$i]["vendor_lead_code"], $msg_per);
 
-            $msg_G = str_replace("--A--first_name--B--", $listas[$i][first_name], $msg);
+            $msg_G = str_replace("--A--first_name--B--", $listas[$i]["first_name"], $msg);
 
-            $msg_G = str_replace("--A--f--B--", $listas[$i][middle_initial], $msg_G);
-            $msg_G = str_replace("--A--m--B--", $listas[$i][vendor_lead_code], $msg_G);
+            $msg_G = str_replace("--A--f--B--", $listas[$i]["middle_initial"], $msg_G);
+            $msg_G = str_replace("--A--m--B--", $listas[$i]["vendor_lead_code"], $msg_G);
 
 
             $msg_per = removeAcentos($msg_per);
         } else {
-            $msg_per = removeAcentos($listas[$i][comments]);
+            $msg_per = removeAcentos($listas[$i]["comments"]);
             $msg_G = $msg_per;
         }
 
-        send_sms_api($listas[$i][phone_number], $msg_per);
-/*
-        if ($gateways_ports[type] == "GATEWAY") {
-            if (!send_gateway($msg_per, $listas[$i][phone_number], $gateways_ports, $count)) {
-                return false;
-            }
-        } else {
-            if (!send_email("ccamemail@gmail.com", "Acustica MyPBX", $msg_per, $listas[$i][phone_number], $gateways_ports[port])) {
-                return false;
-            }
-        }*/
+        $result = send_sms_api($listas[$i]["phone_number"], $msg_per);
+        /*
+                if ($gateways_ports[type] == "GATEWAY") {
+                    if (!send_gateway($msg_per, $listas[$i][phone_number], $gateways_ports, $count)) {
+                        return false;
+                    }
+                } else {
+                    if (!send_email("ccamemail@gmail.com", "Acustica MyPBX", $msg_per, $listas[$i][phone_number], $gateways_ports[port])) {
+                        return false;
+                    }
+                }*/
 
 
         mysql_query("INSERT INTO sms_list VALUES (NULL , $camp_id, NOW(), '" . $listas[$i][lead_id] . "', '" . $listas[$i][phone_number] . "','" . mysql_real_escape_string($msg_G) . "','$gateways_ports[descricao]')", $link) or die(mysql_error());
@@ -204,7 +204,7 @@ function send_sms($msg, $gateways_ports, $listas, $camp_id, $comments = false)
     log_admin("SMS", "SEND " . $count . "sms End", $camp_id, "");
     // close cURL resource, and free up system resources
 
-    return true;
+    return $result;
 }
 
 $gateways_brute = mysql_query("Select IP,user,pass,port,descricao,ext,type from gsm_gateways WHERE ID_gsm=$gateid;", $link) or die(mysql_error());
@@ -301,8 +301,8 @@ if ($modo == "camp" and isset($_POST['id_camp']) AND $msg_comments != 1) {
         $i++;
     }
 
-    if (send_sms($msg, $gateways_ports, $listas, $id_camp, true)) {
-        echo json_encode(array('Enviadas com sucesso.'));
+    if ($result = send_sms($msg, $gateways_ports, $listas, $id_camp, true)) {
+        echo json_encode(array('Enviadas com sucesso.', $result));
     } else {
         header('HTTP/1.1 500 The gateways could be unaccessible');
         die('ERROR');
