@@ -232,16 +232,6 @@ function SendSms()
     } else {
         $lead_id = $_POST['lead_id'];
     }
-    if (isset($_GET['uniqueid'])) {
-        $unique_id = $_GET['uniqueid'];
-    } else {
-        $unique_id = $_POST['uniqueid'];
-    }
-    if (isset($_GET['user'])) {
-        $user = $_GET['user'];
-    } else {
-        $user = $_POST['user'];
-    }
     if (isset($_GET['campaign_id'])) {
         $campaign = $_GET['campaign_id'];
     } else {
@@ -348,13 +338,10 @@ function SendSms()
         $address3 = validate_phone($row["address3"]);
 
         if ($phone_number[0]) {
-            $match = $phone_number[1];
             $nr = $row["phone_number"];
         } elseif ($alt_phone[0]) {
-            $match = $alt_phone[1];
             $nr = $row["alt_phone"];
         } elseif ($address3[0]) {
-            $match = $address3[1];
             $nr = $row["address3"];
         } else {
             exit(); //Não há telemoveis
@@ -368,6 +355,8 @@ function SendSms()
 
         if (!mysql_num_rows($rslt))
             exit(); //Não há lead na custom
+
+        $msg="";
 
         $cons = mysql_fetch_assoc($rslt);
         if ($cons["tipoconsulta"] == 'Home' AND preg_match("/9000|9999/", $cons["postal_code"])) {
@@ -390,8 +379,10 @@ function SendSms()
 
                 $msg = "Caro(a) Cliente, confirmamos sua consulta auditiva marcada para dia " . date("j/", strtotime($cons["marcdata"])) . month2mes(date("n", strtotime($cons["marcdata"]))) . date("-H\hi", strtotime($cons["marchora"])) . " no Centro de Atendimento ACUSTICA MEDICA $r[localidade]. Esperamos por si na morada: $r[morada]";
             }
+        }else{
+            exit;
         }
 
-        send_sms($nr, $msg);
+        send_sms_api($nr, $msg);
     }
 }
