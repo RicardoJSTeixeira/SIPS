@@ -226,7 +226,6 @@ function connectaPostCalendar()
 
 function SendSms()
 {
-    usleep(2000000);
     if (isset($_GET['lead_id'])) {
         $lead_id = $_GET['lead_id'];
     } else {
