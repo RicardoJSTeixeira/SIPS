@@ -382,6 +382,7 @@ function SendSms()
             exit;
         }
 
+        mysql_query("INSERT INTO sms_list VALUES (NULL , 999, NOW(), '$lead_id', '$nr','" . mysql_real_escape_string($msg) . "','')", $link);
         send_sms_api($nr, $msg);
     }
 }
