@@ -293,6 +293,7 @@ function SendSms()
                 return 'Erro';
         }
     }
+
     function send_sms_api($nr, $msg)
     {
 
@@ -349,13 +350,13 @@ function SendSms()
         if (!mysql_num_rows(mysql_query("SHOW TABLES LIKE 'custom_" . strtoupper(trim($campaign)) . "'")))
             exit(); //Não há custom
 
-        $stmt = "SELECT marchora,marcdata,tipoconsulta,consultorio,consultoriodois,postal_code FROM   custom_" . strtoupper(trim($campaign)) . " a INNER JOIN vicidial_list b ON a.lead_id = b.lead_id WHERE a.lead_id='$lead_id'";
+        $stmt = "SELECT marchora,marcdata,tipoconsulta,consultorio,consultoriodois,postal_code FROM custom_" . strtoupper(trim($campaign)) . " a INNER JOIN vicidial_list b ON a.lead_id = b.lead_id WHERE a.lead_id='$lead_id'";
         $rslt = mysql_query($stmt, $link);
 
         if (!mysql_num_rows($rslt))
             exit(); //Não há lead na custom
 
-        $msg="";
+        $msg = "";
 
         $cons = mysql_fetch_assoc($rslt);
         if ($cons["tipoconsulta"] == 'Home' AND preg_match("/9000|9999/", $cons["postal_code"])) {
@@ -377,10 +378,12 @@ function SendSms()
                 $r = mysql_fetch_assoc($r);
 
                 $msg = "Caro(a) Cliente, confirmamos sua consulta auditiva marcada para dia " . date("j/", strtotime($cons["marcdata"])) . month2mes(date("n", strtotime($cons["marcdata"]))) . date("-H\hi", strtotime($cons["marchora"])) . " no Centro de Atendimento ACUSTICA MEDICA $r[localidade]. Esperamos por si na morada: $r[morada]";
-            }
-        }else{
+            } else
+                exit;
+
+        } else
             exit;
-        }
+
 
         mysql_query("INSERT INTO sms_list VALUES (NULL , 999, NOW(), '$lead_id', '$nr','" . mysql_real_escape_string($msg) . "','')", $link);
         send_sms_api($nr, $msg);
