@@ -370,7 +370,7 @@ function SendSms()
             $r = mysql_query($q, $link);
             if (mysql_num_rows($r)) {
                 $r = mysql_fetch_assoc($r);
-                $msg = "Caro(a) Cliente, confirmamos sua consulta auditiva marcada para dia " . date("j/", strtotime($cons["marcdata"])) . month2mes(date("n", strtotime($cons["marcdata"]))) . date("-H\hi", strtotime($cons["marchora"])) . " no Consultório ACUSTICA MEDICA $r[localidade]. Esperamos por si na morada: $r[morada]";
+                $msg = "Caro(a) Cliente, confirmamos a sua consulta auditiva marcada para dia " . date("j/", strtotime($cons["marcdata"])) . month2mes(date("n", strtotime($cons["marcdata"]))) . date("-H\hi", strtotime($cons["marchora"])) . " no Consultório ACUSTICA MEDICA $r[localidade]. Esperamos por si na morada: $r[morada]";
             }
         } elseif ($cons["tipoconsulta"] == 'CATOS') {
 
@@ -379,7 +379,7 @@ function SendSms()
             if (mysql_num_rows($r)) {
                 $r = mysql_fetch_assoc($r);
 
-                $msg = "Caro(a) Cliente, confirmamos sua consulta auditiva marcada para dia " . date("j/", strtotime($cons["marcdata"])) . month2mes(date("n", strtotime($cons["marcdata"]))) . date("-H\hi", strtotime($cons["marchora"])) . " no Centro de Atendimento ACUSTICA MEDICA $r[localidade]. Esperamos por si na morada: $r[morada]";
+                $msg = "Caro(a) Cliente, confirmamos a sua consulta auditiva marcada para dia " . date("j/", strtotime($cons["marcdata"])) . month2mes(date("n", strtotime($cons["marcdata"]))) . date("-H\hi", strtotime($cons["marchora"])) . " no Centro de Atendimento ACUSTICA MEDICA $r[localidade]. Esperamos por si na morada: $r[morada]";
             } else
                 exit;
 
