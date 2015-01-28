@@ -237,6 +237,8 @@ function SendSms()
         $campaign = $_POST['campaign_id'];
     }
 
+    sleep(2);
+
     $link = mysql_connect("192.168.1.252", "sipsadmin", "sipsps2012");
     mysql_select_db("asterisk");
 
