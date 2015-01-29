@@ -120,9 +120,10 @@ if (isset($report_marc_outbound)) {
         'Avisos'), ";");
 /* @var $camp_options Array*/
     foreach ($camp_options as $currentCamp) {
+        $archive = (strtotime("2 month ago") > strtotime($data_final)) ? "_archive" : "";
         $currentCamp=strtoupper($currentCamp);
         $query_log = "SELECT a.lead_id,a.campaign_id,a.call_date AS data,a.status AS resultado, a.user as utilizador, b.*, c.*, d.campaign_name AS campanha, e.id_reservation
-                        FROM vicidial_log a
+                        FROM vicidial_log$archive a
                         JOIN custom_$currentCamp b ON a.lead_id = b.lead_id
                         JOIN vicidial_list c ON a.lead_id = c.lead_id
                         Left JOIN sips_sd_reservations e ON a.lead_id = e.lead_id
