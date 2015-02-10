@@ -19,11 +19,30 @@ fputcsv($output, array(
     'Comentários',
     'Pedido',
     'Pendente',
-    'Aprovado'), ";");
+    'Aprovado',
+    'Admin'), ";");
 
 
 
-$query_log = "SELECT a.id record_id,a.user,a.entry_time,a.matricula,a.km,a.viatura,a.comments,a.ocorrencia,a.status,b.type,max(IF(b.status=2 OR b.status=1 ,b.note,'')) note,MAX(IF(b.status=0,b.event_date,'')) pedido,MAX(IF(b.status=2,b.event_date,'') ) pendente,MAX(IF(b.status=1,b.event_date,'') ) aprovado FROM spice_report_frota a inner join   spice_log  b   on a.id=b.record_id where b.section='Frota' and a.entry_time  BETWEEN :data_inicial AND :data_final group by record_id;";
+$query_log = "SELECT
+                a.id record_id,
+                a.user,
+                a.entry_time,
+                a.matricula,
+                a.km,
+                a.viatura,
+                a.comments,
+                a.ocorrencia,
+                a.status,
+                b.type,
+                max(IF(b.status=2 OR b.status=1 ,b.note,'')) note,
+                MAX(IF(b.status=0,b.event_date,'')) pedido,
+                MAX(IF(b.status=2,b.event_date,'') ) pendente,
+                MAX(IF(b.status=1,b.event_date,'') ) aprovado,
+                MAX(username) username
+            FROM spice_report_frota a
+            INNER JOIN spice_log b ON a.id=b.record_id
+            WHERE b.section='Frota' AND a.entry_time BETWEEN :data_inicial AND :data_final GROUP BY record_id;";
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
@@ -42,7 +61,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $row['comments'],
         $row['pedido'],
         $row['pendente'],
-        $row['aprovado']), ";");
+        $row['aprovado'],
+        $row['username']), ";");
 }
 
 fclose($output);
