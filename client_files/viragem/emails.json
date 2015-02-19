@@ -1,586 +1,282 @@
 {
-    "concessionarios": [
+  "concessionarios": [
+    {
+      "nome": "Evoracar Portalegre",
+      "servico": "VN",
+      "interlocutores": [
         {
-            "nome": "Auto Real Cacém",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "António Nuno Cunha Monteiro",
-                    "email": "acmonteiro@santogal.pt"
-                },
-                {
-                    "nome": "Inês Pinto",
-                    "email": "iapinto@santogal.pt"
-                },
-                {
-                    "nome": "jbferreira",
-                    "email": "jbferreira@santogal.pt"
-                },
-                {
-                    "nome": "António Martins",
-                    "email": "afmartins@santogal.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
         },
         {
-            "nome": "Cibercar - Porto",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "Pedro Tavares",
-                    "email": "pedro.tavares@cibercar.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
+          "nome": "Carlos Calado",
+          "email": "carlos.calado@multiauto-galilei.pt"
         },
         {
-            "nome": "Finesource",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "Andre teixeira",
-                    "email": "andreduarte92@hotmail.com"
-                }
-            ]
-        },
-        {
-            "nome": "Gavis",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "Nuno Botelho",
-                    "email": "nuno.botelho@gavis.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
-        },
-        {
-            "nome": "Hydraplan",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "Meira Afonso",
-                    "email": "meira.afonso@hydraplan.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
-        },
-        {
-            "nome": "VN Citroen",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "dpsalvador",
-                    "email": "dpsalvador@santogal.pt"
-                },
-                {
-                    "nome": "Francisco Pinho",
-                    "email": "fjpinho@santogal.pt"
-                },
-                {
-                    "nome": "Maria Fátima Pais",
-                    "email": "mfpais@santogal.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
-        },
-        {
-            "nome": "Santogal P Peugeot e Citroen",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "dpsalvador",
-                    "email": "dpsalvador@santogal.pt"
-                },
-                {
-                    "nome": "Pedro Esteves",
-                    "email": "pmesteves@santogal.pt"
-                },
-                {
-                    "nome": "Joaquim Tomé Santos",
-                    "email": "jtsantos@santogal.pt"
-                },
-                {
-                    "nome": "Ana Costa",
-                    "email": "afcosta@santogal.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
-        },
-        {
-            "nome": "Santogal F e SGA",
-            "servico": "",
-            "interlocutores": [
-                {
-                    "nome": "dpsalvador",
-                    "email": "dpsalvador@santogal.pt"
-                },
-                {
-                    "nome": "Pedro Esteves",
-                    "email": "pmesteves@santogal.pt"
-                },
-                {
-                    "nome": "Joaquim Tomé Santos",
-                    "email": "jtsantos@santogal.pt"
-                },
-                {
-                    "nome": "Ana Costa",
-                    "email": "afcosta@santogal.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
-        },
-        {
-            "nome": "APV e Garantias Mocar",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dpsalvador",
-                    "email": "dpsalvador@santogal.pt"
-                },
-                {
-                    "nome": "Pedro Esteves",
-                    "email": "pmesteves@santogal.pt"
-                },
-                {
-                    "nome": "Joaquim Tomé Santos",
-                    "email": "jtsantos@santogal.pt"
-                },
-                {
-                    "nome": "Ana Costa",
-                    "email": "afcosta@santogal.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                }
-            ]
-        },
-        {
-            "nome": "Evoracar Évora",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joao.l.lopes",
-                    "email": "joao.l.lopes@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Evoracar Évora",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "paulo.tarouca",
-                    "email": "paulo.tarouca@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Evoracar Portalegre",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joao.bonito",
-                    "email": "joao.bonito@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Evoracar Portalegre",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "paulo.tarouca",
-                    "email": "paulo.tarouca@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Evoracar Ponte de Sor",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joao.bonito",
-                    "email": "joao.bonito@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Evoracar Ponte de Sor",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "paulo.tarouca",
-                    "email": "paulo.tarouca@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Beja",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joaquim.cardoso",
-                    "email": "joaquim.cardoso@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "antonio.m.martins",
-                    "email": "antonio.m.martins@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Beja",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "carlos.calado",
-                    "email": "carlos.calado@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Estremoz",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joaquim.cardoso",
-                    "email": "joaquim.cardoso@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Estremoz",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "carlos.calado",
-                    "email": "carlos.calado@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Portalegre",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joao.bonito",
-                    "email": "joao.bonito@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joaquim.cardoso",
-                    "email": "joaquim.cardoso@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Portalegre",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "carlos.calado",
-                    "email": "carlos.calado@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Évora",
-            "servico": "APV",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "joaquim.cardoso",
-                    "email": "joaquim.cardoso@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
-        },
-        {
-            "nome": "Motorex Évora",
-            "servico": "VN/VU",
-            "interlocutores": [
-                {
-                    "nome": "dina.fitas",
-                    "email": "dina.fitas@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "carlos.calado",
-                    "email": "carlos.calado@multiauto-galilei.pt"
-                },
-                {
-                    "nome": "Catarina Livramento",
-                    "email": "catarinalivramento@viragem.com"
-                },
-                {
-                    "nome": "Mario Garcez",
-                    "email": "mariogarcez@viragem.com"
-                },
-                {
-                    "nome": "Paulo Isidoro",
-                    "email": "paulo.isidoro@multiauto-galilei.pt"
-                }
-            ]
+          "nome": "Paulo Tarouca",
+          "email": "paulo.tarouca@multiauto-galilei.pt"
         }
-    ]
+      ]
+    },
+    {
+      "nome": "Evoracar Ponte de Sor",
+      "servico": "VN",
+      "interlocutores": [
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Tarouca",
+          "email": "paulo.tarouca@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Évora",
+      "servico": "VN",
+      "interlocutores": [
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Carlos Calado",
+          "email": "carlos.calado@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Portalegre",
+      "servico": "VN",
+      "interlocutores": [
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Tarouca",
+          "email": "paulo.tarouca@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Évora",
+      "servico": "VN",
+      "interlocutores": [
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Tarouca",
+          "email": "paulo.tarouca@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Estremoz",
+      "servico": "VN",
+      "interlocutores": [
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Tarouca",
+          "email": "paulo.tarouca@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Beja",
+      "servico": "VN",
+      "interlocutores": [
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Tarouca",
+          "email": "paulo.tarouca@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Portalegre-Mitsubishi",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Bonito",
+          "email": "joao.bonito@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Ponte de Sor-Mitsubishi",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Bonito",
+          "email": "joao.bonito@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Évora-Mitsubishi",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Lopes",
+          "email": "joao.l.lopes@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Portalegre- Não Mitsubishi",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Bonito",
+          "email": "joao.bonito@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Ponte de Sor- Não Mitsubishi",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Bonito",
+          "email": "joao.bonito@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Evoracar Évora- Não Mitsubishi",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Lopes",
+          "email": "joao.l.lopes@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Évora",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Julio Nepomuceno",
+          "email": "julio.nepomuceno@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Portalegre",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "João Bonito",
+          "email": "joao.bonito@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Estremoz",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        }
+      ]
+    },
+    {
+      "nome": "Motorex Beja",
+      "servico": "APV",
+      "interlocutores": [
+        {
+          "nome": "Joaquim Cardoso",
+          "email": "joaquim.cardoso@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Paulo Isidoro",
+          "email": "paulo.isidoro@multiauto-galilei.pt"
+        },
+        {
+          "nome": "Manuel Aleixo",
+          "email": "manuel.aleixo@multiauto-galilei.pt"
+        }
+      ]
+    }
+  ]
 }
