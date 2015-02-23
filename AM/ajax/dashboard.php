@@ -128,7 +128,7 @@ switch ($action) {
                 a.user FROM vicidial_list a
     INNER JOIN vicidial_users b ON a.user=b.user
     LEFT JOIN sips_sd_reservations c ON a.lead_id=c.lead_id
-    WHERE b.user_group=:user_group AND list_id=:list AND (c.lead_id IS NULL OR c.gone=0) AND extra6='NO' limit 20000";
+    WHERE b.user_group=:user_group AND list_id=:list AND (c.lead_id IS NULL OR c.gone=1) AND extra6='NO' limit 20000";
             $variables[":user_group"] = $u->user_group;
         } else {
             $siblings=implode("','", $u->siblings);
@@ -147,7 +147,7 @@ switch ($action) {
             a.user
             FROM vicidial_list a
     LEFT JOIN sips_sd_reservations b ON a.lead_id=b.lead_id
-    WHERE a.user IN ('$siblings') AND list_id=:list AND (b.lead_id IS NULL or b.gone=0) AND extra6='NO' limit 20000";
+    WHERE a.user IN ('$siblings') AND list_id=:list AND (b.lead_id IS NULL or b.gone=1) AND extra6='NO' limit 20000";
         }
 
         $stmt = $db->prepare($query);
