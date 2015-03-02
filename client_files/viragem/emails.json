@@ -545,6 +545,20 @@
           "email": "mariogarcez@viragem.com"
         }
       ]
+    },
+    {
+      "nome": "Santogal Peugeot Lisboa",
+      "servico": "APV/VN",
+      "interlocutores": [
+        {
+          "nome": "Catarina Livramento",
+          "email": "catarinalivramento@viragem.com"
+        },
+        {
+          "nome": "Susana Vital",
+          "email": "sbvital@santogal.pt"
+        }
+      ]
     }
   ]
 }
