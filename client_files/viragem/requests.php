@@ -2,7 +2,7 @@
 
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
-require ('../../swiftemail/lib/swift_required.php');
+require('../../swiftemail/lib/swift_required.php');
 
 error_reporting();
 ini_set('display_errors', '1');
@@ -14,45 +14,91 @@ foreach ($_GET as $key => $value) {
     ${$key} = $value;
 }
 
-$js["por_abrir"] = array();
-$js["fechados"] = array();
-$js["abertos"] = array();
-$js["expirados"] = array();
 switch ($action) {
     //------------------------------------------------//    
     //---------------------GET------------------------//  
     //------------------------------------------------//
 
     case "get_table_data":
+        $js = array(
+            "aFechados" => array(),
+            "aAbertos" => array(),
+            "aExpirados" => array(),
+            "aPorAbrir" => array()
+        );
         //ABERTOS E FECHADOS
-        $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao  where data between '$data_inicio 00:00:00' and '$data_fim 23:59:59' order by data desc";
+        $query = <<<sql
+SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao
+FROM reclamacao
+WHERE data BETWEEN '$data_inicio 00:00:00' and '$data_fim 23:59:59'
+ORDER BY data DESC
+sql;
         $query = mysql_query($query, $link) or die(mysql_error());
         while ($row = mysql_fetch_assoc($query)) {
-            if ((int) $row["tipo"]) {
-                $js["fechados"][] = array("id" => $row["id"], "nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
-            } else {
-                $js["abertos"][] = array("id" => $row["id"], "nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechados" : "Abertos");
+            $row["email"] = json_decode($row["email"]);
+            $row["tipo"] = ((int)$row["tipo"]) ? "Fechados" : "Abertos";
+
+            $workedRow = array(
+                $row["id"],
+                $row["nome"],
+                $row["campanha"],
+                $row["tipo_reclamacao"],
+                $row["tipificacao_reclamacao"],
+                $row["data"] . "<div class='view-button'><button id='" . $row["id"] . "I' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" . json_encode($row) . "'> Ver </button></div>"
+            );
+
+            if ((int)$row["tipo"])
+                $js["aFechados"][] = $workedRow;
+            else
+                $js["aAbertos"][] = $workedRow;
+        }
+            //EXPIRADOS
+            $date = date("Y-m-d H:i:s", strtotime('-1 month'));
+            $query = <<<sql
+SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao
+FROM reclamacao
+WHERE data<'$date 00:00:00' and tipo='0'
+ORDER BY data DESC
+sql;
+            $query = mysql_query($query, $link) or die(mysql_error());
+            while ($row = mysql_fetch_assoc($query)) {
+                $row["email"] = json_decode($row["email"]);
+                $js["aExpirados"][] = array(
+                    $row["id"],
+                    $row["nome"],
+                    $row["campanha"],
+                    $row["tipo_reclamacao"],
+                    $row["tipificacao_reclamacao"],
+                    $row["data"],
+                    (((int)$row["tipo"]) ? "Fechado" : "Aberto") . "<div class='view-button'><button id='" . $row["id"] . "I' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" . json_encode($row) . "'> Ver </button></div>"
+                );
             }
-        }
-        //EXPIRADOS
-        $date = date("Y-m-d H:i:s", strtotime('-1 month'));
-        $query = "SELECT id,lead_id,nome,campanha,comentario,email,data,tipo,tipo_reclamacao,tipificacao_reclamacao from reclamacao where data<'$date 00:00:00' and tipo='0' order  by data desc";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js["expirados"][] = array("id" => $row["id"], "nome" => $row["nome"], "campanha" => $row["campanha"], "tipo_reclamacao" => $row["tipo_reclamacao"], "tipificacao_reclamacao" => $row["tipificacao_reclamacao"], "data" => $row["data"], "lead_id" => $row["lead_id"], "comentario" => $row["comentario"], "email" => json_decode($row["email"]), "tipo" => ((int) $row["tipo"]) ? "Fechado" : "Aberto");
-        }
-        //POR ABRIR
-        $query = "SELECT a.lead_id,c.first_name,a.campaign_id,b.campaign_name, a.call_date from vicidial_log a inner join vicidial_campaigns b on a.campaign_id=b.campaign_id left join vicidial_list c on a.lead_id=c.lead_id left join reclamacao d on d.lead_id=a.lead_id where a.status='S00014' and d.lead_id is NULL and call_date between '$data_inicio 00:00:00' and '$data_fim 23:59:59'";
-        $query = mysql_query($query, $link) or die(mysql_error());
-        while ($row = mysql_fetch_assoc($query)) {
-            $js["por_abrir"][] = array("nome" => $row["first_name"], "campanha" => $row["campaign_name"], "data" => $row["call_date"], "campaign_id" => $row["campaign_id"], "lead_id" => $row["lead_id"], "tipo" => "por_abrir");
-        }
-        echo json_encode($js);
-        break;
 
 
+            //POR ABRIR
+            $query = <<<sql
+SELECT a.lead_id, c.first_name nome, a.campaign_id, b.campaign_name, a.call_date data, 'por_abrir' tipo
+FROM vicidial_log a
+INNER JOIN vicidial_campaigns b ON a.campaign_id=b.campaign_id
+LEFT JOIN vicidial_list c ON a.lead_id=c.lead_id
+LEFT JOIN reclamacao d ON d.lead_id=a.lead_id
+WHERE a.status='S00014' AND d.lead_id IS NULL and call_date BETWEEN '$data_inicio 00:00:00' AND '$data_fim 23:59:59'
+sql;
+            $query = mysql_query($query, $link) or die(mysql_error());
+            while ($row = mysql_fetch_assoc($query)) {
+                $js["aPorAbrir"][] = array(
+                    $row["nome"],
+                    $row["campaign_name"],
+                    $row["data"] . "<div class='view-button'><button id='" . $row["lead_id"] . "L' class='btn btn-mini icon-reorder ver_reclamacao' data-info='" . json_encode($row) . "'> Ver </button></div>"
+                );
 
-    case "get_script_fields":
+            }
+            echo json_encode($js);
+            break;
+
+
+        case
+            "get_script_fields":
         $ja = array();
         $query = "SELECT a.id,a.tag,a.type,c.valor,a.texto from script_dinamico a inner join script_assoc b on a.id_script=b.id_script inner join script_result c on a.tag=c.tag_elemento and lead_id='$lead_id'  where b.id_camp_linha='$campaign_id' and a.type in ('textarea','texto')";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -70,7 +116,6 @@ switch ($action) {
         break;
 
 
-
     case "edit_estado":
         $query = "UPDATE `reclamacao` SET tipo=1 WHERE id=$id";
         $query = mysql_query($query, $link) or die(mysql_error());
@@ -84,30 +129,30 @@ switch ($action) {
         //save to DB
         $query = "INSERT INTO `reclamacao`(`lead_id`, `nome`, `campanha`, `comentario`, `email`, `data`, `tipo`,tipo_reclamacao,tipificacao_reclamacao,concessionario) VALUES ($lead_id,'$nome','$campanha','$comentario','" . mysql_real_escape_string(json_encode($email)) . "','" . $date . "',$tipo,'$tipo_reclamacao','$tipificacao_reclamacao','$concessionario')";
         $query = mysql_query($query, $link) or die(mysql_error());
-        $id_reclamacao=mysql_insert_id();
+        $id_reclamacao = mysql_insert_id();
 
 
-        $consecionarios_raw=file_get_contents("emails.json");
-        $consecionarios=json_decode($consecionarios_raw);
+        $consecionarios_raw = file_get_contents("emails.json");
+        $consecionarios = json_decode($consecionarios_raw);
         if ($tipo) {
             $transport = Swift_SmtpTransport::newInstance('mail.viragem.com', 465, 'ssl')
-                    ->setUsername('viragem@viragem.com')
-                    ->setPassword('password12345##');
+                ->setUsername('viragem@viragem.com')
+                ->setPassword('password12345##');
             $mailer = Swift_Mailer::newInstance($transport);
             // Create the message
             $message = Swift_Message::newInstance();
             $daFields = getDafields($lead_id);
 
             $query = "SELECT " . $daFields['Data da Visita'] . " 'data', " . $daFields['Telefone'] . " 'telemovel', " . $daFields['Marca'] . " 'marca'," . $daFields['Modelo'] . " 'modelo'," . $daFields['Matricula'] . " 'matricula' from vicidial_list where lead_id='$lead_id'";
-            
+
             $query = mysql_query($query, $link) or die(mysql_error());
             $row = mysql_fetch_assoc($query);
 
             $message
-                    ->setFrom(array('viragem@viragem.com' => 'Viragem'))
-                    ->setSubject("#$id_reclamacao $row[matricula] ".$consecionarios->concessionarios[$concessionario]->nome." $tipo_reclamacao")
-                    ->setBody(
-                            '
+                ->setFrom(array('viragem@viragem.com' => 'Viragem'))
+                ->setSubject("#$id_reclamacao $row[matricula] " . $consecionarios->concessionarios[$concessionario]->nome . " $tipo_reclamacao")
+                ->setBody(
+                    '
 <div align="center">
   <table border="0" cellspacing="0" cellpadding="0" width="500" style="width:375.0pt">
     <tbody>
@@ -455,17 +500,18 @@ switch ($action) {
         break;
 }
 
-function getDafields($lead_id) {
-    global $link;
-    $result = mysql_query("SELECT campaign_id id from vicidial_log where lead_id='$lead_id' and status='S00014' limit 1;", $link) or die(mysql_error());
-    $log = mysql_fetch_object($result);
+        function getDafields($lead_id)
+        {
+            global $link;
+            $result = mysql_query("SELECT campaign_id id from vicidial_log where lead_id='$lead_id' and status='S00014' limit 1;", $link) or die(mysql_error());
+            $log = mysql_fetch_object($result);
 
-    $fields_raw = mysql_query("SELECT name, display_name from vicidial_list_ref where campaign_id='$log->id';", $link) or die(mysql_error());
+            $fields_raw = mysql_query("SELECT name, display_name from vicidial_list_ref where campaign_id='$log->id';", $link) or die(mysql_error());
 
-    $fields = array();
-    while ($row = mysql_fetch_object($fields_raw)) {
-        $fields[$row->display_name] = $row->name;
-    }
+            $fields = array();
+            while ($row = mysql_fetch_object($fields_raw)) {
+                $fields[$row->display_name] = $row->name;
+            }
 
-    return $fields;
-}
+            return $fields;
+        }
