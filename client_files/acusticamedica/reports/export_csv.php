@@ -1402,7 +1402,7 @@ if (isset($report_drops_inb)) {
         'Avisos'), ";");
 
     foreach ($camp_options as $currentCamp) {
-        $query_log = "SELECT a.lead_id,a.campaign_id AS linhainbound,a.call_date AS data,a.status AS resultado,a.user as utilizador,c.* FROM vicidial_closer_log a JOIN vicidial_list c ON a.lead_id = c.lead_id where a.status LIKE 'DROP' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
+        $query_log = "SELECT a.lead_id,a.campaign_id AS linhainbound,a.call_date AS data,a.status AS resultado,a.user as utilizador,c.* FROM vicidial_closer_log a JOIN vicidial_list c ON a.lead_id = c.lead_id where a.status IN ('DROP','AFTHRS') AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' AND a.campaign_id LIKE '$currentCamp'";
 
         $query_log = mysql_query($query_log, $link) or die(mysql_error());
 
