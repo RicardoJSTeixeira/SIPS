@@ -559,6 +559,20 @@
           "email": "sbvital@santogal.pt"
         }
       ]
+    },
+    {
+      "nome": "Rede Citroen / S Drive",
+      "servico": "APV/VN",
+      "interlocutores": [
+        {
+          "nome": "Catarina Livramento",
+          "email": "catarinalivramento@viragem.com"
+        },
+        {
+          "nome": "Filipe Botelho",
+          "email": "fbbotelho@santogal.pt"
+        }
+      ]
     }
   ]
 }
