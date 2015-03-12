@@ -254,12 +254,18 @@ $(function () {
 
     $("#button_pesquisa").click(function (e) {
         e.preventDefault();
+        var jqThis=$(this);
+
         if ($("#dateform").validationEngine('validate')) {
+
+            jqThis.prop("disabled",true);
+
             $("#report_reclamacao").removeClass("hide");
             ojqTables.por_abrir.fnClearTable();
             ojqTables.abertos.fnClearTable();
             ojqTables.fechados.fnClearTable();
             ojqTables.expirados.fnClearTable();
+
             $.post("requests.php", {
                     action: "get_table_data",
                     data_inicio: $("#datetime_from").val(),
@@ -276,6 +282,9 @@ $(function () {
                     ojqTables.expirados.dataTable().fnAddData(oData.aExpirados);
 
                 }, "json")
+                .always(function(){
+                    jqThis.prop("disabled",false);
+                })
                 .fail(function () {
                     return false;
                 });
