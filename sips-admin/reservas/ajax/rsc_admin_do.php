@@ -5,7 +5,7 @@ $id_scheduler=preg_replace($only_nr, '', $_POST["id"]);
 $display_text=trim($_POST["display_text"]);
 $alias_code=trim($_POST["alias_code"]);
 
-	$query="INSERT INTO `asterisk`.`sips_sd_resources` (`id_scheduler`, `display_text`, `alias_code`, `active`)
+	$query="INSERT INTO `sips_sd_resources` (`id_scheduler`, `display_text`, `alias_code`, `active`)
 			VALUES
 			('".mysql_real_escape_string($id_scheduler)."',
 			'".mysql_real_escape_string($display_text)."',

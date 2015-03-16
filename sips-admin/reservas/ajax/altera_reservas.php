@@ -48,7 +48,7 @@ if ($pedido == 1) {
         $id = preg_replace($only_nr, '', $_POST['id']);
     }
 
-    $query = "UPDATE `asterisk`.`sips_sd_reservations` SET
+    $query = "UPDATE `sips_sd_reservations` SET
        `start_date`='" . mysql_real_escape_string($start) . "',
        `end_date`='" . mysql_real_escape_string($end) . "',
        `id_resource`='" . mysql_real_escape_string($resource) . "'

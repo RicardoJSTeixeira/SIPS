@@ -13,7 +13,7 @@ if ($pedido == 128) {
     $cal = $_POST['cal'];
     $type = $_POST['type'];
 
-    $q = "INSERT INTO `asterisk`.`sips_sd_agent_ref` (`ref_id`, `user`, `id_calendar`, `cal_type`) VALUES (NULL, '$user', '$cal', '$type');";
+    $q = "INSERT INTO `sips_sd_agent_ref` (`ref_id`, `user`, `id_calendar`, `cal_type`) VALUES (NULL, '$user', '$cal', '$type');";
     mysql_query($q, $link) or die(mysql_error());
     $last = mysql_insert_id();
     log_admin("CALENDAR_AGENT_REF", "ADD REF", $last, $q, $_POST['cr'], $_SERVER['REMOTE_ADDR']);
