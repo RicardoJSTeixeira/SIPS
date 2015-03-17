@@ -63,11 +63,11 @@ class SendEmail
 
     static function fnSendEmailAlert(PDO $db, UserControler $UserC, $user, $tres, $seis)
     {
-        $BossUser = (object) array("user" => "RGE", "full_name" => "rge@acusticamedica.pt");
+        #$BossUser = (object) array("user" => "RGE", "full_name" => "rge@acusticamedica.pt");
         $aoParents = $UserC->getAll($UserC::ASM, $user->username);
 
-        if ($seis)
-            $aoParents[] = $BossUser;
+        #if ($seis)
+        #    $aoParents[] = $BossUser;
 
         foreach ($aoParents AS $oParent) {
 
