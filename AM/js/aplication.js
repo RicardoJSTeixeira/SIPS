@@ -203,6 +203,10 @@ function init() {
             }
         }, oSettings);
     };
+
+
+    $.fn.dataTableExt.sErrMode = 'throw';
+
     $.msg('overwriteGlobal', 'clickUnblock', false);
     $.msg('overwriteGlobal', 'autoUnblock', false);
     $.msg('overwriteGlobal', 'content', 'Por favor aguarde...');
