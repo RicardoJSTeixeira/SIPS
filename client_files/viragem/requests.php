@@ -127,7 +127,7 @@ sql;
         $email = is_array($email) ? $email : array();
         $date = date("Y-m-d H:i:s");
         //save to DB
-        $query = "INSERT INTO `reclamacao`(`lead_id`, `nome`, `campanha`, `comentario`, `email`, `data`, `tipo`,tipo_reclamacao,tipificacao_reclamacao,concessionario) VALUES ($lead_id,'$nome','$campanha','$comentario','" . mysql_real_escape_string(json_encode($email)) . "','" . $date . "',$tipo,'$tipo_reclamacao','$tipificacao_reclamacao','$concessionario')";
+        $query = "INSERT INTO `reclamacao`(`lead_id`, `nome`, `campanha`, `comentario`, `email`, `data`, `tipo`,tipo_reclamacao,tipificacao_reclamacao,concessionario) VALUES ($lead_id,'" . mysql_real_escape_string($nome)."','$campanha','" . mysql_real_escape_string($comentario)."','" . mysql_real_escape_string(json_encode($email)) . "','" . $date . "',$tipo,'$tipo_reclamacao','$tipificacao_reclamacao','$concessionario')";
         $query = mysql_query($query, $link) or die(mysql_error());
         $id_reclamacao = mysql_insert_id();
 
