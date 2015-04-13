@@ -3,7 +3,7 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
-#date_default_timezone_set('Europe/Lisbon');
+date_default_timezone_set('GMT');
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 $offset = filter_var($_POST["offset"]);
