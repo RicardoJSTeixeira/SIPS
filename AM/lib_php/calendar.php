@@ -373,7 +373,7 @@ class Calendar extends Calendars
             "minTime" => $this->_resources[0]->begin_time / 60,
             "maxTime" => ($this->_resources[0]->end_time / 60) + ($this->_resources[0]->blocks / 60),
             "sch" => $this->_id_scheduler,
-            "lazyFetching" => (bool)!$this->_is_restricted_days,
+            "lazyFetching" => (bool)!$this->_is_restricted_days
         );
     }
 

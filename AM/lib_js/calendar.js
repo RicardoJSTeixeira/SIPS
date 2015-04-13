@@ -33,6 +33,7 @@ Calendar = (function () {
                 type: "POST",
                 data: {
                     action: "GetReservations",
+                    offset: Math.abs(new Date().getTimezoneOffset()) * 60,
                     resource: "all"
                 }
             },
