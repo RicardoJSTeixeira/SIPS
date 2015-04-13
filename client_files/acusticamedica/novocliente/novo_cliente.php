@@ -280,7 +280,7 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option selected="" value="nenhum">Nenhum</option>
             <option value="C/AGD"> Águeda</option>
             <option value="C/ABF"> Albufeira</option>
-            <option value="C/AGS"> Algés</option>
+            <option value="C/ACT"> Alcoutim</option>
             <option value="C/ALM"> Almeirim</option>
             <option value="C/AMR"> Amarante</option>
             <option value="C/AND"> Anadia</option>
@@ -291,7 +291,6 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="C/BEL"> Bebém</option>
             <option value="C/CTH"> Cantanhede</option>
             <option value="C/CTX"> Cartaxo</option>
-            <option value="C/CHV"> Chaves</option>
             <option value="C/CDX"> Condeixa</option>
             <option value="C/COR"> Coruche</option>
             <option value="C/ENT"> Entroncamento</option>
@@ -299,8 +298,7 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="C/ETJ"> Estarreja</option>
             <option value="C/VNF"> Famalicão</option>
             <option value="C/FAF"> Fafe</option>
-            <option value="C/FUD"> Fundão</option>
-            <option value="C/GND"> Gondomar</option>
+            <option value="C/FDV"> Figueiro dos Vinhos</option>
             <option value="C/GOV"> Gouveia</option>
             <option value="C/GDL"> Grândola</option>
             <option value="C/LGS"> Lagos</option>
@@ -312,7 +310,6 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="C/LSA"> Lousã</option>
             <option value="C/ILH"> Ilhavo</option>
             <option value="C/MFA"> Mafra</option>
-            <option value="C/MAI"> Maia</option>
             <option value="C/MGL"> Mangualde</option>
             <option value="C/MGR"> Marinha Grande</option>
             <option value="C/MED"> Mêda</option>
@@ -323,25 +320,21 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="C/MUR"> Moura</option>
             <option value="C/NIS"> Nisa</option>
             <option value="C/ODM"> Odemira</option>
-            <option value="C/OEI"> Oeiras</option>
             <option value="C/OLH"> Olhão</option>
             <option value="C/OLV"> Olivais</option>
             <option value="C/OAZ"> Oliveira de Azeméis</option>
             <option value="C/ODB"> Oliveira do Bairro</option>
             <option value="C/ODH"> Oliveira do Hospital</option>
             <option value="C/ORE"> Ourém</option>
-            <option value="C/OVR"> Ovar</option>
             <option value="C/PDG"> Pedrógão Grande</option>
             <option value="C/PRD"> Parede</option>
             <option value="C/PNE"> Peniche</option>
             <option value="C/PNL"> Pinhel</option>
             <option value="C/PTS"> Ponte de Sor</option>
             <option value="C/RMR"> Rio Maior</option>
-            <option value="C/QLZ"> Queluz</option>
             <option value="C/SMC"> Samora Correia</option>
             <option value="C/SCD"> Santa Comba Dão</option>
             <option value="C/STG"> Santiago do Cacém</option>
-            <option value="C/STR"> Santo Tirso</option>
             <option value="C/SEI"> Seia</option>
             <option value="C/SSB"> Sesimbra</option>
             <option value="C/SIV"> Silves</option>
@@ -353,7 +346,6 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="C/VCB"> Vale de Cambra</option>
             <option value="C/VNF"> Vila Nova de Famalicão</option>
             <option value="C/VSA"> Vila Real de Santo António</option>
-            <option value="C/PDV"> Povoa do Varzim</option>
             <option value="C/CDX"> Condeixa</option>
         </select>
     </div>
