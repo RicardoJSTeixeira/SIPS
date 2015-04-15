@@ -3,7 +3,7 @@
 Class requisitions
 {
 
-    public function __construct($db, $user_level, $user_id, $siblings)
+    public function __construct(PDO $db, $user_level, $user_id, $siblings)
     {
         $this->_user_level = $user_level;
         $this->_user_id = $user_id;
@@ -11,18 +11,18 @@ Class requisitions
         $this->_db = $db;
     }
 
-    public function get_requisitions_to_datatable($show_aproved)
+    public function get_requisitions_to_datatable($domain, $show_aproved)
     {
         $approved_toggle = "";
-        if ($show_aproved!="true")
+        if ($show_aproved != "true")
             $approved_toggle = " and sr.status<>1";
 
         $result['aaData'] = array();
         $filter = ($this->_user_level == 6) ? ' and sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' and sr.user like "' . $this->_user_id . '" ' : '');
-        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city  from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where 1 $filter $approved_toggle  ";
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city,sr.domain from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where 1 $filter $approved_toggle AND sr.domain = :domain  limit 1000";
 
         $stmt = $this->_db->prepare($query);
-        $stmt->execute();
+        $stmt->execute(array(":domain" => $domain));
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             //sorting de colunas
@@ -107,12 +107,12 @@ Class requisitions
         return $stmt->execute(array(":cod_cliente" => $cod_cliente, ":id" => $id));
     }
 
-    public function create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments)
+    public function create_requisition($domain, $type, $lead_id, $contract_number, $attachment, $products_list, $comments)
     {
-        $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`comments`,`status`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products,:comments, :status)";
+        $query = "INSERT INTO `spice_requisition`( `user`, `type`, `lead_id`, `date`, `contract_number`, `attachment`, `products`,`comments`,`status`,`domain`) VALUES ( :user, :type, :lead_id, :date, :contract_number, :attachment, :products,:comments, :status, :domain)";
         $stmt = $this->_db->prepare($query);
         $data = date('Y-m-d H:i:s');
-        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":comments" => $comments, ":status" => 0));
+        $stmt->execute(array(":user" => $this->_user_id, ":type" => $type, ":lead_id" => $lead_id, ":date" => $data, ":contract_number" => $contract_number, ":attachment" => $attachment, ":products" => json_encode($products_list), ":comments" => $comments, ":status" => 0, ":domain" => $domain));
         $last_insert_id = $this->_db->lastInsertId();
         return array($last_insert_id, $this->_user_id, $type, $lead_id, $data, $contract_number, $attachment, "<div><button class='btn ver_requisition_products' value='" . $last_insert_id . "'><i class='icon-eye-open'></i>Ver</button></div>", "Pedido enviado");
     }

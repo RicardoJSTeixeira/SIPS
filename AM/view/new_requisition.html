@@ -222,14 +222,20 @@
 <script>
     var uploader;
     $(function () {
-
         var
                 client = getUrlVars(),
-                clientID='';
+                clientID = '';
+
+        var domain = atob(client.domain);
+
+        if (domain != "equip" && domain != "mkt") {
+            $("#view_requisition_datatable").html("<h1>Por favor carregue CTRL+SHIFT+R para actualizar o SPICE</h1>");
+            return false;
+        }
 
         if (client.id) {
             try {
-                clientID = atob(client.id)
+                clientID = atob(client.id);
                 fnValidateAudiograma(clientID)
             } catch (e) {
                 fnInit();
@@ -247,7 +253,7 @@
                             fnInit();
                         else
                             bootbox.alert("Este cliente não tem audiograma actualizado, por favor faça um novo exame.",
-                                    $.history.push.bind(this,'view/dashboard.html'))
+                                    $.history.push.bind(this, 'view/dashboard.html'))
 
                     }, "json")
         }
@@ -340,7 +346,7 @@
             });
 
 
-            var requisition1 = new requisition($("#extra_div"), {uploader: uploader});
+            var requisition1 = new requisition($("#extra_div"), {uploader: uploader}, domain);
             requisition1.init(function () {
                 requisition1.new_requisition($("#new_requisition_div"), clientID);
             });

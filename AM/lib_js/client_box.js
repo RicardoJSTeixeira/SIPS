@@ -912,6 +912,3 @@ var ClientBox = function (configs) {
             });
     }
 };
-
-
-

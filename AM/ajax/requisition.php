@@ -28,19 +28,19 @@ $requisitions = new requisitions($db, $userID->user_level, $userID->username, $u
 $log = new Logger($db, $user->getUser());
 switch ($action) {
     case "listar_produtos_to_datatable":
-        echo json_encode($products->get_products_to_datatable());
+        echo json_encode($products->get_products_to_datatable($domain));
         break;
 
     case "listar_requisition_to_datatable":
-        echo json_encode($requisitions->get_requisitions_to_datatable($show_aproved));
+        echo json_encode($requisitions->get_requisitions_to_datatable($domain, $show_aproved));
         break;
 
     case "listar_produtos":
-        echo json_encode($products->get_products());
+        echo json_encode($products->get_products($domain));
         break;
 
     case "criar_encomenda":
-        $encomenda = $requisitions->create_requisition($type, $lead_id, $contract_number, $attachment, $products_list, $comments);
+        $encomenda = $requisitions->create_requisition($domain, $type, $lead_id, $contract_number, $attachment, $products_list, $comments);
         $log->set($encomenda[0], Logger::T_INS, Logger::S_ENC, "", logger::A_SENT);
         echo json_encode($encomenda);
 
@@ -91,9 +91,9 @@ switch ($action) {
     case "validate_audiograma":
         $stmt = $db->prepare("SELECT count(*) FROM `spice_audiograma` WHERE lead_id=:id AND date > date_sub(now(),INTERVAL 6 MONTH);");
         $stmt->execute(array(":id" => $lead_id));
-        $row=$stmt->fetch(PDO::FETCH_NUM);
+        $row = $stmt->fetch(PDO::FETCH_NUM);
 
-        echo json_encode($row[0]!="0");
+        echo json_encode($row[0] != "0");
 
         break;
 }

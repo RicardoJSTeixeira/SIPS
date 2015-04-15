@@ -1,4 +1,4 @@
-var Products = function (geral_path, options_ext) {
+var Products = function (geral_path, options_ext, domain) {
     var me = this,
         product_id = 0,
         datatable_path = "";
@@ -13,11 +13,23 @@ var Products = function (geral_path, options_ext) {
         $.get("/AM/view/products/product.html", function (data) {
             geral_path.empty().off().append(data);
             geral_path.find(".chosen-select").chosen({no_results_text: "Sem resultados", width: "100%"});
-            $("#edit_product_data_promoçao1").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
+            $("#edit_product_data_promoçao1").datetimepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "pt",
+                minView: 2,
+                startDate: moment().format("YYYY-MM-DD")
+            })
                 .on('changeDate', function () {
                     $("#edit_product_data_promoçao2").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
                 });
-            $("#edit_product_data_promoçao2").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2, startDate: moment().format("YYYY-MM-DD")})
+            $("#edit_product_data_promoçao2").datetimepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "pt",
+                minView: 2,
+                startDate: moment().format("YYYY-MM-DD")
+            })
                 .on('changeDate', function () {
                     $("#edit_product_data_promoçao1").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
                 });
@@ -74,7 +86,10 @@ var Products = function (geral_path, options_ext) {
                 });
                 var color = [];
                 $.each(edit_product_modal.find("#edit_product_table_tbody_color tr"), function () {
-                    color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
+                    color.push({
+                        color: $(this).find(".color_picker_select").val(),
+                        name: $(this).find(".color_name").val()
+                    });
                 });
 
                 var size = [];
@@ -251,7 +266,10 @@ var Products = function (geral_path, options_ext) {
             });
             var color = [];
             $.each(new_product_path.find("#new_product_table_tbody_color tr"), function () {
-                color.push({color: $(this).find(".color_picker_select").val(), name: $(this).find(".color_name").val()});
+                color.push({
+                    color: $(this).find(".color_picker_select").val(),
+                    name: $(this).find(".color_name").val()
+                });
             });
 
             var size = [];
@@ -272,7 +290,8 @@ var Products = function (geral_path, options_ext) {
                         type: types,
                         color: color,
                         active: 1,
-                        size: size
+                        size: size,
+                        domain:domain
                     }, function (data) {
                         new_product_path.modal("hide");
                         if (datatable_path) {
@@ -369,7 +388,11 @@ var Products = function (geral_path, options_ext) {
                 "sPaginationType": "full_numbers",
                 "sAjaxSource": '/AM/ajax/products.php',
                 "fnServerParams": function (aoData) {
-                    aoData.push({"name": "action", "value": "listar_produtos_to_datatable"}, {"name": "product_editable", "value": me.config.product_editable});
+                    aoData.push(
+                        {"name": "action", "value": "listar_produtos_to_datatable"},
+                        {"name": "product_editable", "value": me.config.product_editable},
+                        {"name": "domain", "value": domain}
+                    );
                 },
                 "fnDrawCallback": function () {
                     $.each(me.Table_view_product.find(".btn_ver_produto"), function () {
@@ -384,10 +407,16 @@ var Products = function (geral_path, options_ext) {
                         }
                     });
                 },
-                "aoColumns": [{"sTitle": "Id", "sWidth": "25px"}, {"sTitle": "Nome"}, {"sTitle": "M.Mensal", "sWidth": "50px"}, {
+                "aoColumns": [{"sTitle": "Id", "sWidth": "25px"}, {"sTitle": "Nome"}, {
+                    "sTitle": "M.Mensal",
+                    "sWidth": "50px"
+                }, {
                     "sTitle": "M.Especial",
                     "sWidth": "50px"
-                }, {"sTitle": "Categoria", "sWidth": "70px"}, {"sTitle": "Tipo", "sWidth": "110px"}, {"sTitle": "Opções", "sWidth": "50px"}],
+                }, {"sTitle": "Categoria", "sWidth": "70px"}, {
+                    "sTitle": "Tipo",
+                    "sWidth": "110px"
+                }, {"sTitle": "Opções", "sWidth": "50px"}],
                 "oLanguage": {"sUrl": "../../../jquery/jsdatatable/language/pt-pt.txt"}
             });
         } else {
@@ -500,7 +529,7 @@ var Products = function (geral_path, options_ext) {
     function populate_parent(select, level_out, children, callback) {
         var out_level = level_out;
         var level = 0;
-        $.post('/AM/ajax/products.php', {action: "get_produtos"},
+        $.post('/AM/ajax/products.php', {action: "get_produtos",domain:domain},
             function (data) {
 
                 var option = "";

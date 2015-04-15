@@ -25,16 +25,16 @@ switch ($action) {
 
 
     case "listar_produtos_to_datatable":
-        echo json_encode($products->get_products_to_datatable($product_editable));
+        echo json_encode($products->get_products_to_datatable($domain, $product_editable));
         break;
 
     case "criar_produto":
-        echo json_encode($products->add_product($name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $active, $size));
+        echo json_encode($products->add_product($domain, $name, $max_req_m, $max_req_s, $parent, $category, $type, $color, $size));
 
         break;
 
     case "get_produtos":
-        echo json_encode($products->get_products());
+        echo json_encode($products->get_products($domain));
         break;
 
     case "get_produto_by_id":
