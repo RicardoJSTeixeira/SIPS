@@ -9,7 +9,6 @@ define("ROOT", $header);
 
 //includes
 require(ROOT . "ini/dbconnect.php");
-require(ROOT . "AM/lib_php/user.php");
 require(ROOT . "requests/_json_convert.php");
 
 //regex

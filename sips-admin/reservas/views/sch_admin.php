@@ -62,12 +62,12 @@
                 </thead>
                 <tbody>
                     <?php
-
+/*
                     $user = new UserLogin($db);
                     $user->confirm_login();
-                    $u=$user->getUser();
+                    $u=$user->getUser();*/
 
-                    $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = '$u->username'") or die(mysql_error());
+                    $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = 'SPICE'") or die(mysql_error());
                     $usrQry = mysql_fetch_assoc($usrQry);
 
                     $usrCode = $usrQry['custom_one'];
@@ -78,7 +78,7 @@
                     } elseif($u->user_group=="ADMIN") {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers;";
                     } else {
-                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='$u->user_group';";
+                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='SPICE';";
                     }
 
 

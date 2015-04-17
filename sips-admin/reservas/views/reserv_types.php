@@ -57,12 +57,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
+                    <?php/*
                     $user = new UserLogin($db);
                     $user->confirm_login();
-                    $u=$user->getUser();
+                    $u=$user->getUser();*/
 
-                    $query = "SELECT id_reservations_types, display_text, color,active FROM sips_sd_reservations_types WHERE user_group='$u->user_group';";
+                    $query = "SELECT id_reservations_types, display_text, color,active FROM sips_sd_reservations_types WHERE user_group='SPICE';";
                     $result = mysql_query($query, $link);
                     while ($row = mysql_fetch_assoc($result)) {
                         ?>
