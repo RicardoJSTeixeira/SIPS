@@ -13,10 +13,11 @@ function query_pop_select($query) {
     }
     return $options;
 }
+/*
 $user=new user;
         
         $allowed_camps_regex = implode("|", $user->allowed_campaigns);
-        /*if ($user->user_group != "ADMIN") {
+        if ($user->user_group != "ADMIN") {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
 
 
