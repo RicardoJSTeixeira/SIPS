@@ -24,6 +24,8 @@
         <script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
 
         <?php
+        error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+        ini_set('display_errors', '1');
         require('../func/reserve_utils.php');
         ?>
         <style>
