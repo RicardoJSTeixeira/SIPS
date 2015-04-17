@@ -30,5 +30,3 @@ $filename="Duplicados.csv";
     }
 
     fclose($fp);
-
-?>

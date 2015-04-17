@@ -14,4 +14,3 @@ $alias_code=trim($_POST["alias_code"]);
 
 	mysql_query($query,$link) or die("Sucedeu-se um Erro. ".mysql_error());   
 	echo json_encode(array("id"=>mysql_insert_id(),"display_text"=>$display_text,"alias_code"=>$alias_code));                                               
-?>  

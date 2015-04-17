@@ -24,4 +24,3 @@ $id_resource=preg_replace($only_nr,'',$_POST["id"]);
 
 	mysql_query($query,$link) or die( json_encode(array("sucess"=>0))."  ".mysql_error());   
 	echo json_encode(array("sucess"=>1,"beg"=>substr($beg,0,-3),"end"=>substr($end,0,-3),"id"=> mysql_insert_id($link))); 
-?>

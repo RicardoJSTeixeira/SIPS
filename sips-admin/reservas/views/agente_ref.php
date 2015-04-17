@@ -16,7 +16,7 @@ function query_pop_select($query) {
 $user=new user;
         
         $allowed_camps_regex = implode("|", $user->allowed_campaigns);
-        if ($user->user_group != "ADMIN") {
+        /*if ($user->user_group != "ADMIN") {
             $ret = "WHERE allowed_campaigns REGEXP '$allowed_camps_regex'";
 
 
@@ -34,7 +34,7 @@ $user=new user;
             $tmp = rtrim($tmp, "|");
             $users_regex = "Where user REGEXP '^$tmp$'";
             $users_regexb = "and b.user REGEXP '^$tmp$'";
-        }
+        }*/
         
 
 ?>

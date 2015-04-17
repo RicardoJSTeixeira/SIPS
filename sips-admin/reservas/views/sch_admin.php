@@ -60,7 +60,10 @@
                 </thead>
                 <tbody>
                     <?php
-                    $user = new user;
+
+                    $user = new UserLogin($db);
+                    $user->confirm_login();
+                    $u=$user->getUser();
 
                     $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = '$user->id'") or die(mysql_error());
                     $usrQry = mysql_fetch_assoc($usrQry);
@@ -70,10 +73,10 @@
                     $u_g = $usrQry['user_group'];
                     if ($u_g == 'AreaSalesManager' or $u_g == 'AAL' or $u_g == 'AMB' or $u_g == 'ANU' or $u_g == 'FPO' or $u_g == 'RGE' or $u_g == "BIO" or $u_g == "SPICE") {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers a WHERE a.alias_code in ($usrCode) ;";
-                    } elseif($user->user_group=="ADMIN") {
+                    } elseif($u->user_group=="ADMIN") {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers;";
                     } else {
-                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='$user->user_group';";
+                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='$u->user_group';";
                     }
 
 

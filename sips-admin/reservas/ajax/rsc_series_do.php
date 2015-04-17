@@ -30,4 +30,3 @@ $query = "INSERT INTO `sips_sd_series` (`start_time`, `end_time`, `day_of_week_s
 
 mysql_query($query, $link) or die(json_encode(array("sucess" => 0)) . "  " . mysql_error());
 echo json_encode(array("sucess" => 1, "time_start" => substr($beg, 0, -3), "time_end" => substr($end, 0, -3), "d_start" => $d_start, "d_end" => $d_end, "id" => mysql_insert_id($link)));
-?>
