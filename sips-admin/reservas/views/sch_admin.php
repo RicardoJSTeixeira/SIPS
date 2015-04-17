@@ -65,7 +65,7 @@
                     $user->confirm_login();
                     $u=$user->getUser();
 
-                    $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = '$user->id'") or die(mysql_error());
+                    $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = '$u->username'") or die(mysql_error());
                     $usrQry = mysql_fetch_assoc($usrQry);
 
                     $usrCode = $usrQry['custom_one'];
