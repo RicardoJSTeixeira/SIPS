@@ -3,6 +3,7 @@
 
     <li class="active"><a href="#gestao_apoio_marketing" data-toggle="tab">Gestao apoio Mkt.</a></li>
     <li><a href="#novo_apoio_marketing" data-toggle="tab">Novo Apoio Mkt</a></li>
+    <li><a href="#enc" data-toggle="tab">Encomendas</a></li>
 
 </ul>
 
@@ -26,6 +27,24 @@
         </div>
         <div class="grid-content" id="div_apoio_marketing" ></div>
     </div>
+
+    <div class="tab-pane master_pedido_div" id="enc">
+        <div class="grid-title">
+            <div class="pull-left">
+                Gestão de Encomendas
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-danger toggle_aproved" data-type="encomenda"><i class='icon-eye-close'></i>Aprovados</button>
+                <button class="btn btn-lg btn-info" id="export_ENC"><i class='icon-download'></i>Transferir</button>
+                <a class="btn btn-lg btn-primary" href="#view/new_requisition.html?domain=bWt0"><i class='icon-shopping-cart'></i>Nova Encomenda</a>
+
+            </div>
+        </div>
+        <div class="grid-content div_admin_edit" id="requisition_master_div">
+            <table class="table table-bordered table-mod datables_updatable" id="view_requisition_datatable"></table>
+            <div class="clear"></div>
+        </div>
+    </div>
 </div>
 
 
@@ -42,4 +61,36 @@
         Rq.apoio_marketing.init();
         Rq.apoio_marketing.get_to_datatable($("#pedidos_marketing_datatable"));
     });
+</script>
+<script type="text/javascript" src="/AM/lib_js/requisition.js" ></script>
+<script type="text/javascript">
+
+    $(function() {
+        var rq = new requisition($("#admin_extra_zone"), {}, "mkt");
+        rq.init(function()
+        {
+            if (SpiceU.user_level > 5) {
+                $("#button_new_requisition").hide();
+            }
+            else {
+                $("#principal button.btn-info").hide();
+            }
+            rq.get_current_requisitions($("#view_requisition_datatable"), 1);
+        });
+
+        var get = getUrlVars();
+        if (get.enc) {
+            $('.tabs-main a:last').tab('show');
+        }
+
+    });
+
+    $(".toggle_aproved").click(function(e)
+    {
+        e.preventDefault();
+        $(this).find("i").toggleClass("icon-eye-open").toggleClass("icon-eye-close");
+        $(this).toggleClass("btn-success").toggleClass("btn-danger");
+        $(this).parents(".master_pedido_div").find(".datables_updatable").dataTable().fnReloadAjax();
+    });
+
 </script>
