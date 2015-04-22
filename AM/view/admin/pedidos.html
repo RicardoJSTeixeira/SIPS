@@ -1,6 +1,6 @@
 <style>
     .cod_cliente_input{
-        margin-bottom: 0px !important;
+        margin-bottom: 0 !important;
     }
 </style>
 <div id="admin_extra_zone"></div>
@@ -114,7 +114,7 @@
 <script type="text/javascript">
 
     $(function() {
-        var rq = new requisition($("#admin_extra_zone"), {});
+        var rq = new requisition($("#admin_extra_zone"), {}, "equip");
         rq.init(function()
         {
             if (SpiceU.user_level > 5) {

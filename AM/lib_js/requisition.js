@@ -390,7 +390,7 @@ var requisition = function (geral_path, options_ext, domain) {
                     "value": jqTable.parents(".master_pedido_div").find(".toggle_aproved").find("i").hasClass("icon-eye-open")
                 }, {
                     "name": "domain",
-                    "value": "equip"
+                    "value": domain
                 });
             },
             "fnDrawCallback": function () {
