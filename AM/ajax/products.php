@@ -38,7 +38,7 @@ switch ($action) {
         break;
 
     case "get_produto_by_id":
-        echo json_encode($products->get_products($id));
+        echo json_encode($products->get_products($domain, $id));
         break;
 
     case "apagar_produto_by_id":

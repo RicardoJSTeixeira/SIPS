@@ -291,7 +291,7 @@ var Products = function (geral_path, options_ext, domain) {
                         color: color,
                         active: 1,
                         size: size,
-                        domain:domain
+                        domain: domain
                     }, function (data) {
                         new_product_path.modal("hide");
                         if (datatable_path) {
@@ -426,7 +426,7 @@ var Products = function (geral_path, options_ext, domain) {
 
     function populate_modal(modal, callback) {
 
-        $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id}, function (data) {
+        $.post('/AM/ajax/products.php', {action: "get_produto_by_id", "id": product_id, domain: domain}, function (data) {
             populate_parent(geral_path.find("#edit_product_parent"), data.parent_level, get_children(data), function () {
                 modal.find("#edit_product_name").val(data.name);
                 modal.find("#edit_product_category").val(data.category);
@@ -529,7 +529,7 @@ var Products = function (geral_path, options_ext, domain) {
     function populate_parent(select, level_out, children, callback) {
         var out_level = level_out;
         var level = 0;
-        $.post('/AM/ajax/products.php', {action: "get_produtos",domain:domain},
+        $.post('/AM/ajax/products.php', {action: "get_produtos", domain: domain},
             function (data) {
 
                 var option = "";
