@@ -10,6 +10,7 @@ require "$root/AM/lib_php/products.php";
 require "$root/AM/lib_php/requisitions.php";
 require "$root/AM/lib_php/msg_alerts.php";
 require "$root/AM/lib_php/logger.php";
+require "$root/AM/lib_php/sendmail.php";
 
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
@@ -42,6 +43,10 @@ switch ($action) {
     case "criar_encomenda":
         $encomenda = $requisitions->create_requisition($domain, $type, $lead_id, $contract_number, $attachment, $products_list, $comments);
         $log->set($encomenda[0], Logger::T_INS, Logger::S_ENC, "", logger::A_SENT);
+
+        if ($domain == "mkt")
+            send_email_req_mkt($products_list, $comments, $user->getUser());
+
         echo json_encode($encomenda);
 
         break;
@@ -98,3 +103,50 @@ switch ($action) {
         break;
 }
 
+
+function send_email_req_mkt($aProducts, $comments, $user)
+{
+    function products2tr($aProdutcts)
+    {
+        global $products;
+
+        $oProducts = $products->get_products("mkt");
+
+        $trs = "";
+        foreach ($aProdutcts as $value) {
+            $trs .= "<tr><td>".$oProducts[$value['id']]."</td><td>$value[quantity]</td></tr>";
+        }
+        return $trs;
+    }
+
+    $msg = "
+         <h3>ENCOMENDA DE MATERIAL</h3>
+
+<strong>Dispenser:</strong>$user->username
+<br>
+<br>
+
+<table>
+    <thead>
+        <tr>
+            <th width='100' bgcolor='#000000'>
+                <p style='color:#fff;margin:0;'>Produtos</p>
+            </th>
+            <th width='450' bgcolor='#000000'>
+                <p style='color:#fff;margin:0;'>Quantidade</p>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    " . products2tr($aProducts) . "
+    </tbody>
+</table>
+<br>
+
+<strong>Observaçoes:</strong> $comments
+
+
+<strong>Submetido por:</strong> $user->username - $user->name";
+
+    send_email("marcacao@acusticamedica.pt", "Marketing Acústica Médica", $msg, "PEDIDO DE MATERIAL MKT - $user->username");
+}
