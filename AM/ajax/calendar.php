@@ -7,10 +7,10 @@ date_default_timezone_set('GMT');
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 $offset = filter_var($_POST["offset"]);
-$start = filter_var($_POST["start"]);
-$end = filter_var($_POST["end"]);
 $start += $offset;
 $end += $offset;
+$start = filter_var($_POST["start"]);
+$end = filter_var($_POST["end"]);
 
 
 require "$root/AM/lib_php/db.php";

@@ -150,6 +150,7 @@ Calendar = (function () {
                         resource: me.resource,
                         rtype: cEO.rtype,
                         lead_id: cEO.lead_id,
+                        offset: Math.abs(new Date().getTimezoneOffset()) * 60,
                         start: cEO.start,
                         end: cEO.end
                     },
@@ -380,6 +381,7 @@ Calendar = (function () {
                 $.post("/AM/ajax/calendar.php", {
                         id: event.id,
                         action: "change",
+                        offset: Math.abs(new Date().getTimezoneOffset()) * 60,
                         start: moment(event.start).unix(),
                         end: moment(event.end).unix()
                     },
