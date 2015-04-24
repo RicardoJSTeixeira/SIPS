@@ -21,7 +21,7 @@ $log = new Logger($db, $user->getUser());
 switch ($action) {
 
     case "get_filtered":
-        echo json_encode($log->get_all_filtered($section, $date_start, $date_end));
+        echo json_encode($log->get_all_filtered($section, $date_start, $date_end, $id));
         break;
 
     case "get_all":

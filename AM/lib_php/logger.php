@@ -57,25 +57,28 @@ class Logger
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function get_all_filtered($section, $date_start, $date_end)
+    public function get_all_filtered($section, $date_start, $date_end, $id = "")
     {
 
-        $parameters = array();
-        $where = "";
 
-        if ($section) {
-            $where = "where section in ('" . implode("','", $section) . "')";
-
-            if ($date_start) {
-                $where = $where . " and event_date>?";
-                $parameters[] = $date_start . " 00:00:00";
-            }
-            if ($date_end) {
-                $where = $where . " and event_date<?";
-                $parameters[] = $date_end . " 23:59:59";
-            }
-        } else {
+        if (!$section) {
             return array();
+        }
+
+        $parameters = array();
+        $where = "where section in ('" . implode("','", $section) . "')";
+
+        if ($date_start) {
+            $where .= " and event_date>?";
+            $parameters[] = $date_start . " 00:00:00";
+        }
+        if ($date_end) {
+            $where .= " and event_date<?";
+            $parameters[] = $date_end . " 23:59:59";
+        }
+        if ($id) {
+            $where .= " and record_id=?";
+            $parameters[] = $id;
         }
 
 

@@ -2,10 +2,20 @@ $(function () {
     $("#select_section").chosen({
         no_results_text: "Sem resultados"
     });
-    $("#date_start").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function (ev) {
+    $("#date_start").datetimepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "pt",
+        minView: 2
+    }).on('changeDate', function (ev) {
         $("#date_end").datetimepicker('setStartDate', moment($(this).val()).format('YYYY-MM-DD'));
     });
-    $("#date_end").datetimepicker({format: 'yyyy-mm-dd', autoclose: true, language: "pt", minView: 2}).on('changeDate', function (ev) {
+    $("#date_end").datetimepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "pt",
+        minView: 2
+    }).on('changeDate', function (ev) {
         $("#date_start").datetimepicker('setEndDate', moment($(this).val()).format('YYYY-MM-DD'));
     });
 });
@@ -13,15 +23,24 @@ $(function () {
 
 $("#button_apply_filters").click(function (e) {
     e.preventDefault();
-    if ($("#filter_form").validationEngine("validate")) {
-        search();
-    }
+    if ($("#id_da_coisa").val().length)
+        return search();
+
+    if ($("#filter_form").validationEngine("validate"))
+        return search();
+
 });
 
 
 function search() {
     $.msg();
-    $.post("ajax/timeline.php", {action: "get_filtered", date_start: $("#date_start").val(), date_end: $("#date_end").val(), section: $("#select_section").val()}, function (data) {
+    $.post("ajax/timeline.php", {
+        action: "get_filtered",
+        date_start: $("#date_start").val(),
+        date_end: $("#date_end").val(),
+        section: $("#select_section").val(),
+        id: $("#id_da_coisa").val()
+    }, function (data) {
         if (data) {
             create_timeline(data);
         }
@@ -67,7 +86,7 @@ function create_timeline(data) {
             createList(a);
         }
         catch (e) {
-            info.push('<ul><li>'+this.note+'</li><ul>');
+            info.push('<ul><li>' + this.note + '</li><ul>');
         }
 
         function createList(arr) {
@@ -88,19 +107,19 @@ function create_timeline(data) {
         }
 
         log = ($("<li>", {class: inverted ? "timeline-inverted" : ""})
-            .append($("<div>", {class: class_badge})
-                .append($("<i>", {class: class_badge_icon}))
-        )
-            .append($("<div>", {class: "timeline-panel"})
-                .append($("<div>", {class: "timeline-heading"})
-                    .append($("<h4>", {class: "timeline-title"}).text(this.type + " - " + this.section + " - #" + this.record_id))
-                    .append($("<h6>").text(" " + moment(this.event_date, "YYYY-MM-DD HH:mm:ss").fromNow() + " - " + this.event_date).prepend($("<i>", {class: "icon-time"})))
-                    .append($("<h6>").text(this.username).prepend($("<i>", {class: "icon-user"})))
+                .append($("<div>", {class: class_badge})
+                    .append($("<i>", {class: class_badge_icon}))
             )
-                .append($("<div>", {class: "timeline-body"})
-                    .append($("<p>").html(info)
+                .append($("<div>", {class: "timeline-panel"})
+                    .append($("<div>", {class: "timeline-heading"})
+                        .append($("<h4>", {class: "timeline-title"}).text(this.type + " - " + this.section + " - #" + this.record_id))
+                        .append($("<h6>").text(" " + moment(this.event_date, "YYYY-MM-DD HH:mm:ss").fromNow() + " - " + this.event_date).prepend($("<i>", {class: "icon-time"})))
+                        .append($("<h6>").text(this.username).prepend($("<i>", {class: "icon-user"})))
                 )
-            ))
+                    .append($("<div>", {class: "timeline-body"})
+                        .append($("<p>").html(info)
+                    )
+                ))
         );
         $("#timeline_main").prepend(log);
     });
