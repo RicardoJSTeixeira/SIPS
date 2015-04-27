@@ -5,7 +5,7 @@ error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
 require "$root/ini/db.php";
-require "$root/ini/dbconnect.php";
+#//require "$root/ini/dbconnect.php";
 require "$root/ini/user.php";
 require "$root/AM/lib_php/products.php";
 require "$root/AM/lib_php/requests.php";

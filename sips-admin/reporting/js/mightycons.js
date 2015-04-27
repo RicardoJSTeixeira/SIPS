@@ -186,12 +186,10 @@ $(function() {
             $('#mightyNest').find('.icon-wrench').popover('hide');
             $('.popover').remove();
         }).on("click", ".icon-trash", function() {
-
             $(this).parent().tooltip('destroy').remove();
             saveTemplate('editTemplate');
 
         }).on('click', '#graphTypeButton', function(e) {
-
             $(this).parent().parent().data().graphType = $('#selectGraphType').find(':selected').data('graph');
         });
 
@@ -205,7 +203,6 @@ $(function() {
         });
 
         $('#selectTemplateList').on('change', function() {
-
             var myTemplateId = $('#selectTemplateList').val();
             $('.master').remove();
             $('.slave').remove();
@@ -703,7 +700,6 @@ $(function() {
                     }, 'json');
                     selectedCabichange = false;
                 }
-
                 $.post("../constructor.php", {action: 'constructPreview', templateId: $('#selectTemplateList').val()}, function(data) {
 
                     browserPreview(data);
@@ -749,9 +745,6 @@ $(function() {
                             .append(
                                     $("<div>", {class: "box"})
                                     ).append(($("<div>", {class: "box-header"})).append($("<h2>")).append($("<i>", {class: "icon-bar-chart"})).append($("<span>", {class: "break"})))
-
-
-
 
                             .append((
                                     $("<div>", {class: "box-content"})

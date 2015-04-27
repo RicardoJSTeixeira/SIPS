@@ -6,7 +6,7 @@ class excelwraper {
     protected $options = array();
     protected $lettNum = array();
     private $cord_template = array(
-        'letter' => 66,
+        'letter' => 'B',
         'number',
         'space'
     );
@@ -67,12 +67,13 @@ class excelwraper {
 
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
-            
+
+        for ($col = 'A'; $activeSheet->getCell($col . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
+            $col2 = $col;
         }
-        $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':' . chr($col - 1) . ($this->checkTableSizeRow() - 1))->applyFromArray($this->board);
+        $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':' . $col2 . ($this->checkTableSizeRow() - 1))->applyFromArray($this->board);
         $activeSheet->getStyle('A' . $this->lettNum[$this->selectedSheet]->number . ':A' . ($this->checkTableSizeRow() - 1))->getFont()->setBold(true);
-        $activeSheet->getStyle(chr($this->lettNum[$this->selectedSheet]->letter) . $this->lettNum[$this->selectedSheet]->number . ':' . chr($col) . $this->lettNum[$this->selectedSheet]->number)->getFont()->setBold(true);
+        $activeSheet->getStyle($this->lettNum[$this->selectedSheet]->letter . $this->lettNum[$this->selectedSheet]->number . ':' . $col . $this->lettNum[$this->selectedSheet]->number)->getFont()->setBold(true);
     }
 
     protected function autoSizeCol() {
@@ -80,9 +81,9 @@ class excelwraper {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
 
-        for ($col = 65; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
+        for ($col = 'A'; $activeSheet->getCell($col . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
 
-            $activeSheet->getColumnDimension(chr($col))->setAutoSize(true);
+            $activeSheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
 
@@ -135,9 +136,9 @@ class excelwraper {
 
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
+        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell($col . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
 
-            $dataseriesLabels[] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . $this->lettNum[$this->selectedSheet]->number, NULL);
+            $dataseriesLabels[] = new PHPExcel_Chart_DataSeriesValues('String', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . $col . '$' . $this->lettNum[$this->selectedSheet]->number, NULL);
         }
         // echo $col;exit;
         return $dataseriesLabels;
@@ -145,9 +146,9 @@ class excelwraper {
 
     protected function dataSeriesValues() {
         $activeSheet = $this->phpexcel->getActiveSheet();
-        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . ($this->lettNum[$this->selectedSheet]->number ))->getValue() != NULL; $col++) {
+        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell($col . '' . ($this->lettNum[$this->selectedSheet]->number ))->getValue() != NULL; $col++) {
 
-            $dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . chr($col) . '$' . ($this->lettNum[$this->selectedSheet]->number + 1) . ':$' . chr($col) . '$' . ($this->checkTableSizeRow() - 1), NULL);
+            $dataSeriesValues[] = new PHPExcel_Chart_DataSeriesValues('Number', $this->phpexcel->getActiveSheet()->getTitle() . '!$' . $col . '$' . ($this->lettNum[$this->selectedSheet]->number + 1) . ':$' . $col . '$' . ($this->checkTableSizeRow() - 1), NULL);
         }
 
         return $dataSeriesValues;
@@ -186,10 +187,10 @@ class excelwraper {
     protected function battlesheetcol() {
         $activeSheet = $this->phpexcel->getActiveSheet();
 
-        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell(chr($col) . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
+        for ($col = $this->lettNum[$this->selectedSheet]->letter; $activeSheet->getCell($col . '' . $this->lettNum[$this->selectedSheet]->number)->getValue() != NULL; $col++) {
             
         }
-        return chr($col);
+        return $col;
     }
 
     public function addsheet($title, $space, $inicialSpace) {
