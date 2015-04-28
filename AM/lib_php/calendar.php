@@ -22,14 +22,14 @@ Class Calendars
 
     public function _getRefs($user)
     {
-        $stmt = $this->_db->prepare("SELECT user_name, calendar_id, calendar_type FROM fscontact.calendar_agent_ref WHERE user_name=:user");
+        $stmt = $this->_db->prepare("SELECT user, id_calendar, cal_type FROM sips_sd_agent_ref WHERE user=:user");
         $stmt->execute(array(":user" => $user));
         $refs = array();
         while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
             if ($row->cal_type != "SCHEDULER") {
                 $refs[] = (object)array("id" => $row->id_calendar);
             } else {
-                $rsc = $this->_db->prepare("SELECT id FROM fscontact.calendar WHERE owner_id=:id AND active=TRUE AND NOT del");
+                $rsc = $this->_db->prepare("SELECT id_resource id FROM sips_sd_resources WHERE id_scheduler=:id AND active=1");
                 $rsc->execute(array(":id" => $row->id_calendar));
                 while ($rscs = $rsc->fetch(PDO::FETCH_OBJ)) {
                     $refs[] = $rscs;
@@ -42,13 +42,9 @@ Class Calendars
     protected function _getName($id, $is_scheduler)
     {
         if ($is_scheduler) {
-            $query = "SELECT group_name AS name
-FROM fscontact.calendar_group
-WHERE id = :id AND active ;";
+            $query = "SELECT display_text name FROM sips_sd_schedulers WHERE id_scheduler=:id AND active=1";
         } else {
-            $query = "SELECT calendar_name AS name
-FROM fscontact.calendar
-WHERE id = :id AND active = 1;";
+            $query = "SELECT display_text name FROM sips_sd_resources WHERE id_resource=:id AND active=1";
         }
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":id" => $id));
@@ -68,36 +64,13 @@ WHERE id = :id AND active = 1;";
     protected function _getReservas($is_scheduler, $id, $beg, $end, $forceUneditable = false)
     {
         if ($is_scheduler) {
-            $query = "SELECT
-  id_reservation,
-  start_date,
-  end_date,
-  a.id_resource,
-  id_user,
-  a.lead_id,
-  id_reservation_type,
-  b.display_text                                                rsc_name,
-  min_time,
-  max_time,
-  del,
-  e.display_text,
-  d.postal_code,
-  CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name,
-  d.extra1                                                      codCamp,
-  changed,
-  f.closed,
-  obs,
-  extra_id,
-  has_accessories,
-  sale,
-  useful,
-  transformer
-FROM sips_sd_reservations a
-  LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
-  LEFT JOIN sips_sd_resources b ON a.id_resource = b.id_resource
-  LEFT JOIN sips_sd_reservations_types e ON a.id_reservation_type = e.id_reservations_types
-  LEFT JOIN spice_consulta f ON a.id_reservation = f.reserva_id
-WHERE b.id_scheduler = :id AND start_date <= :end AND end_date >= :beg AND gone = 0;";
+            $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, e.display_text, d.postal_code, CONCAT(d.first_name, ' ', d.middle_initial, ' ', d.last_name) client_name, d.extra1 codCamp, changed, f.closed, obs, extra_id, has_accessories, sale, useful, transformer
+                FROM sips_sd_reservations a
+                LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
+                LEFT JOIN sips_sd_resources b ON a.id_resource=b.id_resource
+                LEFT JOIN sips_sd_reservations_types e ON a.id_reservation_type=e.id_reservations_types
+                LEFT JOIN spice_consulta f ON a.id_reservation=f.reserva_id
+                WHERE b.id_scheduler=:id AND start_date <=:end AND end_date >=:beg AND gone=0";
         } else {
             $query = "SELECT id_reservation, start_date, end_date, a.id_resource,id_user,a.lead_id,id_reservation_type, b.display_text rsc_name, min_time, max_time, del, d.display_text, c.postal_code, CONCAT(c.first_name, ' ', c.middle_initial, ' ', c.last_name) client_name, c.extra1 codCamp, changed, e.closed, obs, extra_id, has_accessories, sale, useful, transformer
                 FROM sips_sd_reservations a
