@@ -1,64 +1,11 @@
 <?php
-
-if (file_exists("/etc/astguiclient.conf")) {
-    $DBCagc = file("/etc/astguiclient.conf");
-    foreach ($DBCagc as $DBCline) {
-        $DBCline = preg_replace("/ |>|\n|\r|\t|\#.*|;.*/", "", $DBCline);
-        if (ereg("^PATHlogs", $DBCline)) {
-            $PATHlogs = $DBCline;
-            $PATHlogs = preg_replace("/.*=/", "", $PATHlogs);
-        }
-        if (ereg("^PATHweb", $DBCline)) {
-            $WeBServeRRooT = $DBCline;
-            $WeBServeRRooT = preg_replace("/.*=/", "", $WeBServeRRooT);
-        }
-        if (ereg("^VARserver_ip", $DBCline)) {
-            $WEBserver_ip = $DBCline;
-            $WEBserver_ip = preg_replace("/.*=/", "", $WEBserver_ip);
-        }
-        if (ereg("^VARDB_server", $DBCline)) {
-            $VARDB_server = $DBCline;
-            $VARDB_server = preg_replace("/.*=/", "", $VARDB_server);
-        }
-        if (ereg("^VARDB_database", $DBCline)) {
-            $VARDB_database = $DBCline;
-            $VARDB_database = preg_replace("/.*=/", "", $VARDB_database);
-        }
-        if (ereg("^VARDB_user", $DBCline)) {
-            $VARDB_user = $DBCline;
-            $VARDB_user = preg_replace("/.*=/", "", $VARDB_user);
-        }
-        if (ereg("^VARDB_pass", $DBCline)) {
-            $VARDB_pass = $DBCline;
-            $VARDB_pass = preg_replace("/.*=/", "", $VARDB_pass);
-        }
-        if (ereg("^VARDB_custom_user", $DBCline)) {
-            $VARDB_custom_user = $DBCline;
-            $VARDB_custom_user = preg_replace("/.*=/", "", $VARDB_custom_user);
-        }
-        if (ereg("^VARDB_custom_pass", $DBCline)) {
-            $VARDB_custom_pass = $DBCline;
-            $VARDB_custom_pass = preg_replace("/.*=/", "", $VARDB_custom_pass);
-        }
-        if (ereg("^VARDB_port", $DBCline)) {
-            $VARDB_port = $DBCline;
-            $VARDB_port = preg_replace("/.*=/", "", $VARDB_port);
-        }
-    }
-}
-
-//$VARDB_server="sipsam.dyndns.org";
-$host = "mysql:host=" . $VARDB_server . ";dbname=" . $VARDB_database . ";";
-$varDbUser = "sipsadmin";
-$varDbPass = "sipsps2012";
-
 try {
+    $oPropertiesJSON = file_get_contents("/opt/fscontact-server/modules/utils/pg/pg-settings.json");
+    $oProperties = json_decode($oPropertiesJSON);
 
-
-    $db = new PDO($host, $varDbUser, $varDbPass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    $db = new PDO("pgsql:dbname=" . $oProperties->database . ";host=" . $oProperties->serverip, $oProperties->username, $oProperties->password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
     die('Connection failed: ' . $e->getMessage());
 }
- 
