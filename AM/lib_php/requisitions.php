@@ -15,11 +15,11 @@ Class requisitions
     {
         $approved_toggle = " and sr.status=1";
         if ($show_aproved != "true")
-            $approved_toggle = " and sr.status<>1";
+            $approved_toggle = " and sr.status<>1 ORDER BY sr.date";
 
         $result['aaData'] = array();
         $filter = ($this->_user_level == 6) ? ' and sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' and sr.user like "' . $this->_user_id . '" ' : '');
-        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city,sr.domain from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where 1 $filter $approved_toggle AND sr.domain = :domain  limit 1000";
+        $query = "SELECT sr.id,sr.user,sr.type,vl.first_name,sr.date,sr.contract_number,vl.extra2,sr.attachment,'products',sr.status,'botoes','sorting','object',sr.lead_id,vl.middle_initial,vl.last_name,vl.phone_number,vl.address1,vl.city,sr.domain from spice_requisition sr left join vicidial_list vl on vl.lead_id=sr.lead_id where 1 $filter AND sr.domain = :domain $approved_toggle  limit 1000";
 
         $stmt = $this->_db->prepare($query);
         $stmt->execute(array(":domain" => $domain));
