@@ -13,7 +13,7 @@ Class requisitions
 
     public function get_requisitions_to_datatable($domain, $show_aproved)
     {
-        $approved_toggle = "";
+        $approved_toggle = " and status=1";
         if ($show_aproved != "true")
             $approved_toggle = " and sr.status<>1";
 
