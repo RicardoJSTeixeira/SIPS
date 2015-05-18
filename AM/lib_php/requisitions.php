@@ -15,7 +15,7 @@ Class requisitions
     {
         $approved_toggle = " and sr.status=1";
         if ($show_aproved != "true")
-            $approved_toggle = " and sr.status<>1 ORDER BY sr.date";
+            $approved_toggle = " and sr.status<>1 ORDER BY sr.date DESC";
 
         $result['aaData'] = array();
         $filter = ($this->_user_level == 6) ? ' and sr.user in ("' . implode('","', $this->_user_siblings) . '")' : (($this->_user_level < 6) ? ' and sr.user like "' . $this->_user_id . '" ' : '');
