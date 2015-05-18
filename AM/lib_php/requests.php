@@ -623,8 +623,8 @@ class movimentacao_stock extends requests_class
     {
 
         $approved_toggle = "";
-        /*if ($show_aproved!="true")
-            $approved_toggle = " and status<>1";*/
+        if ($show_aproved!="true")
+            $approved_toggle = " and status<>1";
 
         $result['aaData'] = array();
         $filter = ($this->user_level == 6) ? ' and user in ("' . implode('","', $this->user->siblings) . '") ' : (($this->user_level < 6) ? ' and user like "' . $this->user_id . '" ' : '');
