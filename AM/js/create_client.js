@@ -173,7 +173,7 @@ $(function () {
                                 var
                                     data = $(this).data(),
                                     en = btoa(data.lead_id);
-                                $.history.push("view/new_requisition.html?id=" + en);
+                                $.history.push("view/new_requisition.html?domain=ZXF1aXA%3D&id=" + en);
                             }).on("click", ".ver_cliente", function () {
 
                                 var client = new ClientBox();
