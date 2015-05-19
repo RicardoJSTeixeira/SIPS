@@ -60,7 +60,7 @@ Class products
         return $stmt->fetch(PDO::FETCH_OBJ)->name;
     }
 
-    public function get_products($domain, $id = null)
+    public function get_products($domain, $id = null, $idInKey = null)
     {
         $relations = array();
         $stmt = $this->_db->prepare("SELECT parent, child FROM spice_product_assoc");
@@ -105,6 +105,10 @@ Class products
         if ($id) {
             return $output[$id];
         } else {
+
+            if ($idInKey)
+                return $output;
+
             $temp = array();
             foreach ($output as $key => $row) {
                 $temp[$key] = $row['name'];

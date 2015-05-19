@@ -47,7 +47,7 @@ switch ($action) {
         if ($domain == "mkt")
             send_email_req_mkt($products_list, $comments, $user->getUser());
 
-        echo json_encode($encomenda);
+        #echo json_encode($encomenda);
 
         break;
 
@@ -110,11 +110,10 @@ function send_email_req_mkt($aProducts, $comments, $user)
     {
         global $products;
 
-        $oProducts = $products->get_products("mkt");
-
+        $oProducts = $products->get_products("mkt", null, true);
         $trs = "";
         foreach ($aProdutcts as $value) {
-            $trs .= "<tr><td>".$oProducts[$value['id']]["name"]."</td><td>$value[quantity]</td></tr>";
+            $trs .= "<tr><td>" . $oProducts[$value['id']]["name"] . "</td><td>$value[quantity]</td></tr>";
         }
         return $trs;
     }
