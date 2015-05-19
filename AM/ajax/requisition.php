@@ -114,7 +114,7 @@ function send_email_req_mkt($aProducts, $comments, $user)
 
         $trs = "";
         foreach ($aProdutcts as $value) {
-            $trs .= "<tr><td>".$oProducts[$value['id']]."</td><td>$value[quantity]</td></tr>";
+            $trs .= "<tr><td>".$oProducts[$value['id']]["name"]."</td><td>$value[quantity]</td></tr>";
         }
         return $trs;
     }
