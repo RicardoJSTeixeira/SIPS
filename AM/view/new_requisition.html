@@ -226,7 +226,7 @@
                 client = getUrlVars(),
                 clientID = '';
 
-        var domain = atob(client.domain);
+        var domain = atob(decodeURIComponent(client.domain));
 
         if (domain != "equip" && domain != "mkt") {
             $("#view_requisition_datatable").html("<h1>Por favor carregue CTRL+SHIFT+R para actualizar o SPICE</h1>");

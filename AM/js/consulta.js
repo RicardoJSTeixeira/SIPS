@@ -177,7 +177,7 @@ $(function () {
 
     $("#new_request_button, #bnova_enc").click(function () {
         var en = btoa(lead_id);
-        $.history.push("view/new_requisition.html?domain=ZXF1aXA=&id=" + en);
+        $.history.push("view/new_requisition.html?domain=ZXF1aXA%3D&id=" + en);
     });
 
     $(".new_marcacao_button").click(function () {
