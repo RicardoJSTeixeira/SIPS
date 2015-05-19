@@ -260,7 +260,7 @@ var ClientBox = function (configs) {
 
                         var en = btoa(lead_id);
                         modal_html.modal("hide");
-                        $.history.push("view/new_requisition.html?id=" + en);
+                        $.history.push("view/new_requisition.html?domain=ZXF1aXA=?id=" + en);
                     });
 
                 if (!client_extra_count)
