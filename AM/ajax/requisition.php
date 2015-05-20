@@ -47,7 +47,7 @@ switch ($action) {
         if ($domain == "mkt")
             send_email_req_mkt($products_list, $comments, $user->getUser());
 
-        #echo json_encode($encomenda);
+        echo json_encode($encomenda);
 
         break;
 
