@@ -3839,7 +3839,7 @@ $h++;
 
                         echo "<tr>
 				<td>
-					<a target='novapagina' href='" . $row[url] . "'>
+					<a class='sips-links' target='novapagina' href='" . $row[url] . "'>
 						<img style='vertical-align:middle;' src='" . $row[imgpath] . "'>
 						      " . $row[label] . "
 					</a>
@@ -3861,6 +3861,7 @@ $h++;
             <tr><td id='email-log'></td></tr>
             </table>    
         </div>
+
         <style>
         .div-title { width:100%; border-bottom: 1px solid #DDDDDD; font-weight:bold; margin:8px 0 10px 0; }
         .td-text { text-align: right; padding:0 6px 0 0; }
@@ -3917,7 +3918,71 @@ $h++;
             
             });
     
-        </script>   
+        </script>
+
+                <!-- maravilha actual start -->
+
+        <div id='dialog-email_ma'>
+            <div class='div-title'>Dados do Email</div>
+            <table>
+            <tr>
+            <td>Morada de Email: </td><td class='td-text'><input style='width:200px;' id='email-address_ma' value=''> </td>
+            </tr>
+             <tr class='spacer8'></tr>
+            <tr>
+            <td>Destinatário: </td><td class='td-text'><input style='width:200px;' id='email-name_ma' value=''> </td>
+            </tr>
+
+            <tr class='spacer16'></tr>
+            <tr><td colspan='2' style='text-align:left'><button type='button' id='send-email_ma'>Enviar Email</button></td></tr>
+            <tr class='spacer16'></tr>
+            <tr><td id='email-log_ma'></td></tr>
+            </table>
+        </div>
+
+         <script>
+            $('#dialog-email_ma').dialog({
+                title: ' <span style=font-size:13px; color:black>Envio de Email</span> ',
+                autoOpen: false,
+                height: 300,
+                width: 450,
+                resizable: false,
+                buttons: {
+                    'Fechar' : function() { $(this).dialog('close'); }
+                    },
+                open : function() { $('button').blur();  }
+                });
+            $('.sips-links[href=#email-link-ma]').click(function(e) {
+            e.preventDefault();
+                var email_lead_id = $('#lead_id').val();
+                $('#email-log').html('');
+                $('#email-address').val('');
+                $.ajax({
+                        type: 'POST',
+                        url: '../client_files/maravilhaactual/email/_requests.php',
+                        data: {action: 'get_email', lead_id: email_lead_id },
+                        success: function(data, textStatus, jqXHR) { $('#email-address_ma').val(data); $('#email-name_ma').val($('#first_name').val())  }
+                        });
+            $('#dialog-email_ma').dialog( 'open' );
+            });
+
+            $('#send-email_ma').button().click(function(){
+            var email_address_ma = $('#email-address_ma').val();
+            var email_name_ma = $('#email-name_ma').val();
+            var sent_by_user_ma = user;
+            var sent_by_campaign_ma = campaign;
+            $('#email-log_ma').html('<img src=/images/icons/ajax-loader.gif>')
+            $.ajax({
+                    type: 'POST',
+                    url: '../client_files/maravilhaactual/email/_requests.php',
+                    data: {action: 'send_email', email_address: email_address_ma, email_name: email_name_ma, sent_by_user: sent_by_user_ma, sent_by_campaign: sent_by_campaign_ma},
+                    success: function(data, textStatus, jqXHR) { $('#email-log_ma').html(data);  }
+                    });
+
+
+            });
+
+        </script>
                      
                 </td>
 			</tr>";
