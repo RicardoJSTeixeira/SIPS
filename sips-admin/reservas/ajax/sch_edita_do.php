@@ -28,3 +28,4 @@ $postal=(isset($_POST["postal"])?"1":"0");
 
 	mysql_query($query,$link) or die( json_encode(array(sucess=>0))."  ".mysql_error());   
 	echo json_encode(array(sucess=>1));                                               
+?> 

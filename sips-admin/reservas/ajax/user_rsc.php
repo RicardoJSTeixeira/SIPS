@@ -1,6 +1,4 @@
 <?php
-echo json_encode(false);
-/*
 require_once('../func/reserve_utils.php');
 $username=(isset($_POST["username"]))?$_POST["username"]:false;
 $password=(isset($_POST["password"]))?$_POST["password"]:false;
@@ -46,4 +44,5 @@ echo json_encode(true);
 }
 else{
     echo json_encode(false);
-}*/
+}
+?>

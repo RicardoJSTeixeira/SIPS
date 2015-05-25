@@ -24,8 +24,6 @@
         <script type="text/javascript" src="/jquery/scrollto/jquery.scrollTo-1.4.3.1-min.js"></script>
 
         <?php
-        error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-        ini_set('display_errors', '1');
         require('../func/reserve_utils.php');
         ?>
         <style>
@@ -62,12 +60,9 @@
                 </thead>
                 <tbody>
                     <?php
-/*
-                    $user = new UserLogin($db);
-                    $user->confirm_login();
-                    $u=$user->getUser();*/
+                    $user = new user;
 
-                    $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = 'SPICE'") or die(mysql_error());
+                    $usrQry = mysql_query("SELECT user_group, custom_one from vicidial_users WHERE user = '$user->id'") or die(mysql_error());
                     $usrQry = mysql_fetch_assoc($usrQry);
 
                     $usrCode = $usrQry['custom_one'];
@@ -75,10 +70,10 @@
                     $u_g = $usrQry['user_group'];
                     if ($u_g == 'AreaSalesManager' or $u_g == 'AAL' or $u_g == 'AMB' or $u_g == 'ANU' or $u_g == 'FPO' or $u_g == 'RGE' or $u_g == "BIO" or $u_g == "SPICE") {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers a WHERE a.alias_code in ($usrCode) ;";
-                    } elseif($u->user_group=="ADMIN") {
+                    } elseif($user->user_group=="ADMIN") {
                         $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers;";
                     } else {
-                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='SPICE';";
+                        $query = "SELECT id_scheduler,display_text,alias_code,days_visible,blocks,begin_time,end_time,active FROM sips_sd_schedulers WHERE user_group='$user->user_group';";
                     }
 
 

@@ -59,3 +59,4 @@ if ($pedido == 1) {
 } else {
     exit;
 }
+?>

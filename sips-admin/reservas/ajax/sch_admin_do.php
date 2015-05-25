@@ -5,10 +5,8 @@ if (!(isset($_POST["display_text"]) && isset($_POST["alias_code"]) && isset($_PO
  echo "error";
     exit;  
 }
-/*
-$user = new UserLogin($db);
-$user->confirm_login();
-$u=$user->getUser();*/
+
+$user= new user;
 
 $display_text=trim($_POST["display_text"]);
 $alias_code=trim($_POST["alias_code"]);
@@ -25,7 +23,11 @@ $end_time=preg_replace($only_nr, '' , $_POST["end_time"]);
 			".mysql_real_escape_string($blocks).",
 			".mysql_real_escape_string($begin_time).",
 			".mysql_real_escape_string($end_time).",
-			1,'SPICE');";
+			1,'".$user->user_group."');";
 
 	mysql_query($query,$link) or die(json_encode(array(sucess=>1))."Sucedeu-se um Erro. ".mysql_error());   
 	echo json_encode(array("sucess"=>1,"id"=>mysql_insert_id(),"display_text"=>$display_text,"alias_code"=>$alias_code,"display_days"=>$display_days,"blocks"=>m2h($blocks),"begin_time"=>m2h($begin_time,true),"end_time"=>m2h($end_time,true)));                                               
+?>                                                                             
+                                                                               
+                                                                               
+                                                                               

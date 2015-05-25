@@ -21,3 +21,4 @@ if (!(checkDateTime($start) && checkDateTime($end)) ){
     
             echo json_encode(array("sucess" => "1"));
 
+?>
