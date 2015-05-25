@@ -41,7 +41,7 @@
 
         var oD = getUrlVars();
 
-        var domain = atob(oD.domain);
+        var domain = atob(decodeURIComponent(oD.domain));
 
         var config = {};
         product = new Products($("#extra_div"), config,domain);
