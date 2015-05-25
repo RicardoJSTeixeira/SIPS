@@ -1,7 +1,7 @@
 <?php
 
-if (file_exists("/etc/astguiclient.conf")) {
-    $DBCagc = file("/etc/astguiclient.conf");
+if (file_exists("/etc/astguiclient_es.conf")) {
+    $DBCagc = file("/etc/astguiclient_es.conf");
     foreach ($DBCagc as $DBCline) {
         $DBCline = preg_replace("/ |>|\n|\r|\t|\#.*|;.*/", "", $DBCline);
         if (ereg("^PATHlogs", $DBCline)) {
