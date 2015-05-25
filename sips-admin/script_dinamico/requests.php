@@ -2,7 +2,7 @@
 
 require("../../ini/dbconnect.php");
 require("../../ini/user.php");
-require("../../ini/db.php");
+require("../../AM/lib_php/db.php");
 require("script.php");
 require("../../ini/htmlpurifier/HTMLPurifier.standalone.php");
 
