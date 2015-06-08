@@ -1,7 +1,7 @@
 <?php
-
+/*
 ini_set('display_errors', 1);
-error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);*/
 foreach ($_POST as $key => $value) {
     ${$key} = $value;
 }
@@ -28,9 +28,9 @@ switch ($action) {
             return false;
         } else {
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $destiny . $id . "_-_" . $fileName))
-                echo json_encode(["message" => "$fileName Guardado", "id" => $id,]);
+                echo json_encode(array("message" => "$fileName Guardado", "id" => $id));
             else
-                echo json_encode(["message" => "$fileName Não Guardado", "id" => $id,]);
+                echo json_encode(array("message" => "$fileName Não Guardado", "id" => $id));
         }
         break;
 
