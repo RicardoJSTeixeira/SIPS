@@ -359,6 +359,7 @@ if ($_POST['nc_flag'] == "nc_post") {
         <select class="multiple-requiredconsultoriodois chzn-select" id="consultoriodois" name="consultoriodois">
             <option selected="" value="nenhum">Nenhum</option>
             <option value="B/ABN"> Consultório Abrantes</option>
+            <option value="B/BALC"> Consultório Alcobaça</option>
             <option value="B/BALG"> Consultório Algés</option>
             <option value="B/ALM"> Consultório Almada</option>
             <option value="B/ALV"> Consultório Lisboa - Alvalade</option>
