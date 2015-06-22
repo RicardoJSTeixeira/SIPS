@@ -13,11 +13,11 @@ if (isset($_POST['start']) && isset($_POST['end']) && isset($_POST['resource']) 
 }else{
 	exit;
 }
-                $users= new users;
+               /* $users= new users;
                 if(!$users->isAdminPass($pass)){
                     echo json_encode(array("success" => 0,"message" => "Password não pertence a um admin."));
                     exit;
-                }
+                }*/
 		if (!(checkDateTime($start) && checkDateTime($end)) ){
                     echo json_encode(array("success" => 0,"message" => "Não é uma data."));
 			exit;

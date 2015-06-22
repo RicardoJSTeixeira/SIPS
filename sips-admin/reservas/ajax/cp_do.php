@@ -24,4 +24,3 @@ $query = "INSERT INTO `sips_sd_cp` (`cp`, `tecnico`)
 
 mysql_query($query, $link) or die(json_encode(array("sucess" => 0)) . "  " . mysql_error());
 echo json_encode(array("sucess" => 1, "cp" => $cp, "ref" => $ref, "id" => mysql_insert_id($link)));
-?>

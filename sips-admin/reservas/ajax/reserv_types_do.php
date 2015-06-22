@@ -1,7 +1,9 @@
 <?php
 
 require_once('../func/reserve_utils.php');
-$user = new user;
+/*$user = new UserLogin($db);
+$user->confirm_login();
+$u=$user->getUser();*/
 
 if (isset($_POST['nr'])) {
     $nr = preg_replace($only_nr, '', $_POST["nr"]);
@@ -38,8 +40,7 @@ $color = $_POST["color"];
 $query = "INSERT INTO `sips_sd_reservations_types` ( `display_text`, `color`,`active`,`user_group`)
             VALUES ('" . mysql_real_escape_string($text) . "',
                         '" . mysql_real_escape_string($color) . "',1,
-                        '" . $user->user_group . "');";
+                        'SPICE');";
 
 mysql_query($query, $link) or die(json_encode(array("sucess" => 0)) . "  " . mysql_error());
 echo json_encode(array("sucess" => 1, "text" => $text, "color" => $color, "id" => mysql_insert_id($link)));
-?>
