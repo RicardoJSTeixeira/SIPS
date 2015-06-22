@@ -8,7 +8,7 @@ for ($i = 0; $i < $self - 2; $i++) {
 define("ROOT", $header);
 
 //includes
-require(ROOT . "ini/dbconnect.php");
+require(ROOT . "ini/dbconnect_es.php");
 require(ROOT . "requests/_json_convert.php");
 
 //regex
