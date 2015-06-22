@@ -449,7 +449,10 @@ else
 	$query_date_BEGIN = "$query_date $time_BEGIN";   
 	$query_date_END = "$end_date $time_END";
 
-	if (strlen($user_group)>0) {$ugSQL="and vicidial_agent_log.user_group='$user_group'";}
+
+		$archive = (strtotime("2 month ago") > strtotime($query_date_END)) ? "_archive" : "";
+
+	if (strlen($user_group)>0) {$ugSQL="and vicidial_agent_log$archive.user_group='$user_group'";}
 	else {$ugSQL='';}
 
 	if ($file_download < 1)
@@ -581,7 +584,7 @@ $query = "	SELECT	user,
 					lead_id,
 					status,
 					dead_sec
-			FROM 	vicidial_agent_log 
+			FROM 	vicidial_agent_log$archive
 			WHERE 	event_time <= '$query_date_END' 
 			AND 	event_time >= '$query_date_BEGIN' 
 			$grupos_SQL 
@@ -732,7 +735,7 @@ $pause_codes_SQL = "AND sub_status IN($pause_codes_IN)";
 $query = "	SELECT 		user,
 						sum(pause_sec),
 						sub_status 
-			FROM 		vicidial_agent_log 
+			FROM 		vicidial_agent_log$archive
 			WHERE 		event_time <= '$query_date_END' 
 			AND 		event_time >= '$query_date_BEGIN' 
 			AND			pause_sec > 0 
@@ -952,7 +955,7 @@ echo "</div>";*/
 	$PCusersARY=$MT;
 	$PCuser_namesARY=$MT;
 	$user_count=0;
-	$stmt="select $userSQL,sum(pause_sec),sub_status from vicidial_agent_log where event_time <= '$query_date_END' and event_time >= '$query_date_BEGIN' and pause_sec > 0 and pause_sec < 65000 $group_SQL $user_group_SQL group by user,sub_status order by user,sub_status desc limit 10000000;";
+	$stmt="select $userSQL,sum(pause_sec),sub_status from vicidial_agent_log$archive where event_time <= '$query_date_END' and event_time >= '$query_date_BEGIN' and pause_sec > 0 and pause_sec < 65000 $group_SQL $user_group_SQL group by user,sub_status order by user,sub_status desc limit 10000000;";
 	$rslt=mysql_query($stmt, $link);
 	if ($DB) {echo "$stmt\n";}
 	$subs_to_print = mysql_num_rows($rslt);
@@ -990,7 +993,7 @@ echo "</div>";*/
 
 
 	##### BEGIN Gather all agent time records and parse through them in PHP to save on DB load
-	$stmt="select $userSQL,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log where event_time <= '$query_date_END' and event_time >= '$query_date_BEGIN' $group_SQL $user_group_SQL limit 10000000;";
+	$stmt="select $userSQL,wait_sec,talk_sec,dispo_sec,pause_sec,lead_id,status,dead_sec from vicidial_agent_log$archive where event_time <= '$query_date_END' and event_time >= '$query_date_BEGIN' $group_SQL $user_group_SQL limit 10000000;";
 	
  
 	
