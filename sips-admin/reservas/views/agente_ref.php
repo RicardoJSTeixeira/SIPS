@@ -115,19 +115,20 @@ $user=new user;
                                                 (SELECT  `ref_id` ,  `user` ,  `display_text` ,  `cal_type` 
                                                 FROM  `sips_sd_agent_ref` a
                                                 INNER JOIN sips_sd_schedulers b ON a.id_calendar = b.id_scheduler
-                                                WHERE cal_type =1)
+                                                WHERE cal_type ='SCHEDULER')
                                                 UNION ALL (SELECT  `ref_id` ,  `user` ,  `display_text` ,  `cal_type` 
                                                 FROM  `sips_sd_agent_ref` a
                                                 INNER JOIN sips_sd_resources b ON a.id_calendar = b.id_resource
-                                                WHERE cal_type =2))a
-                                                INNER JOIN vicidial_users b ON a.user = b.user $users_regexb", $link) or die(mysql_error());
+                                                WHERE cal_type ='RESOURCE'))a
+                                                INNER JOIN vicidial_users b ON a.user = b.user ", $link) or die(mysql_error());
                             while ($row = mysql_fetch_array($result)) {
                                 ?>
                                 <tr>
                                     <td><?= $row[1] ?></td>
                                     <td><?= $row[2] ?></td>
                                     <td><?= strtr($row[3], array("RESOURCE" => "Recurso", "SCHEDULER" => "Calendário")) ?>
-                                        <div class="view-button"><a href="#" class="btn btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td></tr>
+                                        <div class="view-button"><a href="#" class="btn btn-mini activator confirm-delete" data-id="<?= $row[0] ?>" data-user="<?= $row[1] ?>" data-cal="<?= $row[2] ?>"> <i class="icon-trash"></i><span>Eliminar</span></a></div></td>
+                                </tr>
                             <?php } ?>
                         </tbody>
                     </table>
