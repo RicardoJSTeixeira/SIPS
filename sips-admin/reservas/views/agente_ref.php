@@ -266,8 +266,9 @@ $user=new user;
                         });
 
                         $("#newRef-confirm").on("click", function() {
-                            var conf = $("#newRef-form").serializeObject(), cal_id;
+                            var conf = $("#newRef-form").serializeObject(), cal_id, type;
                             cal_id = (conf.type === "1") ? conf.sch : conf.rsc;
+                            type = (conf.type === "1") ? "SCHEDULER" : "RESOURCE";
                             $.post("../ajax/agente_ref_do.php", {pedido: 128, cr:'<?=$user->id?>', user: conf.user, type: conf.type, cal: cal_id}, function(data) {
                                 otable.dataTable().fnAddData([data.utilizador,data.desc_cal,data.tipo+'<div class="view-button"><a href="#" class="btn  btn-mini activator confirm-delete" data-id="'+data.last+'" data-user="'+data.utilizador+'" data-cal="'+data.desc_cal+'"> <i class="icon-trash"></i><span>Eliminar</span></a></div></div>']);					
                                 $("#newRef-modal").modal('hide');

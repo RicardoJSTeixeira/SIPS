@@ -43,4 +43,3 @@ if ($pedido == 667) {
     log_admin("CALENDAR_AGENT_REF", "DEL REF", $id, $q, $_POST['cr'], $_SERVER['REMOTE_ADDR']);
     echo json_encode(array("done"));
 }
-?>
