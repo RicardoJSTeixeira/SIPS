@@ -4,7 +4,7 @@ $aType = explode("_", $action);
 $type = array_pop($aType);
 
 $curTime = date("Y-m-d_H:i:s");
-$filename = "novas_leads_followUp_$type" . "_" . $curTime;
+$filename = "novas_leads_Consulta_" . $curTime;
 header("Content-Disposition: attachment; filename=" . $filename . ".csv");
 $output = fopen('php://output', 'w');
 
@@ -97,7 +97,7 @@ fputcsv($output, array(
     'Branch',
     'Comments',
     'Salesperson Team',
-    'Tipo Cliente',
+    'Tipo Cliente',//fim leads
     "Contact No.",
     "Interaction Log Entry No.",
     "Sugar Contact No.",
@@ -113,7 +113,7 @@ fputcsv($output, array(
     "Audiogram",
     "Appointment Result",
     "3a Pessoa",
-    "Nome 3a Pessoa",
+    "Nome 3a Pessoa",//fim consulta
     "Tipo Perda Dto.",
     "Tipo Perda Esq.",
     "Pct. Perda Dto.",
@@ -127,14 +127,17 @@ fputcsv($output, array(
     "Resultado",
     "Tipo de Venda"), ";");
 
-if ($type == "dispenser") {
-    $dispens_cc = "NO";
-} else {
-    $dispens_cc = "YES";
-}
+$dispens_cc = "NO";
+
+$tipoFamHack = array(
+    "marido/esposa" => "Marido/Esposa",
+    "filho" => "Filho(a)",
+    "familiar" => "Outro Familiar",
+    "amigo" => "Amigo(a)"
+);
 
 $query_log = "SELECT * FROM (SELECT
-                a.lead_id
+                a.lead_id,
                 a.title,
                 a.extra1,
                 a.first_name,
@@ -158,15 +161,15 @@ $query_log = "SELECT * FROM (SELECT
                 a.comments
                 FROM vicidial_list a
                 INNER JOIN vicidial_users b ON a.user=b.user
-                WHERE a.entry_date BETWEEN :data_inicial AND :data_final AND a.extra6=:type AND a.status='NEW' AND b.user_group=:user_group AND b.user_level<5)
+                WHERE a.entry_date BETWEEN :data_inicial1 AND :data_final1 AND a.extra6=:type AND a.status='NEW' AND b.user_group=:user_group AND b.user_level<5)
                 a INNER JOIN
                 (SELECT extra2 'cod cliente', a.extra_id as 'interaction log', a.lead_id 'sugar ref', id_reservation , a.entry_date, consulta_razao ,start_date, exame_razao, venda_razao, f.user, alias_code as 'salesperson code', extra1 'camp cod', IF(exame,'YES','NO') 'exame', feedback, terceira_pessoa
             FROM sips_sd_reservations a
             INNER JOIN sips_sd_resources g ON a.id_resource = g.id_resource
             LEFT JOIN vicidial_list d ON a.lead_id = d.lead_id
             INNER JOIN spice_consulta f ON a.id_reservation=f.reserva_id
-            WHERE f.closed=1 AND f.data BETWEEN :data_inicial AND :data_final $where)
-            b ON a.lead_id=b.'sugar ref'
+            WHERE f.closed=1 AND f.data BETWEEN :data_inicial2 AND :data_final2 $where)
+            b ON a.lead_id=b.`sugar ref`
             INNER JOIN
             (SELECT uniqueid, extra2 'codCliente', a.extra_id AS 'itLogID', a.lead_id , id_reservation , a.entry_date, f.user, consulta_razao, alias_code AS 'salespersonCode', f.produtos, f.venda, MAX(IF(g.name='AR',g.value,''))'AR',MAX(IF(g.name='AL',g.value,'')) 'AL',MAX(IF(g.name='BCR',g.value,'')) 'BCR',MAX(IF(g.name='BCL',g.value,'')) 'BCL',MAX(IF(g.name='ULLR',g.value,'')) 'ULLR',MAX(IF(g.name='ULLL',g.value,'')) 'ULLL'
                 FROM sips_sd_reservations a
@@ -176,8 +179,18 @@ $query_log = "SELECT * FROM (SELECT
                 INNER JOIN spice_audiograma g ON a.id_reservation=g.uniqueid
                 WHERE f.closed=1 AND f.exame=1 AND f.data BETWEEN :data_inicial AND :data_final $where GROUP BY g.uniqueid)
                 c  ON b.id_reservation=c.uniqueid";
+
+
 $stmt = $db->prepare($query_log);
-$stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59", ":type" => $dispens_cc, ":user_group" => $u->user_group));
+$stmt->execute(array(
+    ":data_inicial" => "$data_inicial 00:00:00",
+    ":data_final" => "$data_final 23:59:59",
+    ":data_inicial1" => "$data_inicial 00:00:00",
+    ":data_final1" => "$data_final 23:59:59",
+    ":data_inicial2" => "$data_inicial 00:00:00",
+    ":data_final2" => "$data_final 23:59:59",
+    ":type" => $dispens_cc,
+    ":user_group" => $u->user_group));
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -194,6 +207,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $audioResult = audioCalc($ar[1], $al[1], $ar[2], $al[2], $ar[3], $al[3], $ar[5], $al[5]);
 
+
+    $terc_tipo = $terc_nome = "";
+
+    $terceira_pessoa = json_decode($row['terceira_pessoa']);
+    if (count($terceira_pessoa)) {
+        $terc_tipo = strtr($terceira_pessoa->tipo, $tipoFamHack);
+        $terc_nome = $terceira_pessoa->nome;
+    }
 
     fputcsv($output, array(
         $row['title'],
@@ -247,7 +268,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $row['camp cod'],
         $row['exame'],
         $row['feedback'],
-        $row['terceira_pessoa'],//fim consultas
+        $terc_tipo,
+        $terc_nome,//fim consultas
         $audioResult->right->text,
         $audioResult->left->text,
         $audioResult->right->value,
