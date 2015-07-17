@@ -3849,9 +3849,9 @@ function DispoSelect_submit_allowed() {
     lead_id_hack = $("#lead_id").val();
 
     if (custom_fields_enabled && !isCB) {
-
-        if (script_dinamico && typeof vcFormIFrame.script !== 'undefined') {
-            if (!vcFormIFrame.script.has_script) {
+        
+        if (script_dinamico) {
+            if (typeof vcFormIFrame.script === 'undefined' || !vcFormIFrame.script.has_script) {
                 DispoSubmitFinalStep();
                 return true;
             }
