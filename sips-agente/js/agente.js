@@ -3850,7 +3850,7 @@ function DispoSelect_submit_allowed() {
 
     if (custom_fields_enabled && !isCB) {
 
-        if (script_dinamico) {
+        if (script_dinamico && typeof vcFormIFrame.script !== 'undefined') {
             if (!vcFormIFrame.script.has_script) {
                 DispoSubmitFinalStep();
                 return true;
