@@ -383,8 +383,10 @@ if ($_POST['nc_flag'] == "nc_post") {
             <option value="B/COP"> Consultório Porto - Bolhão</option>
             <option value="B/COV"> Consultório Covilhã</option>
             <option value="B/BREL"> Consultório Elvas</option>
+            <option value="B/BESP"> Consultório Espinho</option>
             <option value="B/EVO"> Consultório Évora</option>
-            <option value="B/FAR"> Consultório Faro</option>
+            <option value="B/BFAF"> Consultório Faro</option>
+            <option value="B/FAR"> Consultório Fafe</option>
             <option value="B/FDF"> Consultório Figueira da Foz</option>
             <option value="B/BFUN"> Consultório Fundão</option>
             <option value="B/GAI"> Consultório Gaia</option>
