@@ -12,13 +12,6 @@ if ($user->user_level < 4) {
     header("location: ../index.php?logout=yes");
 }
 
-    $connection = mysql_connect("$VARDB_server:$VARDB_port", "sipsadmin", "sipsps2012");
-    mysql_select_db("asterisk", $connection);
-    
-    mysql_query("ALTER TABLE `vicidial_campaigns` ADD `agent_allow_copy_record` TINYINT(1) NOT NULL DEFAULT '0' ;") ;
-    
-    mysql_close($connection);
-
 $curlogo=$_POST['curlogo'];
 ?>
 <!DOCTYPE html>
@@ -41,7 +34,7 @@ $curlogo=$_POST['curlogo'];
             iframe {display: block; width: 100%; border: none; overflow-y: auto; overflow-x: hidden;} 
             .cc-menu{width: 100%;padding:0;}
             .cc-menu .pull-left{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 70%}
-            .cc-menu .grid-title {padding: 4px 0px 0px 6px;}
+            .cc-menu .grid-title {padding: 4px 0 0 6px;}
             .cc-submenu{ width: 95%;margin-left:2.5%;margin-right:2.5%;}
 
 
@@ -52,7 +45,7 @@ $curlogo=$_POST['curlogo'];
                 border-top:none !important;
                 border-left:none !important;
                 border-right:none !important;
-                border-radius: 0px !important;
+                border-radius: 0 !important;
                 -webkit-box-shadow:none !important;
                 box-shadow:none !important;
 
@@ -66,7 +59,7 @@ $curlogo=$_POST['curlogo'];
                 border-top:none !important;
                 border-left:none !important;
                 border-right:none !important;
-                border-radius: 0px !important;
+                border-radius: 0 !important;
                 -webkit-box-shadow:none !important;
                 box-shadow:none !important;
                 text-shadow:none !important;
