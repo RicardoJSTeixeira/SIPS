@@ -126,7 +126,7 @@ if (isset($report_marc_outbound)) {
                         FROM vicidial_log$archive a
                         JOIN custom_$currentCamp b ON a.lead_id = b.lead_id
                         JOIN vicidial_list c ON a.lead_id = c.lead_id
-                        Left JOIN sips_sd_reservations e ON a.lead_id = e.lead_id
+                        Left JOIN sips_sd_reservations e ON a.lead_id = e.lead_id AND a.user=e.id_user
                         JOIN vicidial_campaigns d ON a.campaign_id = d.campaign_id
                         where a.status IN ('MARC', 'NOVOCL','FL0001') AND a.campaign_id LIKE '$currentCamp' AND a.call_date BETWEEN '$data_inicial 01:00:00' AND '$data_final 23:00:00' ";
 
