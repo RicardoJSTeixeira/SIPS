@@ -36,10 +36,12 @@ $query_log = "SELECT
                 MAX(IF(b.status=0,b.event_date,'')) pedido,
                 MAX(IF(b.status=2,b.event_date,'') ) pendente,
                 MAX(IF(b.status=1,b.event_date,'') ) aprovado,
-                MAX(username) username
+                c.username username
             FROM spice_requisition a
-            INNER JOIN  spice_log b ON a.id=b.record_id
-            WHERE b.section='Encomenda' AND a.date  BETWEEN :data_inicial AND :data_final GROUP BY record_id;";
+            INNER JOIN spice_log b ON a.id=b.record_id AND b.status = 0 AND b.section='Encomenda'
+            INNER JOIN spice_log c ON a.id=c.record_id AND c.status IN (1,2) AND c.section='Encomenda'
+            WHERE a.date BETWEEN :data_inicial AND :data_final
+            GROUP BY b.record_id ORDER BY b.event_date DESC;";
 $stmt = $db->prepare($query_log);
 $stmt->execute(array(":data_inicial" => "$data_inicial 00:00:00", ":data_final" => "$data_final 23:59:59"));
 
