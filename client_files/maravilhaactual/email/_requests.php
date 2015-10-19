@@ -101,8 +101,8 @@ if($action=="send_email")
     
     require_once 'lib/swift_required.php';
     $transport = Swift_SmtpTransport::newInstance('mail.exemplyrigor.com', 25)
-      ->setUsername('parceiro@exemplyrigor.com')
-      ->setPassword('peenergy');
+      ->setUsername('vmoreno@exemplyrigor.com')
+      ->setPassword('vmoreno');
 
     $mailer = Swift_Mailer::newInstance($transport);
 
@@ -110,7 +110,7 @@ if($action=="send_email")
     
        
     $message = Swift_Message::newInstance('Eficiência Energética - Proposta Retific Power®')
-        ->setFrom(array('parceiro@exemplyrigor.com' => 'Departamento Comercial'))
+        ->setFrom(array('vmoreno@exemplyrigor.com' => 'Departamento Comercial'))
         ->setTo(array($email_address => $email_name));
     
     $message->attach(Swift_Attachment::fromPath('attachments/EmpresaEenergy.pdf'));
@@ -186,8 +186,7 @@ if($action=="send_email")
 			<b>MEIO AMBIENTE</b>
 		</span>                                                                                                                                                
         
-        ', 'text/html')
-       ;
+        ', 'text/html');
 
        
        
