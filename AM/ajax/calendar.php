@@ -3,7 +3,7 @@
 error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 ini_set('display_errors', '1');
 
-date_default_timezone_set('Atlantic/Azores');//o gmt não tem hora de inverno, mas o dos açores é gmt mas no inverno fica gmt + 0 o que corrige todos os stress de quando muda a hora
+date_default_timezone_set('GMT');// Atlantic/Azores |o gmt não tem hora de inverno, mas o dos açores é gmt mas no inverno fica gmt + 0 o que corrige todos os stress de quando muda a hora
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 $offset = filter_var($_POST["offset"]);
