@@ -44,7 +44,7 @@ fputcsv($output, array(
     'Com venda',
     '% Com venda',
     'Terceira pessoa',
-    '% Terceira pessoa',), ";");
+    '% Terceira pessoa'), ";");
 
 $query_log = "SELECT a.consulta, a.exame, a.venda, a.closed, a.terceira_pessoa, a.user, a.left_ear, a.right_ear, a.feedback
                 FROM spice_consulta a

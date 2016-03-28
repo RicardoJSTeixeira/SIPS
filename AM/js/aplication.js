@@ -365,3 +365,8 @@ function scrollTop() {
         scrollTop: 0
     }, "fast");
 }
+
+$('.menu-sidebar').slimScroll({
+    height: '93%',
+    width: '70px'
+});
