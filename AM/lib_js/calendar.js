@@ -150,7 +150,7 @@ Calendar = (function () {
                         resource: me.resource,
                         rtype: cEO.rtype,
                         lead_id: cEO.lead_id,
-                        offset: Math.abs(new Date().getTimezoneOffset()) * 60,
+                        offset: Math.abs(new Date(+cEO.start * 1000).getTimezoneOffset()) * 60,
                         start: cEO.start,
                         end: cEO.end
                     },
@@ -167,9 +167,9 @@ Calendar = (function () {
                         }
                     },
                     "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
                 return true;
 
             },
@@ -381,7 +381,7 @@ Calendar = (function () {
                 $.post("/AM/ajax/calendar.php", {
                         id: event.id,
                         action: "change",
-                        offset: Math.abs(new Date().getTimezoneOffset()) * 60,
+                        offset: Math.abs(new Date(+moment(event.start).unix() * 1000).getTimezoneOffset()) * 60,
                         start: moment(event.start).unix(),
                         end: moment(event.end).unix()
                     },
@@ -393,10 +393,10 @@ Calendar = (function () {
                         me.calendar.fullCalendar('updateEvent', event);
                         $.msg('unblock');
                     }, "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                        revertFunc();
-                    });
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                    revertFunc();
+                });
             } else {
                 revertFunc();
             }
@@ -485,9 +485,9 @@ Calendar = (function () {
                         me.reserveConstruct(dat.tipo);
                         $.msg('unblock');
                     }, "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
             });
     };
 
@@ -507,9 +507,9 @@ Calendar = (function () {
                     }
                     $.msg('unblock');
                 }, "json").fail(function () {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                });
+                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                $.msg('unblock', 5000);
+            });
         })
     }
 
@@ -572,9 +572,9 @@ Calendar = (function () {
                             dropOneConsult();
                             $.msg('unblock');
                         }, "json").fail(function () {
-                            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                            $.msg('unblock', 5000);
-                        });
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
                     me.modal_ext.modal("hide").find(".popover").hide();
                 }
             })
@@ -617,9 +617,9 @@ Calendar = (function () {
                         me.calendar.fullCalendar('removeEvents', calendar_client.id);
                         $.msg('unblock');
                     }, "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
                 me.modal_ext.modal("hide").find(".popover").hide();
             })
             .on("hidden", function () {
@@ -669,67 +669,67 @@ Calendar = (function () {
                         }
                         $.msg('unblock');
                     }, "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
-            });
-
-        me.modals.mkt.find("form").submit(function (e) {
-            e.preventDefault();
-            if (me.modals.mkt.find("form").validationEngine('validate')) {
-                $("#save_mkt").prop('disabled', true);
-                $.msg();
-                $.post("ajax/requests.php", {
-                    action: 'set_mkt_report',
-                    id: me.modals.mkt.data().calEvent.extra_id,
-                    cod: $(this).find('#cod').val(),
-                    total_rastreios: $(this).find('#total_rastreios').val(),
-                    rastreios_perda: $(this).find('#rastreios_perda').val(),
-                    vendas: $(this).find('#vendas').val(),
-                    valor: $(this).find('#valor').val()
-                }, function () {
-                    me.modals.mkt.modal("hide");
-                    $("#save_mkt").prop('disabled', false);
-                    $.jGrowl("Relatório enviado com sucesso!");
-                    $.msg('unblock');
-                    var eApoio = $("#calendar").fullCalendar("clientEvents", function (a) {
-                        return a.extra_id === me.modals.mkt.data().calEvent.extra_id;
-                    });
-                    $.each(eApoio, function () {
-                        this.closed = true;
-                        me.calendar.fullCalendar('updateEvent', this);
-                    });
-                }, 'json').fail(function () {
                     $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
                     $.msg('unblock', 5000);
                 });
+            });
 
-            }
-        })
+        me.modals.mkt.find("form").submit(function (e) {
+                e.preventDefault();
+                if (me.modals.mkt.find("form").validationEngine('validate')) {
+                    $("#save_mkt").prop('disabled', true);
+                    $.msg();
+                    $.post("ajax/requests.php", {
+                        action: 'set_mkt_report',
+                        id: me.modals.mkt.data().calEvent.extra_id,
+                        cod: $(this).find('#cod').val(),
+                        total_rastreios: $(this).find('#total_rastreios').val(),
+                        rastreios_perda: $(this).find('#rastreios_perda').val(),
+                        vendas: $(this).find('#vendas').val(),
+                        valor: $(this).find('#valor').val()
+                    }, function () {
+                        me.modals.mkt.modal("hide");
+                        $("#save_mkt").prop('disabled', false);
+                        $.jGrowl("Relatório enviado com sucesso!");
+                        $.msg('unblock');
+                        var eApoio = $("#calendar").fullCalendar("clientEvents", function (a) {
+                            return a.extra_id === me.modals.mkt.data().calEvent.extra_id;
+                        });
+                        $.each(eApoio, function () {
+                            this.closed = true;
+                            me.calendar.fullCalendar('updateEvent', this);
+                        });
+                    }, 'json').fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+
+                }
+            })
             .find("input:not(:eq(0))").autotab('number');
 
 
         me.modals.acf.find("#save_acf").click(function () {
-            //in single element validations on the contrary (ﾉಠ_ಠ)ﾉ
-            if (!me.modals.acf.find("#obs_acf").validationEngine('validate')) {
-                $.msg();
-                $.post("ajax/calendar.php", {
-                    action: 'set_reservation_obs',
-                    obs: me.modals.acf.find("#obs_acf").val(),
-                    id_reservation: ~~me.modals.acf.data("calEvent").id
-                }, function () {
-                    me.modals.acf.find("#obs_acf").val("");
-                    me.modals.acf.modal("hide");
-                    me.modals.acf.data().calEvent.closed = true;
-                    me.modals.acf.data().calEvent.editable = false;
-                    me.calendar.fullCalendar('updateEvent', this);
-                    $.msg('unblock');
-                }, 'json').fail(function () {
-                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                    $.msg('unblock', 5000);
-                });
-            }
-        })
+                //in single element validations on the contrary (ﾉಠ_ಠ)ﾉ
+                if (!me.modals.acf.find("#obs_acf").validationEngine('validate')) {
+                    $.msg();
+                    $.post("ajax/calendar.php", {
+                        action: 'set_reservation_obs',
+                        obs: me.modals.acf.find("#obs_acf").val(),
+                        id_reservation: ~~me.modals.acf.data("calEvent").id
+                    }, function () {
+                        me.modals.acf.find("#obs_acf").val("");
+                        me.modals.acf.modal("hide");
+                        me.modals.acf.data().calEvent.closed = true;
+                        me.modals.acf.data().calEvent.editable = false;
+                        me.calendar.fullCalendar('updateEvent', this);
+                        $.msg('unblock');
+                    }, 'json').fail(function () {
+                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                        $.msg('unblock', 5000);
+                    });
+                }
+            })
             .end()
             .find(".btn_trash")
             .click(function () {
@@ -746,9 +746,9 @@ Calendar = (function () {
                         }
                         $.msg('unblock');
                     }, "json").fail(function () {
-                        $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                        $.msg('unblock', 5000);
-                    });
+                    $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+                    $.msg('unblock', 5000);
+                });
             });
 
     };
@@ -920,9 +920,9 @@ Calendar = (function () {
                 $.msg('unblock');
             },
             "json").fail(function () {
-                $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
-                $.msg('unblock', 5000);
-            });
+            $.msg('replace', 'Ocorreu um erro, por favor verifique a sua ligação à internet e tente novamente.');
+            $.msg('unblock', 5000);
+        });
 
         me.modals.acf.modal("show");
     };
