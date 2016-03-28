@@ -33,7 +33,7 @@ Calendar = (function () {
                 type: "POST",
                 data: {
                     action: "GetReservations",
-                    offset: Math.abs(new Date().getTimezoneOffset()) * 60,
+                    offset: new Date().getTimezoneOffset() * 60,
                     resource: "all"
                 }
             },
@@ -150,7 +150,7 @@ Calendar = (function () {
                         resource: me.resource,
                         rtype: cEO.rtype,
                         lead_id: cEO.lead_id,
-                        offset: Math.abs(new Date(+cEO.start * 1000).getTimezoneOffset()) * 60,
+                        offset: new Date(+cEO.start * 1000).getTimezoneOffset() * 60,
                         start: cEO.start,
                         end: cEO.end
                     },
@@ -381,7 +381,7 @@ Calendar = (function () {
                 $.post("/AM/ajax/calendar.php", {
                         id: event.id,
                         action: "change",
-                        offset: Math.abs(new Date(+moment(event.start).unix() * 1000).getTimezoneOffset()) * 60,
+                        offset: new Date(+moment(event.start).unix() * 1000).getTimezoneOffset() * 60,
                         start: moment(event.start).unix(),
                         end: moment(event.end).unix()
                     },
